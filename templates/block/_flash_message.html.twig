@@ -1,0 +1,17 @@
+{% if app.request.hasPreviousSession %}
+    {% set flashbag = app.session.flashbag.all() %}
+    {% if flashbag|length %}
+        <div id="flash_message" class="container">
+            {% for type, messages in flashbag %}
+                {% for message in messages %}
+                    <div class="alert alert-{{ type }} alert-dismissible fade show" role="alert">
+                        <span class="sr-only">{{ ('alert.' ~ type)|trans() }} : </span>{{ message|raw|nl2br }}
+                        <button type="button" class="close" data-dismiss="alert" aria-label="{{ 'btn.close'|trans() }}">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                {% endfor %}
+            {% endfor %}
+        </div>
+    {% endif %}
+{% endif %}

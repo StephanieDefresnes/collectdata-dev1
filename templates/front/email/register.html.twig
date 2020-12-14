@@ -1,0 +1,7 @@
+{{ 'registration.email.message'|trans({
+        '%user%': user,
+        '%confirmation_url%': confirmation_url,
+        '%host%': app.request.schemeAndHttpHost,
+        '%website_name%': website_name
+    }, 'security')|raw|nl2br
+}}

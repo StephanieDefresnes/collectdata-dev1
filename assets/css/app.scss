@@ -1,0 +1,33 @@
+// global
+$nav-background:#343a40;
+
+.fa, .fas {
+    width: 20px;
+}
+
+.navbar {
+    background: $nav-background;
+    & .navbar-brand {
+        margin : 0;
+        font-weight: normal;
+        & > span {
+            padding: 0 15px;
+        } 
+    }
+}
+
+#banner {
+    & .user-date:first-letter {
+        text-transform: capitalize;
+    }
+}
+.rtl {
+    
+}
+@media (max-width: 768px) {
+    .navbar {
+        & .navbar-nav {
+            width: 100%;
+        }
+    }
+}

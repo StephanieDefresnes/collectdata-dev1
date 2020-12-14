@@ -1,0 +1,104 @@
+{% trans_default_domain 'front_messages' %}
+{% set route = app.request.get('_route') %}
+<div class="navbar navbar-expand-md navbar-dark bg-dark mb-4" role="navigation">
+    <a class="navbar-brand" href="{{ path('front_home') }}"><img src="{{ asset('img/logo.png') }}" alt="No COVID Project" class="nav-logo"> No COVID Project</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarCollapse">
+    {#    <ul class="navbar-nav mr-auto">
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" id="dropdown_account" 
+                   data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    {% for locale in locales %}
+                        {% if app.request.locale == locale and app.request.locale != 'fr' %}
+                            <img src="{{ asset('img/flag/'~ locale ~'.jpg') }}" alt="{{ locale }}" class="lang-flag">
+                        {% elseif app.request.locale == locale and app.request.locale == 'fr' %}
+                            <img src="{{ asset('img/flag/'~ locale ~'.jpg') }}" alt="{{ locale }}" class="lang-flag">
+                        {% endif %}
+                    {% endfor %}
+                </a>
+                <ul class="dropdown-menu"> 
+                {% for locale in locales %}
+                    {% if locale != app.request.locale %}
+                        <li class="dropdown-item">
+                            <a href="{{ path('locale', {'locale': locale}) }}">
+                                <img src="{{ asset('img/flag/'~ locale ~'.jpg') }}" alt="{{ locale }}" class="lang-flag">
+                                {% if locale == 'en' %}
+                                    English
+                                {% elseif locale == 'es' %}
+                                    Español
+                                {% elseif locale == 'fr' %}
+                                    Français
+                                {% elseif locale == 'it' %}
+                                    Italiano - wip
+                                {% elseif locale == 'tr' %}
+                                    Türk - wip
+                                {% elseif locale == 'ar' %}
+                                    Türk - wip
+                                {% endif %}
+                            </a>
+                        </li>
+                    {% endif %}
+                {% endfor %}
+                </ul>
+            </li>
+        </ul>#}
+        <div class="d-flex">
+            <ul class="navbar-nav">
+            {% if app.user %}
+                <li class="nav-item">
+                    <a class="nav-link dropdown-toggle" id="dropdown_account" 
+                       data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <i class="fas fa-user"></i> {{ 'nav.account'|trans() }}
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdown_account">
+                        {% if is_granted("ROLE_ADMIN") %}
+                            <li class="dropdown-item">
+                                <a href="{{ path('back_home') }}">
+                                    <i class="fas fa-user-cog"></i> {{ 'nav.account_admin'|trans() }}
+                                </a>
+                            </li>
+                        {% else %}
+                            <li class="dropdown-item">
+                                <a href="#">
+                                    <i class="fas fa-user-cog"></i> {{ 'nav.account_profile'|trans() }}
+                                </a>
+                            </li>
+                        {% endif %}
+                        <li class="dropdown-item{{ route == 'app_reset_password' ? ' active' }}">
+                            <a href="{{ path('app_reset_password', { 'id': app.user.id }) }}">
+                                <i class="fas fa-key"></i> {{ 'nav.account_reset_password'|trans() }}
+                            </a>
+                        </li>
+                        <li class="dropdown-item">
+                            <a href="{{ path('app_logout') }}">
+                                <i class="fas fa-sign-out-alt"></i> {{ 'nav.account_logout'|trans() }}
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+            {% else %}
+                <li class="nav-item">
+                    <a class="nav-link dropdown-toggle" id="dropdown_account" 
+                       data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <i class="fas fa-user"></i> {{ 'nav.account'|trans() }}
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdown_account">
+                        <li class="dropdown-item{{ route == 'app_login' ? ' active' }}">
+                            <a href="{{ path('app_login') }}">
+                                <i class="fas fa-sign-in-alt"></i> {{ 'nav.account_login'|trans() }}
+                            </a>
+                        </li>
+                        <li class="dropdown-item{{ route == 'front_register' ? ' active' }}">
+                            <a href="{{ path('front_register') }}">
+                                <i class="fas fa-user"></i> {{ 'nav.account_register'|trans() }}
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+            {% endif %}
+            </ul>
+        </div>
+    </div>
+</div>

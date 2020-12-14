@@ -1,0 +1,60 @@
+{% trans_default_domain 'security' %}
+{% extends 'front/layout.html.twig' %}
+
+{% block title %}{{ 'login.title'|trans() }}{% endblock %}
+
+{% block content %}
+<section class="pt-4 pb-4">
+    <div class="container">
+        {% if error %}
+            <div class="fadeInDown animated">
+                <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+            </div>
+        {% endif %}
+        <div class="col-lg-6 mx-auto">
+            <div class="card mt-4 mb-4">
+                <div class="card-body">
+                    <form method="post">
+                        {% if app.user %}
+                            <div class="mb-3">
+                                {{ 'login.message.logged_as'|trans({ '%user%': app.user }) }}, <a href="{{ path('app_logout') }}">{{ 'login.link.logout'|trans() }}</a>
+                            </div>
+                        {% else %}
+                            <h1 class="h3 mb-3 font-weight-normal">{{ 'login.h1'|trans() }}</h1>
+                            <div class="form-group">
+                                <label for="inputEmail" class="sr-only">{{ 'login.label.email'|trans() }}</label>
+                                <input type="email" value="{{ last_username }}" name="email" id="inputEmail" class="form-control mb-2" placeholder="{{ 'login.label.email'|trans() }}" required autofocus>
+                                <label for="inputPassword" class="sr-only">{{ 'login.label.password'|trans() }}</label>
+                                <input type="password" name="password" id="inputPassword" class="form-control" placeholder="{{ 'login.label.password'|trans() }}" required>
+                            </div>
+                            <input type="hidden" name="_csrf_token"
+                                value="{{ csrf_token('authenticate') }}">
+                            <div class="form-group">
+                                <div class="checkbox mb-3">
+                                    <label>
+                                        <input type="checkbox" name="_remember_me"> {{ 'login.label.remember_me'|trans() }}
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="form-group text-center">
+                                <button class="btn btn-primary btn-block" type="submit">
+                                    {{ 'login.btn.submit'|trans() }}
+                                </button>
+                            </div>
+                            <hr>
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <a href="{{ path('app_forget_password') }}" class="btn btn-default btn-block btn-sm">{{ 'login.link.forget_password'|trans() }}</a>
+                                </div>
+                                <div class="col-sm-6">
+                                    <a href="{{ path('front_register')}}" class="btn btn-default btn-block btn-sm"><i class="fas fa-user"></i> {{ 'login.link.registration'|trans() }}</a>
+                                </div>
+                            </div>
+                        {% endif %}
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

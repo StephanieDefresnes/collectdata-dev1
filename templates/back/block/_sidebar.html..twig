@@ -1,0 +1,52 @@
+{% trans_default_domain 'back_messages' %}
+{% set route = app.request.get('_route') %}
+
+<!-- Sidebar  -->
+<nav id="sidebar">
+    <div class="sidebar-header">
+       <div class="logo-sidebar">
+            <img src="{#{{ asset("build/images/logo-white.png") }}#}" class="img-fluid" alt="Logo sidebar">
+        </div>
+        <br>
+        <div class="row">
+            <div class="mx-auto">
+                <p class="text-center"><small>{#{{ "now"|format_date }}#}</small></p>
+                <div class="row">
+                    <div class="col-4">
+                        <div class="icon-rounded text-center">
+                            <i class="fas fa-user fa-2x"></i>
+                        </div>
+                    </div>
+                    <div class="col-8">
+                        <ul class="list-unstyled">
+                            <li>{{ app.user }}</li>
+                            <li>{{ app.user.email }}</li>
+                            {% for role in app.user.roles %}
+                                <li><small>{{ role }}</small></li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <ul class="list-unstyled components">
+        <li class="{{ route == 'back_home' ? 'active' }}">
+            <a href="{{ path('back_home') }}">{{ 'sidebar.home'|trans }}</a>
+        </li>
+        <li class="{{ route in ['back_user_search', 'back_user_create'] ? 'active' }}">
+            <a href="#user_sub_menu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">{{ 'sidebar.user'|trans() }}</a>
+            <ul class="collapse list-unstyled" id="user_sub_menu">
+                
+                <li>
+                    <a href="{{ path('back_user_search') }}">{{ 'sidebar.user_search'|trans() }}</a>
+                </li>
+                
+                <li>
+                    <a href="{{ path('back_user_create') }}">{{ 'sidebar.user_create'|trans() }}</a>
+                </li>
+                
+            </ul>
+        </li>
+    </ul>
+</nav>
