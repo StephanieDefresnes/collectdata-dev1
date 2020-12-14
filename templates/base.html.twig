@@ -1,5 +1,21 @@
+{% set route = app.request.attributes.get('_route') %}
+{% set route_params = app.request.attributes.get('_route_params') %}
+{% set params = route_params|merge(app.request.query.all) %}
+{% set applocales=locales|split('|') %}
 <!DOCTYPE html>
-<html lang="fr">
+<html
+    {% for locale in applocales %}
+        {% if  (locale == app.request.locale and app.request.locale != '')
+            or (locale == app.request.locale and app.request.locale == 'fr')
+            or (locale == app.request.locale and app.request.locale == '') %}
+            lang="{{ locale }}"
+        {% endif %}
+        {% if  (locale == app.request.locale and app.request.locale == 'ar')
+            or (locale == app.request.locale and app.request.locale == 'he')
+            or (locale == app.request.locale and app.request.locale == 'ur') %}
+            dir="rtl"
+        {% endif %}
+    {% endfor %}>
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0,shrink-to-fit=no">

@@ -41,10 +41,14 @@ security:
         ROLE_ADMIN:             [ ROLE_MODERATOR ]
         ROLE_SUPER_ADMIN:       [ ROLE_ADMIN, ROLE_ALLOWED_TO_SWITCH ]
     access_control:
-        - { path: ^/back/*, roles: ROLE_SUPER_ADMIN }
-        - { path: ^/back/*, roles: ROLE_ADMIN }
-        - { path: ^/back/*, roles: ROLE_MODERATOR }
-        - { path: ^/font/*, roles: ROLE_SUPER_ADMIN }
-        - { path: ^/font/*, roles: ROLE_ADMIN }
-        - { path: ^/font/*, roles: ROLE_MODERATOR }
-        - { path: ^/font/*, roles: ROLE_USER }
+        - { path: ^/%app_locales%/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/%app_locales%/forget_password, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/%app_locales%/register, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/%app_locales%, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/%app_locales%/back/*, roles: ROLE_SUPER_ADMIN }
+        - { path: ^/%app_locales%/back/*, roles: ROLE_ADMIN }
+        - { path: ^/%app_locales%/back/*, roles: ROLE_MODERATOR }
+        - { path: ^/%app_locales%/front/*, roles: ROLE_SUPER_ADMIN }
+        - { path: ^/%app_locales%/front/*, roles: ROLE_ADMIN }
+        - { path: ^/%app_locales%/front/*, roles: ROLE_MODERATOR }
+        - { path: ^/%app_locales%/front/*, roles: ROLE_USER }

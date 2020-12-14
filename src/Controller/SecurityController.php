@@ -32,14 +32,18 @@ class SecurityController extends AbstractController
         $this->translator = $translator;
     }
     
+    
     /**
-     * @Route("/login", name="app_login")
+     * @Route("/{_locale<%app_locales%>}/login",name="app_login")
      */
-    public function login(AuthenticationUtils $authenticationUtils): Response
+    public function login(Request $request, AuthenticationUtils $authenticationUtils): Response
     {
+        $locale = $request->getLocale();
+        
         // if ($this->getUser()) {
         //     return $this->redirectToRoute('target_path');
         // }
+        
 
         // get the login error if there is one
         $error = $authenticationUtils->getLastAuthenticationError();
@@ -50,7 +54,7 @@ class SecurityController extends AbstractController
     }
 
     /**
-     * @Route("/logout", name="app_logout")
+     * @Route("/{_locale<%app_locales%>}/logout", name="app_logout")
      */
     public function logout()
     {
@@ -84,7 +88,7 @@ class SecurityController extends AbstractController
     }
     
     /**
-     * @Route("/forget_password", name="app_forget_password")
+     * @Route("/{_locale<%app_locales%>}/forget_password", name="app_forget_password")
      */
     public function forgetPassword(Request $request, UserRepository $userRepository, Mailer $mailer): Response
     {
@@ -107,7 +111,7 @@ class SecurityController extends AbstractController
     }
     
     /**
-     * @Route("/reset_password/{id}", defaults={"id"=null}, name="app_reset_password")
+     * @Route("/{_locale<%app_locales%>}/reset_password/{id}", defaults={"id"=null}, name="app_reset_password")
      */
     public function resetPassword(
         Request $request,

@@ -11,6 +11,9 @@
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav mr-auto">
+                {% include 'front/block/_locale_switcher.html.twig' %}
+            </ul>
             <div class="d-flex">
                 <ul class="navbar-nav">
                 {% if app.user %}
