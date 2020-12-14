@@ -1,0 +1,7 @@
+alert:
+    info: Alerte info
+    success: Alerte succès
+    warning: Alerte avertissement
+    danger: Alerte danger
+btn:
+    close: Fermer

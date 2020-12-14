@@ -8,6 +8,10 @@ use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\User\PasswordUpgraderInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use \Doctrine\ORM\Tools\Pagination\Paginator;
+use \Symfony\Component\HttpFoundation\Request;
+use \Symfony\Component\HttpFoundation\Session\Session;
+use \Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * @method User|null find($id, $lockMode = null, $lockVersion = null)
@@ -64,4 +68,48 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         ;
     }
     */
+
+    /**
+     * @return [] Returns an array of User objects
+     */
+    public function search(Request $request, Session $session, array $data, string &$page)
+    {
+        if ((int) $page < 1) {
+            throw new \InvalidArgumentException(sprintf("The page argument can not be less than 1 (value : %s)", $page));
+        }
+        $firstResult = ($page - 1) * $data['number_by_page'];
+        $query = $this->getBackQuery($data);
+        $query->setFirstResult($firstResult)->setMaxResults($data['number_by_page'])->addOrderBy('.updatedAt', 'DESC');
+        $paginator = new Paginator($query);
+        if ($paginator->count() <= $firstResult && $page != 1) {
+            if (!$request->get('page')) {
+                $session->set('back_user_page', --$page);
+                return $this->search($request, $session, $data, $page);
+            } else {
+                throw new NotFoundHttpException();
+            }
+        }
+        return $paginator;
+    }
+
+    /**
+     * @return \Doctrine\DBAL\Query\QueryBuilder
+     */
+    public function getSearchQuery(array $data)
+    {
+        $query = $this->createQueryBuilder('');
+        if (null !== ($data['search'] ?? null)) {
+            $exprOrX = $query->expr()->orX();
+            $exprOrX
+                ->add($query->expr()->like('u.name', ':search'))
+                ->add($query->expr()->like('u.email', ':search'));
+            $query->where($exprOrX)->setParameter('search', '%' . $data['search'] . '%');
+        }
+        if (null !== ($data['role'] ?? null)) {
+            $query
+                ->andWhere('u.roles LIKE :role')
+                ->setParameter('role', '%"'.$data['role'].'"%');
+        }
+        return $query;
+    }
 }

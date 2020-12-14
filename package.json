@@ -3,7 +3,7 @@
         "@fortawesome/fontawesome-free": "^5.15.1",
         "@fortawesome/free-brands-svg-icons": "^5.15.1",
         "@symfony/stimulus-bridge": "^1.1.0",
-        "@symfony/webpack-encore": "^0.32.0",
+        "@symfony/webpack-encore": "^0.33.0",
         "bootstrap": "^4.5.3",
         "core-js": "^3.0.0",
         "jquery": "^3.5.1",

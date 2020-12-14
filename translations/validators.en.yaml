@@ -1,0 +1,11 @@
+registration:
+    message:
+        unique_email: There is already an account with this email
+        password_not_blank: Please enter a password
+        password_length_min: Your password should be at least 6 characters
+        repeated_password_invalid: The password fields must match.
+        agree_terms_is_true: You should agree to our terms.
+reset_password:
+    message:
+        current_password_wrong: Wrong value for your current password
+        repeated_new_password_invalid: The new password fields must match.

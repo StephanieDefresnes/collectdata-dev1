@@ -1,0 +1,124 @@
+editor:
+    field:
+        body: Contenido
+    label:
+        body: Contenido
+        key: Clé
+    update:
+        flash:
+            success: 'Los datos se han guardado.'
+        h1: 'Contenu du site'
+        h2: 'Contenido del sitio'
+        title: 'Edición de texto'
+invitation:
+    email:
+        subject: '%website_name% - Invitación'
+        message: |
+            Hola %user%,
+            
+            Un usuario te ha invitado a unirte a %website_name%.
+            
+            Nombre de usuario : %email%
+            Contraseña : %password%
+
+            Para validar la invitación, haga clic <a href="%confirmation_url%">aquí</a>.
+
+            Este enlace solo se puede utilizar una vez para validar su cuenta.
+
+            Atentamente,
+            <a href="%host%">%website_name%</a>
+nav:
+    home: Frente a casa
+    end_switch: Fin de la exploración
+    account: Cuenta
+    account_login: Iniciar sesión
+    account_logout: Desconexión
+    account_profile: Mi informacion
+    account_reset_password: Cambiar la contraseña
+sidebar:
+    home: Volver a casa
+    user: Usuario
+    user_search: Listado
+    user_create: Invitación
+action:
+    delete: Eliminar
+    update: Editar
+    permute_enabled: Activar / Desactivar
+button:
+    add: Añadiendo
+    down: Bajar
+    remove: Eliminar
+    save: Grabar
+    up: Subir
+    back: Retour
+    cancel: Regreso
+    create: Añadir
+    delete: Eliminar
+    delete_title: Eliminar
+    disable: Desactivar
+    enable: Activar
+    filter: Filtrado
+    next: Próximo
+    previous: Anterior
+    read_title: Detalles
+    submit: Enviar
+    switch: Para explorar
+    update_title: Editar
+    validate: Validar
+delete:
+    confirm: 'Confirmación de eliminación'
+    warning: 'La eliminación será definitiva.'
+error:
+    no_element_selected: 'Ningún artículo seleccionado'
+label:
+    filter_number_by_page: 'Número de elementos por página'
+    filter_search: Buscar
+'no': No
+search:
+    action_th: Acción(es)
+    no_data_found: 'No se encontraron datos'
+user:
+    button:
+        create: Invitación
+    create:
+        flash:
+            success: 'Se ha invitado al usuario (%identifier%).'
+        h1: 'Invitación'
+        h2: 'Invitar a un usuario'
+        title: 'Invitación'
+    delete:
+        flash:
+            success: 'Usuario(s) eliminado.'
+        h1: 'Borrar usuario'
+        h2: 'Se eliminará la siguiente lista'
+        modal_title: 'Borrar usuario'
+    error:
+        cannot_delete_super_admin: No se puede eliminar un superadministrador.
+        cannot_permute_enabled_super_admin: Un superadministrador no se puede habilitar ni deshabilitar.
+    field:
+        created_at: 'Creado'
+        email: Email
+        enabled: Habilitado
+        name: apellido
+        last_login_at: 'Última conexión'
+        roles: Rol(s)
+        updated_at: 'Modificado'
+    label:
+        email: Email
+        name: apellido
+        roles: Roles
+    read:
+        h1: 'Detalles - Usuario'
+        h2: Detalles
+        title: 'Detalles - Usuario'
+    search:
+        h1: 'Buscar - Usuario'
+        h2: Buscar
+        title: 'Buscar - Usuario'
+    update:
+        flash:
+            success: 'Usuario cambiado.'
+        h1: 'Editar usuario'
+        h2: 'Formulario de modificación'
+        title: 'Editar - Usuario'
+'yes': Si

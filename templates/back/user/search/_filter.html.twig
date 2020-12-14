@@ -1,0 +1,27 @@
+{% trans_default_domain 'back_messages' %}
+<div class="card p-2 mb-2">
+    <div class="card-body">
+        {{ form_start(form_filter) }}
+            <div class="row">
+                <div class="col-lg-6">
+                    {{ form_row(form_filter.search) }}
+                </div>
+                <div class="col-lg-6">
+                    {{ form_row(form_filter.role) }}
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-6">
+                    {{ form_row(form_filter.number_by_page) }}
+                </div>
+                <div class="col-lg-6">
+                    <div class="form-group">
+                        <button id="filter_submit" class="btn btn-primary btn-block">
+                            <i class="fas fa-filter"></i> {{ 'button.filter'|trans() }}
+                        </button>
+                    </div>
+                </div>
+            </div>
+        {{ form_end(form_filter) }}
+    </div>
+</div>

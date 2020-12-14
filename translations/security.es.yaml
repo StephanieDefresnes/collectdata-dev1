@@ -1,0 +1,79 @@
+forget_password:
+    title: Contraseña olvidada
+    h1: Contraseña olvidada
+    btn:
+        submit: enviar a
+    flash:
+        check_email: |
+            Un correo electronico ha sido enviado. Contiene un enlace en el que deberá hacer clic para restablecer su contraseña.
+            Si no recibe un correo electrónico, revise su carpeta de correo no deseado o intente nuevamente.
+    email:
+        subject: 'Restablecer su contraseña'
+        message: |
+            Hola %user%:
+            
+            Para restablecer su contraseña, haga clic <a href="%confirmation_url%">aquí</a>.
+            
+            Este enlace solo se puede utilizar una vez.
+            
+            Si no eres el iniciador de esta solicitud, ignora este mensaje.
+            
+            Atentamente,
+            <a href="%host%">%website_name%</a>
+    label:
+        email: Email
+login:
+    title: Iniciar sesión
+    h1: Por favor Iniciar sesión
+    link:
+        logout: Desconectarse
+        forget_password: ¿ Contraseña olvidada ?
+        registration: Registro
+    message:
+        welcome: Bienvenido %user%
+        logged_as: Has iniciado sesión como %user%
+        email_not_found: No se pudo encontrar este correo electrónico.
+        not_activated: Esta cuenta no está activada.
+    label:
+        email: Email
+        password: Contraseña
+        remember_me: Se acuerda de mi
+    btn:
+        submit: Iniciar sesión
+registration:
+    title: Registro
+    h1: Registro
+    btn:
+        submit: Registro
+    email:
+        subject: Bienvenido %user%
+        message: |
+            Hola %user%:
+
+            Para validar su cuenta de usuario, haga clic <a href="%confirmation_url%">aquí</a>.
+
+            Este enlace solo se puede utilizar una vez para validar su cuenta.
+
+            Atentamente,
+            <a href="%host%">%website_name% </a>
+    flash:
+        check_email: Se ha enviado un correo electrónico a %email%. Contiene un enlace de activación en el que deberá hacer clic para activar su cuenta.
+        confirmed: Felicitaciones %user%, su cuenta ahora está activada.
+    label:
+        email: Email
+        name: Apellido
+        password: Contraseña
+        repeat_password: Repite la contraseña
+        agree_terms: Acepto las condiciones de uso
+    terms_link: Lea nuestras %link_start%condiciones de uso%link_end%
+reset_password:
+    title: Restablecer la contraseña
+    h1: Restablecer la contraseña
+    btn:
+        submit: Reiniciar
+    flash:
+        success: La contraseña ha sido cambiada.
+    label:
+        current_password: Antigua contraseña
+        new_password: Nueva contraseña
+        repeat_new_password: Repita la nueva contraseña

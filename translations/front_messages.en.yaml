@@ -1,0 +1,10 @@
+nav:
+    home: Home
+    account: Account
+    account_back: Back-office
+    account_login: Login
+    account_logout: Logout
+    account_register: Registration
+    account_profile: My profile
+    account_reset_password: Reset password
+    lang_choice: Language

@@ -7,6 +7,20 @@
 // bootstrap
 @import "~bootstrap/scss/bootstrap";
 
+// global
+$nav-background:#343a40;
+$nav-background-active:#ddd;
+$nav-background-active-class:#777;
+$nav-color:#808080;
+$nav-color-hover:#fff;
+$nav-color-active:#333;
+$sm-nav-background:#343a40;
+$sm-nav-background-active:#343a40;
+$sm-nav-background-active-class:#111;
+$sm-nav-color:#808080;
+$sm-nav-color-hover:#fff;
+$sm-nav-color-active:#fff;
+
 body {
     #flash_message {
         width: 100%;
@@ -17,74 +31,153 @@ body {
         top: 90px;
         z-index: 999;
     }
-    & > .menu {
+    & > .container-fluid {
+        & .navbar {
+            margin: 0 -15px;
+            & .navbar-brand {
+                & > .nav-logo {
+                    width: 24px;
+                    height: 24px;
+                    vertical-align: sub;
+                }
+            } 
+            & .navbar-nav > li {
+                & > a {
+                    cursor: pointer;
+                }
+                &.show a::after {
+                    border-top: 0;
+                    border-right: 0.3em solid transparent;
+                    border-bottom: 0.3em solid;;
+                    border-left: 0.3em solid transparent;
+                }
+                & > .dropdown-menu {
+                    margin: 0;
+                    padding: 0;
+                    border-radius: 0 0 0.25rem 0.25rem;
+                    &.lang-menu {
+                        top: 47px;
+                        left: -5px;
+                    }
+                    & .dropdown-item {
+                        padding: 0;
+                        &:hover,
+                        &:active {
+                            background-color: $nav-background-active;
+                            & a {
+                                color: #333;
+                            }
+                        }
+                        &:last-child {
+                            border-radius: 0 0 0.25rem 0.25rem;
+                        }
+                        &.active {
+                            background-color: $nav-background-active-class;
+                            & a {
+                                color: $nav-color-active;
+                            }
+                        }
+                        & a {
+                            display: block;
+                            padding: 0.5rem 0.75rem;
+                            color: $nav-color;
+                            text-decoration: none;
+                            & .lang-flag {
+                                margin-right: 5px;
+                            }
+                        }
+                    }
+                }
+            }
+            & .navbar-lang {
+                & > li {
+                    & .lang-name {
+                        text-transform: capitalize;
+                    } 
+                    & .lang-flag {
+                        width: 18px;
+                        height: 13px;
+                        vertical-align: middle;
+                    }
+                    & > a {
+                        &::after  {
+                            display: none;
+                        }
+                        & > span {
+                            display: none;
+                        }
+                        & .lang-menu .lang-flag {
+                            vertical-align: baseline;
+                        }
+                    }
+                    & > .menu-lang  {
+                        margin: 0.5rem 0 0;
+                    }
+                }
+            }
+        }
+    }
+}
+@media (max-width: 768px) {
+    body {
         & > .container-fluid {
-            padding-right: 0;
-            padding-left: 0;
-            
             & .navbar {
+                margin: 0 -15px;
                 & .navbar-brand {
                     & > .nav-logo {
                         width: 24px;
                         height: 24px;
                         vertical-align: sub;
                     }
-                }
-                & .lang-flag {
-                    width: 18px;
-                    height: 13px;
-                    vertical-align: baseline;
-                }
-                & .navbar-nav > li {
-                    & > a {
-                        cursor: pointer;
-                    }
-                    &.show a::after {
-                        border-top: 0;
-                        border-right: 0.3em solid transparent;
-                        border-bottom: 0.3em solid;;
-                        border-left: 0.3em solid transparent;
-                    }
-                    & > .dropdown-menu {
-                        margin: 0;
-                        padding: 0;
-                        border-radius: 0 0 0.25rem 0.25rem;
-                        & .dropdown-item {
-                            padding: 0;
-                            &:hover,
-                            &:active {
-                                background-color: #ddd;
-                                & a {
-                                    color: #333;
-                                }
+                } 
+                & > .navbar-collapse {
+                    & .navbar-nav > li {
+                        & > a {
+                            cursor: pointer;
+                            &::after {
+                                display: inline-block;
                             }
-                            &:last-child {
-                                border-radius: 0 0 0.25rem 0.25rem;
-                            }
-                            &.active {
-                                background-color: #777;
-                                & a {
-                                    color: #fff;
-                                }
-                            }
-                            & a {
-                                display: block;
-                                padding: 0.5rem 0.75rem;
-                                color: #333;
-                                text-decoration: none;
-                                & .lang-flag {
-                                    margin-right: 5px;
-                                }
+                            & > .lang-flag {
+                                vertical-align: baseline;
+                                width: 17px;
+                                margin-right: 6px;
                             }
                         }
-                    }
-                }
-                & > .collapse > .navbar-nav > li {
-                    & > a::after  {
-                        display: none;
-                    }
-                    & > .dropdown-menu  {
-                        margin: 0.5rem 0 0;
+                        & > #menu_lang {
+                            & > span {
+                                display: inline-block;
+                            }
+                        }
+                        & > .dropdown-menu {
+                            border-width: 0;
+                            background-color: $sm-nav-background;
+                            &.lang-menu {
+                                left: 0;
+                                & > li .lang-flag {
+                                    vertical-align: initial;
+                                    width: 17px;
+                                    margin-right: 6px;
+                                }
+                            }
+                            & > .dropdown-item {
+                                padding: 0;
+                                border-width: 0;
+                                &:hover,
+                                &:active {
+                                    background-color: $sm-nav-background;
+                                    & a {
+                                        color: $sm-nav-color-hover;
+                                    }
+                                }
+                                & > a {
+                                    padding: 0.5rem 0;
+                                    color: $sm-nav-color;
+                                    & > .lang-flag {
+                                        vertical-align: inherit;
+                                    }
+                                }                            
+                            }
+                        }
                     }
                 }
             }

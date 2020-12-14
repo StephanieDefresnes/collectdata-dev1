@@ -1,0 +1,79 @@
+forget_password:
+    title: Mot de passe oublié
+    h1: Mot de passe oublié
+    btn:
+        submit: Envoyer
+    flash:
+        check_email: |
+            Un e-mail a été envoyé. Il contient un lien sur lequel il vous faudra cliquer pour réinitialiser votre mot de passe.
+            Si vous ne recevez pas d'email, vérifiez votre dossier spam ou essayez à nouveau.
+    email:
+        subject: 'Réinitialisation de votre mot de passe'
+        message: |
+            Bonjour %user%,
+            
+            Pour réinitialiser votre mot de passe, merci de cliquer <a href="%confirmation_url%">ici</a>.
+            
+            Ce lien ne peut être utilisé qu'une seule fois.
+            
+            Si vous n'êtes pas à l'origine de cette demande, veuillez ne pas tenir compte de ce message.
+            
+            Cordialement,
+            <a href="%host%">%website_name%</a>
+    label:
+        email: Email
+login:
+    title: S'identifier
+    h1: Veuillez vous connecter
+    link:
+        logout: Se déconnecter
+        forget_password: Mot de passe oublié ?
+        registration: Inscription
+    message:
+        welcome: Bienvenue %user%
+        logged_as: Vous êtes connecté en tant que %user%
+        email_not_found: Ce email n'a pas pu être trouvé.
+        not_activated: Ce compte n'est pas activé.
+    label:
+        email: Email
+        password: Mot de passe
+        remember_me: Se souvenir de moi
+    btn:
+        submit: Connexion
+registration:
+    title: Inscription
+    h1: Inscription
+    btn:
+        submit: Inscription
+    email:
+        subject: Bienvenue %user%
+        message: |
+            Bonjour %user%,
+
+            Pour valider votre compte utilisateur, merci de cliquer <a href="%confirmation_url%">ici</a>.
+
+            Ce lien ne peut être utilisé qu'une seule fois pour valider votre compte.
+
+            Cordialement,
+            <a href="%host%">%website_name%</a>
+    flash:
+        check_email: Un e-mail a été envoyé à l'adresse %email%. Il contient un lien d'activation sur lequel il vous faudra cliquer afin d'activer votre compte.
+        confirmed: Félicitations %user%, votre compte est maintenant activé.
+    label:
+        email: Email
+        name: Nom
+        password: Mot de passe
+        repeat_password: Répéter le mot de passe
+        agree_terms: J'accepte les conditions d'utilisation
+    terms_link: Lire nos %link_start%conditions d'utilisation%link_end%
+reset_password:
+    title: Réinitialiser le mot de passe
+    h1: Réinitialiser le mot de passe
+    btn:
+        submit: Réinitialiser
+    flash:
+        success: Le mot de passe a été modifié.
+    label:
+        current_password: Ancien mot de passe
+        new_password: Nouveau mot de passe
+        repeat_new_password: Répéter le nouveau mot de passe

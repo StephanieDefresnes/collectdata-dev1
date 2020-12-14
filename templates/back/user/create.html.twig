@@ -1,0 +1,39 @@
+{% trans_default_domain 'back_messages' %}
+{% extends "back/layout.html.twig" %}
+
+{% block title %}{{ 'user.create.title'|trans() }}{% endblock %}
+
+{% block content %}
+<section class="pt-4 pb-4">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-6">
+                <h1 class="h3">{{ 'user.create.h1'|trans() }}</h1>
+            </div>
+            <div class="col-sm-6 text-right">
+                <p>
+                    <a href="{{ path('back_user_search') }}" class="btn btn-primary" role="button">
+                        <i class="fas fa-reply"></i> {{ 'button.back'|trans() }}
+                    </a>
+                </p>
+            </div>
+        </div>
+        <hr>
+        <div class="card mt-4 mb-4">
+            <div class="card-body">
+                <h2 class="card-title">{{ 'user.create.h2'|trans() }}</h2>
+                <div class="p-4 border border-light">
+                    {{ form_start(form) }}
+                        {{ form_row(form.name) }}
+                        {{ form_row(form.email) }}
+                        {{ form_row(form.roles) }}
+                        <button class="btn btn-primary btn-block">
+                            <i class="far fa-paper-plane"></i> {{ 'button.submit'|trans() }}
+                        </button>
+                    {{ form_end(form) }}
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

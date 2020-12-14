@@ -1,0 +1,11 @@
+registration:
+    message:
+        unique_email: Il y a déjà un compte avec ce email
+        password_not_blank: Veuillez entrer un mot de passe
+        password_length_min: Votre mot de passe doit comporter au moins 6 caractères
+        repeated_password_invalid: Les champs de mot de passe doivent correspondre
+        agree_terms_is_true: Vous devez accepter nos conditions
+reset_password:
+    message:
+        current_password_wrong: Votre mot de passe actuel n'est pas valide
+        repeated_new_password_invalid: Les champs du nouveau mot de passe doivent correspondre

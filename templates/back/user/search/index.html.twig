@@ -1,0 +1,107 @@
+{% trans_default_domain 'back_messages' %}
+{% extends "back/layout.html.twig" %}
+
+{% set can_create = true %}
+{% set can_read = true %}
+{% set can_update = true %}
+{% set can_delete = true %}
+{% set can_filter = true %}
+{% set can_multi_select = true %}
+
+{% block title %}{{ 'user.search.title'|trans() }}{% endblock %}
+
+{% block content %}
+{% if can_delete %}
+    <div id="delete" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 id="modal_title" class="modal-title">{{ 'user.delete.modal_title'|trans() }}</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="X">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div id="modal_body" class="modal-body">
+                    <h6 id="modal_body_title"></h6>
+                    <div class="alert alert-warning">
+                        <strong>{{ 'delete.warning'|trans() }}</strong>
+                    </div>
+                </div>
+                <div id="modal_footer" class="modal-footer">
+                    {{ form_start(form_delete, {'attr': {'id': 'form_back_user_delete' }}) }}
+                        <button type="submit" class="btn btn-danger">{{ 'button.delete'|trans() }}</button>
+                    {{ form_end(form_delete) }}
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">{{ 'button.cancel'|trans() }}</button>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endif %}
+<section class="pt-4 pb-4">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-6">
+                <h1 class="h3">{{ 'user.search.h1'|trans() }}</h1>
+            </div>
+            <div class="col-sm-6 text-right">
+                <p>
+                    {% if can_create %}
+                        <a href="{{ path('back_user_create') }}" class="btn btn-primary">
+                            <i class="fas fa-plus"></i> {{ 'user.button.create'|trans() }}
+                        </a>
+                    {% endif %}
+                </p>
+            </div>
+        </div>
+        <hr>
+
+        {% if can_filter %}
+            {{ include('back/user/search/_filter.html.twig') }}
+        {% endif %}
+
+        {{ include('back/user/search/_list.html.twig') }}
+
+        {{ include('back/user/search/_pagination.html.twig') }}
+
+    </div>
+</section>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+
+    {% if can_delete %}
+        <script>
+            $(document).ready(function(){
+                $('.btn-delete').click(function(){
+                    var title = $(this).attr('data-title');
+                    var path = $(this).attr('data-path');
+                    $('#form_back_user_delete').attr('action', path);
+                    $('#modal_body_title').html("{{ 'delete.confirm'|trans() }} : <strong>"+title+"</strong>");
+                });
+            });
+        </script>
+    {% endif %}
+
+    {% if can_multi_select %}
+        <script>
+            $(document).ready(function(){
+                $("#check_all").click(function(){
+                    $('input:checkbox').not(this).prop('checked', this.checked);
+                });
+                $("#select_all").change(function() {
+                    if (this.checked) {
+                        $(".select").each(function() {
+                            this.checked=true;
+                        });
+                    } else {
+                        $(".select").each(function() {
+                            this.checked=false;
+                        });
+                    }
+                });
+            });
+        </script>
+    {% endif %}
+
+{% endblock %}
