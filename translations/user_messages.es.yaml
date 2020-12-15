@@ -4,6 +4,23 @@ nav:
     account_profile: Mi informacion
     account_reset_password: Cambiar la contraseña
     contrib: Contribución
-    contribs: Mes contribuciones
+    contribs: Mis contribuciones
     add_contrib: Agregar una contribución
     translate_contrib: Traducir contribución
+account:
+    name: Apellido :
+    email: Email :
+    roles: 
+        title: Estado :
+        title_s: Estados :
+        user: Contribuyente
+        moderator: Moderador
+        admin: Administrador
+        super_admin: Superadministrador
+    date_create: Fecha de creación :
+    default_lang: 
+        title: Lengua :
+        default: Defecto (FR)
+    contribs: Numero de contribuciones :
+    no_contrib: Sin contribución
+    update: Modify my account

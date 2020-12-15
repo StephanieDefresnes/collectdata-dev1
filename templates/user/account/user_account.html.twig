@@ -1,10 +1,81 @@
 {% extends 'user/layout.html.twig' %}
-{% trans_default_domain 'front_messages' %}
+{% trans_default_domain 'user_messages' %}
 
 {% block title %}{% endblock %}
 
 {% block content %}
-    <div class="container">
-        
+    <section class="pt-4 pb-4">
+        <div class="container">
+            <h1 class="h3 mb-3 font-weight-normal">{{ 'nav.account_profile'|trans() }}</h1>
+            <div class="row">
+                <div class="col-md-8">
+                    <div class="card mt-4 mb-4">
+                        <h5 class="card-header text-uppercase">{{ user.name }}</h5>
+                        <div class="card-body">
+                            <p class="row">
+                                <span class="col-md-5 text-secondary">{{ 'account.email'|trans() }}</span>
+                                <span class="col-md-7">{{ user.email }}</span>                                
+                            </p>
+                            <p class="row">
+                                <span class="col-md-5 text-secondary">{{ 'account.date_create'|trans() }}</span>
+                                <span class="col-md-7 first-letter">{{ user.dateCreate|format_datetime('full', 'short', locale='fr') }}</span>                                
+                            </p>
+                            <p class="row">
+                                <span class="col-md-5 text-secondary">{{ 'account.default_lang.title'|trans() }}</span>
+                                <span class="col-md-7 first-letter">
+                                    {% if user_lang is empty %}
+                                        {{ 'account.default_lang.default'|trans() }}
+                                    {% else %}
+                                        {{ user_lang }}
+                                    {% endif %}
+                                </span>                                
+                            </p>
+                            <p class="row">
+                                <span class="col-md-5 text-secondary">
+                                    {% if user.roles|length == 1 %}
+                                    {{ 'account.roles.title'|trans() }}
+                                    {% else %}
+                                    {{ 'account.roles.title_s'|trans() }}
+                                    {% endif %}
+                                </span>
+                                <span class="col-md-7">
+                                    {% for role in user.roles %}
+                                        {% if role == 'ROLE_USER' %}{{ 'account.roles.user'|trans() }}
+                                        {% elseif role == 'ROLE_MODERATOR' %}{{ 'account.roles.moderator'|trans() }}
+                                        {% elseif role == 'ROLE_ADMIN' %}{{ 'account.roles.admin'|trans() }}
+                                        {% elseif role == 'ROLE_SUPER_ADMIN' %}{{ 'account.roles.super_admin'|trans() }}{% endif %}
+                                        {% if not loop.last %},{% endif %}
+                                    {% endfor %}
+                                </span>                                
+                            </p>
+                            <p class="row">
+                                <span class="col-md-5 text-secondary">
+                                    {{ 'account.contribs'|trans() }}
+                                </span>
+                                <span class="col-md-7">
+                                    {% if user.contribs is empty %}
+                                        {{ 'account.no_contrib'|trans() }}
+                                    {% else %}
+                                        {{ user.contribs }}
+                                    {% endif %}
+                                </span>                                
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 mt-5 pt-5">
+                    <p class="mb-3 text-center">
+                        <a href="#" class="btn btn-secondary">
+                            {{ 'account.update'|trans() }}
+                        </a>
+                    </p>
+                    <p class="text-center">
+                        <a href="{{ path('app_reset_password', { 'id': app.user.id }) }}" class="btn btn-warning">
+                            {{ 'nav.account_reset_password'|trans() }}
+                        </a>
+                    </p>
+                </div>
+            </div>
+        </div>
     </div>
 {% endblock %}

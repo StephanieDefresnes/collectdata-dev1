@@ -7,3 +7,20 @@ nav:
     contribs: Mes contributions
     add_contrib: Ajouter une contribution
     translate_contrib: Traduire une contribution
+account:
+    name: Nom :
+    email: Email :
+    roles: 
+        title: Statut :
+        title_s: Statuts :
+        user: Contributeur
+        moderator: Modérateur
+        admin: Administrateur
+        super_admin: Super administrateur
+    date_create: Date de création :
+    default_lang: 
+        title: Langue :
+        default: Défaut (FR)
+    contribs: Nombre de contributions :
+    no_contrib: Aucune contribution
+    update: Modifier mon compte
