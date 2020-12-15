@@ -1,0 +1,9 @@
+nav:
+    account: Account
+    account_logout: Logout
+    account_profile: My profile
+    account_reset_password: Reset password
+    contrib: Contribution
+    contribs: My contributions
+    add_contrib: Add contribution
+    translate_contrib: Translate contribution

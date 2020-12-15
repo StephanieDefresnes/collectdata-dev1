@@ -1,0 +1,9 @@
+nav:
+    account: Cuenta
+    account_logout: Desconexión
+    account_profile: Mi informacion
+    account_reset_password: Cambiar la contraseña
+    contrib: Contribución
+    contribs: Mes contribuciones
+    add_contrib: Agregar una contribución
+    translate_contrib: Traducir contribución

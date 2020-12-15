@@ -51,4 +51,4 @@ security:
         - { path: ^/%app_locales%/front/*, roles: ROLE_SUPER_ADMIN }
         - { path: ^/%app_locales%/front/*, roles: ROLE_ADMIN }
         - { path: ^/%app_locales%/front/*, roles: ROLE_MODERATOR }
-        - { path: ^/%app_locales%/front/*, roles: ROLE_USER }
+        - { path: ^/%app_locales%/*, roles: ROLE_USER }

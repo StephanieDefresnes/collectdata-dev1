@@ -42,6 +42,11 @@ body {
                 }
             } 
             & .navbar-nav {
+                &.navbar-user {
+                    & .dropdown-menu {
+                        top: 47px;
+                    }
+                }
                 & > li {
                     & > a {
                         cursor: pointer;
