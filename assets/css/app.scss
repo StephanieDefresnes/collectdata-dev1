@@ -16,10 +16,8 @@ $nav-background:#343a40;
     }
 }
 
-#banner {
-    & .user-date:first-letter {
-        text-transform: capitalize;
-    }
+.first-letter:first-letter {
+    text-transform: capitalize;
 }
 .rtl {
     
