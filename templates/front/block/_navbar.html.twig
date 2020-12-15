@@ -14,8 +14,9 @@
             <ul class="navbar-nav mr-auto">
                 {% if not app.user %}
                     {% include 'front/block/_locale_switcher.html.twig' %}
+                {% else %}
+                    {% include "block/_contrib.html.twig" %}
                 {% endif %}
-                {% include "block/_contrib.html.twig" %}
             </ul>
             <div class="d-flex">
                 <ul class="navbar-nav">
