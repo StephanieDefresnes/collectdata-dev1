@@ -22,7 +22,7 @@ use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
- * @Route("/back/user")
+ * @Route("/{_locale<%app_locales%>}/back/user")
  */
 class UserController extends AbstractController
 {

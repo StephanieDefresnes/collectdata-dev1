@@ -7,7 +7,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
- * @Route("/back")
+ * @Route("/{_locale<%app_locales%>}/back")
  */
 class PageController extends AbstractController
 {
