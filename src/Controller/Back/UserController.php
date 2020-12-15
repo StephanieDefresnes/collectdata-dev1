@@ -51,7 +51,7 @@ class UserController extends AbstractController
     }
 
     /**
-     * @Route("/search/{page}", name="back_user_search", methods="GET|POST")
+     * @Route("/{_locale<%app_locales%>}/search/{page}", name="back_user_search", methods="GET|POST")
      */
     public function search(Request $request, Session $session, $page=null)
     {
@@ -83,7 +83,7 @@ class UserController extends AbstractController
     }
 
     /**
-     * @Route("/create", name="back_user_create", methods="GET|POST")
+     * @Route("/{_locale<%app_locales%>}/create", name="back_user_create", methods="GET|POST")
      */
     public function create(Request $request, UserPasswordEncoderInterface $passwordEncoder, Mailer $mailer): Response
     {
@@ -122,7 +122,7 @@ class UserController extends AbstractController
     }
 
     /**
-     * @Route("/read/{id}", name="back_user_read", methods="GET")
+     * @Route("/{_locale<%app_locales%>}/read/{id}", name="back_user_read", methods="GET")
      */
     public function read(User $user): Response
     {
@@ -134,7 +134,7 @@ class UserController extends AbstractController
     }
 
     /**
-     * @Route("/{id}/update", name="back_user_update", methods="GET|POST")
+     * @Route("/{_locale<%app_locales%>}/{id}/update", name="back_user_update", methods="GET|POST")
      */
     public function update(Request $request, User $user): Response
     {
@@ -156,7 +156,7 @@ class UserController extends AbstractController
     }
 
     /**
-     * @Route("/delete", name="back_user_delete", methods="GET|POST")
+     * @Route("/{_locale<%app_locales%>}/delete", name="back_user_delete", methods="GET|POST")
      */
     public function delete(Request $request): Response
     {    
@@ -192,7 +192,7 @@ class UserController extends AbstractController
     }
     
     /**
-     * @Route("/permute/enabled", name="back_user_permute_enable", methods="GET")
+     * @Route("/{_locale<%app_locales%>}/permute/enabled", name="back_user_permute_enable", methods="GET")
      */
     public function permuteEnabled(Request $request): Response
     {    
