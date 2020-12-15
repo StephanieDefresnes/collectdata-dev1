@@ -1,0 +1,24 @@
+{% trans_default_domain 'user_messages' %}
+<li class="nav-item dropdown">
+    <a class="nav-link dropdown-toggle" id="dropdown_contribs" 
+       data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            {{ 'nav.contrib'|trans() }}
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="dropdown_contribs">
+        <li class="dropdown-item">
+            <a href="#">
+                <i class="far fa-list-alt"></i> {{ 'nav.contribs'|trans() }}
+            </a>
+        </li>
+        <li class="dropdown-item">
+            <a href="#">
+                <i class="far fa-edit"></i> {{ 'nav.add_contrib'|trans() }}
+            </a>
+        </li>
+        <li class="dropdown-item">
+            <a href="#">
+                <i class="fas fa-globe"></i> {{ 'nav.translate_contrib'|trans() }}
+            </a>
+        </li>
+    </ul>
+</li>

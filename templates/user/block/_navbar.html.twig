@@ -1,5 +1,4 @@
 {% trans_default_domain 'front_messages' %}
-{% trans_default_domain 'user_messages' %}
 {% set route = app.request.get('_route') %}
 <div class="container-fluid">
     <nav class="navbar navbar-expand-md navbar-dark bg-dark mb-4" role="navigation">
@@ -13,30 +12,7 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav mr-auto navbar-user">
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" id="dropdown_contribs" 
-                       data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            {{ 'nav.contrib'|trans() }}
-                    </a>
-                    <ul class="dropdown-menu" aria-labelledby="dropdown_contribs">
-                        <li class="dropdown-item">
-                            <a href="#">
-                                <i class="far fa-list-alt"></i> {{ 'nav.contribs'|trans() }}
-                            </a>
-                        </li>
-                        <li class="dropdown-item">
-                            <a href="#">
-                                <i class="far fa-edit"></i> {{ 'nav.add_contrib'|trans() }}
-                            </a>
-                        </li>
-                        <li class="dropdown-item">
-                            <a href="€">
-                                <i class="fas fa-globe"></i> {{ 'nav.translate_contrib'|trans() }}
-                            </a>
-                        </li>
-                    </ul>
-                </li>
-                
+                {% include "block/_contrib.html.twig" %}
             </ul>
             <div class="d-flex">
                 <ul class="navbar-nav">
