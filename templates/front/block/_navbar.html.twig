@@ -40,11 +40,6 @@
                                     </a>
                                 </li>
                             {% endif %}
-                            <li class="dropdown-item{{ route == 'app_reset_password' ? ' active' }}">
-                                <a href="{{ path('app_reset_password', { 'id': app.user.id }) }}">
-                                    <i class="fas fa-key"></i> {{ 'nav.account_reset_password'|trans() }}
-                                </a>
-                            </li>
                             <li class="dropdown-item">
                                 <a href="{{ path('app_logout') }}">
                                     <i class="fas fa-sign-out-alt"></i> {{ 'nav.account_logout'|trans() }}
