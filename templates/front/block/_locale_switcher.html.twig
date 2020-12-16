@@ -21,6 +21,7 @@
                 <li class="dropdown-item">
                     <a class="" href="{{ path(route, params|merge({ _locale: locale })) }}">
                         <img src="{{ asset('img/flag/'~ locale ~'.jpg') }}" alt="{{ locale }}" class="lang-flag">
+                        <span class="text-capitalize">{{ locale|locale_name(locale) }}</span>
                     </a>
                 </li>
             {% endif %}
