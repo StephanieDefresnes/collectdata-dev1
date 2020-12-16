@@ -28,10 +28,8 @@ class RegistrationController extends AbstractController
     /**
      * @Route("/{_locale<%app_locales%>}/register",name="front_register")
      */
-    public function register(TranslatorInterface $translator, $locales, $defaultLocale, Request $request, UserPasswordEncoderInterface $passwordEncoder, Mailer $mailer): Response
-    {
-        $locale = $request->getLocale();
-        
+    public function register(Request $request, UserPasswordEncoderInterface $passwordEncoder, Mailer $mailer): Response
+    {        
         $user = new User();
         $form = $this->createForm(RegistrationFormType::class, $user);
         $form->handleRequest($request);

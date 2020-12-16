@@ -13,7 +13,7 @@ class PageController extends AbstractController
     /**
      * @Route("/{_locale<%app_locales%>}",name="front_home")
      */
-    public function index(TranslatorInterface $translator, $locales, $defaultLocale, Request $request): Response
+    public function index(Request $request): Response
     {
         $locale = $request->getLocale();
         return $this->render('front/page/index.html.twig', [
