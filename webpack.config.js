@@ -30,6 +30,7 @@ Encore
     .addEntry('back_app', './assets/js/back_app.js')
     .addEntry('front_app', './assets/js/front_app.js')
     .addEntry('app', './assets/js/app.js')
+    .addEntry('user_update_app', './assets/js/user_update_app.js')
     
     // When enabled, Webpack "splits" your files into smaller pieces for greater optimization.
     .splitEntryChunks()
