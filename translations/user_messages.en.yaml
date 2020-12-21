@@ -8,8 +8,10 @@ nav:
     add_contrib: Add contribution
     translate_contrib: Translate contribution
 account:
+    reset_password: Reset password
     name: Name :
     email: Email :
+    lang_choice: Choix de langue :
     roles: 
         title: Status :
         title_s: Status :
@@ -23,4 +25,8 @@ account:
         default: Default (FR)
     contribs: Number of contributions :
     no_contrib: No contribution
-    update: Modify my account
+    update:
+        title: Modify my account
+        submit: Modify
+        flash:
+            success: Your profile has been modified

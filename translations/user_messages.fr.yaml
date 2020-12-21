@@ -2,14 +2,16 @@ nav:
     account: Compte
     account_logout: Déconnection
     account_profile: Mes informations
-    account_reset_password: Modifier le mot de passe
+    account_reset_password: Modifier mon mot de passe
     contrib: Contribution
     contribs: Mes contributions
     add_contrib: Ajouter une contribution
     translate_contrib: Traduire une contribution
 account:
+    reset_password: Modifier mon mot de passe
     name: Nom :
     email: Email :
+    lang_choice: Choix de langue :
     roles: 
         title: Statut :
         title_s: Statuts :
@@ -23,4 +25,9 @@ account:
         default: Défaut (FR)
     contribs: Nombre de contributions :
     no_contrib: Aucune contribution
-    update: Modifier mon compte
+    update:
+        title: Modifier mon compte
+        submit: Enregistrer
+        flash:
+            success: Votre profil a bien été modifié
+            

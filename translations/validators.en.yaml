@@ -9,3 +9,6 @@ reset_password:
     message:
         current_password_wrong: Wrong value for your current password
         repeated_new_password_invalid: The new password fields must match.
+account:
+    message:
+        unique_email: There is already an account with this email

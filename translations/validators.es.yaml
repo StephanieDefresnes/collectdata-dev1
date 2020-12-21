@@ -9,3 +9,6 @@ reset_password:
     message:
         current_password_wrong: Tu contraseña actual no es válida
         repeated_new_password_invalid: Los campos de la nueva contraseña deben coincidir
+account:
+    message:
+        unique_email: Ya existe una cuenta con este correo electrónico

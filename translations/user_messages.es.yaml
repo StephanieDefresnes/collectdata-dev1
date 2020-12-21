@@ -8,6 +8,7 @@ nav:
     add_contrib: Agregar una contribución
     translate_contrib: Traducir contribución
 account:
+    reset_password: Cambiar la contraseña
     name: Apellido :
     email: Email :
     roles: 
@@ -23,4 +24,8 @@ account:
         default: Defecto (FR)
     contribs: Numero de contribuciones :
     no_contrib: Sin contribución
-    update: Modificar mi cuenta
+    update:
+        title: Modificar mi cuenta
+        submit: Modificar
+        flash:
+            success: Tu perfil ha sido modificado
