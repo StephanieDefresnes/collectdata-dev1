@@ -36,7 +36,7 @@ class Lang
      * @ORM\Column(type="boolean")
      */
     private $enabled;
-
+    
     public function getId(): ?int
     {
         return $this->id;

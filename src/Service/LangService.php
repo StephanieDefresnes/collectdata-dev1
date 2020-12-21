@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Service;
 
 use App\Entity\Lang;
@@ -13,7 +14,7 @@ class LangService {
         $this->em = $em;
     }
 
-    public function getLangEnabled()
+    public function getLangsEnabled()
     {
         $result = [];
         
@@ -25,18 +26,17 @@ class LangService {
         
         foreach ($langs as $lang) {
             $result[] = [ 
-                'id' => $lang->geId(),
+                'id' => $lang->getId(),
                 'lang' => $lang->getLang(),
-                'name' => $lang->getName(),
+                'name' => html_entity_decode($lang->getName(), ENT_QUOTES, 'UTF-8'),
                 'english_name' => $lang->getEnglishName(),
             ];
         }
-        $result = implode(",", $result);
         return $result;
         
     }
 
-    public function getLangNotEnabled()
+    public function getLangsNotEnabled()
     {
         $result = [];
         
@@ -50,6 +50,7 @@ class LangService {
             $result[] = [ 
                 'id' => $lang->geId(),
                 'lang' => $lang->getLang(),
+                'name' => html_entity_decode($lang->getName(), ENT_QUOTES, 'UTF-8'),
                 'english_name' => $lang->getEnglishName(),
             ];
         }
