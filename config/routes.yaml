@@ -2,15 +2,3 @@
 #    path: /
 #    controller: App\Controller\DefaultController::index
 #
-#front_register:
-#    path: /{_locale}/register
-#    controller: App\Controller\Front\RegistrationController::register
-#    requirements:
-##        _locale: '@App\Service\LangService'
-#        _locale: ar|en|es|fr|it|tr
-#app_login:
-#    path: /{_locale}/login
-#    controller: App\Controller\SecurityController::login
-#    requirements:
-##        _locale: '@App\Service\LangService'
-#        _locale: ar|en|es|fr|it|tr
