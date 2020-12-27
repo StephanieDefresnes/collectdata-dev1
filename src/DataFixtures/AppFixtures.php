@@ -3,6 +3,7 @@
 namespace App\DataFixtures;
 
 use App\Entity\Lang;
+use App\Entity\Score;
 use App\Entity\Status;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
@@ -1291,8 +1292,32 @@ class AppFixtures extends Fixture
         $manager->persist($status3);
 
         $status4 = new Status();
-        $status4->setName("refused");
+        $status4->setScore("refused");
         $manager->persist($status4);
+
+        $score1 = new Score();
+        $status4->setScore(1);
+        $status4->setName("Success");
+        $status4->setColorClass("success");
+        $manager->persist($score1);
+
+        $score2 = new Score();
+        $status4->setScore(2);
+        $status4->setName("Do better");
+        $status4->setColorClass("primary");
+        $manager->persist($score2);
+
+        $score3 = new Score();
+        $status4->setScore(3);
+        $status4->setName("Warning");
+        $status4->setColorClass("warning");
+        $manager->persist($score3);
+
+        $score4 = new Score();
+        $status4->setScore(4);
+        $status4->setName("Danger");
+        $status4->setColorClass("danger");
+        $manager->persist($score4);
 
         $manager->flush();
     }
