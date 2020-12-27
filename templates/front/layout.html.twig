@@ -14,9 +14,11 @@
             {% include "front/block/_navbar.html.twig" %}
         {% endblock %}
 
-        {% block content %}
-            {% block banner%}{% endblock %}
-        {% endblock %}
+        <div class="container py-4">
+            {% block content %}
+                {% block banner%}{% endblock %}
+            {% endblock %}
+        </div>
 
         {% block footer %}
             {% include "block/_footer.html.twig" %}
