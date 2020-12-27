@@ -6,7 +6,7 @@
     </a>
     <ul class="dropdown-menu" aria-labelledby="dropdown_contribs">
         <li class="dropdown-item">
-            <a href="#">
+            <a href="{{ path('user_situs', { 'id': app.user.id }) }}">
                 <i class="far fa-list-alt"></i> {{ 'nav.contribs'|trans() }}
             </a>
         </li>
