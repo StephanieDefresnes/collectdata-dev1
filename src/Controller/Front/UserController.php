@@ -98,6 +98,8 @@ class UserController extends AbstractController
                 $lang = $this->langService->getUserLang($request_lang_id);
                 $user_lang = $lang->getLang();
             }
+            
+            $user->setUpdated();
         
             $this->getDoctrine()->getManager()->flush();
             $msg = $this->translator->trans('account.update.flash.success', [], 'user_messages', $locale = $user_lang);

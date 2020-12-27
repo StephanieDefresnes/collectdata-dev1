@@ -96,8 +96,8 @@ class User implements UserInterface
      */
     public function setCreated()
     {
-        $this->setCreatedAt(new \DateTime());
-        $this->setUpdatedAt(new \DateTime());
+        $this->setDateCreate(new \DateTime());
+        $this->setDateUpdate(new \DateTime());
     }
 
     /**
@@ -105,7 +105,7 @@ class User implements UserInterface
      */
     public function setUpdated()
     {
-        $this->setUpdatedAt(new \DateTime());
+        $this->setDateUpdate(new \DateTime());
     }
 
     public function getId(): ?int
