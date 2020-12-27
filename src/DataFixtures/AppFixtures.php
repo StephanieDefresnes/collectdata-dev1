@@ -1292,31 +1292,31 @@ class AppFixtures extends Fixture
         $manager->persist($status3);
 
         $status4 = new Status();
-        $status4->setScore("refused");
+        $status4->setName("refused");
         $manager->persist($status4);
 
         $score1 = new Score();
-        $status4->setScore(1);
-        $status4->setName("Success");
-        $status4->setColorClass("success");
+        $score1->setScore(1);
+        $score1->setName("Success");
+        $score1->setColorClass("success");
         $manager->persist($score1);
 
         $score2 = new Score();
-        $status4->setScore(2);
-        $status4->setName("Do better");
-        $status4->setColorClass("primary");
+        $score2->setScore(2);
+        $score2->setName("Do better");
+        $score2->setColorClass("primary");
         $manager->persist($score2);
 
         $score3 = new Score();
-        $status4->setScore(3);
-        $status4->setName("Warning");
-        $status4->setColorClass("warning");
+        $score3->setScore(3);
+        $score3->setName("Warning");
+        $score3->setColorClass("warning");
         $manager->persist($score3);
 
         $score4 = new Score();
-        $status4->setScore(4);
-        $status4->setName("Danger");
-        $status4->setColorClass("danger");
+        $score4->setScore(4);
+        $score4->setName("Danger");
+        $score4->setColorClass("danger");
         $manager->persist($score4);
 
         $manager->flush();
