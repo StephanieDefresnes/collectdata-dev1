@@ -42,6 +42,11 @@ class CategoryLevel1
      */
     private $langId;
 
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $validated;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -103,6 +108,18 @@ class CategoryLevel1
     public function setLangId(int $langId): self
     {
         $this->langId = $langId;
+
+        return $this;
+    }
+
+    public function getValidated(): ?bool
+    {
+        return $this->validated;
+    }
+
+    public function setValidated(bool $validated): self
+    {
+        $this->validated = $validated;
 
         return $this;
     }
