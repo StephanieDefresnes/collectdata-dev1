@@ -30,4 +30,15 @@ account:
         submit: Enregistrer
         flash:
             success: Votre profil a bien été modifié
-            
+contribs:
+    title: Mes contributions
+    thead:
+        id: N°
+        title: Titre
+        description: Description
+        date_creation: Date de Création
+        date_last_update: Dernière mise à jour
+        date_submission: Date de valisation
+        category_level1: Catégorie
+        category_level2: Sous-catégorie
+        lang: Langue

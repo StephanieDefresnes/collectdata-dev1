@@ -29,3 +29,15 @@ account:
         submit: Modificar
         flash:
             success: Tu perfil ha sido modificado
+contribs:
+    title: Mis contribuciones
+    thead:
+        id: No.
+        title: Título
+        description: Descripción
+        date_creation: Fecha de creación
+        date_last_update: Última actualización
+        date_submission: Date de valisation
+        category_level1: Categoría
+        category_level2: Subcategoría
+        lang: Lengua

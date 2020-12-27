@@ -30,3 +30,15 @@ account:
         submit: Modify
         flash:
             success: Your profile has been modified
+contribs:
+    title: My contributions
+    thead:
+        id: No.
+        title: Title
+        description: Description
+        date_creation: Creation Date
+        date_last_update: Last update
+        date_submission: Validation date
+        category_level1: Category
+        category_level2: Sub-category
+        lang: Language
