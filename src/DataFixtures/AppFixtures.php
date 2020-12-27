@@ -3,6 +3,7 @@
 namespace App\DataFixtures;
 
 use App\Entity\Lang;
+use App\Entity\Status;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 
@@ -1276,6 +1277,22 @@ class AppFixtures extends Fixture
         $lang180->setEnglishName("Zulu");
         $lang180->setEnabled(0);
         $manager->persist($lang180);
+
+        $status1 = new Status();
+        $status1->setName("redaction");
+        $manager->persist($status1);
+
+        $status2 = new Status();
+        $status2->setName("validation");
+        $manager->persist($status2);
+
+        $status3 = new Status();
+        $status3->setName("validated");
+        $manager->persist($status3);
+
+        $status4 = new Status();
+        $status4->setName("refused");
+        $manager->persist($status4);
 
         $manager->flush();
     }
