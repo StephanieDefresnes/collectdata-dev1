@@ -31,10 +31,13 @@ class UserController extends AbstractController
      */
     private $translator;
     
-    public function __construct(LangService $langService, TranslatorInterface $translator)
+    private $defaultLocale;
+    
+    public function __construct(LangService $langService, TranslatorInterface $translator, $defaultLocale = 'fr')
     {
         $this->langService = $langService;
         $this->translator = $translator;
+        $this->defaultLocale = $defaultLocale;
     }
 
     /**
@@ -82,15 +85,27 @@ class UserController extends AbstractController
                 'id' => $this->getUser()->getId()
             ]);
         $langs = $this->langService->getLangsEnabled();
+        $user_lang_id = $this->getUser()->getLangId();
         
         if ($form->isSubmitted() && $form->isValid()) {
+            
+            $request_lang_id = $request->request->get('user_update_form')['langId'];
+            $user_lang;
+                
+            if ($request_lang_id == null) {
+                $user_lang = $this->defaultLocale;
+            } else {
+                $lang = $this->langService->getUserLang($request_lang_id);
+                $user_lang = $lang->getLang();
+            }
+        
             $this->getDoctrine()->getManager()->flush();
-            $msg = $this->translator->trans('account.update.flash.success', [], 'user_messages');
+            $msg = $this->translator->trans('account.update.flash.success', [], 'user_messages', $locale = $user_lang);
             $this->addFlash('success', $msg);
-            return $this->redirectToRoute('user_account', ['id' => $user->getId()]);
+            
+            return $this->redirectToRoute('user_account', ['id' => $user->getId(), '_locale' => $user_lang]);
         }
         
-
         return $this->render('front/user/account/user_update.html.twig', [
             'user' => $user,
             'langs' => $langs,

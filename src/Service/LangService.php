@@ -14,6 +14,19 @@ class LangService {
         $this->em = $em;
     }
 
+    public function getUserLang($user_lang_id)
+    {
+        
+        $repository = $this->em->getRepository(Lang::class);
+        
+        $lang = $repository->findOneBy(
+            ['id' => $user_lang_id]
+        );
+        
+        return $lang;
+        
+    }
+
     public function getLangsEnabled()
     {
         $result = [];
