@@ -29,9 +29,9 @@ account:
         submit: Modificar
         flash:
             success: Tu perfil ha sido modificado
-contribs:
+contrib:
     title: Mis contribuciones
-    thead:
+    table:
         id: No.
         title: Título
         description: Descripción
@@ -41,3 +41,4 @@ contribs:
         category_level1: Categoría
         category_level2: Subcategoría
         lang: Lengua
+        actions: Acciones

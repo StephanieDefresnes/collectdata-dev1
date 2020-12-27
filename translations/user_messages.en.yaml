@@ -30,9 +30,9 @@ account:
         submit: Modify
         flash:
             success: Your profile has been modified
-contribs:
+contrib:
     title: My contributions
-    thead:
+    table:
         id: No.
         title: Title
         description: Description
@@ -42,3 +42,4 @@ contribs:
         category_level1: Category
         category_level2: Sub-category
         lang: Language
+        actions: Actions

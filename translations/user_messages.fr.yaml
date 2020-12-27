@@ -30,9 +30,9 @@ account:
         submit: Enregistrer
         flash:
             success: Votre profil a bien été modifié
-contribs:
+contrib:
     title: Mes contributions
-    thead:
+    table:
         id: N°
         title: Titre
         description: Description
@@ -42,3 +42,4 @@ contribs:
         category_level1: Catégorie
         category_level2: Sous-catégorie
         lang: Langue
+        actions: Actions
