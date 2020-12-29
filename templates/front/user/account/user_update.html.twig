@@ -4,14 +4,15 @@
 {% block title %}{{ 'account.update.title'|trans() }}{% endblock %}
 
 {% block content %}
-<section class="pt-4 pb-4">
-    <div class="container">
+    <div class="container py-4">
+        {% block banner%}
+            <h1 class="h3 mb-0 font-weight-normal">{{ 'account.update.title'|trans() }}</h1>
+        {% endblock %}
         <div class="col-lg-7 mx-auto">
-            <div class="card mt-4 mb-4">
+            <div class="card my-4">
                 <div class="card-body">
                     {{ form_start(form) }}
-                        <h1 class="h3 mb-4 font-weight-normal">{{ 'account.update.title'|trans() }}</h1>
-                        <div class="row my-3">
+                        <div class="row mt-2 mb-3">
                             <div class="col-sm-4 pt-2">
                                 {{ form_label(form.email) }}
                             </div>
@@ -47,7 +48,10 @@
                             </div>
                             {{ form_row(form.langId) }}
                         </div>
-                        <div class="form-group text-right">
+                        <div class="form-group text-right mb-1">
+                            <a href="{{ path('user_account', { 'id': app.user.id }) }}" class="btn btn-secondary">
+                                {{ 'account.update.back'|trans() }}
+                            </a>
                             <button class="btn btn-primary" type="submit">
                                 {{ 'account.update.submit'|trans() }}
                             </button>
@@ -57,7 +61,6 @@
             </div>
         </div>
     </div>
-</section>
 {% endblock %}
 
 {% block javascripts %}
