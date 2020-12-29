@@ -71,6 +71,7 @@ reset_password:
     h1: Réinitialiser le mot de passe
     btn:
         submit: Réinitialiser
+        back: Retour
     flash:
         success: Le mot de passe a été modifié.
     label:

@@ -68,6 +68,7 @@ reset_password:
     h1: Reset password
     btn:
         submit: Reset
+        back: Back
     flash:
         success: The password has been changed.
     label:
