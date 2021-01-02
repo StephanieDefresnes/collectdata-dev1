@@ -21,12 +21,11 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 class UserController extends AbstractController
 {    
     /**
-     * 
-     * @var LangService     */
+     * @var LangService
+     */
     private $langService;
     
     /**
-     * 
      * @var TranslatorInterface 
      */
     private $translator;
@@ -84,7 +83,7 @@ class UserController extends AbstractController
             ->findOneBy([
                 'id' => $this->getUser()->getId()
             ]);
-        $langs = $this->langService->getLangsEnabled();
+        $langs = $this->langService->getLangsEnabledOrNot(1);
         $user_lang_id = $this->getUser()->getLangId();
         
         if ($form->isSubmitted() && $form->isValid()) {

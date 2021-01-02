@@ -27,41 +27,32 @@ class LangService {
         
     }
 
-    public function getLangsEnabled()
+    public function getLangIdByLang($lang)
+    {
+        
+        $repository = $this->em->getRepository(Lang::class);
+        
+        $lang = $repository->findOneBy(
+            ['lang' => $lang]
+        );
+        
+        return $lang->getId();
+        
+    }
+
+    public function getLangsEnabledOrNot($boolean) 
     {
         $result = [];
         
         $repository = $this->em->getRepository(Lang::class);
         
         $langs = $repository->findBy(
-            ['enabled' => 1]
+            ['enabled' => $boolean]
         );
         
         foreach ($langs as $lang) {
             $result[] = [ 
                 'id' => $lang->getId(),
-                'lang' => $lang->getLang(),
-                'name' => html_entity_decode($lang->getName(), ENT_QUOTES, 'UTF-8'),
-                'english_name' => $lang->getEnglishName(),
-            ];
-        }
-        return $result;
-        
-    }
-
-    public function getLangsNotEnabled()
-    {
-        $result = [];
-        
-        $repository = $this->em->getRepository(Lang::class);
-        
-        $langs = $repository->findBy(
-            ['enabled' => 0]
-        );
-        
-        foreach ($langs as $lang) {
-            $result[] = [ 
-                'id' => $lang->geId(),
                 'lang' => $lang->getLang(),
                 'name' => html_entity_decode($lang->getName(), ENT_QUOTES, 'UTF-8'),
                 'english_name' => $lang->getEnglishName(),
