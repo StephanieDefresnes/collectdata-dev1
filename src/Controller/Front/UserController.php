@@ -60,7 +60,7 @@ class UserController extends AbstractController
             $user_lang = html_entity_decode($lang->getName(), ENT_QUOTES, 'UTF-8');
         }
         
-        return $this->render('front/user/account/user_account.html.twig', [
+        return $this->render('front/user/account/index.html.twig', [
             'user' => $user,
             'user_lang' => $user_lang,
         ]);
@@ -107,7 +107,7 @@ class UserController extends AbstractController
             return $this->redirectToRoute('user_account', ['id' => $user->getId(), '_locale' => $user_lang]);
         }
         
-        return $this->render('front/user/account/user_update.html.twig', [
+        return $this->render('front/user/account/update.html.twig', [
             'user' => $user,
             'langs' => $langs,
             'form' => $form->createView(),

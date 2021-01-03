@@ -1,0 +1,114 @@
+{% extends 'front/layout.html.twig' %}
+{% trans_default_domain 'user_messages' %}
+
+{% set locale = app.request.locale %}
+
+{% block title %}{{ 'contrib.create.form_title'|trans() }}{% endblock %}
+
+{% block content %}
+    <div class="container py-4">
+        {% block banner%}
+            <h1 class="h3 mb-0 px-3 px-lg-0 font-weight-normal">{{ 'contrib.create.form_title'|trans() }}</h1>
+        {% endblock %}
+            
+        <div class="col-lg-8 mx-auto">
+            <div class="card my-4 bg-light">
+                <div class="card-body">
+                    {{ form_start(form) }}
+                        <div class="my-custom-class-for-errors">
+                            {{ form_errors(form) }}
+                        </div>
+                        <div id="form-category-1" class="form-row mt-md-4 mb-4">
+                            <div class="col-md-3">
+                                {{ form_label(form.categoryLevel1) }}
+                            </div>
+                            <div class="col-md-9">
+                                <div class="form-row">
+                                    <div id="select-category-1" class="col-11"
+                                        data-categoryTitle="" data-categoryDescription="">
+                                        {{ form_widget(form.categoryLevel1) }}
+                                    </div>
+                                    <div id="add-category-1" class="col-1 pt-2 text-center">
+                                        <a href="#" id="add-category-1-btn" data-toggle="modal" data-target="#createCategory">
+                                            <i class="fas fa-plus-circle"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="form-category-2" class="form-row d-none">
+                            <div class="col-md-3">
+                                {{ form_label(form.categoryLevel2) }}
+                            </div>
+                            <div class="col-md-9">
+                                <div class="form-row">
+                                    <div id="select-category-2" class="col-11"
+                                        data-categoryTitle="" data-categoryDescription="">
+                                        {{ form_widget(form.categoryLevel2) }}
+                                    </div>
+                                    <div id="add-category-2" class="col-1 pt-2 text-center">
+                                        <a href="#" id="add-category-2-btn" data-toggle="modal" data-target="#createCategory">
+                                            <i class="fas fa-plus-circle"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {{ form_row(form.title) }}
+                        {{ form_row(form.description) }}                        
+                        <div id="submit" class="form-group text-center mt-5 mb-2">
+                            <button id="submit-btn" class="btn btn-primary px-4" type="button">
+                                {{ 'contrib.create.record'|trans() }}
+                            </button>
+                            <button id="submit-btn" class="btn btn-primary px-4" type="button">
+                                {{ 'contrib.create.submit'|trans() }}
+                            </button>
+                        </div>
+                     {{ form_end(form) }}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="createCategory" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="createCategoryLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content" data-level="">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="createCategoryLabel">
+                        <span id="label-level-1">{{ 'category.create.form_title_1'|trans() }}</span>
+                        <span id="label-level-2">{{ 'category.create.form_title_2'|trans() }}</span>
+                    </h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="form-group">
+                            <label class="required">{{ 'category.create.title'|trans() }}</label>
+                            <input type="text" placeholder="{{ 'category.create.title_1_placeholder'|trans() }}" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label class="required">{{ 'category.create.description'|trans() }}</label>
+                            <textarea rows="4" placeholder="{{ 'category.create.description_1_placeholder'|trans() }}" class="form-control"></textarea>
+                        </div>
+                        <div class="text-right">
+                            <button type="button" id="add-cancel" class="btn btn-danger" data-dismiss="modal">{{ 'category.create.cancel'|trans() }}</button>
+                            <button type="button" id="add-category" class="btn btn-primary" data-dismiss="modal">{{ 'category.create.submit'|trans() }}</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {{ encore_entry_script_tags('situ_create_app') }}
+    
+
+<script>
+</script>
+    
+{% endblock %}
