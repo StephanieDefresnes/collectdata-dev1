@@ -1,11 +1,11 @@
 {% extends 'front/layout.html.twig' %}
 {% trans_default_domain 'user_messages' %}
+{% set locale = app.request.locale %}
 
 {% block stylesheets %}
     {{ parent() }}
     {{ encore_entry_link_tags('situ_create_app') }}
 {% endblock %}
-{% set locale = app.request.locale %}
 
 {% block title %}{{ 'contrib.form.situ.label'|trans() }}{% endblock %}
 
