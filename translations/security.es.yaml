@@ -1,8 +1,9 @@
 forget_password:
     title: Contraseña olvidada
     h1: Contraseña olvidada
+    descritpion: Para restablecer su contraseña, ingrese su dirección de correo electrónico
     btn:
-        submit: enviar a
+        submit: Enviar
     flash:
         check_email: |
             Un correo electronico ha sido enviado. Contiene un enlace en el que deberá hacer clic para restablecer su contraseña.
@@ -64,7 +65,7 @@ registration:
         name: Apellido
         password: Contraseña
         repeat_password: Repite la contraseña
-        agree_terms: Acepto las condiciones de uso
+        agree_terms: He leido y acepto las condiciones de uso
     terms_link: Lea nuestras %link_start%condiciones de uso%link_end%
 reset_password:
     title: Restablecer la contraseña

@@ -1,21 +1,26 @@
 forget_password:
     title: Forget password
     h1: Forget password
+    descritpion: To reset your password, please enter your email address
     btn:
         submit: Send
+    flash:
+        check_email: |
+            An email has been sent. It contains a link you must click to reset your password.
+            If you don't get an email check your spam folder or try again.
     email:
         subject: 'Reset Password'
         message: |
             Hello %user%,
 
             To reset your password - please click <a href="%confirmation_url%">here</a>.
+            
+            This link can only be used once.
+            
+            If you are not the initiator of this request, please disregard this message.
 
             Regards,
             <a href="%host%">%website_name%</a>
-    flash:
-        check_email: |
-            An email has been sent. It contains a link you must click to reset your password.
-            If you don't get an email check your spam folder or try again.
     label:
         email: Email
 login:
@@ -61,7 +66,7 @@ registration:
         name: Name
         password: Password
         repeat_password: Repeat password
-        agree_terms: Agree terms of use
+        agree_terms: I have read and I accept terms of use
     terms_link: Read our %link_start%terms of use%link_end%
 reset_password:
     title: Reset password

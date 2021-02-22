@@ -1,6 +1,7 @@
 forget_password:
     title: Mot de passe oublié
     h1: Mot de passe oublié
+    descritpion: Pour réinitialiser votre mot de passe, veuillez renseigner votre adresse mail
     btn:
         submit: Envoyer
     flash:
@@ -64,7 +65,7 @@ registration:
         name: Nom
         password: Mot de passe
         repeat_password: Répéter le mot de passe
-        agree_terms: J'accepte les conditions d'utilisation
+        agree_terms: J'ai lu et j'accepte les conditions d'utilisation
     terms_link: Lire nos %link_start%conditions d'utilisation%link_end%
 reset_password:
     title: Réinitialiser le mot de passe
