@@ -27,11 +27,12 @@ Encore
      * Each entry will result in one JavaScript file (e.g. app.js)
      * and one CSS file (e.g. app.css) if you JavaScript imports CSS.
      */
+    .addEntry('app', './assets/js/app.js')
     .addEntry('back_app', './assets/js/back_app.js')
     .addEntry('front_app', './assets/js/front_app.js')
-    .addEntry('app', './assets/js/app.js')
     .addEntry('user_update_app', './assets/js/user_update_app.js')
     .addEntry('situ_create_app', './assets/js/situ_create_app.js')
+    .addEntry('situ_list_app', './assets/js/situ_list_app.js')
     
     // When enabled, Webpack "splits" your files into smaller pieces for greater optimization.
     .splitEntryChunks()
