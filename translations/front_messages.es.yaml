@@ -1,10 +1,13 @@
 nav:
     home: Bienvenida
     account: Cuenta
+    account_unknown: Usuario
     account_back: Back-office
     account_login: Iniciar sesión
     account_logout: Desconexión
     account_register: Registro
     account_profile: Mi informacion
     account_reset_password: Cambiar la contraseña
-    lang_choice: Elige lengua
+    lang_choice: Elige idioma
+btn:
+    close: Cerrar

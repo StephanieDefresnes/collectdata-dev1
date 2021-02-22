@@ -1,3 +1,7 @@
+// css
+import '../css/user_update_app.scss';
+
+// js
 $(function() {
     
     $('#select_user_langId').change(function() {

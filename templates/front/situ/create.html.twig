@@ -1,8 +1,17 @@
 {% extends 'front/layout.html.twig' %}
+<<<<<<< HEAD
+=======
+{% block stylesheets %}
+    {{ parent() }}
+    {{ encore_entry_link_tags('situ_create_app') }}
+{% endblock %}
+
+>>>>>>> situ-create
 {% trans_default_domain 'user_messages' %}
 
 {% set locale = app.request.locale %}
 
+<<<<<<< HEAD
 {% block title %}{{ 'contrib.create.form_title'|trans() }}{% endblock %}
 
 {% block content %}
@@ -30,12 +39,58 @@
                                     </div>
                                     <div id="add-category-1" class="col-1 pt-2 text-center">
                                         <a href="#" id="add-category-1-btn" data-toggle="modal" data-target="#createCategory">
+=======
+{% block title %}{{ 'contrib.form.situ.label'|trans() }}{% endblock %}
+
+{% block content %}
+    <div class="container mt-5 pt-5 py-4">
+        {% block banner%}
+            <h1 class="h3 my-3 mb-5 text-white">{{ 'contrib.form.situ.label'|trans() }}</h1>
+        {% endblock %}
+            
+        <div class="col-lg-8 mx-auto">
+            {{ form_start(form) }}
+                <div class="card my-4 bg-light-50 border-0 shadow">
+                    <div class="card-header py-4 pl-4 bg-dark-50 border text-white">
+                        <div class="my-custom-class-for-errors">
+                            {{ form_errors(form) }}
+                        </div>
+                        <div id="event" class="formData form-row mt-1 mb-4">
+                            <div class="col-md-4 pt-md-1">
+                                {{ form_label(form.event) }}
+                                {{ form_errors(form.event) }}
+                            </div>
+                            <div class="col-md-8">
+                                <div class="form-row">
+                                    <div id="form-event" class="col-11">{{ form_widget(form.event) }}</div>
+                                    <div id="add-event" class="col-1 pt-2 pl-md-2 text-center colBtn">
+                                        <a href="#" id="add-event-btn" class="text-light" data-id="event">
                                             <i class="fas fa-plus-circle"></i>
                                         </a>
                                     </div>
                                 </div>
                             </div>
                         </div>
+                        <div id="categoryLevel1" class="formData form-row mb-4">
+                            <div class="col-md-4 pt-md-1">
+                                {{ form_label(form.categoryLevel1) }}
+                                {{ form_errors(form.categoryLevel1) }}
+                            </div>
+                            <div class="col-md-8">
+                                <div class="form-row">
+                                    <div id="form-categoryLevel1" class="col-11 colData">
+                                        {{ form_widget(form.categoryLevel1) }}
+                                    </div>
+                                    <div id="add-categoryLevel1" class="col-1 pt-2 pl-md-2 text-center colBtn">
+                                        <a href="#" id="add-categoryLevel1-btn" class="text-light" data-id="categoryLevel1">
+>>>>>>> situ-create
+                                            <i class="fas fa-plus-circle"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+<<<<<<< HEAD
                         <div id="form-category-2" class="form-row d-none">
                             <div class="col-md-3">
                                 {{ form_label(form.categoryLevel2) }}
@@ -48,12 +103,27 @@
                                     </div>
                                     <div id="add-category-2" class="col-1 pt-2 text-center">
                                         <a href="#" id="add-category-2-btn" data-toggle="modal" data-target="#createCategory">
+=======
+                        <div id="categoryLevel2" class="formData form-row mb-2">
+                            <div class="col-md-4 pt-md-1 col-cat">
+                                {{ form_label(form.categoryLevel2) }}
+                                {{ form_errors(form.categoryLevel2) }}
+                            </div>
+                            <div class="col-md-8">
+                                <div class="form-row">
+                                    <div id="form-categoryLevel2" class="col-11 colData">
+                                        {{ form_widget(form.categoryLevel2) }}
+                                    </div>
+                                    <div id="add-categoryLevel2" class="col-1 pt-2 pl-md-2 text-center colBtn">
+                                        <a href="#" id="add-categoryLevel2-btn" class="text-light" data-id="categoryLevel2">
+>>>>>>> situ-create
                                             <i class="fas fa-plus-circle"></i>
                                         </a>
                                     </div>
                                 </div>
                             </div>
                         </div>
+<<<<<<< HEAD
                         {{ form_row(form.title) }}
                         {{ form_row(form.description) }}                        
                         <div id="submit" class="form-group text-center mt-5 mb-2">
@@ -101,14 +171,82 @@
             </div>
         </div>
     </div>
+=======
+                    </div>
+                    <div class="card-body p-4 bg-white-80">
+                        <h2 class="h5 font-weight-normal">{{ 'contrib.form.situ.h2'|trans() }}</h2>
+                        {{ form_row(form.title) }}
+                        {{ form_row(form.description) }} 
+                        <div id="form-items" class="form-row">
+                            {{ form_label(form.situItems) }}
+                            <ul id="situItems" class="list-group list-group-flush col-12"
+                                data-prototype="{{ form_widget(form.situItems.vars.prototype)|e }}"
+                                data-widget-situItems="{{ '<li class="list-group-item pt-1 px-0 mb-2 bg-none clearfix"></li>'|e }}"
+                                data-widget-counter="{{ form.situItems|length }}">
+                                <legend class="col-form-label">{{ 'contrib.form.item.label'|trans() }}</legend>
+                                {% for situItems in form.situItems %}
+                                    <li class="list-group-item pt-1 px-0 mb-2 bg-none clearfix">
+                                        {{ form_errors(situItems) }}
+                                        {{ form_widget(situItems) }}
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                            <div id="add-situ" class="col-12">
+                                <p class="h6">{{ 'contrib.form.item.add_item.title'|trans() }}</p>
+                                <div class="small d-block my-4 pb-1">
+                                    {{ 'contrib.form.item.add_item.comment-begin'|trans() }}
+                                    <span class="text-info">{{ 'contrib.form.item.score.info'|trans() }}</span>
+                                    {{ 'contrib.form.item.add_item.comment-1'|trans() }}
+                                    <span class="text-warning">{{ 'contrib.form.item.score.warning'|trans() }}</span>
+                                    {{ 'contrib.form.item.add_item.comment-2'|trans() }}
+                                    <span class="text-danger">{{ 'contrib.form.item.score.danger'|trans() }}</span>
+                                    {{ 'contrib.form.item.add_item.comment-end'|trans() }}
+                                </div>
+                                <div id="add-itemSitu-link" class="col-md-6 offset-md-3 mb-3 text-center text-decoration-none"
+                                    data-list-selector="#situItems">
+                                    <i class="fas fa-plus-circle"></i>
+                                    <span class="text-muted">{{ 'contrib.form.item.add_item.btn'|trans() }}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {{ form_row(form.statusId) }}
+                    <div class="card-footer bg-light text-right">
+                        <button id="save-btn" class="btn btn-outline-primary px-3" type="submit">
+                            {{ 'contrib.form.record.btn'|trans() }}
+                        </button>
+                        <button id="submit-btn" class="btn btn-primary px-4" type="submit">
+                            {{ 'contrib.form.submit.btn'|trans() }}
+                        </button>
+                    </div>
+                </div>
+            </div>
+        {{ form_end(form) }}
+    </div>
+<style>
+        
+</style>
+>>>>>>> situ-create
 {% endblock %}
 
 {% block javascripts %}
     {{ parent() }}
     {{ encore_entry_script_tags('situ_create_app') }}
+<<<<<<< HEAD
     
 
 <script>
 </script>
     
+=======
+<script>
+    var translations = {
+       "event-titlePlaceholder" : "{{ 'contrib.form.event.add.placeholder' | trans }}",
+       "categoryLevel1-titlePlaceholder" : "{{ 'contrib.form.category.level1.title_placeholder' | trans }}",
+       "categoryLevel2-titlePlaceholder" : "{{ 'contrib.form.category.level2.title_placeholder' | trans }}",
+       "categoryLevel1-descriptionPlaceholder" : "{{ 'contrib.form.category.level1.description_placeholder' | trans }}",
+       "categoryLevel2-descriptionPlaceholder" : "{{ 'contrib.form.category.level2.description_placeholder' | trans }}",
+    } 
+</script>
+>>>>>>> situ-create
 {% endblock %}

@@ -3,31 +3,34 @@ nav:
     account_logout: Déconnection
     account_profile: Mes informations
     account_reset_password: Modifier mon mot de passe
-    contrib: Contribution
-    contribs: Mes contributions
-    add_contrib: Ajouter une contribution
-    translate_contrib: Traduire une contribution
+    contribs:
+        title: Contributions
+        all: Toutes les contributions
+        user: Mes contributions
+        add: Ajouter une contribution
+        translate: Traduire une contribution
 account:
     reset_password: Modifier mon mot de passe
-    name: Nom :
-    email: Email :
-    lang_choice: Choix de langue :
+    name: 'Nom :'
+    email: 'Email :'
+    lang_choice: 'Choix de langue :'
     roles: 
-        title: Statut :
-        title_s: Statuts :
+        title: 'Statut :'
+        title_s: 'Statuts :'
         user: Contributeur
         moderator: Modérateur
         admin: Administrateur
         super_admin: Super administrateur
-    date_create: Date de création :
+    date_create: 'Date de création :'
     default_lang: 
-        title: Langue :
+        title: 'Langue :'
         default: Défaut (FR)
-    contribs: Nombre de contributions :
+    contribs: 'Nombre de contributions :'
     no_contrib: Aucune contribution
     update:
         title: Modifier mon compte
         submit: Enregistrer
+        back: Retour
         flash:
             success: Votre profil a bien été modifié
 contrib:
@@ -36,10 +39,80 @@ contrib:
         id: N°
         title: Titre
         description: Description
-        date_creation: Date de Création
-        date_last_update: Dernière mise à jour
-        date_submission: Date de valisation
+        date_creation: Création
+        date_last_update: Dernière modification
+        date_submission: 
+            title: Date de validation
+            empty: Validation en cours
+        status:
+            title: Status
+            writing: En cours de rédaction
+            validation: Validation demandée
+            validated: Validé
+            refused: Refusé
+        event: Événement
         category_level1: Catégorie
         category_level2: Sous-catégorie
         lang: Langue
-        actions: Actions
+        actions:
+            title: Actions
+            validation: Demander la validation
+            read: Lire
+            edit: Modifier
+            delete: Supprimer
+    form:
+        situ:
+            h2: La situation à risque
+            label: Ajouter une situation à risque
+            title: 'Titre :'
+            title_placeholder: Courte description de la situation
+            description: 'Description :'
+            description_placeholder: Description détaillée de la situation
+        event:
+            label: Ajouter un événement
+            placeholder: Choisir un événement
+            add:
+                title: 'Titre :'
+                placeholder: Nom de l'événement
+        category:
+            add:
+                title: 'Titre :'
+                description: 'Description :'
+            level1:
+                label: Ajouter une catégorie
+                placeholder: Choisir une catégorie
+                title_placeholder: Courte description de la catégorie
+                description_placeholder: Description détaillée de la catégorie
+            level2:
+                label: Ajouter une sous-catégorie
+                placeholder: Choisir une sous-catégorie
+                title_placeholder: Courte description de la sous-catégorie
+                description_placeholder: Description détaillée de la sous-catégorie
+        item:
+            label: 'La meilleure attitude à adopter :'
+            label_item: 'Autre réponse possible :'
+            add_item:
+                title: Voulez-vous que votre contribution participe au test Quotient Risque à venir ? Alors ajoutez quelques attitudes que vous n'auriez pas adopté !
+                comment-begin: 'Vous pouvez ajouter jusqu''à 3 attitudes : la moyenne mais acceptable ('
+                comment-1: ), la moyenne non recommandée (
+                comment-2: ) et la pire attitude à adopter (
+                comment-end: ).
+                btn: Ajouter une attitude
+            title_placeholder: Courte description de la réponse
+            description_placeholder: Description détaillée de la réponse
+            score:
+                success: Succès
+                info: Peut mieux faire
+                warning: Attention
+                danger: Danger
+                placeholder: Attribuer un score
+        submit:
+            btn: Envoyer
+            flash:
+                success: La situation a bien été envoyée
+                error: Une erreur s'est produite lors de l'envoi de la situation
+        save:
+            btn: Enregistrer
+            flash:
+                success: La situation a bien été enregistrée
+                error: Une erreur s'est produite lors de l'enregistrement de la situation

@@ -3,30 +3,34 @@ nav:
     account_logout: Desconexión
     account_profile: Mi informacion
     account_reset_password: Cambiar la contraseña
-    contrib: Contribución
-    contribs: Mis contribuciones
-    add_contrib: Agregar una contribución
-    translate_contrib: Traducir contribución
+    contribs:
+        title: Contribuciones
+        all: Todas las contribuciones
+        user: Mis contribuciones
+        add: Agregar una contribución
+        translate: Traducir contribución
 account:
     reset_password: Cambiar la contraseña
-    name: Apellido :
-    email: Email :
+    name: 'Apellido :'
+    email: 'Email :'
+    lang_choice: 'Elección de idioma :'
     roles: 
-        title: Estado :
-        title_s: Estados :
+        title: 'Estado :'
+        title_s: 'Estados :'
         user: Contribuyente
         moderator: Moderador
         admin: Administrador
         super_admin: Superadministrador
-    date_create: Fecha de creación :
+    date_create: 'Fecha de creación :'
     default_lang: 
-        title: Lengua :
+        title: 'Idioma :'
         default: Defecto (FR)
-    contribs: Numero de contribuciones :
+    contribs: 'Numero de contribuciones :'
     no_contrib: Sin contribución
     update:
         title: Modificar mi cuenta
         submit: Modificar
+        back: Regreso
         flash:
             success: Tu perfil ha sido modificado
 contrib:
@@ -37,8 +41,78 @@ contrib:
         description: Descripción
         date_creation: Fecha de creación
         date_last_update: Última actualización
-        date_submission: Date de valisation
+        date_submission: 
+            title: Fecha de validación
+            empty: Validación en curso
+        status:
+            title: Estado
+            writing: Redacción en curso
+            validation: Validación solicitada
+            validated: Validado
+            refused: Rechazado
+        event: Evento
         category_level1: Categoría
         category_level2: Subcategoría
-        lang: Lengua
-        actions: Acciones
+        lang: Idioma
+        actions:
+            title: Acciones
+            validation: Solicitar validación
+            read: Leer
+            edit: Editar
+            delete: Eliminar
+    form:
+        situ:
+            h2: La situación de riesgo
+            label: Agrega una situación de riesgo
+            title: 'Título :'
+            title_placeholder: Breve descripción de la situación.
+            description: 'Descripción :'
+            description_placeholder: Descripción detallada de la situación
+        event:
+            label: Agregar un evento
+            placeholder: Elige un evento
+            add:
+                title: 'Título :'
+                placeholder: Nombre del evento
+        category:
+            add:
+                title: 'Título :'
+                description: 'Descripción :'
+            level1:
+                label: Agregar una categoría
+                placeholder: Elige una categoría
+                title_placeholder: Breve descripción de la categoría.
+                description_placeholder: Descripción detallada de la categoría
+            level2:
+                label: Agregar una subcategoría
+                placeholder: Elige una subcategoría
+                title_placeholder: Breve descripción de la subcategoría.
+                description_placeholder: Descripción detallada de la subcategoría
+        item:                
+            label: 'La mejor actitud a adoptar: :'
+            label_item: 'Otra posible respuesta : '
+            add_item:
+                title: ¿Quiere que su contribución participe en la próxima prueba de cociente de riesgo? ¡Así que agregue algunas actitudes que no habría adoptado!
+                comment-begin: 'Puede agregar hasta 3 actitudes: promedio pero aceptable ('
+                comment-1: ), el promedio no recomendado (
+                comment-2: ) y la peor actitud a adoptar (
+                comment-end: ).
+                btn: Agrega una actitud
+            title_placeholder: Breve descripción de la respuesta
+            description_placeholder: Descripción detallada de la respuesta
+            score:
+                success: Éxito
+                info: Puedes hacerlo mejor
+                warning: Advertencia
+                danger: Peligro
+                placeholder: Asignar una puntuación
+        submit:
+            btn: Enviar
+            flash:
+                success: La situación ha sido enviada
+                danger: Se produjo un error al enviar la situación.
+        record:
+            btn: Salvar
+            flash:
+                success: La situación se ha salvado
+                danger: Se produjo un error al salvad la situación

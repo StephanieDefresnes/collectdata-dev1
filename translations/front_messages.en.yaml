@@ -1,6 +1,7 @@
 nav:
     home: Home
     account: Account
+    account_unknown: User
     account_back: Back-office
     account_login: Login
     account_logout: Logout
@@ -8,3 +9,5 @@ nav:
     account_profile: My profile
     account_reset_password: Reset password
     lang_choice: Choose language
+btn:
+    close: Close

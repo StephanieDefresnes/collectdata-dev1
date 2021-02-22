@@ -13,12 +13,24 @@ use Doctrine\Persistence\ManagerRegistry;
  * @method CategoryLevel1[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
 class CategoryLevel1Repository extends ServiceEntityRepository
-{
+{    
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, CategoryLevel1::class);
     }
-
+    
+    public function findCategoriesByEventId($eventId)
+    {
+        return $this->createQueryBuilder('c')
+                    ->andWhere("c.eventId = ?1")
+                    ->andWhere("c.validated = ?2")
+                    ->setParameter(1, $eventId)
+                    ->setParameter(2, 1)
+                    ->select('c.id, c.title, c.description')
+                    ->getQuery()
+                    ->getResult();
+    }
+    
     // /**
     //  * @return CategoryLevel1[] Returns an array of CategoryLevel1 objects
     //  */

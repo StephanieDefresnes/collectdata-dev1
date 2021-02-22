@@ -9,17 +9,24 @@
         {% block flash_message %}
             {% include "block/_flash_message.html.twig" %}
         {% endblock %}
+        
+        {% block navbar %}
+            {% include "back/block/_navbar.html.twig" %}
+        {% endblock %}
+            
         <div class="wrapper">
             {% block sidebar %}
                 {% include "back/block/_sidebar.html.twig" %}
             {% endblock %}
             <div id="content">
-                {% block navbar %}
-                    {% include "block/_navbar.html.twig" %}
-                {% endblock %}
                 {% block content %}{% endblock %}
             </div>
         </div>
+
+        {% block footer %}
+            {% include "block/_footer.html.twig" %}
+        {% endblock %}
+            
         {% block javascripts %}
             {{encore_entry_script_tags('back_app')}}
         {% endblock %}

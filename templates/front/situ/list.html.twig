@@ -7,6 +7,7 @@
 {% block title %}{{ 'contrib.title'|trans() }}{% endblock %}
 
 {% block content %}
+<<<<<<< HEAD
     {% block banner%}
         <div class="container py-4">
             <h1 class="h3 mb-0 font-weight-normal">{{ 'contrib.title'|trans() }}</h1>
@@ -47,10 +48,141 @@
                         <td></td>
                         <td></td>
                         <td></td>
+=======
+
+    <div class="container mt-5 pt-5 py-4">
+    {% block banner%}
+            <h1 class="h3 my-3 mb-5 text-white">{{ 'contrib.title'|trans() }}</h1>
+    {% endblock %}
+
+    {% if situs is empty %}
+        <div class="mb-5 p-3 bg-white-80">
+            {{ 'account.no_contrib'|trans() }}
+        </div>
+    {% else %}
+        <div class=" table-responsive">
+            <table class="shadow table table-borderless table-hover border border-secondary text-nowrap bg-white-80">
+                <thead class="bg-black-40 text-white">
+                    <tr>
+                        <th class="pb-3">{{ 'contrib.table.title'|trans() }}</th>
+                        <th class="pb-3">{{ 'contrib.table.description'|trans() }}</th>
+                        <th class="pb-3">{{ 'contrib.table.date_creation'|trans() }}</th>
+                        <th class="pb-3">{{ 'contrib.table.event'|trans() }}</th>
+                        <th class="pb-3">{{ 'contrib.table.category_level1'|trans() }}</th>
+                        <th class="pb-3">{{ 'contrib.table.category_level2'|trans() }}</th>
+                        <th class="pb-3">{{ 'contrib.table.lang'|trans() }}</th>
+                        <th class="pb-3">{{ 'contrib.table.status.title'|trans() }}</th>
+                        <th class="pb-3">{{ 'contrib.table.actions.title'|trans() }}</th>
+                    </tr>
+                </thead>
+                <tbody class="small">
+                    {% for situ in situs %}
+                    <tr data-id="{{ situ.id }}">
+                        <th class="pt-3"
+                            scope="row" data-toggle="tooltip" data-placement="right" title="{{ situ.title }}">
+                            {{ situ.title|u.truncate(20, '...') }}
+                        </td>
+                        <td class="pt-3"
+                            data-toggle="tooltip" data-placement="right" title="{{ situ.description }}">
+                            {{ situ.description|u.truncate(20, '...') }}
+                        </td>
+                        <td class="pt-3"
+                            data-toggle="tooltip" data-placement="right" title="{{ situ.dateCreation is empty ? '' : situ.dateCreation|format_datetime('short', 'short', locale=locale) }}">
+                            {{ situ.dateCreation|format_datetime('short', 'none', locale=locale) }}
+                        </td>
+                        <td class="pt-3"
+                            data-toggle="tooltip" data-placement="right" title="{{ situ.evtTitle }}">
+                            {{ situ.evtTitle|u.truncate(20, '...') }}
+                        </td>
+                        <td class="pt-3"
+                            data-toggle="tooltip" data-placement="right" title="{{ situ.cat1Title }}">
+                            {{ situ.cat1Title|u.truncate(20, '...') }}
+                        </td>
+                        <td class="pt-3"
+                            data-toggle="tooltip" data-placement="right" title="{{ situ.cat2Title }}">
+                            {{ situ.cat2Title|u.truncate(20, '...') }}
+                        </td>
+                        <td class="pt-3 first-letter">{{ situ.langName }}</td>
+                        <td class="pt-3">
+                            {% if situ.statusName == 'writing'%}
+                                {{ 'contrib.table.status.writing'|trans() }}
+                            {% elseif situ.statusName == 'validation' %}
+                                {{ 'contrib.table.status.validation'|trans() }}
+                            {% elseif situ.statusName == 'validated' %}
+                                {{ 'contrib.table.status.validated'|trans() }}
+                            {% else %}
+                                {{ 'contrib.table.status.refused'|trans() }}
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if situ.statusName == 'writing'%}
+                                <button class="btn btn-outline-secondary btn-sm px-1"
+                                    data-toggle="tooltip" data-placement="left"
+                                    title="{{ 'contrib.table.actions.edit'|trans() }}">
+                                    <i class="fas fa-pen"></i></button>
+                                <button class="btn btn-outline-success btn-sm px-1"
+                                    data-toggle="tooltip" data-placement="left"
+                                    title="{{ 'contrib.table.actions.validation'|trans() }}">
+                                    <i class="fas fa-share"></i></button>
+                                <button class="btn btn-outline-danger btn-sm"
+                                    data-toggle="tooltip" data-placement="left"
+                                    title="{{ 'contrib.table.actions.delete'|trans() }}">
+                                    <i class="far fa-trash-alt"></i></button>
+                            {% elseif situ.statusName == 'validation' %}
+                                <button class="btn btn-outline-secondary btn-sm px-1"
+                                    data-toggle="tooltip" data-placement="left"
+                                    title="{{ 'contrib.table.actions.edit'|trans() }}">
+                                    <i class="fas fa-pen"></i></button>
+                                <span class="text-success py-2 pl-2 border-transparent"
+                                    data-toggle="tooltip" data-placement="left"
+                                    title="{{ 'contrib.table.status.validation'|trans() }}">
+                                    <i class="fas fa-check"></i></span>
+                                <button class="btn btn-outline-danger btn-sm"
+                                    data-toggle="tooltip" data-placement="left"
+                                    title="{{ 'contrib.table.actions.delete'|trans() }}">
+                                    <i class="far fa-trash-alt"></i></button>
+                            {% elseif situ.statusName == 'validated' %}
+                                <button class="btn btn-outline-secondary btn-sm px-1"
+                                    data-toggle="tooltip" data-placement="left"
+                                    title="{{ 'contrib.table.actions.edit'|trans() }}">
+                                    <i class="fas fa-pen"></i></button>
+                                <button class="btn btn-outline-success btn-sm px-1"
+                                    data-toggle="tooltip" data-placement="left"
+                                    title="{{ 'contrib.table.actions.read'|trans() }}">
+                                    <i class="fas fa-eye"></i></button>
+                                <button class="btn btn-outline-danger btn-sm"
+                                    data-toggle="tooltip" data-placement="left"
+                                    title="{{ 'contrib.table.actions.delete'|trans() }}">
+                                    <i class="far fa-trash-alt"></i></button>
+                            {% else %}
+                                <button class="btn btn-outline-secondary btn-sm px-1"
+                                    data-toggle="tooltip" data-placement="left"
+                                    title="{{ 'contrib.table.actions.edit'|trans() }}">
+                                    <i class="fas fa-pen"></i></button>
+                                <span class="text-success py-2 pl-2 border-transparent"
+                                    data-toggle="tooltip" data-placement="left"
+                                    title="{{ 'contrib.table.status.refused'|trans() }}">
+                                    <i class="fas fa-exclamation-triangle"></i></span>
+                                <button class="btn btn-outline-danger btn-sm "
+                                    data-toggle="tooltip" data-placement="left"
+                                    title="{{ 'contrib.table.actions.delete'|trans() }}">
+                                    <i class="far fa-trash-alt"></i></button>
+                            {% endif %}
+                        </td>
+>>>>>>> situ-create
                     </tr>
                     {% endfor %}
                 </tbody>
             </table>
         </div>
     {% endif %}
+<<<<<<< HEAD
+=======
+    </div>
+
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+>>>>>>> situ-create
 {% endblock %}

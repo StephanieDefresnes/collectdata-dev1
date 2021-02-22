@@ -9,4 +9,6 @@ $(function() {
         $('#flash_message').delay(3000).fadeOut();
     }
     
+    $('[data-toggle="tooltip"]').tooltip()
+    
 });

@@ -4,23 +4,18 @@
 <!-- Sidebar  -->
 <nav id="sidebar">
     <div class="sidebar-header">
-       <div class="logo-sidebar">
-            <img src="{#{{ asset("build/images/logo-white.png") }}#}" class="img-fluid" alt="Logo sidebar">
-        </div>
-        <br>
         <div class="row">
             <div class="mx-auto">
-                <p class="text-center"><small>{#{{ "now"|format_date }}#}</small></p>
+                <h2 class="badge badge-dark badge-secondary text-wrap">{{ "now"|format_date }}</h2>
                 <div class="row">
-                    <div class="col-4">
+                    <div class="col-3">
                         <div class="icon-rounded text-center">
                             <i class="fas fa-user fa-2x"></i>
                         </div>
                     </div>
-                    <div class="col-8">
+                    <div class="col-9">
                         <ul class="list-unstyled">
                             <li>{{ app.user }}</li>
-                            <li>{{ app.user.email }}</li>
                             {% for role in app.user.roles %}
                                 <li><small>{{ role }}</small></li>
                             {% endfor %}

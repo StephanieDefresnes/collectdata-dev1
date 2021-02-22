@@ -31,6 +31,7 @@ Encore
     .addEntry('front_app', './assets/js/front_app.js')
     .addEntry('app', './assets/js/app.js')
     .addEntry('user_update_app', './assets/js/user_update_app.js')
+    .addEntry('situ_create_app', './assets/js/situ_create_app.js')
     
     // When enabled, Webpack "splits" your files into smaller pieces for greater optimization.
     .splitEntryChunks()

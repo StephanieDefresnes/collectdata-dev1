@@ -28,17 +28,14 @@ class UserController extends AbstractController
 {
 
     /**
-     * 
      * @var UserRepository     */
     private $userRepository;
     
     /**
-     * 
      * @var UserManager     */
     private $userManager;
     
     /**
-     * 
      * @var TranslatorInterface 
      */
     private $translator;

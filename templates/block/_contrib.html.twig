@@ -1,24 +1,32 @@
 {% trans_default_domain 'user_messages' %}
+
 <li class="nav-item dropdown">
     <a class="nav-link dropdown-toggle" id="dropdown_contribs" 
        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            {{ 'nav.contrib'|trans() }}
+            {{ 'nav.contribs.title'|trans() }}
     </a>
-    <ul class="dropdown-menu" aria-labelledby="dropdown_contribs">
-        <li class="dropdown-item">
+    <ul class="dropdown-menu bg-dark mt-md-2" aria-labelledby="dropdown_contribs">
+        <li class="dropdown-item{{ route == '' ? ' active' }}">
+            <a href="">
+                <i class="far fa-list-alt"></i> {{ 'nav.contribs.all'|trans() }}
+            </a>
+        </li>
+        {% if app.user %}
+        <li class="dropdown-item{{ route == 'user_situs' ? ' active' }}">
             <a href="{{ path('user_situs', { 'id': app.user.id }) }}">
-                <i class="far fa-list-alt"></i> {{ 'nav.contribs'|trans() }}
+                <i class="fas fa-list-ul"></i> {{ 'nav.contribs.user'|trans() }}
             </a>
         </li>
-        <li class="dropdown-item">
-            <a href="#">
-                <i class="far fa-edit"></i> {{ 'nav.add_contrib'|trans() }}
+        <li class="dropdown-item{{ route == 'create_situ' ? ' active' }}">
+            <a href="{{ path('create_situ', { 'id': app.user.id }) }}">
+                <i class="far fa-edit"></i> {{ 'nav.contribs.add'|trans() }}
             </a>
         </li>
-        <li class="dropdown-item">
-            <a href="#">
-                <i class="fas fa-globe"></i> {{ 'nav.translate_contrib'|trans() }}
+        <li class="dropdown-item{{ route == '' ? ' active' }}">
+            <a href="">
+                <i class="fas fa-globe"></i> {{ 'nav.contribs.translate'|trans() }}
             </a>
         </li>
+        {% endif %}
     </ul>
 </li>

@@ -3,31 +3,34 @@ nav:
     account_logout: Logout
     account_profile: My profile
     account_reset_password: Reset password
-    contrib: Contribution
-    contribs: My contributions
-    add_contrib: Add contribution
-    translate_contrib: Translate contribution
+    contribs:
+        title: Contributions
+        all: All contributions
+        user: My contributions
+        add: Add contribution
+        translate: Translate contribution
 account:
     reset_password: Reset password
-    name: Name :
-    email: Email :
-    lang_choice: Choix de langue :
+    name: 'Name :'
+    email: 'Email :'
+    lang_choice: 'Choice of language :'
     roles: 
-        title: Status :
-        title_s: Status :
+        title: 'Status :'
+        title_s: 'Status :'
         user: Contributor
         moderator: Moderator
         admin: Administrator
         super_admin: Super administrator
-    date_create: Creation date :
+    date_create: 'Creation date :'
     default_lang: 
-        title: Language :
+        title: 'Language :'
         default: Default (FR)
-    contribs: Number of contributions :
+    contribs: 'Number of contributions :'
     no_contrib: No contribution
     update:
         title: Modify my account
         submit: Modify
+        back: Back
         flash:
             success: Your profile has been modified
 contrib:
@@ -38,8 +41,78 @@ contrib:
         description: Description
         date_creation: Creation Date
         date_last_update: Last update
-        date_submission: Validation date
+        date_submission:
+            title: Validation date
+            empty: Validation in progress
+        status:
+            title: Status
+            writing: On going redaction
+            validation: Validation requested
+            validated: Validated
+            refused: Rejected
+        event: Event
         category_level1: Category
         category_level2: Sub-category
         lang: Language
-        actions: Actions
+        actions:
+            title: Actions
+            validation: Request validation
+            read: Read
+            edit: Edit
+            delete: Delete
+    form:
+        situ:
+            h2: Risky situation
+            label: Add a risky situation
+            title: 'Title :'
+            title_placeholder: Short description of the situation
+            description: 'Description :'
+            description_placeholder: Detailed description of the situation
+        event:
+            label: Add an event
+            placeholder: Choose an event
+            add:
+                title: 'Title :'
+                placeholder: Event's name
+        category:
+            add:
+                title: 'Title :'
+                description: 'Description :'
+            level1:
+                label: Add a category
+                placeholder: Choose a category
+                title_placeholder: Short description of the category
+                description_placeholder: Detailed description of the category
+            level2:
+                label: Add a sub-category
+                placeholder: Choose a sub-category
+                title_placeholder: Short description of the sub-category
+                description_placeholder: Detailed description of the sub-category
+        item:
+            label: 'The best attitude to adopt :'
+            label_item: 'Other possible answer :'
+            add_item:
+                title: Do you want your contribution to participate in the upcoming Risk Quotient test? So add some attitudes that you wouldn't have adopted!
+                comment-begin: 'You can add up to 3 attitudes: an average but acceptable ('
+                comment-1: ), an average not recommended (
+                comment-2: ) and the worst attitude to adopt (
+                comment-end: ).
+                btn: Add an attitude
+            title_placeholder: Short description of the response
+            description_placeholder: Detailed description of the response
+            score:
+                success: Success
+                info: Can do better
+                warning:  Warning
+                danger: Danger
+                placeholder: Assign a score
+        submit:
+            btn: Submit
+            flash:
+                success: The situation has been submitted
+                danger: An error occurred while submitting the situation
+        record:
+            btn: Save
+            flash:
+                success: The situation has been saved
+                danger: An error occurred while saving the situation

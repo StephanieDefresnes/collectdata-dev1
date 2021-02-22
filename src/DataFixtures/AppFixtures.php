@@ -2,6 +2,7 @@
 
 namespace App\DataFixtures;
 
+use App\Entity\Event;
 use App\Entity\Lang;
 use App\Entity\Score;
 use App\Entity\Status;
@@ -1280,7 +1281,7 @@ class AppFixtures extends Fixture
         $manager->persist($lang180);
 
         $status1 = new Status();
-        $status1->setName("redaction");
+        $status1->setName("writing");
         $manager->persist($status1);
 
         $status2 = new Status();
@@ -1295,30 +1296,60 @@ class AppFixtures extends Fixture
         $status4->setName("refused");
         $manager->persist($status4);
 
-        $score1 = new Score();
-        $score1->setScore(1);
-        $score1->setName("Success");
-        $score1->setColorClass("success");
-        $manager->persist($score1);
+        $event1 = new Event();
+        $event1->setTitle("Épidémie - Virus aéroporté");
+        $event1->setValidated(1);
+        $event1->setLangId(47);
+        $manager->persist($event1);
 
-        $score2 = new Score();
-        $score2->setScore(2);
-        $score2->setName("Do better");
-        $score2->setColorClass("primary");
-        $manager->persist($score2);
+        $event2 = new Event();
+        $event2->setTitle("Séisme");
+        $event2->setValidated(1);
+        $event2->setLangId(47);
+        $manager->persist($event2);
 
-        $score3 = new Score();
-        $score3->setScore(3);
-        $score3->setName("Warning");
-        $score3->setColorClass("warning");
-        $manager->persist($score3);
+        $event3 = new Event();
+        $event3->setTitle("Innondation");
+        $event3->setValidated(1);
+        $event3->setLangId(47);
+        $manager->persist($event3);
 
-        $score4 = new Score();
-        $score4->setScore(4);
-        $score4->setName("Danger");
-        $score4->setColorClass("danger");
-        $manager->persist($score4);
+        $event4 = new Event();
+        $event4->setTitle("Epidemic - Airborne virus");
+        $event4->setValidated(1);
+        $event4->setLangId(40);
+        $manager->persist($event4);
 
+        $event5 = new Event();
+        $event5->setTitle("Earthquake");
+        $event5->setValidated(1);
+        $event5->setLangId(40);
+        $manager->persist($event5);
+
+        $event6 = new Event();
+        $event6->setTitle("Flood");
+        $event6->setValidated(1);
+        $event6->setLangId(40);
+        $manager->persist($event6);
+
+        $event7 = new Event();
+        $event7->setTitle("Epidemia - Virus en el aire");
+        $event7->setValidated(1);
+        $event7->setLangId(146);
+        $manager->persist($event7);
+
+        $event8 = new Event();
+        $event8->setTitle("Terremoto");
+        $event8->setValidated(1);
+        $event8->setLangId(146);
+        $manager->persist($event8);
+
+        $event9 = new Event();
+        $event9->setTitle("Inundar");
+        $event9->setValidated(1);
+        $event9->setLangId(146);
+        $manager->persist($event9);
+        
         $manager->flush();
     }
 }

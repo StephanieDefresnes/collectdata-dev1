@@ -18,6 +18,18 @@ class CategoryLevel2Repository extends ServiceEntityRepository
     {
         parent::__construct($registry, CategoryLevel2::class);
     }
+    
+    public function findCategoriesByCategoryLevel1($categoryLevel1Id)
+    {        
+        return $this->createQueryBuilder('c')
+                    ->andWhere("c.categoryLevel1Id = ?1")
+                    ->andWhere("c.validated = ?2")
+                    ->setParameter(1, $categoryLevel1Id)
+                    ->setParameter(2, 1)
+                    ->select('c.id, c.title, c.description')
+                    ->getQuery()
+                    ->getResult();
+    }
 
     // /**
     //  * @return CategoryLevel2[] Returns an array of CategoryLevel2 objects

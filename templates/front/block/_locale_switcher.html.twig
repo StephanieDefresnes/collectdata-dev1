@@ -10,18 +10,18 @@
         {% if locale == app.request.locale %}
         <a class="nav-link dropdown-toggle" id="menu_lang" 
                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            <img src="{{ asset('img/flag/'~ locale ~'.jpg') }}" alt="{{ locale }}" class="lang-flag">
+            <img src="{{ asset('img/flag/'~ locale ~'.jpg') }}" alt="{{ locale }}" class="lang-flag mr-1">
             <span>{{ 'nav.lang_choice'|trans() }}</span>
         </a>
         {% endif %}
     {% endfor %}
-    <ul class="dropdown-menu lang-menu" aria-labelledby="menu_lang">
+    <ul class="dropdown-menu lang-menu bg-dark" aria-labelledby="menu_lang">
         {% for locale in applocales %}
             {% if locale != app.request.locale %}
                 <li class="dropdown-item">
                     <a class="" href="{{ path(route, params|merge({ _locale: locale })) }}">
-                        <img src="{{ asset('img/flag/'~ locale ~'.jpg') }}" alt="{{ locale }}" class="lang-flag">
-                        <span class="text-capitalize">{{ locale|locale_name(locale) }}</span>
+                        <img src="{{ asset('img/flag/'~ locale ~'.jpg') }}" alt="{{ locale }}" class="lang-flag mr-2">
+                        <span class="text-capitalize d-inline d-md-inline d-sm-none">{{ locale|locale_name(locale) }}</span>
                     </a>
                 </li>
             {% endif %}

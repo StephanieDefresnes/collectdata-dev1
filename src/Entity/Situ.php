@@ -2,14 +2,20 @@
 
 namespace App\Entity;
 
+use App\Entity\Event;
+use App\Entity\CategoryLevel1;
+use App\Entity\CategoryLevel2;
+use App\Entity\SituItem;
 use App\Repository\SituRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity(repositoryClass=SituRepository::class)
  */
 class Situ
-{
+{    
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
@@ -50,16 +56,6 @@ class Situ
     /**
      * @ORM\Column(type="integer")
      */
-    private $categoryLevel1Id;
-
-    /**
-     * @ORM\Column(type="integer")
-     */
-    private $categoryLevel2Id;
-
-    /**
-     * @ORM\Column(type="integer")
-     */
     private $userId;
 
     /**
@@ -73,9 +69,42 @@ class Situ
     private $langId;
 
     /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Event", inversedBy="situs")
+     */
+    private $event;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\CategoryLevel1", inversedBy="situs")
+     */
+    private $categoryLevel1;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\CategoryLevel2", inversedBy="situs")
+     */
+    private $categoryLevel2;
+
+    /**
      * @ORM\Column(type="integer", nullable=true)
      */
     private $translatedSituId;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\SituItem", cascade={"persist", "remove"}, mappedBy="situ")
+     */
+    protected $situItems;
+
+    public function __construct()
+    {
+        $this->situItems = new ArrayCollection();
+    }
+
+    public function __toString(): ?string
+    {
+        return $this->event;
+        return $this->categoryLevel1;
+        return $this->categoryLevel2;
+//        return $this->getSituItems();
+    }
 
     public function getId(): ?int
     {
@@ -154,30 +183,6 @@ class Situ
         return $this;
     }
 
-    public function getCategoryLevel1Id(): ?int
-    {
-        return $this->categoryLevel1Id;
-    }
-
-    public function setCategoryLevel1Id(int $categoryLevel1Id): self
-    {
-        $this->categoryLevel1Id = $categoryLevel1Id;
-
-        return $this;
-    }
-
-    public function getCategoryLevel2Id(): ?int
-    {
-        return $this->categoryLevel2Id;
-    }
-
-    public function setCategoryLevel2Id(int $categoryLevel2Id): self
-    {
-        $this->categoryLevel2Id = $categoryLevel2Id;
-
-        return $this;
-    }
-
     public function getUserId(): ?int
     {
         return $this->userId;
@@ -214,6 +219,42 @@ class Situ
         return $this;
     }
 
+    public function getEvent(): ?int
+    {
+        return $this->event;
+    }
+
+    public function setEvent(?Event $event): self
+    {
+        $this->event = $event;
+
+        return $this;
+    }
+
+    public function getCategoryLevel1()
+    {
+        return $this->categoryLevel1;
+    }
+
+    public function setCategoryLevel1(?CategoryLevel1 $categoryLevel1): self
+    {
+        $this->categoryLevel1 = $categoryLevel1;
+
+        return $this;
+    }
+
+    public function getCategoryLevel2()
+    {
+        return $this->categoryLevel2;
+    }
+
+    public function setCategoryLevel2(?CategoryLevel2 $categoryLevel2): self
+    {
+        $this->categoryLevel2 = $categoryLevel2;
+
+        return $this;
+    }
+
     public function getTranslatedSituId(): ?int
     {
         return $this->translatedSituId;
@@ -223,6 +264,36 @@ class Situ
     {
         $this->translatedSituId = $translatedSituId;
 
+        return $this;
+    }
+    
+    /**
+     * @return Collection|SituItem[]
+     */
+    public function getSituItems(): Collection
+    {
+        return $this->situItems;
+    }
+     
+    public function addSituItem(SituItem $situItem): self
+    {
+        if (!$this->situItems->contains($situItem)) {
+            $this->situItems[] = $situItem;
+            $situItem->setSitu($this);
+        }
+        
+        return $this;
+    }
+
+    public function removeItem(SituItem $situItem): self
+    {
+        if ($this->situItems->contains($situItem)) {
+            $this->situItems->removeElement($situItem);
+            // set the owning side to null (unless already changed)
+            if ($situItem->getSitu() === $this) {
+                $situItem->setSitu(null);
+            }
+        }
         return $this;
     }
 }

@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\CategoryLevel2Repository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -38,15 +40,30 @@ class CategoryLevel2
     private $userId;
 
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\ManyToOne(targetEntity="App\Entity\CategoryLevel1", inversedBy="categoriesLevel2")
      */
-    private $categoryLevel1Id;
+    private $categoryLevel1;
 
     /**
      * @ORM\Column(type="boolean")
      */
     private $validated;
 
+    /**
+    * @ORM\OneToMany(targetEntity=Situ::class, cascade={"persist"}, mappedBy="categoryLevel2")
+    */
+    protected $situs;
+
+    public function __construct()
+    {
+        $this->situs = new ArrayCollection();
+    }
+
+//    public function __toString(): ?string
+//    {
+//        return $this->situs;
+//    }
+    
     public function getId(): ?int
     {
         return $this->id;
@@ -100,14 +117,14 @@ class CategoryLevel2
         return $this;
     }
 
-    public function getCategoryLevel1Id(): ?int
+    public function getCategoryLevel1(): ?int
     {
-        return $this->categoryLevel1Id;
+        return $this->categoryLevel1;
     }
 
-    public function setCategoryLevel1Id(int $categoryLevel1Id): self
+    public function setCategoryLevel1(?CategoryLevel1 $categoryLevel1): self
     {
-        $this->categoryLevel1Id = $categoryLevel1Id;
+        $this->categoryLevel1 = $categoryLevel1;
 
         return $this;
     }
@@ -121,6 +138,40 @@ class CategoryLevel2
     {
         $this->validated = $validated;
 
+        return $this;
+    }
+    
+
+    /**
+     * @return Collection|Situ[]
+     */
+    public function getSitus(): Collection
+    {
+        return $this->situs;
+    }
+     
+    public function addSitu(Situ $situ): self
+    {
+//        $this->situs->add($situ);
+//        $situ->setCategoryLevel2($this);
+        
+        if (!$this->situs->contains($situ)) {
+            $this->situs[] = $situ;
+            $situ->setCategoryLevel2($this);
+        }
+        
+        return $this;
+    }
+
+    public function removeSitu(Situ $situ): self
+    {
+        if ($this->situs->contains($situ)) {
+            $this->situs->removeElement($situ);
+            // set the owning side to null (unless already changed)
+            if ($situ->getCategoryLevel2() === $this) {
+                $situ->setCategoryLevel2(null);
+            }
+        }
         return $this;
     }
 }

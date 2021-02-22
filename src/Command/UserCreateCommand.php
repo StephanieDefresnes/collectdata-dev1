@@ -66,6 +66,8 @@ class UserCreateCommand extends Command
                 '<info>php %command.full_name% --super-admin</info>',
                 'You can create an admin via the admin flag:',
                 '<info>php %command.full_name% --admin</info>',
+                'You can create an admin via the moderator flag:',
+                '<info>php %command.full_name% --moderator</info>',
                 'Default role is ROLE_USER',
                 'You can create an inactive user (will not be able to log in):',
                 '<info>php %command.full_name% --inactive</info>',
