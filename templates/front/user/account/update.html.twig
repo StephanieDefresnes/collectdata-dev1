@@ -1,15 +1,15 @@
 {% trans_default_domain 'user_messages' %}
-{% extends 'front/user/layout.html.twig' %}
+{% extends 'front/layout.html.twig' %}
 
 {% block title %}{{ 'account.update.title'|trans() }}{% endblock %}
 
 {% block content %}
-    <div class="container py-4">
+    <div class="container mt-5 py-5">
         {% block banner%}
-            <h1 class="h3 mb-0 font-weight-normal">{{ 'account.update.title'|trans() }}</h1>
+            <h1 class="h3 mt-3 mb-5 text-white">{{ 'account.update.title'|trans() }}</h1>
         {% endblock %}
         <div class="col-lg-7 mx-auto">
-            <div class="card my-4">
+            <div class="card my-4 p-2 bg-light-80">
                 <div class="card-body">
                     {{ form_start(form) }}
                         <div class="row mt-2 mb-3">
@@ -48,11 +48,11 @@
                             </div>
                             {{ form_row(form.langId) }}
                         </div>
-                        <div class="form-group text-right mb-1">
-                            <a href="{{ path('user_account', { 'id': app.user.id }) }}" class="btn btn-secondary">
+                        <div class="form-group text-center mb-1">
+                            <a href="{{ path('user_account', { 'id': app.user.id }) }}" class="btn btn-light">
                                 {{ 'account.update.back'|trans() }}
                             </a>
-                            <button class="btn btn-primary" type="submit">
+                            <button class="btn btn-secondary px-5" type="submit">
                                 {{ 'account.update.submit'|trans() }}
                             </button>
                         </div>

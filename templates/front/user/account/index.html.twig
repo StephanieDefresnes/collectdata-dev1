@@ -1,4 +1,4 @@
-{% extends 'front/user/layout.html.twig' %}
+{% extends 'front/layout.html.twig' %}
 {% trans_default_domain 'user_messages' %}
 
 {% set locale = app.request.locale %}
@@ -7,14 +7,14 @@
 {% block title %}{{ 'nav.account_profile'|trans() }}{% endblock %}
 
 {% block content %}
-    <div class="container py-4">
+    <div class="container mt-5 py-5">
         {% block banner%}
-            <h1 class="h3 mb-0 font-weight-normal">{{ 'nav.account_profile'|trans() }}</h1>
+            <h1 class="h3 mt-3 mb-5 text-white">{{ 'nav.account_profile'|trans() }}</h1>
         {% endblock %}
         <div class="row">
             <div class="col-md-8">
-                <div class="card mt-4 mb-4">
-                    <h5 class="card-header text-uppercase">{{ user.name }}</h5>
+                <div class="card mb-4 bg-white-80 border-0">
+                    <h5 class="card-header bg-dark-50 text-white text-uppercase">{{ user.name }}</h5>
                     <div class="card-body">
                         <p class="row">
                             <span class="col-lg-5 text-secondary">{{ 'account.email'|trans() }}</span>

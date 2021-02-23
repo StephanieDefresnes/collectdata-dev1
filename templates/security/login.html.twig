@@ -4,7 +4,7 @@
 {% block title %}{{ 'login.title'|trans() }}{% endblock %}
 
 {% block content %}
-<section class="mt-5 pt-5 py-4">
+<section class="mt-5 py-5">
     <div class="container">
         {% if error %}
             <div class="fadeInDown animated">
@@ -12,7 +12,7 @@
             </div>
         {% endif %}
         <div class="col-lg-6 mx-auto">
-            <div class="card mt-4 mb-4 bg-light-80">
+            <div class="card mt-4 mb-4 p-2 bg-light-80">
                 <div class="card-body">
                     <form method="post">
                         {% if app.user %}
@@ -36,7 +36,7 @@
                                     </label>
                                 </div>
                             </div>
-                            <div class="form-group text-center">
+                            <div class="form-group text-center mb-4">
                                 <button class="btn btn-secondary px-5" type="submit">
                                     {{ 'login.btn.submit'|trans() }}
                                 </button>
