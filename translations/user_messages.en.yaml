@@ -9,11 +9,31 @@ nav:
         user: My contributions
         add: Add contribution
         translate: Translate contribution
+registration:
+    message:
+        unique_email: This email already exists. Please enter a new address.
 account:
     reset_password: Reset password
-    name: 'Name :'
-    email: 'Email :'
-    lang_choice: 'Choice of language :'
+    image:
+        label: 'Avatar :'
+        mimeTypesMessage: Please upload a valid image .png/.jpeg/.jpg/.gif maximum 1024kb
+        title: Edit Image
+        flash:
+            add:
+                success: The image has been sent
+                error: An error occurred while adding the image
+            delete:
+                success: The image has been deleted
+                error: An error occurred while deleting the image
+    name:
+        label: 'Name :'
+    email:
+        label: 'Email :'
+    lang:
+        current: 'Usual language :'
+        option: 'Optional languages :'
+        placeholder: Choose a language
+        default: Default (FR)
     roles: 
         title: 'Status :'
         title_s: 'Status :'
@@ -22,17 +42,69 @@ account:
         admin: Administrator
         super_admin: Super administrator
     date_create: 'Creation date :'
-    default_lang: 
-        title: 'Language :'
-        default: Default (FR)
-    contribs: 'Number of contributions :'
-    no_contrib: No contribution
+    contribs:
+        title: 'Number of contributions :'
+        empty: No contribution
+        count: contribution
+        count_s: contributions
+        translated: 'Translated contribution :'
+        translated_s: 'Translated contributions :'
     update:
         title: Modify my account
         submit: Modify
-        back: Back
+        cancel: Cancel
         flash:
             success: Your profile has been modified
+    translator:
+        checkbox: I want new languages to be added, and I want to contribute to the translation of the site
+        translate: 'Select the languages proposed for the translation :'
+        status: Site translator
+        empty: You do not suggest a language to translate
+        origin:
+            title: 'Download translation support :'
+            subtitle_ar: In Arabic
+            subtitle_en: In English
+            subtitle_es: In Spanish
+            subtitle_fr: In French
+            subtitle_tr: In Turkish
+            # Non soumis à traduction
+            url_ar: '#'
+            url_en: '#'
+            url_es: '#'
+            url_fr: '#'
+            url_tr: '#'
+        file:
+            title: Site translation
+            empty: No files have been sent
+            name: Your translation file
+            name_s: Your translation files
+            delete: Do you want to delete this translation file?
+            sent: sent on
+            valid: validated on
+            modal: 
+                title: Send a translation file
+                lang:
+                    title: 'Select a language :'
+                    placeholder: Choose a language
+                file:
+                    title: 'Upload a translation file :'
+                    placeholder: Select an .xls file
+            mimeTypesMessage: Please upload a valid .xls/.xlsx file maximum 1024kb
+            btn: 
+                add: Browse
+                submit: Send
+                confirm: Confirm
+                cancel : Cancel
+                valid: Thank you !
+                delete: Delete
+            flash:
+                add:
+                    success: The file has been sent
+                    error: An error occurred while sending the file
+                delete:
+                    success: The file has been deleted
+                    error: An error occurred while deleting the file
+                error: An error occurred while processing the file
 contrib:
     title: My contributions
     table:
@@ -61,6 +133,7 @@ contrib:
             edit: Edit
             delete: Delete
     form:
+        multiple_search: Search
         situ:
             h2: Risky situation
             label: Add a risky situation
@@ -68,6 +141,7 @@ contrib:
             title_placeholder: Short description of the situation
             description: 'Description :'
             description_placeholder: Detailed description of the situation
+        lang: Language of the situation
         event:
             label: Add an event
             placeholder: Choose an event
@@ -103,7 +177,7 @@ contrib:
             score:
                 success: Success
                 info: Can do better
-                warning:  Warning
+                warning: Warning
                 danger: Danger
                 placeholder: Assign a score
         submit:

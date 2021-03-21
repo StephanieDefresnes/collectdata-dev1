@@ -4,11 +4,17 @@ $btn-color-hover:#0056b3;
 $score-group-button-hover:#6c757d;
 
 .colBtn {
+    & > span {
+        cursor: pointer;
+    }
     & > button {
         &:focus {
             outline: none;
         }
     }
+}
+#create_situ_form_langId > option:first-child {
+    color: #343a40 !important;
 }
 
 #form-items {

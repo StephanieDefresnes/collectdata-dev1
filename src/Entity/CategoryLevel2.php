@@ -50,7 +50,7 @@ class CategoryLevel2
     private $validated;
 
     /**
-    * @ORM\OneToMany(targetEntity=Situ::class, cascade={"persist"}, mappedBy="categoryLevel2")
+    * @ORM\OneToMany(targetEntity="App\Entity\Situ", cascade={"persist"}, mappedBy="categoryLevel2")
     */
     protected $situs;
 

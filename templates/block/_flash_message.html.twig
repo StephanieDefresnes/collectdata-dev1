@@ -4,12 +4,12 @@
         <div id="flash_message" class="container">
             {% for type, messages in flashbag %}
                 {% for message in messages %}
-                    <div class="alert alert-{{ type == 'success' ? 'secondary' : type }} alert-dismissible fade show" role="alert">
+                    <div class="alert alert-secondary alert-dismissible fade show" role="alert">
                         <span class="sr-only">{{ ('alert.' ~ type)|trans() }} : </span>
                         {% if type == 'success' %}
                             <span class="text-success"><i class="fas fa-check-circle"></i></span>
                         {% elseif type == 'error' %}
-                            <i class="fas fa-exclamation-circle"></i>
+                            <span class="text-danger"><i class="fas fa-exclamation-circle"></i></span>
                         {% endif %}
                         {{ message|raw|nl2br }}
                     </div>

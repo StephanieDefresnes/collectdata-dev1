@@ -111,5 +111,5 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
                 ->setParameter('role', '%"'.$data['role'].'"%');
         }
         return $query;
-    }
+    }    
 }

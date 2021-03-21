@@ -12,15 +12,16 @@
 {% block content %}
 
     <div class="container mt-5 py-5">
-    {% block banner%}
+        
+        {% block banner%}
             <h1 class="h3 mt-3 mb-5 text-white">{{ 'contrib.title'|trans() }}</h1>
-    {% endblock %}
+        {% endblock %}
 
-    {% if situs is empty %}
-        <div class="mb-5 p-3 bg-white-80">
+        {% if situs is empty %}
+        <div class="mb-5 p-3 bg-white-70">
             {{ 'account.no_contrib'|trans() }}
         </div>
-    {% else %}
+        {% else %}
         <div class=" table-responsive">
             <table class="shadow table table-borderless table-hover border border-secondary text-nowrap bg-white-80">
                 <thead class="bg-black-40 text-white">
@@ -135,7 +136,7 @@
                 </tbody>
             </table>
         </div>
-    {% endif %}
+        {% endif %}
             
     </div>
 

@@ -3,67 +3,172 @@
 
 {% block title %}{{ 'account.update.title'|trans() }}{% endblock %}
 
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('fullscreenslide/css/style.css') }}">
+    <link rel="stylesheet" href="{{ asset('select2/css/select2.min.css') }}">
+    {{ encore_entry_link_tags('app') }}
+    {{ encore_entry_link_tags('front_app') }}
+    {{ encore_entry_link_tags('user_update_app') }}
+    </style>
+{% endblock %}
+    
 {% block content %}
+    
     <div class="container mt-5 py-5">
+        
+        <div class="row">
         {% block banner%}
             <h1 class="h3 mt-3 mb-5 text-white">{{ 'account.update.title'|trans() }}</h1>
         {% endblock %}
-        <div class="col-lg-7 mx-auto">
-            <div class="card my-4 p-2 bg-light-80">
-                <div class="card-body">
+        </div>
+                        
+        <div class="row">
+            <div class="col-lg-7 mx-auto p-0">
+                <div class="card my-4 bg-light-50">
                     {{ form_start(form) }}
-                        <div class="row mt-2 mb-3">
-                            <div class="col-sm-4 pt-2">
-                                {{ form_label(form.email) }}
+                    
+                    <div class="card-body bg-white-70 p-4">
+
+                            <div class="row mt-2 mb-3">
+                                <div class="col-sm-4 pt-2">
+                                    {{ form_label(form.imageFilename) }}
+                                </div>
+                                <div class="col-sm-8">
+                                    <div class="row row-img">
+                                        {% if user.imageFilename == '' %}
+                                        <div class="col-auto img-circle">
+                                            <img src="{{ asset('/img/unknown.jpg') }}"
+                                                data-toggle="tooltip" data-placement="right"
+                                                title="{{ 'account.image.title'|trans() }}"
+                                                id="defaultImg" alt="">
+                                            <img src=""
+                                                data-toggle="tooltip" data-placement="right"
+                                                title="{{ 'account.image.title'|trans() }}"
+                                                id="previewImg" class="d-none" alt="">
+                                        </div>
+                                        <div class="col-auto p-0">
+                                            <span class="text-secondary unupload-img no-img d-none"><i class="fas fa-times-circle"></i></span>
+                                            {{ form_errors(form.imageFilename) }}
+                                        </div>
+                                        {% else %}
+                                        <div class="col-auto img-circle">
+                                            <img src="{{ asset('/uploads/img/'~ user.imageFilename) }}" 
+                                                data-toggle="tooltip" data-placement="right"
+                                                title="{{ 'account.image.title'|trans() }}"
+                                                id="defaultImg" alt="">
+                                            <img src="{{ asset('/img/unknown.jpg') }}"
+                                                data-toggle="tooltip" data-placement="right"
+                                                title="{{ 'account.image.title'|trans() }}"
+                                                id="previewImg" class="d-none" alt="">
+                                        </div>
+                                        <div class="col-auto p-0">
+                                            <span class="text-secondary unupload-img d-none"><i class="fas fa-times-circle"></i></span>
+                                            <span class="text-secondary delete-img"><i class="fas fa-times-circle"></i></span>
+                                            {{ form_errors(form.imageFilename) }}
+                                        </div>
+                                        {% endif %}
+                                        <div class="d-none">{{ form_widget(form.imageFilename) }}</div>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="col-sm-8">
-                                {{ form_widget(form.email) }}
+
+                            <div class="row mt-2 mb-3">
+                                <div class="col-sm-4 pt-2">
+                                    {{ form_label(form.email) }}
+                                </div>
+                                <div class="col-sm-8">
+                                    {{ form_widget(form.email) }}
+                                </div>
                             </div>
-                            <div class="form-error">
-                                {{ form_errors(form.email) }}
+
+                            <div class="row my-3">
+                                <div class="col-sm-4 pt-2">
+                                    {{ form_label(form.name) }}
+                                </div>
+                                <div class="col-sm-8">
+                                    {{ form_widget(form.name) }}
+                                </div>
                             </div>
-                        </div>
-                        <div class="row my-3">
-                            <div class="col-sm-4 pt-2">
-                                {{ form_label(form.name) }}
+
+                            <div id="langId" class="row mt-3 mb-4">
+                                <div class="col-sm-4 pt-2">
+                                    {{ form_label(form.langId) }}
+                                </div>
+                                <div class="col-sm-8">
+                                    <select class="form-control custom-select text-capitalize" 
+                                            id="select_user_langId">
+                                        <option value="" data-id=""
+                                                class="text-black-50"{% if user.langId == '' %} selected{% endif %}>
+                                            {{ 'account.lang.default'|trans() }}</option>
+                                        {% for lang in langs %}
+                                            <option value="{{ lang.id }}" data-id="{{ lang.id }}"
+                                                    {% if user.langId == lang.id %} selected{% endif %}>
+                                                {{ lang.name }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                                {{ form_row(form.langId) }}
                             </div>
-                            <div class="col-sm-8">
-                                {{ form_widget(form.name) }}
+
+                            <div class="row mt-3 mb-5">
+                                <div class="col-sm-4 pt-2">
+                                    {{ form_label(form.langs) }}
+                                </div>
+                                <div class="col-sm-8 text-capitalize">
+                                    {{ form_widget(form.langs) }}
+                               </div>
                             </div>
-                            <div class="form-error">
-                                {{ form_errors(form.name) }}
+
+                            <div class="row mt-1">
+                                <div class="col-12 pt-2">
+                                    {{ form_row(form.langContributor) }}
+                                </div>
                             </div>
-                        </div>
-                        <div class="row mt-3 mb-4">
-                            <div class="col-sm-4 pt-2">
-                                <label for="">{{ 'account.lang_choice'|trans() }}</label>
+
+                            <div id="contributorLangs" class="row mt-1 mb-4">
+                                <div class="col-sm-7 pt-1 text-right">
+                                    {{ form_label(form.contributorLangs) }}
+                                </div>
+                                <div class="col-sm-5 text-capitalize">
+                                    {{ form_widget(form.contributorLangs) }}
+                               </div>
                             </div>
-                            <div class="col-sm-8">
-                                <select class="form-control text-capitalize" id="select_user_langId">
-                                    <option value="" class="text-black-50"{% if user.langId == '' %} selected{% endif %}>{{ 'account.default_lang.default'|trans() }}</option>
-                                    {% for lang in langs %}
-                                        <option value="{{ lang.id }}" {% if user.langId == lang.id %} selected{% endif %}>{{ lang.name }}</option>
-                                    {% endfor %}
-                                </select>
-                            </div>
-                            {{ form_row(form.langId) }}
-                        </div>
-                        <div class="form-group text-center mb-1">
+                               
+                    </div>
+                    
+                    <div class="card-footer bg-light text-right">
+                        <div class="d-flex justify-content-between">
                             <a href="{{ path('user_account', { 'id': app.user.id }) }}" class="btn btn-light">
-                                {{ 'account.update.back'|trans() }}
+                                {{ 'account.update.cancel'|trans() }}
                             </a>
                             <button class="btn btn-secondary px-5" type="submit">
                                 {{ 'account.update.submit'|trans() }}
                             </button>
                         </div>
+                    </div>
+                    
                     {{ form_end(form) }}
                 </div>
             </div>
         </div>
+    
     </div>
+    
+    <style>
+        </style>
+    
 {% endblock %}
 
 {% block javascripts %}
     {{ parent() }}
+    <script src="{{ asset('select2/js/select2.min.js') }}"></script>
+    <script>
+        var translations = {
+           "multiple-search" : "{{ 'contrib.form.multiple_search' | trans }}",
+        }
+        var img = {
+            "default" : "{{ asset('/img/unknown.jpg') }}",
+        }
+    </script>
     {{ encore_entry_script_tags('user_update_app') }}
 {% endblock %}

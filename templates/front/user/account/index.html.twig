@@ -2,41 +2,100 @@
 {% trans_default_domain 'user_messages' %}
 
 {% set locale = app.request.locale %}
-
+{% set subtitle_ar = 'account.translator.origin.subtitle_ar' |trans() %}
+{% set subtitle_en = 'account.translator.origin.subtitle_en' |trans() %}
+{% set subtitle_es = 'account.translator.origin.subtitle_es' |trans() %}
+{% set subtitle_fr = 'account.translator.origin.subtitle_fr' |trans() %}
+{% set subtitle_tr = 'account.translator.origin.subtitle_tr' |trans() %}
+{% set url_ar = 'account.translator.origin.url_ar' |trans() %}
+{% set url_en = 'account.translator.origin.url_en' |trans() %}
+{% set url_es = 'account.translator.origin.url_es' |trans() %}
+{% set url_fr = 'account.translator.origin.url_fr' |trans() %}
+{% set url_tr = 'account.translator.origin.url_tr' |trans() %}
+{% set modalFilename = '' %}
 
 {% block title %}{{ 'nav.account_profile'|trans() }}{% endblock %}
 
+{% block stylesheets %}
+    {{ parent() }}
+    {{ encore_entry_link_tags('user_account_app') }}
+    <style>
+        .custom-file-label::after{content:"{{ 'account.translator.file.btn.add' | trans }}";}
+    </style>
+{% endblock %}
+
 {% block content %}
+    
     <div class="container mt-5 py-5">
+        
+        <div class="row">
         {% block banner%}
             <h1 class="h3 mt-3 mb-5 text-white">{{ 'nav.account_profile'|trans() }}</h1>
         {% endblock %}
+        </div>
+                        
         <div class="row">
-            <div class="col-md-8">
-                <div class="card mb-4 bg-white-80 border-0">
-                    <h5 class="card-header bg-dark-50 text-white text-uppercase">{{ user.name }}</h5>
-                    <div class="card-body">
-                        <p class="row">
-                            <span class="col-lg-5 text-secondary">{{ 'account.email'|trans() }}</span>
+        
+            <div class="col-md-8 mx-auto p-0">
+                <div class="card mb-4 bg-light-50 border-0">
+                    
+                    <div class="card-header bg-dark-50">
+                        <div class="row{% if user.imageFilename %} mx-0{% endif %}">
+                            {% if user.imageFilename %}
+                            <div class="img-circle col-auto">
+                                <img src="{{ asset('/uploads/img/'~ user.imageFilename) }}" 
+                                    data-toggle="tooltip" data-placement="right"
+                                    title="{{ 'account.image.title.update'|trans() }}"
+                                    id="defaultImg" alt="">
+                            </div>
+                            {% endif %}
+                            <div class="col-auto">
+                                <h5 class="text-white text-uppercase mb-0{% if user.imageFilename %} mt-4 pt-1{% endif %}">
+                                    {{ user.name }}
+                                </h5>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="card-body bg-white-70">
+                        
+                        <div class="row mb-lg-2 mb-3">
+                            <span class="col-lg-5 text-secondary">{{ 'account.email.label'|trans() }}</span>
                             <span class="col-lg-7">{{ user.email }}</span>                                
-                        </p>
-                        <p class="row">
+                        </div>
+                        
+                        <div class="row mb-lg-2 mb-3">
                             <span class="col-lg-5 text-secondary">{{ 'account.date_create'|trans() }}</span>
                             <span class="col-lg-7 first-letter">
                                 {{ user.dateCreate|format_datetime('full', 'short', locale=locale) }}
                             </span>                                
-                        </p>
-                        <p class="row">
-                            <span class="col-lg-5 text-secondary">{{ 'account.default_lang.title'|trans() }}</span>
+                         </div>
+                        
+                        <div class="row mb-lg-2 mb-3">
+                            <span class="col-lg-5 text-secondary">{{ 'account.lang.current'|trans() }}</span>
                             <span class="col-md-7 first-letter">
                                 {% if user_lang is empty %}
-                                    {{ 'account.default_lang.default'|trans() }}
+                                    {{ 'account.lang.default'|trans() }}
                                 {% else %}
                                     {{ user_lang }}
                                 {% endif %}
                             </span>                                
-                        </p>
-                        <p class="row">
+                        </div>
+                        
+                        <div class="row mb-lg-2 mb-3">
+                            <span class="col-lg-5 text-secondary">{{ 'account.lang.option'|trans() }}</span>
+                            <span class="col-md-7 first-letter list-inline">
+                                {% if langs is empty %}
+                                    --
+                                {% else %}
+                                    {% for lang in user.langs %}
+                                    <span class="text-capitalize decode">{{ lang.name }}</span>
+                                    {% endfor %}
+                                {% endif %}
+                            </span>                                
+                        </div>
+                        
+                        <div class="row mb-lg-2 mb-3">
                             <span class="col-lg-5 text-secondary">
                                 {% if user.roles|length == 1 %}
                                     {{ 'account.roles.title'|trans() }}
@@ -50,41 +109,295 @@
                                     {% elseif role == 'ROLE_MODERATOR' %}{{ 'account.roles.moderator'|trans() }}
                                     {% elseif role == 'ROLE_ADMIN' %}{{ 'account.roles.admin'|trans() }}
                                     {% elseif role == 'ROLE_SUPER_ADMIN' %}{{ 'account.roles.super_admin'|trans() }}{% endif %}
-                                    {% if not loop.last %},{% endif %}
+                                    {% if not loop.last %} - {% endif %}
                                 {% endfor %}
-                            </span>                                
-                        </p>
-                        <p class="row">
-                            <span class="col-lg-5 text-secondary">
-                                {{ 'account.contribs'|trans() }}
-                            </span>
-                            <span class="col-lg-7">
-                                {% if user.contribs is empty %}
-                                    {{ 'account.no_contrib'|trans() }}
-                                {% else %}
-                                    {{ user.contribs }}
+                                {% if user.langContributor %}
+                                    - {{ 'account.translator.status'|trans() }}
                                 {% endif %}
                             </span>                                
-                        </p>
+                        </div>
+                        
+                        <div class="row mb-lg-2 mb-3">
+                            <div class="col-lg-5 text-secondary">
+                                {{ 'account.contribs.title'|trans() }}
+                            </div>
+                            <div class="col-lg-7">
+                                <p class="mb-0">
+                                {% if situs is empty %}
+                                    {{ 'account.no_contrib.empty'|trans() }}
+                                {% elseif situs == 1 %}
+                                    {{ situs }} {{ 'account.contribs.count'|trans() }}
+                                {% else %}
+                                    {{ situs }} {{ 'account.contribs.count_s'|trans() }}
+                                {% endif %}
+                                </p>
+                                {% if situsLangs|length > 1 %}
+                                    {% for situ in situsLangs %}
+                                    <p class="mb-0 row">
+                                        <span class="col-4">
+                                            <span class="text-secondary text-capitalize">{{ situ.langName }} :</span>
+                                        </span>
+                                        <span class="col-7">
+                                            {{ situ.situs }}
+                                            {% if situ.situs  == 1 %}
+                                                {{ 'account.contribs.count'|trans() }}
+                                            {% else %}
+                                                {{ 'account.contribs.count_s'|trans() }}
+                                            {% endif %}
+                                        </span>
+                                    </p>
+                                    {% endfor %}
+                                {% endif %}
+                                {% if situsTranslated %}
+                                    <p class="mt-2 mb-0 text-secondary">
+                                    {% if situsTranslated|length == 1 %}
+                                        {{ 'account.contribs.translated'|trans() }}
+                                    {% else %}
+                                        {{ 'account.contribs.translated_s'|trans() }}
+                                    {% endif %}
+                                    </p>
+                                    {% for situ in situsTranslated %}
+                                    <p class="mb-0 row">
+                                        <span class="col-4">
+                                            <span class="text-secondary text-capitalize">{{ situ.langName }} :</span>
+                                        </span>
+                                        <span class="col-7">
+                                            {{ situ.situs }}
+                                            {% if situ.situs  == 1 %}
+                                                {{ 'account.contribs.count'|trans() }}
+                                            {% else %}
+                                                {{ 'account.contribs.count_s'|trans() }}
+                                            {% endif %}
+                                        </span>
+                                    </p>
+                                    {% endfor %}
+                                {% endif %}
+                            </div>                                
+                        </div>
+                        
+                        {% if user.contributorLangs|length > 0 %}
+                            <div id="form-translation" class="mt-4"
+                                 data-translation="{{ user.contributorLangs|length }}">
+                            {% if user.langContributor and user.contributorLangs %}
+                                <ul id="contributorLangs" class="d-none">
+                                {% for lang in user.contributorLangs %}
+                                    <li data-id="{{ lang.id }}" class="text-capitalize decode">{{ lang.name }}</li>
+                                {% endfor %}
+                                </ul>
+                                <div class="row">
+                                    <div class="col-lg-5 mb-3 text-secondary">
+                                        <hr class="d-lg-none d-block mt-1 mb-3">
+                                        <p>{{ 'account.translator.file.title'|trans() }}</p>
+                                        <hr class="d-lg-block d-none">
+                                        {% if user_lang %}
+                                            <p class="mb-0">{{ 'account.translator.origin.title'|trans() }}</p>
+                                            <p class="mb-0">
+                                            {% if user_lang_lg == 'ar' %}
+                                                <a href="{{ url_ar }}" target="_blank" class="text-primary">
+                                                    {{ subtitle_ar }}
+                                                    <span class="small"><i class="fas fa-external-link-alt"></i></span>
+                                                </a>
+                                            {% elseif user_lang_lg == 'en' %}
+                                                <a href="{{ url_en }}" target="_blank" class="text-primary">
+                                                    {{ subtitle_en }}
+                                                    <span class="small"><i class="fas fa-external-link-alt"></i></span>
+                                                </a>
+                                            {% elseif user_lang_lg == 'es' %}
+                                                <a href="{{ url_es }}" target="_blank" class="text-primary">
+                                                    {{ subtitle_es }}
+                                                    <span class="small"><i class="fas fa-external-link-alt"></i></span>
+                                                </a>
+                                            {% elseif user_lang_lg == 'fr' %}
+                                                <a href="{{ url_fr }}" target="_blank" class="text-primary">
+                                                    {{ subtitle_fr }}
+                                                    <span class="small"><i class="fas fa-external-link-alt"></i></span>
+                                                </a>
+                                            {% elseif user_lang_lg == 'tr' %}
+                                                <a href="{{ url_tr }}" target="_blank" class="text-primary">
+                                                    {{ subtitle_tr }}
+                                                    <span class="small"><i class="fas fa-external-link-alt"></i></span>
+                                                </a>
+                                            {% endif %}
+                                            </p>
+                                            {% for lang in user.langs %}
+                                                <p class="mb-0">
+                                                {% if lang.lang == 'ar' %}
+                                                    <a href="{{ url_ar }}" target="_blank" class="text-primary">
+                                                        {{ subtitle_ar }}
+                                                        <span class="small"><i class="fas fa-external-link-alt"></i></span>
+                                                    </a>
+                                                {% elseif lang.lang == 'en' %}
+                                                    <a href="{{ url_en }}" target="_blank" class="text-primary">
+                                                        {{ subtitle_en }}
+                                                        <span class="small"><i class="fas fa-external-link-alt"></i></span>
+                                                    </a>
+                                                {% elseif lang.lang == 'es' %}
+                                                    <a href="{{ url_es }}" target="_blank" class="text-primary">
+                                                        {{ subtitle_es }}
+                                                        <span class="small"><i class="fas fa-external-link-alt"></i></span>
+                                                    </a>
+                                                {% elseif lang.lang == 'fr' %}
+                                                    <a href="{{ url_fr }}" target="_blank" class="text-primary">
+                                                        {{ subtitle_fr }}
+                                                        <span class="small"><i class="fas fa-external-link-alt"></i></span>
+                                                    </a>
+                                                {% elseif lang.lang == 'tr' %}
+                                                    <a href="{{ url_tr }}" target="_blank" class="text-primary">
+                                                        {{ subtitle_tr }}
+                                                        <span class="small"><i class="fas fa-external-link-alt"></i></span>
+                                                    </a>
+                                                {% endif %}
+                                                </p>
+                                            {% endfor %}
+                                        {% endif %}
+                                    </div>
+                                    <div id="form-userFiles" class="col-lg-7">
+                                        <span id="btn-modal" data-toggle="modal" data-target="#addTranslationFile">
+                                            <span class="text-primary"><i class="fas fa-plus-circle"></i></span>
+                                            {{ 'account.translator.file.modal.title'|trans() }}
+                                        </span>
+                                        <ul id="userFiles" class="list-group my-2">
+                                        {% for translationFile in translationFiles %}
+                                            {% if translationFile.file|length >= 1 %}
+                                            <li class="list-group-item p-0 mt-2 border-0 bg-none text-secondary">
+                                                    {% if translationFile.file|length == 1 %}
+                                                        {{ 'account.translator.file.name'|trans() }}
+                                                    {% else %}
+                                                        {{ 'account.translator.file.name_s'|trans() }}
+                                                    {% endif %}
+                                                <span class="text-dark">
+                                                    {{ translationFile.lang }}
+                                                </span> :
+                                                <ul class="pl-3">
+                                                    {% for file in translationFile.file %}
+
+                                                        <li class="d-flex justify-content-between">
+                                                            <a href="{{ asset('/uploads/user_translations/'~ file.filename) }}" target="_blank">
+                                                            {# Get complete initial Filename event if it has an "-" #}
+                                                                {# Remove SF slug #}
+                                                                {% set filename = file.filename|split('-',-1) %}
+                                                                {# Rebuild initial Filename without slug #}
+                                                                {% set newFilename %}{% for file in filename %}{{ file }}{% if not loop.last %}-{% endif %}{% endfor %}{% endset %}
+                                                            {# End on get complete.. #}
+                                                                {{ newFilename }} -
+                                                                {% if file.statusId == 2 %}
+                                                                    {{ 'account.translator.file.sent'|trans() }}
+                                                                    {{ file.dateCreation|format_datetime('short', 'short', locale=locale) }}
+                                                                {% else %}
+                                                                    {{ 'account.translator.file.valid'|trans() }}
+                                                                    {{ file.dateValidation|format_datetime('short', 'short', locale=locale) }}
+                                                                {% endif %}
+                                                            </a>
+                                                            {% if file.statusId == 2 %}
+                                                            <span   data-toggle="modal" data-target="#removeTranslationFile"
+                                                                    data-filename="{{ file.filename }}" data-short-filename="{{ newFilename }}"
+                                                                    data-lang="{{ translationFile.lang }}"
+                                                                    class="text-dark fileDelete">
+                                                                <i  class="fas fa-times-circle" data-toggle="tooltip" data-placement="left"
+                                                                    title="{{ 'account.translator.file.btn.delete'|trans() }}"></i>
+                                                            </span>
+                                                            {% else %}
+                                                            <span class="text-success">
+                                                                <i  class="fas fa-check-circle"
+                                                                    data-toggle="tooltip" data-placement="left"
+                                                                    title="{{ 'account.translator.file.btn.valid'|trans() }}"></i></span>
+                                                            {% endif %} 
+                                                        </li>
+                                                    {% endfor %}
+                                                </ul>
+                                            </li>
+                                            {% endif %}
+                                        {% endfor %}
+                                        </ul>
+                                    </div>
+                                </div>
+                                    
+                                {{ form_start(form) }}
+                                <div class="modal" id="removeTranslationFile" tabindex="-1">
+                                    <div class="modal-dialog modal-dialog-centered">
+                                        <div class="modal-content border-0">
+                                            <div class="modal-header py-2 bg-dark-50 text-white">
+                                                <h5 class="modal-title">{{ 'account.translator.file.delete' | trans }}</h5>
+                                            </div>
+                                            <div class="modal-body">
+                                                <span id="modal-lang"></span> : <span id="modal-filename"></span>
+                                                {{ form_row(form.filename) }}
+                                                <div class="d-flex justify-content-end mt-3">
+                                                    <span class="btn btn-outline-secondary mx-2 cancel-file" data-dismiss="modal">
+                                                        {{ 'account.translator.file.btn.cancel'|trans() }}
+                                                    </span>
+                                                    <button type="submit" name="user_files_form_filename[submit]" class="btn btn-primary">
+                                                        {{ 'account.translator.file.btn.confirm' | trans }}
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="modal" id="addTranslationFile"
+                                     data-backdrop="static" data-keyboard="false" tabindex="-1">
+                                    <div class="modal-dialog modal-dialog-centered">
+                                        <div class="modal-content border-0">
+                                            <div class="modal-header py-2 bg-dark-50 text-white">
+                                                <h5 class="modal-title">{{ 'account.translator.file.modal.title'|trans() }}</h5>
+                                            </div>
+                                            <div class="modal-body">
+                                                <div class="row">
+                                                    <div class="col-sm-6 mb-3">
+                                                        {{ form_label(form.lang) }}
+                                                    </div>
+                                                    <div class="col-sm-6 mb-3">
+                                                        {{ form_widget(form.lang) }}
+                                                    </div>
+                                                    {{ form_row(form.file) }}
+                                                </div>
+                                                <div class="d-flex justify-content-end mt-3">
+                                                    <span class="btn btn-outline-secondary mx-2 cancel-file"
+                                                          data-dismiss="modal">
+                                                        {{ 'account.translator.file.btn.cancel'|trans() }}
+                                                    </span>
+                                                    <button type="submit" name="user_files_form_lang[submit]" class="btn btn-primary">
+                                                        {{ 'account.translator.file.btn.confirm' | trans }}
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                {{ form_end(form) }}
+                            {% endif %}
+                            </div>
+                        {% endif %}
+                        
                     </div>
-                </div>
-            </div>
-            <div class="col-md-4 mt-md-5 pt-md-5">
-                <div class="row">
-                    <div class="col-md-auto offset-md-2">
-                        <p class="mb-3 text-center">
-                            <a href="{{ path('user_update', { 'id': app.user.id }) }}" class="btn btn-secondary d-md-block">
+                        
+                    <div class="card-footer bg-secondary-40 text-right">
+                        <div class="d-flex justify-content-between">
+                            <a href="{{ path('user_update', { 'id': app.user.id }) }}"
+                               class="mr-2 px-3 pb border btn btn-light bg-light-80">
                                 {{ 'account.update.title'|trans() }}
                             </a>
-                        </p>
-                        <p class="text-center">
-                            <a href="{{ path('app_reset_password', { 'id': app.user.id }) }}" class="btn btn-secondary d-md-block">
+                            <a href="{{ path('app_reset_password', { 'id': app.user.id }) }}"
+                               class="ml-2 px-3 border btn btn-light bg-light-80">
                                 {{ 'account.reset_password'|trans() }}
                             </a>
-                        </p>
+                        </div>
                     </div>
+                            
                 </div>
+                        
             </div>
         </div>
+                    
     </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+    var translations = {
+       "file-placeholder" : "{{ 'account.translator.file.modal.file.placeholder' | trans }}",
+    }
+    </script>
+    {{ encore_entry_script_tags('user_account_app') }}
 {% endblock %}

@@ -2,14 +2,19 @@
 
 namespace App\Entity;
 
+use App\Entity\Lang;
+use App\Entity\UserFile;
 use App\Repository\UserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
+use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * @ORM\Entity(repositoryClass=UserRepository::class)
- * @UniqueEntity(fields={"email"}, message="account.email.unique_email")
+ * @UniqueEntity(fields={"email"}, message="registration.message.unique_email")
  */
 class User implements UserInterface
 {
@@ -52,9 +57,9 @@ class User implements UserInterface
     private $name;
 
     /**
-     * @ORM\Column(type="integer", nullable=true)
+     * @ORM\Column(type="string", length=255, nullable=true)
      */
-    private $contribs;
+    private $imageFilename;
 
     /**
      * @ORM\Column(type="datetime")
@@ -85,6 +90,35 @@ class User implements UserInterface
      * @ORM\Column(type="integer", nullable=true)
      */
     private $langId;
+
+    /**
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $langContributor;
+
+    /**
+    * @ORM\ManyToMany(targetEntity=Lang::class)
+    * @ORM\JoinTable(name="user_langs")
+    */
+    protected $langs;
+
+    /**
+    * @ORM\ManyToMany(targetEntity=Lang::class)
+    * @ORM\JoinTable(name="user_contributor_langs")
+    */
+    protected $contributorLangs;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\UserFile", cascade={"persist", "remove"}, mappedBy="user")
+    */
+    protected $userFiles;
+
+    public function __construct()
+    {
+        $this->langs = new ArrayCollection();
+        $this->contributorLangs = new ArrayCollection();
+        $this->userFiles = new ArrayCollection();
+    }
 
     public function __toString()
     {
@@ -231,15 +265,15 @@ class User implements UserInterface
 
         return $this;
     }
-
-    public function getContribs(): ?int
+    
+    public function getImageFilename()
     {
-        return $this->contribs;
+        return $this->imageFilename;
     }
 
-    public function setContribs(?int $contribs): self
+    public function setImageFilename($imageFilename)
     {
-        $this->contribs = $contribs;
+        $this->imageFilename = $imageFilename;
 
         return $this;
     }
@@ -313,6 +347,97 @@ class User implements UserInterface
     {
         $this->langId = $langId;
 
+        return $this;
+    }
+
+    public function getLangContributor(): ?bool
+    {
+        return $this->langContributor;
+    }
+
+    public function setLangContributor(bool $langContributor): self
+    {
+        $this->langContributor = $langContributor;
+
+        return $this;
+    }
+    
+    /**
+     * @return Collection|Lang[]
+     */
+    public function getLangs(): Collection
+    {
+        return $this->langs;
+    }
+     
+    public function addLang(Lang $lang): self
+    {
+        $this->langs[] = $lang;
+        
+        return $this;
+    }
+
+    public function removeLang(Lang $lang): self
+    {
+        if ($this->langs->contains($lang)) {
+            $this->langs->removeElement($lang);
+        }
+        
+        return $this;
+    }
+    
+    /**
+     * @return Collection|Lang[]
+     */
+    public function getContributorLangs(): Collection
+    {
+        return $this->contributorLangs;
+    }
+     
+    public function addContributorLang(Lang $lang): self
+    {
+        $this->contributorLangs[] = $lang;
+        
+        return $this;
+    }
+
+    public function removeContributorLang(Lang $lang): self
+    {
+        if ($this->contributorLangs->contains($lang)) {
+            $this->contributorLangs->removeElement($lang);
+        }
+        
+        return $this;
+    }
+    
+    /**
+     * @return Collection|UserFile[]
+     */
+    public function getUserFiles(): Collection
+    {
+        return $this->userFiles;
+    }
+     
+    public function addUserFile(UserFile $userFile): self
+    {
+        if (!$this->userFiles->contains($userFile)) {
+            $this->userFiles[] = $userFile;
+            $userFile->setUserFile($this);
+        }
+        
+        return $this;
+    }
+
+    public function removeUserFile(UserFile $userFile): self
+    {
+        if ($this->userFiles->contains($userFile)) {
+            $this->userFiles->removeElement($userFile);
+            // set the owning side to null (unless already changed)
+            if ($userFile->getUserFile() === $this) {
+                $userFile->setUserFile(null);
+            }
+        }
+        
         return $this;
     }
 }

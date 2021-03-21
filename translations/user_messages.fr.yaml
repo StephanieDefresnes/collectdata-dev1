@@ -9,11 +9,31 @@ nav:
         user: Mes contributions
         add: Ajouter une contribution
         translate: Traduire une contribution
+registration:
+    message:
+        unique_email: Il y a déjà un compte avec cet email. Veuillez entrer un nouvel e-mail.
 account:
     reset_password: Modifier mon mot de passe
-    name: 'Nom :'
-    email: 'Email :'
-    lang_choice: 'Choix de langue :'
+    image:
+        label: 'Avatar :'
+        mimeTypesMessage: Veuillez téléverser une image valide .png/.jpeg/.jpg/.gif maximum 1024ko
+        title: Modifier l'image
+        flash:
+            add:
+                success: L'image a bien été envoyée
+                error: Une erreur s'est produite lors de l'ajout de l'image
+            delete:
+                success: L'image a bien été supprimée
+                error: Une erreur s'est produite lors de la suppression de l'image
+    name:
+        label: 'Nom :'
+    email:
+        label: 'Email :'
+    lang:
+        current: 'Langue usuelle :'
+        option: 'Langues optionnelles :'
+        placeholder: Choisir une langue
+        default: Défaut (FR)
     roles: 
         title: 'Statut :'
         title_s: 'Statuts :'
@@ -22,17 +42,69 @@ account:
         admin: Administrateur
         super_admin: Super administrateur
     date_create: 'Date de création :'
-    default_lang: 
-        title: 'Langue :'
-        default: Défaut (FR)
-    contribs: 'Nombre de contributions :'
-    no_contrib: Aucune contribution
+    contribs:
+        title: 'Nombre de contributions :'
+        empty: Aucune contribution
+        count: contribution
+        count_s: contributions
+        translated: 'Contribution traduite :'
+        translated_s: 'Contributions traduites :'
     update:
         title: Modifier mon compte
         submit: Enregistrer
-        back: Retour
+        cancel: Annuler
         flash:
             success: Votre profil a bien été modifié
+    translator:
+        checkbox: Je souhaite que de nouvelles langues soient ajoutées, et je veux contribuer à la traduction du site
+        translate: 'Sélectionner la ou les langues proposée(s) à la traduction :'
+        status: Traducteur du site
+        empty: Vous ne proposez pas de langue à traduire
+        origin:
+            title: 'Télécharger le support de traduction :'
+            subtitle_ar: En arabe
+            subtitle_en: En anglais
+            subtitle_es: En espagnol
+            subtitle_fr: En français
+            subtitle_tr: En turc
+            # Non soumis à traduction
+            url_ar: '#'
+            url_en: '#'
+            url_es: '#'
+            url_fr: '#'
+            url_tr: '#'
+        file:
+            title: Traduction du site
+            empty: Aucun fichier n'a été envoyé
+            name: Votre fichier de traduction
+            name_s: Vos fichiers de traduction
+            delete: Voulez-vous supprimer ce fichier de traduction ?
+            sent: envoyé le
+            valid: validé le
+            modal: 
+                title: Envoyer un fichier de traduction
+                lang:
+                    title: 'Sélectionner une langue :'
+                    placeholder: Choisir une langue
+                file:
+                    title: 'Téléverser un fichier de traduction :'
+                    placeholder: Sélectionner un fichier .xls
+            mimeTypesMessage: Veuillez téléverser un fichier valide .xls/.xlsx maximum 1024ko
+            btn: 
+                add: Parcourir
+                submit: Envoyer
+                confirm: Confirmer
+                cancel : Annuler
+                valid: Merci !
+                delete: Supprimer
+            flash:
+                add:
+                    success: Le fichier a bien été envoyé
+                    error: Une erreur s'est produite lors de l'envoi du fichier
+                delete:
+                    success: Le fichier a bien été supprimé
+                    error: Une erreur s'est produite lors de la suppression du fichier
+                error: Une erreur s'est produite lors du traitement du fichier
 contrib:
     title: Mes contributions
     table:
@@ -61,6 +133,7 @@ contrib:
             edit: Modifier
             delete: Supprimer
     form:
+        multiple_search: Rechercher
         situ:
             h2: La situation à risque
             label: Ajouter une situation à risque
@@ -68,6 +141,7 @@ contrib:
             title_placeholder: Courte description de la situation
             description: 'Description :'
             description_placeholder: Description détaillée de la situation
+        lang: Langue de la situation
         event:
             label: Ajouter un événement
             placeholder: Choisir un événement

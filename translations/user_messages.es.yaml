@@ -9,11 +9,31 @@ nav:
         user: Mis contribuciones
         add: Agregar una contribución
         translate: Traducir contribución
+registration:
+    message:
+        unique_email: Ya existe este email. Ingrese un nuevo email.
 account:
     reset_password: Cambiar la contraseña
-    name: 'Apellido :'
-    email: 'Email :'
-    lang_choice: 'Elección de idioma :'
+    image:
+        label: 'Avatar :'
+        mimeTypesMessage: Sube una imagen válida .png/.jpeg/.jpg/.gif de 1024 kb como máximo
+        title: Editar imagen
+        flash:
+            add:
+                success: La imagen ha sido enviada
+                error: Ocurrió un error al agregar la imagen
+            delete:
+                success: La imagen ha sido eliminada
+                error: Ocurrió un error al eliminar la imagen
+    name:
+        label: 'Apellido :'
+    email: 
+        label: 'Email :'
+    lang:
+        current: 'Idioma habitual :'
+        option: 'Idiomas opcionales :'
+        placeholder: Elige un idioma
+        default: Defecto (FR)
     roles: 
         title: 'Estado :'
         title_s: 'Estados :'
@@ -22,17 +42,69 @@ account:
         admin: Administrador
         super_admin: Superadministrador
     date_create: 'Fecha de creación :'
-    default_lang: 
-        title: 'Idioma :'
-        default: Defecto (FR)
-    contribs: 'Numero de contribuciones :'
-    no_contrib: Sin contribución
+    contribs:
+        title: 'Numero de contribuciones :'
+        empty: Sin contribución
+        count: contribution
+        count_s: contributions
+        translated: 'Contribución traducida:'
+        translated_s: 'Contribuciones traducidas :'
     update:
         title: Modificar mi cuenta
         submit: Modificar
-        back: Regreso
+        cancel: Anular
         flash:
             success: Tu perfil ha sido modificado
+    translator:
+        checkbox: Quiero que se agreguen nuevos idiomas y quiero contribuir a la traducción del sitio.
+        translate: 'Seleccionar los idiomas propuestos para la traducción :'
+        status: Traductor del sitio
+        empty: No sugieres un idioma para traducir
+        origin:
+            title: 'Descargar soporte de traducción :'
+            subtitle_ar: En árabe
+            subtitle_en: En inglés
+            subtitle_es: En español
+            subtitle_fr: En francés
+            subtitle_tr: En turco
+            # Non soumis à traduction
+            url_ar: '#'
+            url_en: '#'
+            url_es: '#'
+            url_fr: '#'
+            url_tr: '#'
+        file:
+            title: Traducción del sitio
+            empty: No se han enviado archivos
+            name: Tu archivo de traducción
+            name_s: Tus archivos de traducción
+            delete: ¿Quieres eliminar este archivo de traducción?
+            sent: enviado el
+            valid: validado el
+            modal: 
+                title: Enviar un archivo de traducción
+                lang:
+                    title: 'Selecciona un idioma  :'
+                    placeholder: Elige un idioma
+                file:
+                    title: 'Cargar un archivo de traducción :'
+                    placeholder: Seleccione un archivo .xls
+            mimeTypesMessage: Sube un archivo .xls / .xlsx válido con un máximo de 1024 kb.
+            btn: 
+                add: Navegar
+                submit: Send
+                confirm: Confirmar
+                cancel : Cancelar
+                valid: Gracias !
+                delete: Borrar
+            flash:
+                add:
+                    success: El archivo ha sido enviado
+                    error: Ocurrió un error al enviar el archivo.
+                delete:
+                    success: El archivo ha sido eliminado
+                    error: Ocurrió un error al eliminar el archivo.
+                error: Ocurrió un error al procesar el archivo
 contrib:
     title: Mis contribuciones
     table:
@@ -61,6 +133,7 @@ contrib:
             edit: Editar
             delete: Eliminar
     form:
+        multiple_search: Buscar
         situ:
             h2: La situación de riesgo
             label: Agrega una situación de riesgo
@@ -68,6 +141,7 @@ contrib:
             title_placeholder: Breve descripción de la situación.
             description: 'Descripción :'
             description_placeholder: Descripción detallada de la situación
+        lang: Idioma de la situación
         event:
             label: Agregar un evento
             placeholder: Elige un evento

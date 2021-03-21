@@ -16,16 +16,15 @@ class CreateCategoryLevel2Type extends AbstractType
         $builder
             ->add('title', TextType::class, [
                 'label' => 'contrib.form.category.add.title',
-                'attr' => [
-                    'placeholder' => 'contrib.form.category.level2.title_placeholder'
-                    ],
+                'attr' => ['placeholder' => 'contrib.form.category.level2.title_placeholder'],
             ])
             ->add('description', TextareaType::class, [
-                'label' => 'contrib.form.category.add.description',
                 'attr' => [
                     'rows' => '3',
-                    'placeholder' => 'contrib.form.category.level2.description_placeholder'
+                    'placeholder' => 'contrib.form.category.level2.description_placeholder',
                     ],
+                'row_attr' => ['class' => 'mb-0'],
+                'label' => 'contrib.form.category.add.description',
             ])
         ;
     }

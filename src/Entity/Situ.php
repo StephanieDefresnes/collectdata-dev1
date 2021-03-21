@@ -64,9 +64,9 @@ class Situ
     private $statusId;
 
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Lang", inversedBy="situs")
      */
-    private $langId;
+    private $lang;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Event", inversedBy="situs")
@@ -207,14 +207,14 @@ class Situ
         return $this;
     }
 
-    public function getLangId(): ?int
+    public function getLang(): ?int
     {
-        return $this->langId;
+        return $this->lang;
     }
 
-    public function setLangId(int $langId): self
+    public function setLang(?Lang $lang): self
     {
-        $this->langId = $langId;
+        $this->lang = $lang;
 
         return $this;
     }

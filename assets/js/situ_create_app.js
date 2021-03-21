@@ -4,18 +4,23 @@ import '../css/situ_create_app.scss'
 // js
 
 /**
+ * Load events depending on User optionnal languages
+ */
+
+/**
  * Load categories or create them functions
  */
 // Init forms
 function initSelectData(dataId) {
     var select = '<select id="create_situ_form_'+ dataId +'"'
                     +' name="create_situ_form['+ dataId +']"'
-                    +' class="form-control"></select>'
+                    +' class="form-control custom-select"></select>'
     return select
 }
 function initCreateData(dataId) {
+    var mb = dataId  == 'event' ? ' mb-0' : ''
     var fields =
-        '<div id="create_situ_form_'+ dataId +'"><div class="form-group mt-1">'
+        '<div id="create_situ_form_'+ dataId +'"><div class="form-group mt-1' + mb + '">'
             +'<label for="create_situ_form_'+ dataId +'_title" class="required">Titre :</label>'
             +'<input type="text" id="'+ dataId +'_title"'
                 +' name="create_situ_form['+ dataId +'][title]" required="required"'
@@ -23,7 +28,7 @@ function initCreateData(dataId) {
             +'</div>'
     if (dataId == 'categoryLevel1' || dataId == 'categoryLevel2') {
         fields +=
-            '<div class="form-group">'
+            '<div class="mb-0 form-group">'
             +'<label for="create_situ_form_'+ dataId +'_description" class="required">Description :</label>'
             +'<textarea id="create_situ_form_'+ dataId +'_description"'
                 +' name="create_situ_form['+ dataId +'][description]" required="required" rows="3"'
@@ -35,13 +40,12 @@ function initCreateData(dataId) {
 }
 
 // Action when option select is changed
-function changeCategory(selectId) {
+function changeAction(selectId) {
     var nextSelectId = selectId.parents('.formData').next().find('select').attr('id'),
         lastData = 'categoryLevel2',
         $form = selectId.closest('form'),
         data = {}
     data[selectId.attr('name')] = selectId.val()
-    console.log(data)
     loadCategories($form, data, selectId, '#'+ nextSelectId, lastData)
 }
 
@@ -56,16 +60,34 @@ function loadCategories($form, data, selectId, nextSelectId, lastData) {
                 $(html).find(nextSelectId)
             )
             if (!$(nextSelectId).is('select')
+              && $(selectId).attr('id') == 'create_situ_form_lang') {
+                $('.colDataLang').each(function(){
+                    $(this).html(initCreateData($(this).parents('.formData').attr('id')))
+                            .next('.colBtn').hide()
+                })
+            } else if (!$(nextSelectId).is('select')
               && $(selectId).attr('id') == 'create_situ_form_event') {
-                $('#'+ lastData).find('.colData').html(initCreateData(lastData))
-            } else {
-                $(nextSelectId).parent().next().find('button').remove()
-                $(nextSelectId).parent().next().find('a').show()
+                $('.colData').each(function(){
+                    $(this).html(initCreateData($(this).parents('.formData').attr('id')))
+                            .next('.colBtn').hide()
+                })
+            } else if ($(nextSelectId).is('select')) {
+                $('.formData').each(function(){
+                    $(this).find('button').remove()
+                    $(this).find('span').show()
+                })
             }
-            $('.colData').each(function(){
-                if ($(this).children().is('select')) $(this).next('.colBtn').show()
-                else $(this).next('.colBtn').hide()
-            })
+            if ( $(selectId).attr('id') == 'create_situ_form_lang') {
+                $('.colDataLang').each(function(){
+                    if ($(this).children().is('select')) $(this).next('.colBtn').show()
+                    else $(this).next('.colBtn').hide()
+                })
+            } else if ($(selectId).attr('id') == 'create_situ_form_event') {
+                $('.colData').each(function(){
+                    if ($(this).children().is('select')) $(this).next('.colBtn').show()
+                    else $(this).next('.colBtn').hide()
+                })
+            }
         }
     })
 }
@@ -84,30 +106,32 @@ function toggleFields(dataEntity) {
 // Add Event or category level 1&2
 function toggleNewFields(newFields, dataEntity) {
     // Replace select with new fields
-    $('#form-'+ dataEntity).html(newFields).next('.colBtn').find('a').hide()
+    $('#form-'+ dataEntity).html(newFields).next('.colBtn').find('span').hide()
     // Deploy new fields depending on Add button
     if (dataEntity == 'event') {
         // If add eventID, create category level 1&2
         $('#form-categoryLevel1').html(initCreateData('categoryLevel1'))
         $('#form-categoryLevel2').html(initCreateData('categoryLevel2'))
         $('#add-categoryLevel1-btn, #add-categoryLevel2-btn').hide()
-    } else if (dataEntity == 'categoryLevel1Id') {
+        $('#add-categoryLevel1, #add-categoryLevel2').find('button').remove()
+    } else if (dataEntity == 'categoryLevel1') {
         // If add categoryLevelId, create categoryLevel2Id
         $('#form-categoryLevel2').html(initCreateData('categoryLevel2'))
         $('#add-categoryLevel2-btn').hide()
+        $('#add-categoryLevel2').find('button').remove()
     }
 }
 // Reset Event or category level 1&2 select
 function toggleOldFields(oldFields, dataEntity) {
     var resetNewFields = 
-        $('<button type="button" class="pl-0 border-0 btn bg-transparent h6 text-danger">'
+        $('<button type="button" class="mx-2 pt-0 pl-0 border-0 btn bg-transparent h6 text-danger">'
             +'<i class="fas fa-times-circle"></i>'
             +'</button>')
         $('#add-'+ dataEntity).append(resetNewFields)
 
     resetNewFields.on('click', function() {
         // Get back data from select
-        $('#form-'+ dataEntity).html(oldFields).next('.colBtn').find('a').show()
+        $('#form-'+ dataEntity).html(oldFields).next('.colBtn').find('span').show()
         resetNewFields.remove()
 
         // Reset select depending on ResetNewFields button
@@ -129,6 +153,7 @@ function toggleOldFields(oldFields, dataEntity) {
 // Get the ul that holds the collection of tags
 var collectionHolder = $('#situItems')
 
+// Add Delete button for each situItem added
 function addSituItemLiDeleteButton(situItemLi) {
     var removeFormButton = 
             $('<button type="button" class="btn btn-outline-danger float-right mt-1">'
@@ -161,6 +186,7 @@ function addSituItemLiDeleteButton(situItemLi) {
     })
 }
 
+// Add reset button for each score situItem seleted
 function addResetSituItemScoreButton(scoreSelect){
     var resetChoiceButton = 
             $('<button type="button" class="h5 border-0 bg-transparent position-absolute d-none">'
@@ -199,6 +225,7 @@ function addResetSituItemScoreButton(scoreSelect){
     })
 }
 
+// Update free or used scores options for each situItem score selected
 function updateAllScores(newValue, oldValue) {
     // Check all Score select fields
     collectionHolder.find('select').each(function() {
@@ -234,7 +261,7 @@ function updateAllScores(newValue, oldValue) {
     })
 }
 
-// Action change
+// Update free or used scores options for current situItem score action
 function updateCurrentScore(newElem) {
     var oldValue = ''
     newElem.find('select').on('focus', function () {
@@ -265,10 +292,50 @@ function updateCurrentScore(newElem) {
         updateAllScores(newValue, oldValue)
     })
 }
+
+// Add itemSitu from prototype
+function addSituItem(button) {
+
+    var list = $(button.attr('data-list-selector'))
+    var counter = list.attr('data-widget-counter') || list.children().length
+    var newWidget = list.attr('data-prototype')
+
+    newWidget = newWidget.replace(/__name__/g, counter)
+    counter++
+    list.attr('data-widget-counter', counter)
+
+    var newElem = $(list.attr('data-widget-situItems')).html(newWidget)
+
+    var selected = []
+    collectionHolder.find('select').each(function() {
+        if ($(this).val() != '') {
+            selected.push($(this).val())
+        }
+    })
+
+    newElem.find('option').each(function() {
+        if (selected.includes($(this).attr('data-id'))) {
+
+            if ($(this).is('[selected]')) $(this).removeAttr('selected')
+            $(this).hide()
+        }
+        if ($(this).attr('data-id') == 0) $(this).hide()
+    })
+    addSituItemLiDeleteButton(newElem)
+    addResetSituItemScoreButton(newElem.find('select'))
+    updateCurrentScore(newElem)
+    newElem.appendTo(list)
+
+    // Hide Adding button when all options are selected
+    if (collectionHolder.find('li').length == 4 ) {
+        $('#add-situ').hide()
+    }
+}
     
 /**
  * Submission
  */
+// Set status value depending on submitted button
 function submissionStatus(buttonId) {
     var statusId;
     buttonId == 'save-btn' ? statusId = 1 : statusId = 2
@@ -277,33 +344,47 @@ function submissionStatus(buttonId) {
     
 $(function() {
     
+    // Ajustments
+    $('#create_situ_form_lang option').first().addClass('text-dark')
+    $('.colDataLang').each(function(){
+        if (!$(this).children().is('select')) $(this).next().find('span').hide()
+    })
     /**
-     * Load categories or create them
+     * Load events/categories or create them
      */
-    // Load Categories only on select
-    if ($('#create_situ_form_event').is('select')) {
-        $('form').on('change', '#create_situ_form_event, #create_situ_form_categoryLevel1', function() {
+    // Load data only on select
+    if ($('#create_situ_form_lang').is('select') || $('#create_situ_form_event').is('select')) {
+        
+        $('form').on('change', '#create_situ_form_lang, #create_situ_form_event, #create_situ_form_categoryLevel1', function() {
             if ($(this).is('select')) {
-                // Reset selects before event
-                if ($(this).attr('id') == 'create_situ_form_event') {
-                    $('.colData').each(function(){
-                        $(this).html(initSelectData($(this).parents('.formData').attr('id')))
+                // Reset selects before action
+                if ($(this).attr('id') == 'create_situ_form_lang') {
+                    if ($(this).val != '') $(this).addClass('text-capitalize')
+                    else {
+                        if ($(this).hasClass('text-capitalize')) {
+                            $(this).removeClass('text-capitalize')
+                        }
+                    }
+                    $('.formData').each(function(){
+                        $(this).find('.colDataLang')
+                                .html(initSelectData($(this).attr('id')))
+                    })
+                } else if ($(this).attr('id') == 'create_situ_form_event') {
+                    $('.formData').each(function(){
+                        $(this).find('.colData')
+                                .html(initSelectData($(this).attr('id')))
                     })
                 } else {
                     $(this).parents('.formData').next().find('.colData')
                         .html(initSelectData('categoryLevel2'))
                 }
             }
-            // Load categories on create it in ajax
-            changeCategory($(this))
+            // Load event/categories on create it in ajax
+            changeAction($(this))
         })
-    }
-    // If no eventId, change Bootstrap class & hide add button
-    else {
-        $('#form-event').removeClass('col-11').addClass('col-12')
-        $('.colData').each(function(){
-            $(this).removeClass('col-11').addClass('col-12')
-        })
+        
+    } else {
+        // If no optional language neither no eventId, change Bootstrap class & hide add button
         $('.colBtn').each(function(){
             $(this).hide()
         })
@@ -321,47 +402,19 @@ $(function() {
     /**
      * Add SituItem collection
      */
-    // Add a delete link to all of the existing tag form li elements
+    // Add a delete link to all of the existing situItem form li elements
     collectionHolder.find('li').each(function() {
         addSituItemLiDeleteButton($(this))
     })
     
+    // Init once required
+    $(document).ready(function() {
+        addSituItem($('#add-itemSitu-link'))
+    });
+    
+    // Than add until 4 itemSitu
     $('#add-itemSitu-link').click(function () {
-        
-        var list = $($(this).attr('data-list-selector'))
-        var counter = list.attr('data-widget-counter') || list.children().length
-        var newWidget = list.attr('data-prototype')
-        
-        newWidget = newWidget.replace(/__name__/g, counter)
-        counter++
-        list.attr('data-widget-counter', counter)
-        
-        var newElem = $(list.attr('data-widget-situItems')).html(newWidget)
-        
-        var selected = []
-        collectionHolder.find('select').each(function() {
-            if ($(this).val() != '') {
-                selected.push($(this).val())
-            }
-        })
-        
-        newElem.find('option').each(function() {
-            if (selected.includes($(this).attr('data-id'))) {
-                
-                if ($(this).is('[selected]')) $(this).removeAttr('selected')
-                $(this).hide()
-            }
-            if ($(this).attr('data-id') == 0) $(this).hide()
-        })
-        addSituItemLiDeleteButton(newElem)
-        addResetSituItemScoreButton(newElem.find('select'))
-        updateCurrentScore(newElem)
-        newElem.appendTo(list)
-        
-        // Hide Adding button when all options are selected
-        if (collectionHolder.find('li').length == 4 ) {
-            $('#add-situ').hide()
-        }
+        addSituItem($(this))
     })
     
     /**

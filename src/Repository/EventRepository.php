@@ -3,9 +3,9 @@
 namespace App\Repository;
 
 use App\Entity\Event;
-use App\Service\LangService;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Symfony\Component\Security\Core\Security;
 
 /**
  * @method Event|null find($id, $lockMode = null, $lockVersion = null)
@@ -15,23 +15,27 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class EventRepository extends ServiceEntityRepository
 {
-    private $langService;
-    
-    public function __construct(ManagerRegistry $registry, LangService $langService)
+    public function __construct(ManagerRegistry $registry, Security $security)
     {
         parent::__construct($registry, Event::class);
         
-        $this->langService = $langService;
+        $this->security = $security;
     }
     
-    public function findLocaleEvents()
-    {
-        $locale_lang_id = $this->langService->getLangIdByLang(locale_get_default());
+    /**
+     * @return [] Returns an array of Events objects by user current language
+     */
+    public function findByLocaleLang()
+    {        
+        $userLangId = $this->security->getUser()->getLangId();
+        if ($userLangId == '') {
+            $userLangId = 47;
+        }
         
         return $this->createQueryBuilder('c')
-                    ->andWhere("c.langId = ?1")
-                    ->andWhere("c.validated = ?2")
-                    ->setParameter(1, $locale_lang_id)
+                    ->andWhere("c.lang = ?1")
+                    ->andWhere("c.validated = ?2") 
+                    ->setParameter(1, $userLangId)
                     ->setParameter(2, 1)
                     ->select('c.id, c.title')
                     ->getQuery()

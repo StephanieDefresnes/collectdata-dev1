@@ -64,9 +64,21 @@ class SituController extends AbstractController
     public function createSitu(Request $request, EntityManagerInterface $em, LangService $langService): Response
     {
         $situ = new Situ();
+        $user = $this->getUser();
         
-        $userId = $this->getUser()->getId();
-        $langId = $langService->getLangIdByLang(locale_get_default());
+        // Get current user id
+        $userId = $user->getId();
+        
+        // Get current language user
+        $userLangId = $user->getLangId();
+        if ($userLangId == '') {
+            $userCurrentLang = $langService->getUserLang(47);
+        } else {
+            $userCurrentLang = $langService->getUserLang($userLangId);
+        }
+        
+        // Get optional user langs
+        $langs = $user->getLangs()->getValues();
         
         $situItems = new ArrayCollection();
         foreach ($situ->getSituItems() as $situItem) {
@@ -77,14 +89,20 @@ class SituController extends AbstractController
         $form->handleRequest($request);
         
         if ($form->isSubmitted() && $form->isValid()) {
-            $data = $form->getData();
+            
+            // Create or choose an event
+            if ($form->get('lang')->getData() == null) {
+                $langData = $langService->getUserLang(47);
+            } else {
+                $langData = $form['lang']->getData();
+            }
             
             // Create or choose an event
             if ($form->get('event')->getData()->getId() == null) {
                 $event = new Event();
                 $event->setTitle($form->get('event')->getData()->getTitle());
                 $event->setUserId($userId);
-                $event->setLangId($langId);
+                $event->setLang($langData);
                 $event->setValidated(0);
                 $em->persist($event);
                 $eventData = $event;
@@ -99,7 +117,7 @@ class SituController extends AbstractController
                 $catLvl1->setDescription($form->get('categoryLevel1')->getData()->getDescription());
                 $catLvl1->setDateCreation(new \DateTime('now'));
                 $catLvl1->setUserId($userId);
-                $catLvl1->setLangId($langId);
+                $catLvl1->setLang($langData);
                 $catLvl1->setValidated(0);
                 $catLvl1->setEvent($eventData);
                 $em->persist($catLvl1);
@@ -115,7 +133,6 @@ class SituController extends AbstractController
                 $catLvl2->setDescription($form->get('categoryLevel2')->getData()->getDescription());
                 $catLvl2->setDateCreation(new \DateTime('now'));
                 $catLvl2->setUserId($userId);
-                $catLvl1->setLangId($langId);
                 $catLvl2->setValidated(0);
                 $catLvl2->setCategoryLevel1($catLvl1Data);
                 $em->persist($catLvl2);
@@ -124,6 +141,7 @@ class SituController extends AbstractController
                 $catLvl2Data = $form['categoryLevel2']->getData();
             }
             
+            $situ->setLang($langData);
             $situ->setEvent($eventData);
             $situ->setCategoryLevel1($catLvl1Data);
             $situ->setCategoryLevel2($catLvl2Data);
@@ -140,21 +158,21 @@ class SituController extends AbstractController
             
             $situ->setUserId($userId);
             $situ->setStatusId($statusId);
-            $situ->setLangId($langId);
+            $situ->setLang($langData);
             
-            $situItems = $form->get('situItems');
+            $em->persist($situ);
             
             // Save Collection >= 1 item
+            $situItems = $form->get('situItems');
             foreach ($situItems as $item) {
                 $situItem = new SituItem();
                 $situItem->setScore($item->get('score')->getData());
                 $situItem->setTitle($item->get('title')->getData());
                 $situItem->setDescription($item->get('description')->getData());
                 $situItem->setSitu($situ);
+                $em->persist($situItem);
             }
             
-            $em->persist($situ);
-            $em->persist($situItem);
             $em->flush();
             
             if ($statusId == 1) {
@@ -180,6 +198,7 @@ class SituController extends AbstractController
         return $this->render('front/situ/create.html.twig', [
             'form' => $form->createView(),
             'situ' => $situ,
+            'langs' => $langs,
         ]);
     }
 }

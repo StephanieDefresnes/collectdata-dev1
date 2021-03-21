@@ -16,40 +16,40 @@ class LangService {
 
     public function getUserLang($user_lang_id)
     {
-        
         $repository = $this->em->getRepository(Lang::class);
         
         $lang = $repository->findOneBy(
             ['id' => $user_lang_id]
         );
-        
         return $lang;
-        
     }
 
-    public function getLangIdByLang($lang)
+    public function getLangByUserLang($lang)
     {
-        
         $repository = $this->em->getRepository(Lang::class);
         
         $lang = $repository->findOneBy(
             ['lang' => $lang]
         );
-        
-        return $lang->getId();
-        
+        return $lang;
     }
-
-    public function getLangsEnabledOrNot($boolean) 
+    
+    public function findLangsEnabledOrNot($boolean)
     {
-        $result = [];
         
         $repository = $this->em->getRepository(Lang::class);
         
         $langs = $repository->findBy(
             ['enabled' => $boolean]
         );
+        return $langs;
+    }
+
+    public function getLangsEnabledOrNot($boolean) 
+    {
+        $langs = $this->findLangsEnabledOrNot($boolean);
         
+        $result = [];
         foreach ($langs as $lang) {
             $result[] = [ 
                 'id' => $lang->getId(),
@@ -59,6 +59,5 @@ class LangService {
             ];
         }
         return $result;
-        
     }
 }

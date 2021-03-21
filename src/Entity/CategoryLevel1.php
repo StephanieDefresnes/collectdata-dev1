@@ -40,14 +40,14 @@ class CategoryLevel1
     private $userId;
 
     /**
-     * @ORM\Column(type="integer")
-     */
-    private $langId;
-
-    /**
      * @ORM\Column(type="boolean")
      */
     private $validated;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Lang", inversedBy="categoriesLevel1")
+     */
+    private $lang;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Event", inversedBy="categoriesLevel1")
@@ -70,11 +70,10 @@ class CategoryLevel1
         $this->situs = new ArrayCollection();
     }
 
-//    public function __toString(): ?string
-//    {
-//        return $this->categoriesLevel2;
-//        return $this->situs;
-//    }
+    public function __toString(): ?string
+    {
+        return $this->langId;
+    }
     
     public function getId(): ?int
     {
@@ -129,14 +128,14 @@ class CategoryLevel1
         return $this;
     }
 
-    public function getLangId(): ?int
+    public function getLang(): ?int
     {
-        return $this->langId;
+        return $this->lang;
     }
 
-    public function setLangId(int $langId): self
+    public function setLang(?Lang $lang): self
     {
-        $this->langId = $langId;
+        $this->lang = $lang;
 
         return $this;
     }

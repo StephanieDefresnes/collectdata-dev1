@@ -35,9 +35,9 @@ class Event
     private $userId;
 
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Lang", inversedBy="events")
      */
-    private $langId;
+    private $lang;
 
     /**
      * @ORM\OneToMany(targetEntity=CategoryLevel1::class, cascade={"persist"}, mappedBy="event")
@@ -57,7 +57,7 @@ class Event
 
     public function __toString(): ?string
     {
-//        return $this->categoriesLevel1;
+        return $this->categoriesLevel1;
         return $this->getId();
     }
 
@@ -102,14 +102,14 @@ class Event
         return $this;
     }
 
-    public function getLangId(): ?int
+    public function getLang(): ?int
     {
-        return $this->langId;
+        return $this->lang;
     }
 
-    public function setLangId(int $langId): self
+    public function setLang(?Lang $lang): self
     {
-        $this->langId = $langId;
+        $this->lang = $lang;
 
         return $this;
     }

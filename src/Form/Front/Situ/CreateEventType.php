@@ -15,10 +15,9 @@ class CreateEventType extends AbstractType
     {
         $builder
             ->add('title', TextType::class, [
+                'attr' => ['placeholder' => 'contrib.form.event.add.placeholder','class' => 'mb-0'],
+                'row_attr' => ['class' => 'mb-0'],
                 'label' => 'contrib.form.event.add.title',
-                'attr' => [
-                    'placeholder' => 'contrib.form.event.add.placeholder'
-                    ],
             ])
         ;
     }
