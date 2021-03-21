@@ -58,8 +58,7 @@ registration:
             Regards,
             <a href="%host%">%website_name%</a>
     flash:
-        check_email: |
-            An email has been sent to %email%. It contains an activation link you must click to activate your account.
+        check_email: An email has been sent to %email%. It contains an activation link you must click to activate your account.
         confirmed: 'Congrats %user%, your account is now activated.'
     label:
         email: Email
@@ -80,3 +79,6 @@ reset_password:
         current_password: Old password
         new_password: New password
         repeat_new_password: Repeat new password
+registration:
+    message:
+        unique_email: This email already exists. Please enter a new address.
