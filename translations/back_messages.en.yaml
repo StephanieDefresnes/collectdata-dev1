@@ -1,49 +1,66 @@
 action:
     delete: Delete
-    permute_enabled: 'Enable / Disable'
+    permute_enabled: Enable / Disable
     update: Update
 button:
+    add: Addition
     back: Back
     cancel: Cancel
     create: Add
     delete: Delete
     delete_title: Delete
     disable: Disable
+    down: Down
     enable: Enable
     filter: Filter
     next: Next
     previous: Previous
     read_title: Details
+    remove: Remove
+    save: Save
     submit: Submit
     switch: Switch
+    up: Up
     update_title: Update
     validate: Validate
 delete:
-    confirm: 'Confirmation of deletion'
-    warning: 'The deletion will be final.'
+    confirm: Confirmation of deletion
+    warning: The deletion will be final.
+editor:
+    field:
+        body: Content
+    label:
+        body: Content
+        key: Key
+    update:
+        flash:
+            success: The data has been saved.
+        h1: Site content
+        h2: Text editing
+        title: Text editing
 error:
-    no_element_selected: 'No element selected'
+    no_element_selected: No element selected
 invitation:
     email:
         message: "Hello %user%,\n\nEmail : %email%\nPassword : %password%\n\nTo finish activating your account - please click <a href=\"%confirmation_url%\">here</a>.\n\nThis link can only be used once to validate your account.\n\nRegards,\n\n<a href=\"%host%\">%website_name%</a>\n"
         subject: '%website_name% - Invitation'
 label:
-    filter_number_by_page: 'Number by page'
+    filter_number_by_page: Number by page
     filter_search: Search
 nav:
     account: Account
     account_login: Login
     account_logout: Logout
-    account_profile: 'My profile'
-    account_reset_password: 'Reset password'
-    end_switch: 'End switch'
-    home: 'Home Front'
-'no': 'No'
+    account_profile: My profile
+    account_reset_password: Reset password
+    end_switch: End switch
+    home: Home Front
+'no': No
 search:
     action_th: Action(s)
-    no_data_found: 'No data found'
+    no_data_found: No data found
 sidebar:
-    home: 'Home Back'
+    home: Home Back
     user: Utilisateur
     user_create: Invite
     user_search: List
@@ -52,45 +69,45 @@ user:
         create: Invite
     create:
         flash:
-            success: 'User (%identifier%) has been invite.'
-        h1: 'Invite - User'
-        h2: 'Invitation to user'
-        title: 'Invite - User'
+            success: User (%identifier%) has been invite.
+        h1: Invite - User
+        h2: Invitation to user
+        title: Invite - User
     delete:
         flash:
-            success: 'User(s) deleted.'
-        h1: 'Delete - User'
-        h2: 'The following list will be deleted'
+            success: User(s) deleted.
+        h1: Delete - User
+        h2: The following list will be deleted
         modal_title: 'Delete - User'
     error:
-        cannot_delete_super_admin: 'A super admin cannot be deleted.'
-        cannot_permute_enabled_super_admin: 'A super admin cannot be enabled or disabled.'
+        cannot_delete_super_admin: A super admin cannot be deleted.
+        cannot_permute_enabled_super_admin: A super admin cannot be enabled or disabled.
     field:
-        created_at: 'Created At'
+        created_at: Created At
         email: Email
         enabled: Enabled
-        firstname: firstname
-        last_login_at: 'Last Login At'
-        lastname: lastname
+        firstname: Firstname
+        last_login_at: Last Login At
+        lastname: Lastname
         name: Name
         roles: Roles
-        updated_at: 'Updated At'
+        updated_at: Updated At
     label:
         email: Email
         name: Name
         roles: Roles
     read:
-        h1: 'Details - User'
+        h1: Details - User
         h2: Details
-        title: 'Details - User'
+        title: Details - User
     search:
-        h1: 'Search - User'
+        h1: Search - User
         h2: Search
-        title: 'Search - User'
+        title: Search - User
     update:
         flash:
-            success: 'User updated.'
-        h1: 'Update - User'
-        h2: 'Update form'
-        title: 'Update - User'
-'yes': 'Yes'
+            success: User updated.
+        h1: Update - User
+        h2: Update form
+        title: Update - User
+'yes': Yes

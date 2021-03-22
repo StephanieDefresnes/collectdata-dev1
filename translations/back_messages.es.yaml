@@ -1,3 +1,31 @@
+action:
+    delete: Eliminar
+    update: Editar
+    permute_enabled: Activar / Desactivar
+button:
+    add: Añadiendo
+    back: Espalda
+    cancel: Regreso
+    create: Añadir
+    delete: Eliminar
+    delete_title: Eliminar
+    disable: Desactivar
+    down: Bajar
+    enable: Activar
+    filter: Filtrado
+    next: Próximo
+    previous: Anterior
+    read_title: Detalles
+    remove: Eliminar
+    save: Grabar
+    submit: Enviar
+    switch: Para explorar
+    up: Subir
+    update_title: Editar
+    validate: Validar
+delete:
+    confirm: 'Confirmación de eliminación'
+    warning: 'La eliminación será definitiva.'
 editor:
     field:
         body: Contenido
@@ -10,6 +38,8 @@ editor:
         h1: 'Contenu du site'
         h2: 'Contenido del sitio'
         title: 'Edición de texto'
+error:
+    no_element_selected: 'Ningún artículo seleccionado'
 invitation:
     email:
         subject: '%website_name% - Invitación'
@@ -27,6 +57,9 @@ invitation:
 
             Atentamente,
             <a href="%host%">%website_name%</a>
+label:
+    filter_number_by_page: 'Número de elementos por página'
+    filter_search: Buscar
 nav:
     home: Frente a casa
     end_switch: Fin de la exploración
@@ -35,48 +68,15 @@ nav:
     account_logout: Desconexión
     account_profile: Mi informacion
     account_reset_password: Cambiar la contraseña
-sidebar:
-    home: Volver a casa
-    user: Usuario
-    user_search: Listado
-    user_create: Invitación
-action:
-    delete: Eliminar
-    update: Editar
-    permute_enabled: Activar / Desactivar
-button:
-    add: Añadiendo
-    down: Bajar
-    remove: Eliminar
-    save: Grabar
-    up: Subir
-    back: Retour
-    cancel: Regreso
-    create: Añadir
-    delete: Eliminar
-    delete_title: Eliminar
-    disable: Desactivar
-    enable: Activar
-    filter: Filtrado
-    next: Próximo
-    previous: Anterior
-    read_title: Detalles
-    submit: Enviar
-    switch: Para explorar
-    update_title: Editar
-    validate: Validar
-delete:
-    confirm: 'Confirmación de eliminación'
-    warning: 'La eliminación será definitiva.'
-error:
-    no_element_selected: 'Ningún artículo seleccionado'
-label:
-    filter_number_by_page: 'Número de elementos por página'
-    filter_search: Buscar
 'no': No
 search:
     action_th: Acción(es)
     no_data_found: 'No se encontraron datos'
+sidebar:
+    home: Volver a casa
+    user: Usuario
+    user_create: Invitación
+    user_search: Listado
 user:
     button:
         create: Invitación
@@ -99,8 +99,10 @@ user:
         created_at: 'Creado'
         email: Email
         enabled: Habilitado
-        name: apellido
+        firstname: Nombre de pila
         last_login_at: 'Última conexión'
+        lastname: Apellido
+        name: Apellido
         roles: Rol(s)
         updated_at: 'Modificado'
     label:

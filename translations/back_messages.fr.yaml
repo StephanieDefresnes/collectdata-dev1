@@ -1,6 +1,6 @@
 action:
     delete: Supprimer
-    permute_enabled: 'Activer / Désactiver'
+    permute_enabled: Activer / Désactiver
     update: Modifier
 button:
     add: Ajout
@@ -24,8 +24,8 @@ button:
     update_title: Modifier
     validate: Valider
 delete:
-    confirm: 'Confirmation de la suppression'
-    warning: 'La suppression sera définitive.'
+    confirm: Confirmation de la suppression
+    warning: La suppression sera définitive.
 editor:
     field:
         body: Contenu
@@ -34,31 +34,44 @@ editor:
         key: Clé
     update:
         flash:
-            success: 'Les données ont été sauvegardées.'
-        h1: 'Contenu du site'
-        h2: 'Édition de texte'
-        title: 'Édition de texte'
+            success: Les données ont été sauvegardées.
+        h1: Contenu du site
+        h2: Édition de texte
+        title: Édition de texte
 error:
-    no_element_selected: 'Aucun élément sélectionné'
+    no_element_selected: Aucun élément sélectionné
 invitation:
     email:
-        message: "Bonjour %user%,\n\nVous avez été invité à rejoindre %website_name% par un administrateur.\n\nIdentifiant : %email%\nMot de passe : %password%\n\nPour valider l'invitation, merci de cliquer <a href=\"%confirmation_url%\">ici</a>.\n\nCe lien ne peut être utilisé qu'une seule fois pour valider votre compte.\n\nCordialement,\n<a href=\"%host%\">%website_name%</a>\n"
         subject: '%website_name% - Invitation'
+        message: |
+            Bonjour %user%,
+            
+            Vous avez été invité à rejoindre %website_name% par un administrateur.
+            
+            Identifiant : %email%
+            Mot de passe : %password%
+            
+            Pour valider l'invitation, merci de cliquer <a href=\"%confirmation_url%\">ici</a>.
+            
+            Ce lien ne peut être utilisé qu'une seule fois pour valider votre compte.
+            
+            Cordialement,
+            <a href=\"%host%\">%website_name%</a>
 label:
-    filter_number_by_page: 'Nombre d''élément par page'
+    filter_number_by_page: Nombre d'élément par page
     filter_search: Rechercher
 nav:
     account: Compte
     account_login: Connexion
-    account_logout: Déconnection
-    account_profile: 'Mes informations'
-    account_reset_password: 'Modifier le mot de passe'
-    end_switch: 'Fin de l''exploration'
-    home: 'Accueil Front'
+    account_logout: Déconnexion
+    account_profile: Mes informations
+    account_reset_password: Modifier le mot de passe
+    end_switch: Fin de l'exploration
+    home: Accueil Front
 'no': Non
 search:
     action_th: Action(s)
-    no_data_found: 'Aucune donnée n''a été trouvée'
+    no_data_found: Aucune donnée n'a été trouvée
 sidebar:
     home: 'Accueil Back'
     user: Utilisateur
@@ -69,26 +82,26 @@ user:
         create: Inviter
     create:
         flash:
-            success: 'L''utilisateur (%identifier%) a été invité.'
+            success: L'utilisateur (%identifier%) a été invité.
         h1: Invitation
-        h2: 'Inviter un utilisateur'
+        h2: Inviter un utilisateur
         title: Invitation
     delete:
         flash:
-            success: 'Utilisateur(s) supprimé.'
-        h1: 'Supprimer - Utilisateur'
-        h2: 'La liste suivante sera supprimée'
-        modal_title: 'Supprimer - Utilisateur'
+            success: Utilisateur(s) supprimé(s).
+        h1: Supprimer - Utilisateur
+        h2: La liste suivante sera supprimée
+        modal_title: Supprimer - Utilisateur
     error:
-        cannot_delete_super_admin: 'Un super administrateur ne peut pas être supprimé.'
-        cannot_permute_enabled_super_admin: 'Un super administrateur ne peut pas être activé ou désactivé.'
+        cannot_delete_super_admin: Un super administrateur ne peut pas être supprimé.
+        cannot_permute_enabled_super_admin: Un super administrateur ne peut pas être activé ou désactivé.
     field:
         created_at: Créé
         email: Email
         enabled: Activé
-        firstname: firstname
-        last_login_at: 'Dernière connexion'
-        lastname: lastname
+        firstname: Prénom
+        last_login_at: Dernière connexion
+        lastname: Nom de famille
         name: Nom
         roles: Rôle(s)
         updated_at: Modifié
@@ -97,17 +110,17 @@ user:
         name: Nom
         roles: Rôles
     read:
-        h1: 'Détails - Utilisateur'
+        h1: Détails - Utilisateur
         h2: Détails
-        title: 'Détails - Utilisateur'
+        title: Détails - Utilisateur
     search:
-        h1: 'Rechercher - Utilisateur'
+        h1: Rechercher - Utilisateur
         h2: Rechercher
-        title: 'Rechercher - Utilisateur'
+        title: Rechercher - Utilisateur
     update:
         flash:
-            success: 'Utilisateur modifié.'
-        h1: 'Modifier - Utilisateur'
-        h2: 'Formulaire de modification'
-        title: 'Modifier - Utilisateur'
+            success: Utilisateur modifié.
+        h1: Modifier - Utilisateur
+        h2: Formulaire de modification
+        title: Modifier - Utilisateur
 'yes': Oui
