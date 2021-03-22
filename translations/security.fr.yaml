@@ -79,7 +79,6 @@ reset_password:
         current_password: Ancien mot de passe
         new_password: Nouveau mot de passe
         repeat_new_password: Répéter le nouveau mot de passe
-        translate: Traduire une contribution
-account:
+registration:
     message:
-        unique_email: Il y a déjà un compte avec ce email
+        unique_email: Cet email existe déjà. Veuillez entrer une autre adresse email.
