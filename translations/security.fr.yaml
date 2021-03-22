@@ -66,6 +66,8 @@ registration:
         password: Mot de passe
         repeat_password: Répéter le mot de passe
         agree_terms: J'ai lu et j'accepte les conditions d'utilisation
+    message:
+        unique_email: Cet email existe déjà. Veuillez entrer une autre adresse email.
     terms_link: Lire nos %link_start%conditions d'utilisation%link_end%
 reset_password:
     title: Réinitialiser le mot de passe
@@ -79,6 +81,3 @@ reset_password:
         current_password: Ancien mot de passe
         new_password: Nouveau mot de passe
         repeat_new_password: Répéter le nouveau mot de passe
-registration:
-    message:
-        unique_email: Cet email existe déjà. Veuillez entrer une autre adresse email.

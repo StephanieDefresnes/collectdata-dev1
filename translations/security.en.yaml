@@ -66,6 +66,8 @@ registration:
         password: Password
         repeat_password: Repeat password
         agree_terms: I have read and I accept terms of use
+    message:
+        unique_email: This email already exists. Please enter a new address.
     terms_link: Read our %link_start%terms of use%link_end%
 reset_password:
     title: Reset password
@@ -79,6 +81,3 @@ reset_password:
         current_password: Old password
         new_password: New password
         repeat_new_password: Repeat new password
-registration:
-    message:
-        unique_email: This email already exists. Please enter a new address.

@@ -66,6 +66,8 @@ registration:
         password: Contraseña
         repeat_password: Repite la contraseña
         agree_terms: He leido y acepto las condiciones de uso
+    message:
+        unique_email: Ya existe este email. Ingrese un nuevo email.
     terms_link: Lea nuestras %link_start%condiciones de uso%link_end%
 reset_password:
     title: Restablecer la contraseña
@@ -79,6 +81,3 @@ reset_password:
         current_password: Antigua contraseña
         new_password: Nueva contraseña
         repeat_new_password: Repita la nueva contraseña
-registration:
-    message:
-        unique_email: Ya existe este email. Ingrese un nuevo email.
