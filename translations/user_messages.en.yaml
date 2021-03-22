@@ -9,9 +9,6 @@ nav:
         user: My contributions
         add: Add contribution
         translate: Translate contribution
-registration:
-    message:
-        unique_email: This email already exists. Please enter a new address.
 account:
     reset_password: Reset password
     image:
@@ -29,6 +26,7 @@ account:
         label: 'Name :'
     email:
         label: 'Email :'
+        unique_email: This email already exists. Please enter a new address.
     lang:
         current: 'Usual language :'
         option: 'Optional languages :'

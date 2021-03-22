@@ -9,9 +9,6 @@ nav:
         user: Mes contributions
         add: Ajouter une contribution
         translate: Traduire une contribution
-registration:
-    message:
-        unique_email: Il y a déjà un compte avec cet email. Veuillez entrer un nouvel e-mail.
 account:
     reset_password: Modifier mon mot de passe
     image:
@@ -29,6 +26,7 @@ account:
         label: 'Nom :'
     email:
         label: 'Email :'
+        unique_email: Il y a déjà un compte avec cet email. Veuillez entrer un nouvel e-mail.
     lang:
         current: 'Langue usuelle :'
         option: 'Langues optionnelles :'

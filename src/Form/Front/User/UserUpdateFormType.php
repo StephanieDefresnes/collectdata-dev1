@@ -60,7 +60,7 @@ class UserUpdateFormType extends AbstractType
                 'label' => 'account.email.label',
                 'constraints' => [
                     new NotBlank([
-                        'message' => 'account.message.unique_email',
+                        'message' => 'account.email.unique_email',
                     ]),
                 ],
             ])

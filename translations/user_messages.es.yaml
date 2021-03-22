@@ -9,9 +9,6 @@ nav:
         user: Mis contribuciones
         add: Agregar una contribución
         translate: Traducir contribución
-registration:
-    message:
-        unique_email: Ya existe este email. Ingrese un nuevo email.
 account:
     reset_password: Cambiar la contraseña
     image:
@@ -29,6 +26,7 @@ account:
         label: 'Apellido :'
     email: 
         label: 'Email :'
+        unique_email: Ya existe este email. Ingrese un nuevo email.
     lang:
         current: 'Idioma habitual :'
         option: 'Idiomas opcionales :'
