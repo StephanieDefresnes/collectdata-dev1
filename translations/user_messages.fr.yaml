@@ -1,6 +1,6 @@
 nav:
     account: Compte
-    account_logout: Déconnection
+    account_logout: Déconnexion
     account_profile: Mes informations
     account_reset_password: Modifier mon mot de passe
     contribs:
@@ -117,7 +117,7 @@ contrib:
             title: Date de validation
             empty: Validation en cours
         status:
-            title: Status
+            title: Statut
             writing: En cours de rédaction
             validation: Validation demandée
             validated: Validé
