@@ -4,10 +4,14 @@ nav:
     account_unknown: Utilisateur
     account_back: Back-office
     account_login: Connexion
-    account_logout: Déconnection
+    account_logout: Déconnexion
     account_register: Inscription
     account_profile: Mes informations
     account_reset_password: Modifier mon mot de passe
     lang_choice: Choisir la langue
 btn:
     close: Fermer
+content:
+    banner:
+        hello: Bonjour %user% !
+        welcome: Bienvenue !

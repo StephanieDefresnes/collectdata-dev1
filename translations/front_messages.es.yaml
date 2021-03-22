@@ -11,3 +11,7 @@ nav:
     lang_choice: Elige idioma
 btn:
     close: Cerrar
+content:
+    banner:
+        hello: ¡Hola, %user%!
+        welcome: ¡Bienvenida !
