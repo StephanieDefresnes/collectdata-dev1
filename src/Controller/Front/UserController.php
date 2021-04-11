@@ -254,19 +254,6 @@ class UserController extends AbstractController
                     $this->addFlash('error', $msg);
                 }
                 
-            } else {
-                
-                try {
-                    unlink($this->getParameter('user_img').'/'.$userImageFilename);
-                    $user->setImageFilename('');
-                } catch (FileException $e) {
-                    $msg = $this->translator->trans(
-                            'account.image.flash.delete.error', [],
-                            'user_messages', $locale = locale_get_default()
-                        );
-                    $this->addFlash('error', $msg);
-                }
-                
             }
             
             // Switch locale
