@@ -132,6 +132,7 @@ contrib:
             delete: Supprimer
     form:
         multiple_search: Rechercher
+        to_validate: ( validation en cours )
         situ:
             h2: La situation à risque
             label: Ajouter une situation à risque
