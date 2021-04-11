@@ -23,23 +23,30 @@ class EventRepository extends ServiceEntityRepository
     }
     
     /**
-     * @return [] Returns an array of Events objects by user current language
+     * @return []   Returns an array of Events objects
+     *              by locale and by user events
      */
     public function findByLocaleLang()
     {        
+        $userId = $this->security->getUser()->getId();
         $userLangId = $this->security->getUser()->getLangId();
         if ($userLangId == '') {
             $userLangId = 47;
         }
         
-        return $this->createQueryBuilder('c')
-                    ->andWhere("c.lang = ?1")
-                    ->andWhere("c.validated = ?2") 
+        $query =  $this->createQueryBuilder('c');
+                    $query->andWhere('c.lang = ?1')
+                    ->andWhere('c.validated = ?2') 
+                    ->andWhere($query->expr()->orX(
+                        $query->expr()->eq('c.userId ', '?3'),
+                        $query->expr()->eq('c.validated', '?4')
+                    ))
                     ->setParameter(1, $userLangId)
                     ->setParameter(2, 1)
-                    ->select('c.id, c.title')
-                    ->getQuery()
-                    ->getResult();
+                    ->setParameter(3, $userId)
+                    ->setParameter(4, 0)
+                    ->select('c.id');
+        return $query->getQuery()->getResult();        
     }
 
     // /**

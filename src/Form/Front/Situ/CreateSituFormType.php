@@ -8,6 +8,9 @@ use App\Repository\EventRepository;
 use App\Repository\CategoryLevel1Repository;
 use App\Repository\CategoryLevel2Repository;
 use App\Service\LangService;
+use App\Service\EventService;
+use App\Service\CategoryLevel1Service;
+use App\Service\CategoryLevel2Service;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
@@ -29,17 +32,26 @@ class CreateSituFormType extends AbstractType
     private $categoryLevel1Repository;
     private $categoryLevel2Repository;
     private $langService;
+    private $eventService;
+    private $categoryLevel1Service;
+    private $categoryLevel2Service;
     
     public function __construct(EventRepository $eventRepository,
                                 CategoryLevel1Repository $categoryLevel1Repository,
                                 CategoryLevel2Repository $categoryLevel2Repository,
                                 LangService $langService,
+                                EventService $eventService,
+                                CategoryLevel1Service $categoryLevel1Service,
+                                CategoryLevel2Service $categoryLevel2Service,
                                 Security $security)
     {
         $this->eventRepository = $eventRepository;
         $this->categoryLevel1Repository = $categoryLevel1Repository;
         $this->categoryLevel2Repository = $categoryLevel2Repository;
         $this->langService = $langService;
+        $this->eventService = $eventService;
+        $this->categoryLevel1Service = $categoryLevel1Service;
+        $this->categoryLevel2Service = $categoryLevel2Service;
         $this->security = $security;
     }
     
@@ -114,22 +126,34 @@ class CreateSituFormType extends AbstractType
                 $events = [];
                 
                 if ($lang_id) {
-                    $events = $this->eventRepository->findBy([
-                        'lang' => $lang_id,
-                        'validated' => 1
-                    ]);
+                    
+                    $GLOBALS['langId'] = $lang_id->getId();
+                    $events = $this->eventService->getByLangAndByCategoryUser();
 
                     if ($events) {
                         // If categories exist, give choices
+                        // Choices are categories validated
+                        //      and current user events not validated
                         $form->add('event', EntityType::class, [
                             'class' => 'App\Entity\Event',
                             'attr' => ['class' => 'custom-select'],
                             'label' => 'contrib.form.event.label',
                             'placeholder' => 'contrib.form.event.placeholder',
-                            'choices' => $events,
+                            'query_builder' => function (EntityRepository $er) {
+                                return $er->createQueryBuilder('c')
+                                        ->andWhere('c.lang = ?1')
+                                        ->andWhere('c.validated = ?2 OR (c.userId = ?3 AND c.validated = ?4)')
+                                        ->setParameter(1, $GLOBALS['langId'])
+                                        ->setParameter(2, 1)
+                                        ->setParameter(3, $this->security->getUser()->getId())
+                                        ->setParameter(4, 0);
+                            },
                             'choice_label' => 'title',
                             'choice_attr' => function($choice, $key, $value) {
-                                return ['class' => 'text-dark text-capitalize'];
+                                if ($choice->getValidated() == 0)
+                                    return ['class' => 'text-dark to-validate'];
+                                else
+                                    return ['class' => 'text-dark text-capitalize'];
                             },
                         ]);
                     } else {
@@ -156,14 +180,19 @@ class CreateSituFormType extends AbstractType
                             'placeholder' => 'contrib.form.event.placeholder',
                             'query_builder' => function (EntityRepository $er) {
                                 return $er->createQueryBuilder('c')
-                                        ->andWhere("c.lang = ?1")
-                                        ->andWhere("c.validated = ?2")
+                                        ->andWhere('c.lang = ?1')
+                                        ->andWhere('c.validated = ?2 OR (c.userId = ?3 AND c.validated = ?4)')
                                         ->setParameter(1, $this->security->getUser()->getLangId())
-                                        ->setParameter(2, 1);
+                                        ->setParameter(2, 1)
+                                        ->setParameter(3, $this->security->getUser()->getId())
+                                        ->setParameter(4, 0);;
                             },
                             'choice_label' => 'title',
                             'choice_attr' => function($choice, $key, $value) {
-                                return ['class' => 'text-dark'];
+                                if ($choice->getValidated() == 0)
+                                    return ['class' => 'text-dark to-validate'];
+                                else
+                                    return ['class' => 'text-dark text-capitalize'];
                             },
                         ]);
                     }
@@ -175,22 +204,36 @@ class CreateSituFormType extends AbstractType
                 $categoriesLevel1 = [];
 
                 if ($event_id) {
-                    $categoriesLevel1 = $this->categoryLevel1Repository->findBy([
-                        'event' => $event_id,
-                        'validated' => 1
-                    ]);
+                    
+                    $GLOBALS['eventId'] = $event_id;
+                    $categoriesLevel1 =
+                            $this->categoryLevel1Service
+                                ->getValidatedAndByEventUser($event_id);
                 
                     if ($categoriesLevel1) {
                         // If categories exist, give choices
+                        // Choices are categories validated
+                        //      and current user categories not validated
                         $form->add('categoryLevel1', EntityType::class, [
                             'class' => 'App\Entity\CategoryLevel1',
                             'attr' => ['class' => 'custom-select'],
                             'label' => 'contrib.form.category.level1.label',
                             'placeholder' => 'contrib.form.category.level1.placeholder',
-                            'choices' => $categoriesLevel1,
+                            'query_builder' => function (EntityRepository $er) {
+                                return $er->createQueryBuilder('c')
+                                        ->andWhere('c.event = ?1')
+                                        ->andWhere('c.validated = ?2 OR (c.userId = ?3 AND c.validated = ?4)')
+                                        ->setParameter(1, $GLOBALS['eventId'])
+                                        ->setParameter(2, 1)
+                                        ->setParameter(3, $this->security->getUser()->getId())
+                                        ->setParameter(4, 0);;
+                            },
                             'choice_label' => 'title',
                             'choice_attr' => function($choice, $key, $value) {
-                                return ['class' => 'text-dark'];
+                                if ($choice->getValidated() == 0)
+                                    return ['class' => 'text-dark to-validate'];
+                                else
+                                    return ['class' => 'text-dark text-capitalize'];
                             },
                         ]);
                     } else {
@@ -225,22 +268,37 @@ class CreateSituFormType extends AbstractType
                 $categoriesLevel2 = [];
 
                 if ($categoryLevel1_id) {
-                    $categoriesLevel2 = $this->categoryLevel2Repository->findBy([
-                        'categoryLevel1' => $categoryLevel1_id,
-                        'validated' => 1
-                    ]);
+                    
+                    $GLOBALS['catLv1Id'] = $categoryLevel1_id;
+                    $categoriesLevel2 =
+                            $this->categoryLevel2Service
+                                ->getValidatedAndByEventUser($categoryLevel1_id);
                 
                     if ($categoriesLevel2) {
                         // If categories exist, give choices
+                        // Choices are categories validated
+                        //      and current user categories not validated
                         $form->add('categoryLevel2', EntityType::class, [
                             'class' => 'App\Entity\CategoryLevel2',
                             'attr' => ['class' => 'custom-select'],
                             'label' => 'contrib.form.category.level2.label',
                             'placeholder' => 'contrib.form.category.level2.placeholder',
-                            'choices' => $categoriesLevel2,
+//                            'choices' => $categoriesLevel2,
+                            'query_builder' => function (EntityRepository $er) {
+                                return $er->createQueryBuilder('c')
+                                        ->andWhere('c.categoryLevel1 = ?1')
+                                        ->andWhere('c.validated = ?2 OR (c.userId = ?3 AND c.validated = ?4)')
+                                        ->setParameter(1, $GLOBALS['catLv1Id'])
+                                        ->setParameter(2, 1)
+                                        ->setParameter(3, $this->security->getUser()->getId())
+                                        ->setParameter(4, 0);;
+                            },
                             'choice_label' => 'title',
                             'choice_attr' => function($choice, $key, $value) {
-                                return ['class' => 'text-dark'];
+                                if ($choice->getValidated() == 0)
+                                    return ['class' => 'text-dark to-validate'];
+                                else
+                                    return ['class' => 'text-dark text-capitalize'];
                             },
                         ]);
                     } else {
@@ -274,7 +332,7 @@ class CreateSituFormType extends AbstractType
                 ->addEventListener(
                     FormEvents::PRE_SET_DATA,
                     function (FormEvent $formEvent) use ($formModifierEventId) {
-                        $langId = $formEvent->getData()->getEvent();
+                        $langId = $formEvent->getData()->getLang();
                         $lang_id = $langId ? $langId->getId() : null;
                         $formModifierEventId($formEvent->getForm(), $lang_id);
                     }

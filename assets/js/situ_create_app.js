@@ -88,6 +88,13 @@ function loadCategories($form, data, selectId, nextSelectId, lastData) {
                     else $(this).next('.colBtn').hide()
                 })
             }
+            if ($(nextSelectId).is('select')) {
+                $(nextSelectId).find('option').each(function() {
+                    if ($(this).hasClass('to-validate')) {
+                        $(this).append(' '+ translations['toValidate'])
+                    }
+                })
+            }
         }
     })
 }
@@ -341,8 +348,16 @@ function submissionStatus(buttonId) {
     buttonId == 'save-btn' ? statusId = 1 : statusId = 2
     $('#create_situ_form_statusId').val(statusId)
 }
-    
+
 $(function() {
+    
+    $('body').find('select').each(function() {
+        $(this).find('option').each(function() {
+            if ($(this).hasClass('to-validate')) {
+                $(this).append(' '+ translations['toValidate'])
+            }
+        })
+    })
     
     // Ajustments
     $('#create_situ_form_lang option').first().addClass('text-dark')
@@ -356,7 +371,8 @@ $(function() {
     if ($('#create_situ_form_lang').is('select') || $('#create_situ_form_event').is('select')) {
         
         $('form').on('change', '#create_situ_form_lang, #create_situ_form_event, #create_situ_form_categoryLevel1', function() {
-            if ($(this).is('select')) {
+            if ($(this).is('select')) {                
+                
                 // Reset selects before action
                 if ($(this).attr('id') == 'create_situ_form_lang') {
                     if ($(this).val != '') $(this).addClass('text-capitalize')
