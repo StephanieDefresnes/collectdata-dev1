@@ -38,7 +38,7 @@ $white-80:rgba(255, 255, 255, 0.8);
 $black-40:rgba(0, 0, 0, 0.4);
 $secondary-40:rgba(108, 117, 125, 0.4);
 $secondary-50:rgba(108, 117, 125, 0.5);
-$secondary-70:rgba(108, 117, 125, 0.7);
+$secondary-80:rgba(108, 117, 125, 0.8);
 
 // Custom scrollbar
 *::-webkit-scrollbar {
@@ -345,7 +345,7 @@ body {
     background: $secondary-50 !important;
 }
 .bg-secondary-80  {
-    background: $secondary-70 !important;
+    background: $secondary-80 !important;
 }
 
 .table-hover.bg-white-80 tbody tr:hover {

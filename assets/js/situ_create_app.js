@@ -4,11 +4,7 @@ import '../css/situ_create_app.scss'
 // js
 
 /**
- * Load events depending on User optionnal languages
- */
-
-/**
- * Load categories or create them functions
+ * Load datas or create them depending on User action
  */
 // Init forms
 function initSelectData(dataId) {
@@ -51,6 +47,21 @@ function changeAction(selectId) {
 
 // Load categories if exist or create them
 function loadCategories($form, data, selectId, nextSelectId, lastData) {
+    
+    if ($(nextSelectId).parents('.formData').hasClass('d-none')) {
+        $(nextSelectId)
+                .parents('.formData').removeClass('d-none').addClass('on-load')
+                .children('div').each(function() {
+                    $(this).animate({ opacity: 0}, 250); 
+                })
+    } else {
+        $(nextSelectId)
+                .parents('.formData').addClass('on-load')
+                .children('div').each(function() {
+                    $(this).animate({ opacity: 0}, 250); 
+                })
+    }
+    
     $.ajax({
         url: $form.attr('action'),
         type: $form.attr('method'),
@@ -71,6 +82,9 @@ function loadCategories($form, data, selectId, nextSelectId, lastData) {
                     $(this).html(initCreateData($(this).parents('.formData').attr('id')))
                             .next('.colBtn').hide()
                 })
+                if ($('#categoryLevel1, #categoryLevel2').hasClass('on-load'))
+                    $('#categoryLevel1, #categoryLevel2').removeClass('d-none on-load')
+                        .children().animate({ opacity: 1}, 250)
             } else if ($(nextSelectId).is('select')) {
                 $('.formData').each(function(){
                     $(this).find('button').remove()
@@ -94,6 +108,14 @@ function loadCategories($form, data, selectId, nextSelectId, lastData) {
                         $(this).append(' '+ translations['toValidate'])
                     }
                 })
+            }
+            
+            if($(nextSelectId).parents('.formData').hasClass('on-load')) {
+                $(nextSelectId)
+                        .parents('.formData').removeClass('on-load')
+                        .children('div').each(function() {
+                            $(this).animate({ opacity: 1}, 250);
+                        })
             }
         }
     })
@@ -121,17 +143,27 @@ function toggleNewFields(newFields, dataEntity) {
         $('#form-categoryLevel2').html(initCreateData('categoryLevel2'))
         $('#add-categoryLevel1-btn, #add-categoryLevel2-btn').hide()
         $('#add-categoryLevel1, #add-categoryLevel2').find('button').remove()
+        if ($('#categoryLevel1, #categoryLevel2').hasClass('on-load')
+         || $('#categoryLevel1, #categoryLevel2').hasClass('d-none')) {
+            $('#categoryLevel1, #categoryLevel2').removeClass('d-none on-load')
+                .children().animate({ opacity: 1}, 250)
+        }
     } else if (dataEntity == 'categoryLevel1') {
         // If add categoryLevelId, create categoryLevel2Id
         $('#form-categoryLevel2').html(initCreateData('categoryLevel2'))
         $('#add-categoryLevel2-btn').hide()
         $('#add-categoryLevel2').find('button').remove()
+        if ($('#categoryLevel2').hasClass('on-load')
+         || $('#categoryLevel2').hasClass('d-none')) {
+            $('#categoryLevel2').removeClass('d-none on-load')
+                .children().animate({ opacity: 1}, 250)
+        }
     }
 }
 // Reset Event or category level 1&2 select
 function toggleOldFields(oldFields, dataEntity) {
     var resetNewFields = 
-        $('<button type="button" class="mx-2 pt-0 pl-0 border-0 btn bg-transparent h6 text-danger">'
+        $('<button type="button" class="m-0 pt-0 px-0 border-0 btn bg-transparent h6 text-danger">'
             +'<i class="fas fa-times-circle"></i>'
             +'</button>')
         $('#add-'+ dataEntity).append(resetNewFields)
@@ -146,9 +178,13 @@ function toggleOldFields(oldFields, dataEntity) {
             $('#form-categoryLevel1').html(initSelectData('categoryLevel1'))
             $('#form-categoryLevel2').html(initSelectData('categoryLevel2'))
             $('#add-categoryLevel1-btn, #add-categoryLevel2-btn').show()
+            $('#categoryLevel1, #categoryLevel2').addClass('d-none on-load')
+                .children().animate({ opacity: 0}, 250)
         } else if (dataEntity == 'categoryLevel1') {
             $('#form-categoryLevel2').html(initSelectData('categoryLevel2'))
             $('#add-categoryLevel2-btn').show()
+            $('#categoryLevel2').addClass('d-none on-load')
+                .children().animate({ opacity: 1}, 250)
         }
     })
 }
@@ -300,6 +336,27 @@ function updateCurrentScore(newElem) {
     })
 }
 
+// Check Items value to show footer
+function checkField(formKO, newElem, field) {
+    newElem.find(field).each(function() {
+        if($(this).val() == '') formKO += 1
+        else formKO += 0
+    })
+    return formKO
+}
+function showFooter(newElem) {
+    newElem.find('select, input, textarea').on('keyup paste change', function() {
+        var formKO = 0
+        formKO += checkField(formKO, newElem, 'select')
+        formKO += checkField(formKO, newElem, 'input')
+        formKO += checkField(formKO, newElem, 'textarea')
+        if (formKO == 0 && $('.card-footer').hasClass('d-none')) {
+            $('.card-footer').delay(1500).removeClass('d-none')
+                    .animate({ opacity: 1}, 500);
+        }
+    })
+}
+
 // Add itemSitu from prototype
 function addSituItem(button) {
 
@@ -332,6 +389,7 @@ function addSituItem(button) {
     addResetSituItemScoreButton(newElem.find('select'))
     updateCurrentScore(newElem)
     newElem.appendTo(list)
+    showFooter(newElem)
 
     // Hide Adding button when all options are selected
     if (collectionHolder.find('li').length == 4 ) {
@@ -349,8 +407,10 @@ function submissionStatus(buttonId) {
     $('#create_situ_form_statusId').val(statusId)
 }
 
+
 $(function() {
     
+    // Load translation if need
     $('body').find('select').each(function() {
         $(this).find('option').each(function() {
             if ($(this).hasClass('to-validate')) {
@@ -364,17 +424,23 @@ $(function() {
     $('.colDataLang').each(function(){
         if (!$(this).children().is('select')) $(this).next().find('span').hide()
     })
+    
     /**
      * Load events/categories or create them
      */
     // Load data only on select
-    if ($('#create_situ_form_lang').is('select') || $('#create_situ_form_event').is('select')) {
+    if ($('#create_situ_form_lang').is('select')
+     || $('#create_situ_form_event').is('select')) {
         
-        $('form').on('change', '#create_situ_form_lang, #create_situ_form_event, #create_situ_form_categoryLevel1', function() {
+        $('form').on('change',  '#create_situ_form_lang, '
+                                +'#create_situ_form_event, '
+                                +'#create_situ_form_categoryLevel1, '
+                                +'#create_situ_form_categoryLevel2', function() {
             if ($(this).is('select')) {                
                 
                 // Reset selects before action
                 if ($(this).attr('id') == 'create_situ_form_lang') {
+                    $('#categoryLevel1, #categoryLevel2').addClass('d-none')
                     if ($(this).val != '') $(this).addClass('text-capitalize')
                     else {
                         if ($(this).hasClass('text-capitalize')) {
@@ -386,13 +452,19 @@ $(function() {
                                 .html(initSelectData($(this).attr('id')))
                     })
                 } else if ($(this).attr('id') == 'create_situ_form_event') {
+                    $('#categoryLevel2').addClass('d-none')
                     $('.formData').each(function(){
                         $(this).find('.colData')
                                 .html(initSelectData($(this).attr('id')))
                     })
-                } else {
+                } else if ($(this).attr('id') == 'create_situ_form_categoryLevel1') {
                     $(this).parents('.formData').next().find('.colData')
                         .html(initSelectData('categoryLevel2'))
+                } else {
+                    if ($('.card-body').hasClass('d-none')) {
+                        $('.card-body').removeClass('d-none')
+                                .animate({ opacity: 1}, 500);
+                    }
                 }
             }
             // Load event/categories on create it in ajax
@@ -432,6 +504,7 @@ $(function() {
     $('#add-itemSitu-link').click(function () {
         addSituItem($(this))
     })
+    
     
     /**
      * Submission
