@@ -1,65 +1,96 @@
 var Encore = require('@symfony/webpack-encore');
 
+// Define App configuration
 Encore
-    // directory where compiled assets will be stored
     .setOutputPath('public/build/')
-    // public path used by the web server to access the output path
     .setPublicPath('/build')
-
     .copyFiles({
         from: 'assets/img',
-    
-       // optional target path, relative to the output dir
-        to: 'images/[name].[hash:8].[ext]',
-        
-        // if versioning is enabled, add the file hash too
-        //to: 'images/[path][name].[hash:8].[ext]',
-        // only copy files matching this pattern
+        to: 'img/[name].[hash:8].[ext]',
         pattern: /\.(png|jpg|jpeg)$/
     })
-
-    /*
-     * ENTRY CONFIG
-     *
-     * Add 1 entry for each "page" of your app
-     * (including one that's included on every page - e.g. "app")
-     *
-     * Each entry will result in one JavaScript file (e.g. app.js)
-     * and one CSS file (e.g. app.css) if you JavaScript imports CSS.
-     */
     .addEntry('app', './assets/js/app.js')
-    .addEntry('back_app', './assets/js/back_app.js')
-    .addEntry('front_app', './assets/js/front_app.js')
-    .addEntry('situ_create_app', './assets/js/situ_create_app.js')
-    .addEntry('situ_list_app', './assets/js/situ_list_app.js')
-    .addEntry('user_account_app', './assets/js/user_account_app.js')
-    .addEntry('user_update_app', './assets/js/user_update_app.js')
-    
-    // When enabled, Webpack "splits" your files into smaller pieces for greater optimization.
     .splitEntryChunks()
-
-    // will require an extra script tag for runtime.js
-    // but, you probably want this, unless you're building a single-page app
     .enableSingleRuntimeChunk()
-
-    /*
-     * FEATURE CONFIG
-     *
-     * Enable & configure other features below. For a full
-     * list of features, see:
-     * https://symfony.com/doc/current/frontend.html#adding-more-features
-     */
     .cleanupOutputBeforeBuild()
     .enableBuildNotifications()
     .enableSourceMaps(!Encore.isProduction())
-    // enables hashed filenames (e.g. app.abc123.css)
     .enableVersioning(Encore.isProduction())
-
-    // enables Sass/SCSS support
     .enableSassLoader()
-
-    // uncomment if you're having problems with a jQuery plugin
     .autoProvidejQuery()
 ;
 
-module.exports = Encore.getWebpackConfig();
+// Build the first configuration
+const appConfig = Encore.getWebpackConfig();
+
+// Set a unique name for the config (needed later!)
+appConfig.name = 'appConfig';
+
+/*
+ * Define FrontOffice configuration
+ */
+// reset Encore to build frontApp
+Encore.reset();
+
+Encore
+    .setOutputPath('public/build/front/')
+    .setPublicPath('/build/front')
+    .copyFiles({
+        from: 'assets/front/img',
+        to: 'build/front/img/[name].[hash:8].[ext]',
+        pattern: /\.(png|jpg|jpeg)$/
+    })
+    .addEntry('front_app', './assets/front/js/front_app.js')
+    .addEntry('situ_create_app', './assets/front/js/situ_create_app.js')
+    .addEntry('situ_list_app', './assets/front/js/situ_list_app.js')
+    .addEntry('user_account_app', './assets/front/js/user_account_app.js')
+    .addEntry('user_update_app', './assets/front/js/user_update_app.js')
+    .splitEntryChunks()
+    .enableSingleRuntimeChunk()
+    .cleanupOutputBeforeBuild()
+    .enableBuildNotifications()
+    .enableSourceMaps(!Encore.isProduction())
+    .enableVersioning(Encore.isProduction())
+    .enableSassLoader()
+    .autoProvidejQuery()
+;
+
+// Build the first configuration
+const frontApp = Encore.getWebpackConfig();
+
+// Set a unique name for the config (needed later!)
+frontApp.name = 'frontApp';
+
+/*
+ * Define App configuration
+ */
+// reset Encore to build backApp
+Encore.reset();
+
+Encore
+    .setOutputPath('public/build/back/')
+    .setPublicPath('/build/back')
+    .copyFiles({
+        from: 'assets/back/img',
+        to: 'build/back/img/[name].[hash:8].[ext]',
+        pattern: /\.(png|jpg|jpeg)$/
+    })
+    .addEntry('back_app', './assets/back/js/back_app.js')
+    .splitEntryChunks()
+    .enableSingleRuntimeChunk()
+    .cleanupOutputBeforeBuild()
+    .enableBuildNotifications()
+    .enableSourceMaps(!Encore.isProduction())
+    .enableVersioning(Encore.isProduction())
+    .enableSassLoader()
+    .autoProvidejQuery()
+;
+
+// Build the first configuration
+const backApp = Encore.getWebpackConfig();
+
+// Set a unique name for the config (needed later!)
+backApp.name = 'backApp';
+
+// export the final configuration as an array of multiple configurations
+module.exports = [appConfig, frontApp, backApp];

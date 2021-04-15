@@ -1,7 +1,7 @@
 {% extends 'base.html.twig' %}
 
 {% block stylesheets %}
-    {{encore_entry_link_tags('back_app')}}
+    {{ encore_entry_link_tags('back_app', null, 'backApp') }}
 {% endblock %}
 
 {% block body %}
@@ -26,9 +26,9 @@
         {% block footer %}
             {% include "block/_footer.html.twig" %}
         {% endblock %}
-            
+
         {% block javascripts %}
-            {{encore_entry_script_tags('back_app')}}
+            {{ encore_entry_script_tags('back_app', null, 'backApp') }}
         {% endblock %}
     </body>
 {% endblock %}

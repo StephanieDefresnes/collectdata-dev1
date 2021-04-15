@@ -2,23 +2,13 @@
 {% trans_default_domain 'user_messages' %}
 {% set locale = app.request.locale %}
 
+{% block title %}{{ 'contrib.form.situ.label'|trans() }}{% endblock %}
+
 {% block stylesheets %}
     {{ parent() }}
-    {{ encore_entry_link_tags('situ_create_app') }}
-    <style>
-{#        #page > .container .card-header {
-            padding-bottom: 6px !important;
-        }
-        #page > .container .card-header #categoryLevel1,
-        #page > .container .card-header #categoryLevel2,
-        #page > .container .card-body,
-        #page > .container .card-footer {
-            display : none;
-        }#}
-    </style>
+    <link rel="stylesheet" href="{{ asset('select2/css/select2.min.css') }}">
+    {{ encore_entry_link_tags('situ_create_app', null, 'frontApp') }}
 {% endblock %}
-
-{% block title %}{{ 'contrib.form.situ.label'|trans() }}{% endblock %}
 
 {% block content %}
     
@@ -161,7 +151,8 @@
 
 {% block javascripts %}
     {{ parent() }}
-    {{ encore_entry_script_tags('situ_create_app') }}
+    {{ encore_entry_script_tags('situ_create_app', null, 'frontApp') }}
+    <script src="{{ asset('fullscreenslide/js/modernizr.custom.86080.js') }}"></script>
 <script>
     var translations = {
        "toValidate" : "{{ 'contrib.form.to_validate' | trans }}",

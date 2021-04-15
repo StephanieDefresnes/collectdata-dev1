@@ -4,7 +4,7 @@
 
 {% block stylesheets %}
     {{ parent() }}
-    {{ encore_entry_link_tags('situ_list_app') }}
+    {{ encore_entry_link_tags('situ_list_app', null, 'frontApp') }}
 {% endblock %}
 
 {% block title %}{{ 'contrib.title'|trans() }}{% endblock %}

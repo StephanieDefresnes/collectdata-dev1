@@ -18,7 +18,6 @@
 
 {% block stylesheets %}
     {{ parent() }}
-    {{ encore_entry_link_tags('user_account_app') }}
     <style>
         .custom-file-label::after{content:"{{ 'account.translator.file.btn.add' | trans }}";}
     </style>
@@ -398,5 +397,5 @@
        "file-placeholder" : "{{ 'account.translator.file.modal.file.placeholder' | trans }}",
     }
     </script>
-    {{ encore_entry_script_tags('user_account_app') }}
+    {{ encore_entry_script_tags('user_account_app', null, 'frontApp') }}
 {% endblock %}

@@ -1,15 +1,12 @@
-{% trans_default_domain 'user_messages' %}
 {% extends 'front/layout.html.twig' %}
+{% trans_default_domain 'user_messages' %}
 
 {% block title %}{{ 'account.update.title'|trans() }}{% endblock %}
 
 {% block stylesheets %}
-    <link rel="stylesheet" href="{{ asset('fullscreenslide/css/style.css') }}">
+    {{ parent() }}
     <link rel="stylesheet" href="{{ asset('select2/css/select2.min.css') }}">
-    {{ encore_entry_link_tags('app') }}
-    {{ encore_entry_link_tags('front_app') }}
-    {{ encore_entry_link_tags('user_update_app') }}
-    </style>
+    {{ encore_entry_link_tags('user_update_app', null, 'frontApp') }}
 {% endblock %}
     
 {% block content %}
@@ -170,5 +167,5 @@
             "default" : "{{ asset('/img/unknown.jpg') }}",
         }
     </script>
-    {{ encore_entry_script_tags('user_update_app') }}
+    {{ encore_entry_script_tags('user_update_app', null, 'frontApp') }}
 {% endblock %}

@@ -1,7 +1,7 @@
 {% extends 'base.html.twig' %}
+
 {% block stylesheets %}
-    {{ encore_entry_link_tags('app') }}
-    {{ encore_entry_link_tags('front_app') }}
+    {{ encore_entry_link_tags('front_app', null, 'frontApp') }}
     <link rel="stylesheet" href="{{ asset('fullscreenslide/css/style.css') }}">
 {% endblock %}
 
@@ -27,8 +27,8 @@
         {% endblock %}
 
         {% block javascripts %}
-            {{ encore_entry_script_tags('front_app') }}
-            {{ encore_entry_script_tags('app') }}
+{#            {{ encore_entry_script_tags('app') }}#}
+            {{ encore_entry_script_tags('front_app', null, 'frontApp') }}
             <script src="{{ asset('fullscreenslide/js/modernizr.custom.86080.js') }}"></script>
         {% endblock %}
     </body>

@@ -1,5 +1,5 @@
 // css
-import '../css/situ_create_app.scss'
+import '../scss/situ_create_app.scss'
 
 // js
 

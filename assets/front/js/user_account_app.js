@@ -1,5 +1,5 @@
 // css
-import '../css/user_account_app.scss';
+import '../scss/user_account_app.scss';
 
 // js
 $(function() {

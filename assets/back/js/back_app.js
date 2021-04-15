@@ -1,5 +1,5 @@
 // css
-import '../css/back_app.scss';
+import '../scss/back_app.scss';
 
 // js
 const $ = require('jquery');
