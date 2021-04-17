@@ -11,8 +11,6 @@ use App\Service\LangService;
 use App\Service\SituService;
 use App\Service\UserFileService;
 use Doctrine\ORM\EntityManagerInterface;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
@@ -23,7 +21,6 @@ use Symfony\Component\String\Slugger\SluggerInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
- * @Security("is_granted('ROLE_USER')")
  * @Route("/{_locale<%app_locales%>}")
  */
 class UserController extends AbstractController
@@ -259,7 +256,7 @@ class UserController extends AbstractController
             // Switch locale
             $request_lang_id = $request->request->get('user_update_form')['langId'];
             if ($request_lang_id == null) {
-                $user_lang = $this->defaultLocale;
+                $user_lang = 'fr';
             } else {
                 $lang = $this->langService->getUserLang($request_lang_id);
                 $user_lang = $lang->getLang();
@@ -270,8 +267,8 @@ class UserController extends AbstractController
             foreach ($optionalLangs as $optionLang) {
                 $lang = new Lang();
                 $lang->addUser($optionLang);
+                $em->persist($lang);
             }
-            $em->persist($lang);
             $em->flush();
             
             $user->setUpdated();
