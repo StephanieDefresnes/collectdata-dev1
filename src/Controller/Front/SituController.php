@@ -12,8 +12,6 @@ use App\Service\LangService;
 use App\Service\SituService;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -21,14 +19,10 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
- * @Security("is_granted('ROLE_USER')")
  * @Route("/{_locale<%app_locales%>}")
  */
 class SituController extends AbstractController
-{    
-    /**
-     * @var TranslatorInterface 
-     */
+{
     private $translator;
     
     public function __construct(TranslatorInterface $translator)
@@ -61,7 +55,9 @@ class SituController extends AbstractController
     /**
      * @Route("/{id}/situ/new", name="create_situ", methods="GET|POST")
      */
-    public function createSitu(Request $request, EntityManagerInterface $em, LangService $langService): Response
+    public function createSitu( Request $request,
+                                EntityManagerInterface $em,
+                                LangService $langService): Response
     {
         $situ = new Situ();
         $user = $this->getUser();
@@ -102,8 +98,8 @@ class SituController extends AbstractController
                 $event = new Event();
                 $event->setTitle($form->get('event')->getData()->getTitle());
                 $event->setUserId($userId);
-                $event->setLang($langData);
                 $event->setValidated(0);
+                $event->setLang($langData);
                 $em->persist($event);
                 $eventData = $event;
             } else {
@@ -117,8 +113,8 @@ class SituController extends AbstractController
                 $catLvl1->setDescription($form->get('categoryLevel1')->getData()->getDescription());
                 $catLvl1->setDateCreation(new \DateTime('now'));
                 $catLvl1->setUserId($userId);
-                $catLvl1->setLang($langData);
                 $catLvl1->setValidated(0);
+                $catLvl1->setLang($langData);
                 $catLvl1->setEvent($eventData);
                 $em->persist($catLvl1);
                 $catLvl1Data = $catLvl1;
@@ -134,6 +130,7 @@ class SituController extends AbstractController
                 $catLvl2->setDateCreation(new \DateTime('now'));
                 $catLvl2->setUserId($userId);
                 $catLvl2->setValidated(0);
+                $catLvl2->setLang($langData);
                 $catLvl2->setCategoryLevel1($catLvl1Data);
                 $em->persist($catLvl2);
                 $catLvl2Data = $catLvl2;

@@ -128,18 +128,6 @@ class CategoryLevel1
         return $this;
     }
 
-    public function getLang(): ?int
-    {
-        return $this->lang;
-    }
-
-    public function setLang(?Lang $lang): self
-    {
-        $this->lang = $lang;
-
-        return $this;
-    }
-
     public function getValidated(): ?bool
     {
         return $this->validated;
@@ -148,6 +136,18 @@ class CategoryLevel1
     public function setValidated(bool $validated): self
     {
         $this->validated = $validated;
+
+        return $this;
+    }
+
+    public function getLang(): ?int
+    {
+        return $this->lang;
+    }
+
+    public function setLang(?Lang $lang): self
+    {
+        $this->lang = $lang;
 
         return $this;
     }
@@ -174,8 +174,6 @@ class CategoryLevel1
      
     public function addCategoryLevel2(CategoryLevel2 $categoryLevel2): self
     {
-//        $this->categoriesLevel2->add($categoryLevel2);
-//        $categoryLevel2->setCategoryLevel1Id($this);
         if (!$this->categoriesLevel2->contains($categoryLevel2)) {
             $this->categoriesLevel2[] = $categoryLevel2;
             $categoryLevel2->setEvent($this);
@@ -203,12 +201,6 @@ class CategoryLevel1
     {
         return $this->situs;
     }
-     
-//    public function addSitu(Situ $situ)
-//    {
-//        $this->situs->add($situ);
-//        $situ->setCategoryLevel1($this);
-//    }
      
     public function addSitu(Situ $situ): self
     {        

@@ -40,14 +40,19 @@ class CategoryLevel2
     private $userId;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\CategoryLevel1", inversedBy="categoriesLevel2")
-     */
-    private $categoryLevel1;
-
-    /**
      * @ORM\Column(type="boolean")
      */
     private $validated;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Lang", inversedBy="categoriesLevel2")
+     */
+    private $lang;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\CategoryLevel1", inversedBy="categoriesLevel2")
+     */
+    private $categoryLevel1;
 
     /**
     * @ORM\OneToMany(targetEntity="App\Entity\Situ", cascade={"persist"}, mappedBy="categoryLevel2")
@@ -58,11 +63,6 @@ class CategoryLevel2
     {
         $this->situs = new ArrayCollection();
     }
-
-//    public function __toString(): ?string
-//    {
-//        return $this->situs;
-//    }
     
     public function getId(): ?int
     {
@@ -117,18 +117,6 @@ class CategoryLevel2
         return $this;
     }
 
-    public function getCategoryLevel1(): ?int
-    {
-        return $this->categoryLevel1;
-    }
-
-    public function setCategoryLevel1(?CategoryLevel1 $categoryLevel1): self
-    {
-        $this->categoryLevel1 = $categoryLevel1;
-
-        return $this;
-    }
-
     public function getValidated(): ?bool
     {
         return $this->validated;
@@ -137,6 +125,30 @@ class CategoryLevel2
     public function setValidated(bool $validated): self
     {
         $this->validated = $validated;
+
+        return $this;
+    }
+
+    public function getLang(): ?int
+    {
+        return $this->lang;
+    }
+
+    public function setLang(?Lang $lang): self
+    {
+        $this->lang = $lang;
+
+        return $this;
+    }
+
+    public function getCategoryLevel1(): ?int
+    {
+        return $this->categoryLevel1;
+    }
+
+    public function setCategoryLevel1(?CategoryLevel1 $categoryLevel1): self
+    {
+        $this->categoryLevel1 = $categoryLevel1;
 
         return $this;
     }
@@ -152,9 +164,6 @@ class CategoryLevel2
      
     public function addSitu(Situ $situ): self
     {
-//        $this->situs->add($situ);
-//        $situ->setCategoryLevel2($this);
-        
         if (!$this->situs->contains($situ)) {
             $this->situs[] = $situ;
             $situ->setCategoryLevel2($this);

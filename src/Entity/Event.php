@@ -23,16 +23,16 @@ class Event
      * @ORM\Column(type="string", length=255)
      */
     private $title;
-
-    /**
-     * @ORM\Column(type="boolean")
-     */
-    private $validated;
     
     /**
      * @ORM\Column(type="integer")
      */
     private $userId;
+
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $validated;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Lang", inversedBy="events")
@@ -78,18 +78,6 @@ class Event
         return $this;
     }
 
-    public function getValidated(): ?bool
-    {
-        return $this->validated;
-    }
-
-    public function setValidated(bool $validated): self
-    {
-        $this->validated = $validated;
-
-        return $this;
-    }
-
     public function getUserId(): ?int
     {
         return $this->userId;
@@ -98,6 +86,18 @@ class Event
     public function setUserId(int $userId): self
     {
         $this->userId = $userId;
+
+        return $this;
+    }
+
+    public function getValidated(): ?bool
+    {
+        return $this->validated;
+    }
+
+    public function setValidated(bool $validated): self
+    {
+        $this->validated = $validated;
 
         return $this;
     }
@@ -124,9 +124,6 @@ class Event
      
     public function addCategoryLevel1(CategoryLevel1 $categoryLevel1): self
     {
-//        $this->categoriesLevel1->add($categoryLevel1);
-//        $categoryLevel1->setEventId($this);
-        
         if (!$this->categoriesLevel1->contains($categoryLevel1)) {
             $this->categoriesLevel1[] = $categoryLevel1;
             $categoryLevel1->setEvent($this);
@@ -157,9 +154,6 @@ class Event
      
     public function addSitu(Situ $situ): self
     {
-//        $this->situs->add($situ);
-//        $situ->setEventId($this);
-        
         if (!$this->situs->contains($situ)) {
             $this->situs[] = $situ;
             $situ->setEvent($this);

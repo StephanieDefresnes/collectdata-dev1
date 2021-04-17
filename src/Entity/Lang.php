@@ -51,6 +51,11 @@ class Lang
     protected $categoriesLevel1;
 
     /**
+    * @ORM\OneToMany(targetEntity=CategoryLevel2::class, cascade={"persist"}, mappedBy="lang")
+    */
+    protected $categoriesLevel2;
+
+    /**
     * @ORM\OneToMany(targetEntity=Situ::class, cascade={"persist"}, mappedBy="lang")
     */
     protected $situs;
@@ -177,6 +182,36 @@ class Lang
             // set the owning side to null (unless already changed)
             if ($categoryLevel1->getLang() === $this) {
                 $categoryLevel1->setLang(null);
+            }
+        }
+        return $this;
+    }
+
+    /**
+     * @return Collection|CategoryLevel2[]
+     */
+    public function getCategoriesLevel2(): ?Collection
+    {
+        return $this->categoriesLevel2;
+    }
+     
+    public function addCategoryLevel2(CategoryLevel2 $categoryLevel2): self
+    {
+        if (!$this->categoriesLevel2->contains($categoryLevel2)) {
+            $this->categoriesLevel2[] = $categoryLevel2;
+            $categoryLevel2->setLang($this);
+        }
+        
+        return $this;
+    }
+
+    public function removeCategoryLevel2(CategoryLevel2 $categoryLevel2): self
+    {
+        if ($this->categoriesLevel2->contains($categoryLevel2)) {
+            $this->categoriesLevel2->removeElement($categoryLevel2);
+            // set the owning side to null (unless already changed)
+            if ($categoryLevel2->getLang() === $this) {
+                $categoryLevel2->setLang(null);
             }
         }
         return $this;
