@@ -7,7 +7,6 @@ use App\Form\Front\Situ\CreateSituItemType;
 use App\Repository\EventRepository;
 use App\Repository\CategoryLevel1Repository;
 use App\Repository\CategoryLevel2Repository;
-use App\Repository\LangRepository;
 use App\Service\EventService;
 use App\Service\CategoryLevel1Service;
 use App\Service\CategoryLevel2Service;
@@ -29,7 +28,6 @@ use Symfony\Component\Security\Core\Security;
 
 class CreateSituFormType extends AbstractType
 {
-    private $langRepository;
     private $eventRepository;
     private $categoryLevel1Repository;
     private $categoryLevel2Repository;
@@ -38,8 +36,7 @@ class CreateSituFormType extends AbstractType
     private $categoryLevel1Service;
     private $categoryLevel2Service;
     
-    public function __construct(LangRepository $langRepository,
-                                EventRepository $eventRepository,
+    public function __construct(EventRepository $eventRepository,
                                 CategoryLevel1Repository $categoryLevel1Repository,
                                 CategoryLevel2Repository $categoryLevel2Repository,
                                 LangService $langService,
@@ -48,7 +45,6 @@ class CreateSituFormType extends AbstractType
                                 CategoryLevel2Service $categoryLevel2Service,
                                 Security $security)
     {
-        $this->langRepository = $langRepository;
         $this->eventRepository = $eventRepository;
         $this->categoryLevel1Repository = $categoryLevel1Repository;
         $this->categoryLevel2Repository = $categoryLevel2Repository;
