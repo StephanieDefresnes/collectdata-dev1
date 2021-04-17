@@ -18,6 +18,7 @@
 
 {% block stylesheets %}
     {{ parent() }}
+    {{ encore_entry_link_tags('user_account_app', null, 'frontApp') }}
     <style>
         .custom-file-label::after{content:"{{ 'account.translator.file.btn.add' | trans }}";}
     </style>
