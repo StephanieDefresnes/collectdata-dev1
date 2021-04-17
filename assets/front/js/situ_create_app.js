@@ -76,13 +76,18 @@ function loadCategories($form, data, selectId, nextSelectId, lastData) {
                     $(this).html(initCreateData($(this).parents('.formData').attr('id')))
                             .next('.colBtn').hide()
                 })
+                if ($('#categoryLevel1, #categoryLevel2').hasClass('d-none')
+                 || $('#categoryLevel1, #categoryLevel2').hasClass('on-load'))
+                    $('#categoryLevel1, #categoryLevel2').removeClass('d-none on-load')
+                        .children().animate({ opacity: 1}, 250)
             } else if (!$(nextSelectId).is('select')
               && $(selectId).attr('id') == 'create_situ_form_event') {
                 $('.colData').each(function(){
                     $(this).html(initCreateData($(this).parents('.formData').attr('id')))
                             .next('.colBtn').hide()
                 })
-                if ($('#categoryLevel1, #categoryLevel2').hasClass('on-load'))
+                if ($('#categoryLevel1, #categoryLevel2').hasClass('d-none')
+                 || $('#categoryLevel1, #categoryLevel2').hasClass('on-load'))
                     $('#categoryLevel1, #categoryLevel2').removeClass('d-none on-load')
                         .children().animate({ opacity: 1}, 250)
             } else if ($(nextSelectId).is('select')) {
@@ -418,6 +423,13 @@ $(function() {
             }
         })
     })
+    
+    if ( !$('#create_situ_form_event').is('select')
+       && $('#categoryLevel1').hasClass('d-none')
+       && $('#categoryLevel2').hasClass('d-none') ) {
+        $('#categoryLevel1, #categoryLevel2').removeClass('d-none on-load')
+                .children().animate({ opacity: 1}, 250)
+    }
     
     // Ajustments
     $('#create_situ_form_lang option').first().addClass('text-dark')

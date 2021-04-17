@@ -3,6 +3,7 @@
 namespace App\Service;
 
 use App\Entity\CategoryLevel1;
+use App\Entity\Lang;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Security\Core\Security;
 
@@ -17,25 +18,52 @@ class CategoryLevel1Service {
     }
         
     /**
+     * @return []   Returns categoryLevel1 land id
+     *              Use to get not validated Categories Level1 added by current user
+     */
+    public function getCatLv1LangById($catLv1_id)
+    {
+        return $this->em->createQueryBuilder()
+                ->from(CategoryLevel1::class,'evt')
+                ->select('lang.id landId')
+                ->leftJoin(Lang::class, 'lang', 'WITH', 'evt.lang = lang.id')
+                ->where('evt.id = ?1')
+                ->setParameter(1, $catLv1_id)
+                ->getQuery()
+                ->getOneOrNullResult();
+    }
+        
+    /**
      * @return []   Returns an array of Categories Level1 objects
      *              by event selected and by user categories
      */
-    public function getValidatedAndByEventUser($event_id)
+    public function getByEventAndByEventUser($event_id, $event_lang)
     {
-        $query = $this->em->createQueryBuilder();
-        $query->from(CategoryLevel1::class,'c')
-                ->select(  'c.id id')
-                ->andWhere('c.event = ?1')
-                ->andWhere('c.validated = ?2')
-                ->andWhere($query->expr()->orX(
-                    $query->expr()->eq('c.userId ', '?3'),
-                    $query->expr()->eq('c.validated', '?4')
-                ))
-                ->setParameter(1, $event_id)
-                ->setParameter(2, 1)
-                ->setParameter(3, $this->security->getUser()->getId())
-                ->setParameter(4, 0);
-        return $query->getQuery()->getResult();
+        $qb = $this->em->createQueryBuilder();
+        
+        $catLv1ByEventId = $qb->expr()->andX(
+            $qb->expr()->eq('c.event', '?1'),
+            $qb->expr()->eq('c.validated', '?2')
+        );
+        
+        $catLv1ByUser = $qb->expr()->andX(
+            $qb->expr()->eq('c.event', '?1'),
+            $qb->expr()->eq('c.validated', '?3'),
+            $qb->expr()->eq('c.userId', '?4'),
+            $qb->expr()->eq('c.lang', '?5')
+        );
+        
+        $qb->from(CategoryLevel1::class,'c')
+            ->select('c')
+            ->andWhere($qb->expr()->orX($catLv1ByEventId, $catLv1ByUser))
+            ->setParameters([
+                1 => $event_id,
+                2 => 1,
+                3 => 0,
+                4 => $this->security->getUser()->getId(),
+                5 => $event_lang
+            ]);
+        return $qb->getQuery()->getResult();
     }
     
 }

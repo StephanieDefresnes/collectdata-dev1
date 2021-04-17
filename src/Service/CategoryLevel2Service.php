@@ -20,22 +20,33 @@ class CategoryLevel2Service {
      * @return []   Returns an array of Categories Level2 objects
      *              by CategoryLevel1 selected and by user categories
      */
-    public function getValidatedAndByEventUser($catLv1_id)
+    public function getValidatedAndByEventUser($catLv1_id, $lang_id)
     {        
-        $query = $this->em->createQueryBuilder();
-        $query->from(CategoryLevel2::class,'c')
-                ->select(  'c.id id')
-                ->andWhere('c.categoryLevel1 = ?1')
-                ->andWhere('c.validated = ?2')
-                ->andWhere($query->expr()->orX(
-                    $query->expr()->eq('c.userId ', '?3'),
-                    $query->expr()->eq('c.validated', '?4')
-                ))
-                ->setParameter(1, $catLv1_id)
-                ->setParameter(2, 1)
-                ->setParameter(3, $this->security->getUser()->getId())
-                ->setParameter(4, 0);
-        return $query->getQuery()->getResult();
+        $qb = $this->em->createQueryBuilder();
+        
+        $catLv2ByCatLv1Id = $qb->expr()->andX(
+            $qb->expr()->eq('c.categoryLevel1', '?1'),
+            $qb->expr()->eq('c.validated', '?2')
+        );
+        
+        $catLv2ByUser = $qb->expr()->andX(
+            $qb->expr()->eq('c.categoryLevel1', '?1'),
+            $qb->expr()->eq('c.validated', '?3'),
+            $qb->expr()->eq('c.userId', '?4'),
+            $qb->expr()->eq('c.lang', '?5')
+        );
+        
+        $qb->from(CategoryLevel2::class,'c')
+                ->select('c')
+                ->andWhere($qb->expr()->orX($catLv2ByCatLv1Id, $catLv2ByUser))
+                ->setParameters([
+                    1 => $catLv1_id,
+                    2 => 1,
+                    3 => 0,
+                    4 => $this->security->getUser()->getId(),
+                    5 => $lang_id
+                ]);
+        return $qb->getQuery()->getResult();
     }
     
 }

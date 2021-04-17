@@ -28,27 +28,32 @@ class EventRepository extends ServiceEntityRepository
      */
     public function findByLocaleLang()
     {        
-        $userId = $this->security->getUser()->getId();
-        $userLangId = $this->security->getUser()->getLangId();
-        if ($userLangId == '') {
-            $userLangId = 47;
-        }
+        $user = $this->security->getUser();
+        $userLangId = $user->getLangId() != '' ? $user->getLangId() : 47;
         
-        $query =  $this->createQueryBuilder('c');
-                    $query->andWhere('c.lang = ?1')
-                    ->andWhere('c.validated = ?2') 
-                    ->andWhere($query->expr()->orX(
-                        $query->expr()->eq('c.userId ', '?3'),
-                        $query->expr()->eq('c.validated', '?4')
-                    ))
-                    ->setParameter(1, $userLangId)
-                    ->setParameter(2, 1)
-                    ->setParameter(3, $userId)
-                    ->setParameter(4, 0)
-                    ->select('c.id');
-        return $query->getQuery()->getResult();        
+        $qb =  $this->createQueryBuilder('c');
+        
+        $eventByLang = $qb->expr()->andX(
+            $qb->expr()->eq('c.lang', '?1'),
+            $qb->expr()->eq('c.validated', '?2')
+        );
+        
+        $eventByUser = $qb->expr()->andX(
+            $qb->expr()->eq('c.lang', '?1'),
+            $qb->expr()->eq('c.validated', '?3'),
+            $qb->expr()->eq('c.userId', '?4')
+        );
+        
+        $qb->andWhere($qb->expr()->orX($eventByLang, $eventByUser))
+            ->setParameters([
+                1 => $userLangId,
+                2 => 1,
+                3 => 0,
+                4 => $user->getId(),
+            ]);
+        return $qb->getQuery()->getResult();        
     }
-
+    
     // /**
     //  * @return Event[] Returns an array of Event objects
     //  */
