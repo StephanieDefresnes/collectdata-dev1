@@ -62,7 +62,7 @@ const frontApp = Encore.getWebpackConfig();
 frontApp.name = 'frontApp';
 
 /*
- * Define App configuration
+ * Define BackOffice configuration
  */
 // reset Encore to build backApp
 Encore.reset();
@@ -76,6 +76,7 @@ Encore
         pattern: /\.(png|jpg|jpeg)$/
     })
     .addEntry('back_app', './assets/back/js/back_app.js')
+    .addEntry('index_app', './assets/back/js/index_app.js')
     .splitEntryChunks()
     .enableSingleRuntimeChunk()
     .cleanupOutputBeforeBuild()

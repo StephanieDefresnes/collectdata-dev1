@@ -1,3 +1,35 @@
+sidebar:
+    dashboard: Dashboard
+    lang:
+        title: Languages
+        create: Validation
+        search: List
+        translate_files: Translation files
+    user:
+        title: User
+        create: Invite
+        search: List
+    contrib:
+        title: Contributions
+        create: Validation
+        search: List
+    event:
+        title: Events
+    categories_level_1:
+        title: Categories
+    categories_level_2:
+        title: Sub-category
+nav:
+    account: Account
+    account_logout: Logout
+    account_profile: My profile
+    account_reset_password: Reset password
+    end_switch: End of exploration
+    front: Go to the web site
+footer:
+    copyright: All rights reserved
+dashboard:
+    title: Dashboard
 action:
     delete: Delete
     permute_enabled: Enable / Disable

@@ -1,3 +1,35 @@
+sidebar:
+    dashboard: Tableau de bord
+    lang:
+        title: Langues
+        create: Validation
+        search: Liste
+        translate_files: Fichiers de traduction
+    user:
+        title: Utilisateurs
+        create: Inviter
+        search: Liste
+    contrib:
+        title: Contributions
+        create: Validation
+        search: Liste
+    event:
+        title: Événements
+    categories_level_1:
+        title: Catégories
+    categories_level_2:
+        title: Sous-catégories
+nav:
+    account: Compte
+    account_logout: Déconnexion
+    account_profile: Mes informations
+    account_reset_password: Modifier mon mot de passe
+    end_switch: Fin de l'exploration
+    front: Aller sur le site
+footer:
+    copyright: Tous droits réservés
+dashboard:
+    title: Tableau de bord
 action:
     delete: Supprimer
     permute_enabled: Activer / Désactiver
@@ -60,23 +92,10 @@ invitation:
 label:
     filter_number_by_page: Nombre d'élément par page
     filter_search: Rechercher
-nav:
-    account: Compte
-    account_login: Connexion
-    account_logout: Déconnexion
-    account_profile: Mes informations
-    account_reset_password: Modifier le mot de passe
-    end_switch: Fin de l'exploration
-    home: Accueil Front
 'no': Non
 search:
     action_th: Action(s)
     no_data_found: Aucune donnée n'a été trouvée
-sidebar:
-    home: 'Accueil Back'
-    user: Utilisateur
-    user_create: Inviter
-    user_search: Liste
 user:
     button:
         create: Inviter

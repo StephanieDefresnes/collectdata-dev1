@@ -2,46 +2,104 @@
 {% set route = app.request.get('_route') %}
 
 <!-- Sidebar  -->
-<nav id="sidebar">
-    <div class="sidebar-header">
-        <div class="row">
-            <div class="mx-auto">
-                <h2 class="badge badge-dark badge-secondary text-wrap">{{ "now"|format_date }}</h2>
-                <div class="row">
-                    <div class="col-3">
-                        <div class="icon-rounded text-center">
-                            <i class="fas fa-user fa-2x"></i>
-                        </div>
-                    </div>
-                    <div class="col-9">
-                        <ul class="list-unstyled">
-                            <li>{{ app.user }}</li>
-                            {% for role in app.user.roles %}
-                                <li><small>{{ role }}</small></li>
-                            {% endfor %}
-                        </ul>
-                    </div>
-                </div>
+<ul class="navbar-nav bg-gradient-secondary sidebar sidebar-dark accordion" id="accordionSidebar">
+
+    <!-- Sidebar - Brand -->
+    <a class="sidebar-brand d-flex align-items-center justify-content-center"
+       href="{{ path('front_home') }}">
+        <div class="sidebar-brand-icon">
+            <img src="{{ asset('img/forlifeproject.png') }}" alt="">
+        </div>
+        <div class="sidebar-brand-text mx-3">{{ name_site }}</div>
+    </a>
+
+    <!-- Divider -->
+    <hr class="sidebar-divider my-0">
+
+    <!-- Nav Item - Dashboard -->
+    <li class="nav-item active">
+        <a class="nav-link dashboard" href="{{ path('back_home') }}">
+            <i class="fas fa-fw fa-tachometer-alt"></i>
+            <span>{{ 'sidebar.dashboard'|trans() }}</span>
+        </a>
+    </li>
+
+    <!-- Divider -->
+    <hr class="sidebar-divider mb-1">
+
+    <!-- Nav Items - Pages Collapse Menu -->
+    <li class="nav-item">
+        <a class="nav-link collapsed pb-1" href="#" data-toggle="collapse" data-target="#collapseLang"
+            aria-expanded="true" aria-controls="collapseLang">
+            <i class="fas fa-globe"></i>
+            <span>{{ 'sidebar.lang.title'|trans() }}</span>
+        </a>
+        <div id="collapseLang" class="collapse" aria-labelledby="headingLang" data-parent="#accordionSidebar">
+            <div class="bg-white mb-1 py-2 collapse-inner rounded">
+                <a class="collapse-item" href="">
+                    {{ 'sidebar.lang.search'|trans() }}
+                </a>
+                <a class="collapse-item" href="">
+                    {{ 'sidebar.lang.create'|trans() }}
+                </a>
+                <a class="collapse-item" href="">
+                    {{ 'sidebar.lang.translate_files'|trans() }}
+                </a>
             </div>
         </div>
+    </li>
+    
+    <li class="nav-item">
+        <a class="nav-link collapsed pb-1" href="#" data-toggle="collapse" data-target="#collapseUser"
+            aria-expanded="true" aria-controls="collapseUser">
+            <i class="fas fa-users"></i>
+            <span>{{ 'sidebar.user.title'|trans() }}</span>
+        </a>
+        <div id="collapseUser" class="collapse" aria-labelledby="headingUser" data-parent="#accordionSidebar">
+            <div class="bg-white mb-1 py-2 collapse-inner rounded">
+                <a class="collapse-item" href="{{ path('back_user_search') }}">
+                    {{ 'sidebar.user.search'|trans() }}
+                </a>
+                <a class="collapse-item" href="{{ path('back_user_create') }}">
+                    {{ 'sidebar.user.create'|trans() }}
+                </a>
+            </div>
+        </div>
+    </li>
+    
+    <li class="nav-item">
+        <a class="nav-link collapsed pb-1" href="#" data-toggle="collapse" data-target="#collapseContrib"
+            aria-expanded="true" aria-controls="collapseContrib">
+            <i class="fas fa-list-ul"></i>
+            <span>{{ 'sidebar.contrib.title'|trans() }}</span>
+        </a>
+        <div id="collapseContrib" class="collapse" aria-labelledby="headingContrib" data-parent="#accordionSidebar">
+            <div class="bg-white mb-1 py-2 collapse-inner rounded">
+                <a class="collapse-item" href="">
+                    {{ 'sidebar.contrib.create'|trans() }}
+                </a>
+                <a class="collapse-item" href="">
+                    {{ 'sidebar.contrib.search'|trans() }}
+                </a>
+                <a class="collapse-item" href="">
+                    {{ 'sidebar.event.title'|trans() }}
+                </a>
+                <a class="collapse-item" href="">
+                    {{ 'sidebar.categories_level_1.title'|trans() }}
+                </a>
+                <a class="collapse-item" href="">
+                    {{ 'sidebar.categories_level_2.title'|trans() }}
+                </a>
+            </div>
+        </div>
+    </li>
+
+    <!-- Divider -->
+    <hr class="sidebar-divider d-none d-md-block mt-3">
+
+    <!-- Sidebar Toggler (Sidebar) -->
+    <div class="text-center d-none d-md-inline">
+        <button class="rounded-circle border-0" id="sidebarToggle"></button>
     </div>
-    <ul class="list-unstyled components">
-        <li class="{{ route == 'back_home' ? 'active' }}">
-            <a href="{{ path('back_home') }}">{{ 'sidebar.home'|trans }}</a>
-        </li>
-        <li class="{{ route in ['back_user_search', 'back_user_create'] ? 'active' }}">
-            <a href="#user_sub_menu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">{{ 'sidebar.user'|trans() }}</a>
-            <ul class="collapse list-unstyled" id="user_sub_menu">
-                
-                <li>
-                    <a href="{{ path('back_user_search') }}">{{ 'sidebar.user_search'|trans() }}</a>
-                </li>
-                
-                <li>
-                    <a href="{{ path('back_user_create') }}">{{ 'sidebar.user_create'|trans() }}</a>
-                </li>
-                
-            </ul>
-        </li>
-    </ul>
-</nav>
+
+</ul>

@@ -1,3 +1,35 @@
+sidebar:
+    dashboard: Tablero
+    lang:
+        title: Idiomas
+        create: Validación
+        search: Listado
+        translate_files: Archivos de traducción
+    user:
+        title: Usuarios
+        create: Invitación
+        search: Listado
+    contrib:
+        title: Contribuciones
+        create: Validación
+        search: Listado
+    event:
+        title: Événements
+    categories_level_1:
+        title: Categorías
+    categories_level_2:
+        title: Subcategorías
+nav:
+    account: Cuenta
+    account_logout: Desconexión
+    account_profile: Mi informacion
+    account_reset_password:  Cambiar la contraseña
+    end_switch: Fin de la exploración
+    front: Ir al sitio web
+footer:
+    copyright: Todos los derechos reservados
+dashboard:
+    title: Tablero
 action:
     delete: Eliminar
     update: Editar
