@@ -17,7 +17,7 @@
     <hr class="sidebar-divider my-0">
 
     <!-- Nav Item - Dashboard -->
-    <li class="nav-item active">
+    <li class="nav-item{{ route == 'back_home' ? ' active' }}">
         <a class="nav-link dashboard" href="{{ path('back_home') }}">
             <i class="fas fa-fw fa-tachometer-alt"></i>
             <span>{{ 'sidebar.dashboard'|trans() }}</span>
@@ -28,7 +28,7 @@
     <hr class="sidebar-divider mb-1">
 
     <!-- Nav Items - Pages Collapse Menu -->
-    <li class="nav-item">
+    <li class="nav-item{{ route == '' ? ' active' }}">
         <a class="nav-link collapsed pb-1" href="#" data-toggle="collapse" data-target="#collapseLang"
             aria-expanded="true" aria-controls="collapseLang">
             <i class="fas fa-globe"></i>
@@ -36,20 +36,20 @@
         </a>
         <div id="collapseLang" class="collapse" aria-labelledby="headingLang" data-parent="#accordionSidebar">
             <div class="bg-white mb-1 py-2 collapse-inner rounded">
-                <a class="collapse-item" href="">
+                <a class="collapse-item{{ route == '' ? ' active' }}" href="">
                     {{ 'sidebar.lang.search'|trans() }}
                 </a>
-                <a class="collapse-item" href="">
+                <a class="collapse-item{{ route == '' ? ' active' }}" href="">
                     {{ 'sidebar.lang.create'|trans() }}
                 </a>
-                <a class="collapse-item" href="">
+                <a class="collapse-item{{ route == '' ? ' active' }}" href="">
                     {{ 'sidebar.lang.translate_files'|trans() }}
                 </a>
             </div>
         </div>
     </li>
     
-    <li class="nav-item">
+    <li class="nav-item{{ route == '' ? ' active' }}">
         <a class="nav-link collapsed pb-1" href="#" data-toggle="collapse" data-target="#collapseUser"
             aria-expanded="true" aria-controls="collapseUser">
             <i class="fas fa-users"></i>
@@ -57,17 +57,17 @@
         </a>
         <div id="collapseUser" class="collapse" aria-labelledby="headingUser" data-parent="#accordionSidebar">
             <div class="bg-white mb-1 py-2 collapse-inner rounded">
-                <a class="collapse-item" href="{{ path('back_user_search') }}">
+                <a class="collapse-item{{ route == '' ? ' active' }}" href="{{ path('back_user_search') }}">
                     {{ 'sidebar.user.search'|trans() }}
                 </a>
-                <a class="collapse-item" href="{{ path('back_user_create') }}">
+                <a class="collapse-item{{ route == '' ? ' active' }}" href="{{ path('back_user_create') }}">
                     {{ 'sidebar.user.create'|trans() }}
                 </a>
             </div>
         </div>
     </li>
     
-    <li class="nav-item">
+    <li class="nav-item{{ route == '' ? ' active' }}">
         <a class="nav-link collapsed pb-1" href="#" data-toggle="collapse" data-target="#collapseContrib"
             aria-expanded="true" aria-controls="collapseContrib">
             <i class="fas fa-list-ul"></i>
@@ -75,19 +75,19 @@
         </a>
         <div id="collapseContrib" class="collapse" aria-labelledby="headingContrib" data-parent="#accordionSidebar">
             <div class="bg-white mb-1 py-2 collapse-inner rounded">
-                <a class="collapse-item" href="">
+                <a class="collapse-item{{ route == '' ? ' active' }}" href="">
                     {{ 'sidebar.contrib.create'|trans() }}
                 </a>
-                <a class="collapse-item" href="">
+                <a class="collapse-item{{ route == '' ? ' active' }}" href="">
                     {{ 'sidebar.contrib.search'|trans() }}
                 </a>
-                <a class="collapse-item" href="">
+                <a class="collapse-item{{ route == '' ? ' active' }}" href="">
                     {{ 'sidebar.event.title'|trans() }}
                 </a>
-                <a class="collapse-item" href="">
+                <a class="collapse-item{{ route == '' ? ' active' }}" href="">
                     {{ 'sidebar.categories_level_1.title'|trans() }}
                 </a>
-                <a class="collapse-item" href="">
+                <a class="collapse-item{{ route == '' ? ' active' }}" href="">
                     {{ 'sidebar.categories_level_2.title'|trans() }}
                 </a>
             </div>
