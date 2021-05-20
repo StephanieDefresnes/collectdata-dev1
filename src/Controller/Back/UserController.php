@@ -7,7 +7,6 @@ use App\Repository\UserRepository;
 use App\Form\Back\UserType;
 use App\Form\Back\UserUpdateType;
 use App\Manager\UserManager;
-use App\Form\Back\UserFilterType;
 use App\Form\Back\UserBatchType;
 use App\Mailer\Mailer;
 use Symfony\Component\Form\FormEvent;
@@ -48,19 +47,14 @@ class UserController extends AbstractController
     }
 
     /**
-     * @Route("/search/{page}", name="back_user_search", methods="GET|POST")
+     * @Route("/search", name="back_user_search", methods="GET|POST")
      */
-    public function search(Request $request, Session $session, $page=null)
+    public function search(Request $request, Session $session)
     {
-        if (!$page) { $page = $session->get('back_user_page', 1); }
-        $formFilter = $this->createForm(UserFilterType::class, null, [ 'action' => $this->generateUrl('back_user_search', [ 'page' => 1 ]),]);
-        $formFilter->handleRequest($request);
-        $data = $this->userManager->configFormFilter($formFilter)->getData();
-        $this->denyAccessUnlessGranted('back_user_search', $data);
-        $users = $this->userRepository->search($request, $session, $data, $page);
-        $queryData = $this->userManager->getQueryData($data);
+        $this->denyAccessUnlessGranted('back_user_search');
+        $users = $this->userRepository->findAll();
         $formBatch = $this->createForm(UserBatchType::class, null, [
-            'action' => $this->generateUrl('back_user_search', array_merge([ 'page' => $page ], $queryData)),
+            'action' => $this->generateUrl('back_user_search'),
             'users' => $users,
         ]);
         $formBatch->handleRequest($request);
@@ -70,12 +64,8 @@ class UserController extends AbstractController
         }
         return $this->render('back/user/search/index.html.twig', [
             'users' => $users,
-            'form_filter' => $formFilter->createView(),
             'form_batch' => $formBatch->createView(),
             'form_delete' => $this->createFormBuilder()->getForm()->createView(),
-            'number_page' => ceil(count($users) / $formFilter->get('number_by_page')->getData()) ?: 1,
-            'page' => $page,
-            'query_data' => $queryData,
         ]);
     }
 
@@ -189,12 +179,12 @@ class UserController extends AbstractController
     }
     
     /**
-     * @Route("/permute/enabled", name="back_user_permute_enable", methods="GET")
+     * @Route("/permute/enabled", name="back_user_permute_enabled", methods="GET")
      */
     public function permuteEnabled(Request $request): Response
     {    
         $users = $this->userManager->getUsers();
-        $this->denyAccessUnlessGranted('back_user_permute_enable', $users);
+        $this->denyAccessUnlessGranted('back_user_permute_enabled', $users);
         foreach ($users as $user) {
             $permute = $user->getEnabled() ? false : true;
             $user->setEnabled($permute);

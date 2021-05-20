@@ -6,7 +6,7 @@ sidebar:
         search: List
         translate_files: Translation files
     user:
-        title: User
+        title: Users
         create: Invite
         search: List
     contrib:
@@ -31,6 +31,7 @@ footer:
 dashboard:
     title: Dashboard
 action:
+    placeholder: Select
     delete: Delete
     permute_enabled: Enable / Disable
     update: Update
@@ -79,23 +80,10 @@ invitation:
 label:
     filter_number_by_page: Number by page
     filter_search: Search
-nav:
-    account: Account
-    account_login: Login
-    account_logout: Logout
-    account_profile: My profile
-    account_reset_password: Reset password
-    end_switch: End switch
-    home: Home Front
 'no': No
 search:
     action_th: Action(s)
     no_data_found: No data found
-sidebar:
-    home: Home Back
-    user: Utilisateur
-    user_create: Invite
-    user_search: List
 user:
     button:
         create: Invite

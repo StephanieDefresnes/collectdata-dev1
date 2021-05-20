@@ -1,6 +1,8 @@
 {% trans_default_domain 'back_messages' %}
 {% set route = app.request.get('_route') %}
 
+{% set can_create = true %}
+
 <!-- Sidebar  -->
 <ul class="navbar-nav bg-gradient-secondary sidebar sidebar-dark accordion" id="accordionSidebar">
 
@@ -49,20 +51,22 @@
         </div>
     </li>
     
-    <li class="nav-item{{ route == '' ? ' active' }}">
+    <li class="nav-item{{ route in ['back_user_search', 'back_user_create'] ? ' active' }}">
         <a class="nav-link collapsed pb-1" href="#" data-toggle="collapse" data-target="#collapseUser"
             aria-expanded="true" aria-controls="collapseUser">
             <i class="fas fa-users"></i>
             <span>{{ 'sidebar.user.title'|trans() }}</span>
         </a>
-        <div id="collapseUser" class="collapse" aria-labelledby="headingUser" data-parent="#accordionSidebar">
+        <div id="collapseUser" class="collapse{{ route in ['back_user_search', 'back_user_create'] ? ' show' }}" aria-labelledby="headingUser" data-parent="#accordionSidebar">
             <div class="bg-white mb-1 py-2 collapse-inner rounded">
-                <a class="collapse-item{{ route == '' ? ' active' }}" href="{{ path('back_user_search') }}">
+                <a class="collapse-item{{ route == 'back_user_search' ? ' active' }}" href="{{ path('back_user_search') }}">
                     {{ 'sidebar.user.search'|trans() }}
                 </a>
-                <a class="collapse-item{{ route == '' ? ' active' }}" href="{{ path('back_user_create') }}">
-                    {{ 'sidebar.user.create'|trans() }}
-                </a>
+                {% if can_create %}
+                    <a class="collapse-item{{ route == 'back_user_create' ? ' active' }}" href="{{ path('back_user_create') }}">
+                        {{ 'sidebar.user.create'|trans() }}
+                    </a>
+                {% endif %}
             </div>
         </div>
     </li>

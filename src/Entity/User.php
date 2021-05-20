@@ -44,7 +44,7 @@ class User implements UserInterface
     /**
      * @ORM\Column(type="boolean")
      */
-    private $enable;
+    private $enabled;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
@@ -227,17 +227,17 @@ class User implements UserInterface
 
     public function isEnabled(): ?bool
     {
-        return $this->enable;
+        return $this->enabled;
     }
 
-    public function getEnable(): ?bool
+    public function getEnabled(): ?bool
     {
-        return $this->enable;
+        return $this->enabled;
     }
 
-    public function setEnable(bool $enable): self
+    public function setEnabled(bool $enabled): self
     {
-        $this->enable = $enable;
+        $this->enabled = $enabled;
 
         return $this;
     }

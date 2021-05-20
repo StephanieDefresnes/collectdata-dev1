@@ -78,9 +78,7 @@ class UserManager
     public function configFormFilter(FormInterface $form)
     {
         $request = $this->requestStack->getCurrentRequest();
-        $page = $request->get('page');
-        if (!$page) { $page = $this->session->get('back_user_page', 1); }
-        $this->session->set('back_user_page', $page);
+        $this->session->set('back_user_page');
         if($request->isMethod('POST') && $request->query->get('back_user_search')) {
             $form->submit($request->query->get('back_user_search'));
         } elseif(!$form->getData()) {
@@ -89,7 +87,6 @@ class UserManager
         if ($form->isSubmitted() && $form->isValid()) {
             $this->session->set('back_user_search', $form->get('search')->getData());
             $this->session->set('back_user_role', $form->get('role')->getData());
-            $this->session->set('back_user_number_by_page', $form->get('number_by_page')->getData());
         }
         return $form;
     }
@@ -106,7 +103,7 @@ class UserManager
         return [ 
             'search' => $this->session->get('back_user_search', null),
             'role' => $this->session->get('back_user_role', null),
-            'number_by_page' => $this->session->get('back_user_number_by_page', self::NUMBER_BY_PAGE),
+//            'number_by_page' => $this->session->get('back_user_number_by_page', self::NUMBER_BY_PAGE),
         ];
     }
 

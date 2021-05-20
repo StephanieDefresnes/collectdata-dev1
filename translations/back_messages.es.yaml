@@ -31,6 +31,7 @@ footer:
 dashboard:
     title: Tablero
 action:
+    placeholder: Seleccionar
     delete: Eliminar
     update: Editar
     permute_enabled: Activar / Desactivar
@@ -92,23 +93,10 @@ invitation:
 label:
     filter_number_by_page: 'Número de elementos por página'
     filter_search: Buscar
-nav:
-    home: Frente a casa
-    end_switch: Fin de la exploración
-    account: Cuenta
-    account_login: Iniciar sesión
-    account_logout: Desconexión
-    account_profile: Mi informacion
-    account_reset_password: Cambiar la contraseña
 'no': No
 search:
     action_th: Acción(es)
     no_data_found: 'No se encontraron datos'
-sidebar:
-    home: Volver a casa
-    user: Usuario
-    user_create: Invitación
-    user_search: Listado
 user:
     button:
         create: Invitación

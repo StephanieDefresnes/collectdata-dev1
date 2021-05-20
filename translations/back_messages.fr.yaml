@@ -31,6 +31,7 @@ footer:
 dashboard:
     title: Tableau de bord
 action:
+    placeholder: Sélectionner
     delete: Supprimer
     permute_enabled: Activer / Désactiver
     update: Modifier
@@ -97,6 +98,11 @@ search:
     action_th: Action(s)
     no_data_found: Aucune donnée n'a été trouvée
 user:
+    role:
+        super_admin: Super-administrateur
+        admin: Administrateur
+        moderator: Modérateur
+        user: Utilisateur
     button:
         create: Inviter
     create:
@@ -108,22 +114,21 @@ user:
     delete:
         flash:
             success: Utilisateur(s) supprimé(s).
-        h1: Supprimer - Utilisateur
+        title: Supprimer - Utilisateurs
         h2: La liste suivante sera supprimée
         modal_title: Supprimer - Utilisateur
     error:
         cannot_delete_super_admin: Un super administrateur ne peut pas être supprimé.
         cannot_permute_enabled_super_admin: Un super administrateur ne peut pas être activé ou désactivé.
     field:
-        created_at: Créé
         email: Email
         enabled: Activé
-        firstname: Prénom
-        last_login_at: Dernière connexion
-        lastname: Nom de famille
+        date:
+            create: Créé
+            last_login: Dernière connexion
+            update: Modifié
         name: Nom
         roles: Rôle(s)
-        updated_at: Modifié
     label:
         email: Email
         name: Nom
@@ -133,9 +138,9 @@ user:
         h2: Détails
         title: Détails - Utilisateur
     search:
-        h1: Rechercher - Utilisateur
-        h2: Rechercher
-        title: Rechercher - Utilisateur
+        title: Utilisateurs
+        table: Liste d'utilisateurs
+        actions: Actions groupées
     update:
         flash:
             success: Utilisateur modifié.

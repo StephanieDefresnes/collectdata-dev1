@@ -15,7 +15,7 @@ class UserVoter extends Voter
     const READ = 'back_user_read';
     const UPDATE = 'back_user_update';
     const DELETE = 'back_user_delete';
-    const PERMUTE_ENABLED = 'back_user_permute_enable';
+    const PERMUTE_ENABLED = 'back_user_permute_enabled';
     
     /**
      * @var Security
@@ -53,7 +53,8 @@ class UserVoter extends Voter
         // ... (check conditions and return true to grant permission) ...
         switch ($attribute) {
             case self::SEARCH:
-                return $this->canSearch($subject, $user);
+                return $this->canSearch($user);
+//                return $this->canSearch($subject, $user);
             case self::CREATE:
                 return $this->canCreate($user);
             case self::READ:
@@ -68,7 +69,8 @@ class UserVoter extends Voter
         throw new \LogicException('This code should not be reached!');
     }
     
-    private function canSearch(array $data, User $user)
+//    private function canSearch(array $data, User $user)
+    private function canSearch(User $user)
     {
         if (!$this->security->isGranted('ROLE_ADMIN')) {
             return false;

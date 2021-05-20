@@ -160,9 +160,9 @@ class UserCreateCommand extends Command
         
         // Options activation
         if ($input->getOption('inactive')) {
-            $user->setEnable(false);
+            $user->setEnabled(false);
         } else {
-            $user->setEnable(true);
+            $user->setEnabled(true);
         }
 
         $this->em->persist($user);

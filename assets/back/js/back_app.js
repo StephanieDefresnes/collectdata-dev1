@@ -2,7 +2,8 @@
 import '../scss/back_app.scss';
 
 // js
-const $ = require('startbootstrap-sb-admin-2/node_modules/jquery/dist/jquery.min.js');
+const $ = require('jquery');
 global.$ = global.jQuery = $;
-require('startbootstrap-sb-admin-2/node_modules/bootstrap/dist/js/bootstrap.bundle.min.js');
-require('startbootstrap-sb-admin-2/js/sb-admin-2.js');
+require('startbootstrap-sb-admin-2/vendor/bootstrap/js/bootstrap.bundle.min.js');
+require('startbootstrap-sb-admin-2/vendor/jquery-easing/jquery.easing.min.js');
+require('startbootstrap-sb-admin-2/js/sb-admin-2.min.js');
