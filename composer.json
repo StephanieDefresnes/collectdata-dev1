@@ -12,7 +12,6 @@
         "doctrine/doctrine-bundle": "^2.2",
         "doctrine/doctrine-migrations-bundle": "^3.0",
         "doctrine/orm": "^2.8",
-        "easycorp/easyadmin-bundle": "^3.2",
         "phpdocumentor/reflection-docblock": "^5.2",
         "select2/select2": "^4.0",
         "sensio/framework-extra-bundle": "^5.1",
