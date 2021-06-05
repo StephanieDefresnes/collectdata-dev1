@@ -64,12 +64,12 @@ editor:
         body: Contenido
     label:
         body: Contenido
-        key: Clé
+        key: Llave
     update:
         flash:
             success: 'Los datos se han guardado.'
-        h1: 'Contenu du site'
-        h2: 'Contenido del sitio'
+        h1: 'Contenido del sitio'
+        h2: 'Edición de texto'
         title: 'Edición de texto'
 error:
     no_element_selected: 'Ningún artículo seleccionado'
@@ -98,14 +98,18 @@ search:
     action_th: Acción(es)
     no_data_found: 'No se encontraron datos'
 user:
+    role:
+        super_admin: Superadministrador
+        admin: Administrator
+        moderator: Moderador
+        user: Usuario
     button:
         create: Invitación
     create:
         flash:
             success: 'Se ha invitado al usuario (%identifier%).'
-        h1: 'Invitación'
-        h2: 'Invitar a un usuario'
-        title: 'Invitación'
+        title: Invitar a un usuario
+        h2: Enviar una invitación
     delete:
         flash:
             success: 'Usuario(s) eliminado.'
@@ -116,31 +120,30 @@ user:
         cannot_delete_super_admin: No se puede eliminar un superadministrador.
         cannot_permute_enabled_super_admin: Un superadministrador no se puede habilitar ni deshabilitar.
     field:
-        created_at: 'Creado'
         email: Email
         enabled: Habilitado
-        firstname: Nombre de pila
-        last_login_at: 'Última conexión'
-        lastname: Apellido
+        date:
+            create: Creado
+            last_login: Última conexión
+            update: Modificado
         name: Apellido
         roles: Rol(s)
-        updated_at: 'Modificado'
     label:
         email: Email
-        name: apellido
+        name: Apellido
         roles: Roles
     read:
-        h1: 'Detalles - Usuario'
+        h1: Detalles - Usuario
         h2: Detalles
-        title: 'Detalles - Usuario'
+        title: Detalles - Usuario
     search:
-        h1: 'Buscar - Usuario'
+        h1: Buscar - Usuario
         h2: Buscar
-        title: 'Buscar - Usuario'
+        title: Buscar - Usuario
     update:
         flash:
-            success: 'Usuario cambiado.'
-        h1: 'Editar usuario'
-        h2: 'Formulario de modificación'
-        title: 'Editar - Usuario'
+            success: Usuario cambiado.
+        h1: Editar - Usuario
+        h2: Formulario de modificación
+        title: Editar - Usuario
 'yes': Si

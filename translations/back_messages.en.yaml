@@ -75,8 +75,21 @@ error:
     no_element_selected: No element selected
 invitation:
     email:
-        message: "Hello %user%,\n\nEmail : %email%\nPassword : %password%\n\nTo finish activating your account - please click <a href=\"%confirmation_url%\">here</a>.\n\nThis link can only be used once to validate your account.\n\nRegards,\n\n<a href=\"%host%\">%website_name%</a>\n"
         subject: '%website_name% - Invitation'
+        message: |
+            Hello %user%,
+            
+            You have been invited to join %website_name% by an administrator.
+            
+            Username : %email%
+            nPassword : %password%
+            
+            To finish activating your account, please click <a href=\"%confirmation_url%\">here</a>.
+            
+            This link can only be used once to validate your account.
+            
+            Regards,
+            <a href=\"%host%\">%website_name%</a>
 label:
     filter_number_by_page: Number by page
     filter_search: Search
@@ -85,33 +98,36 @@ search:
     action_th: Action(s)
     no_data_found: No data found
 user:
+    role:
+        super_admin: Super administrator
+        admin: Administrat9r
+        moderator: Moderator
+        user: User
     button:
         create: Invite
     create:
         flash:
             success: User (%identifier%) has been invite.
-        h1: Invite - User
-        h2: Invitation to user
-        title: Invite - User
+        title: Invite an user
+        h2: Send an invitation
     delete:
         flash:
             success: User(s) deleted.
         h1: Delete - User
         h2: The following list will be deleted
-        modal_title: 'Delete - User'
+        modal_title: Delete - User
     error:
         cannot_delete_super_admin: A super admin cannot be deleted.
         cannot_permute_enabled_super_admin: A super admin cannot be enabled or disabled.
     field:
-        created_at: Created At
         email: Email
         enabled: Enabled
-        firstname: Firstname
-        last_login_at: Last Login At
-        lastname: Lastname
+        date:
+            create: Created
+            last_login: Last login
+            update: Updated
         name: Name
-        roles: Roles
-        updated_at: Updated At
+        roles: Role(s)
     label:
         email: Email
         name: Name

@@ -108,9 +108,8 @@ user:
     create:
         flash:
             success: L'utilisateur (%identifier%) a été invité.
-        h1: Invitation
-        h2: Inviter un utilisateur
-        title: Invitation
+        title: Inviter un utilisateur
+        h2: Envoyer une invitation
     delete:
         flash:
             success: Utilisateur(s) supprimé(s).
