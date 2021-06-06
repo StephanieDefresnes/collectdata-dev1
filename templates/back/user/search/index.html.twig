@@ -66,5 +66,10 @@
     {% if can_multi_select %}
         {{ encore_entry_script_tags('user_can_multi_select', null, 'backApp') }}
     {% endif %}
+<script>
+    var translations = {
+       "deleteConfirm" : "{{ 'delete.confirm'|trans }}",
+    }
+</script>
 
 {% endblock %}
