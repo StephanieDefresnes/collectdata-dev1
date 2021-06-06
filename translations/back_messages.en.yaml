@@ -2,7 +2,6 @@ sidebar:
     dashboard: Dashboard
     lang:
         title: Languages
-        create: Validation
         search: List
         translate_files: Translation files
     user:
@@ -93,14 +92,24 @@ invitation:
 label:
     filter_number_by_page: Number by page
     filter_search: Search
+lang:
+    search:
+        title: Languages
+        table: List of languages
+    field:
+        lang: ISO 639-1 code
+        name: Original name
+        english_name: English name
+        enabled: Enabled
 'no': No
 search:
+    action: Action
     action_th: Action(s)
     no_data_found: No data found
 user:
     role:
         super_admin: Super administrator
-        admin: Administrat9r
+        admin: Administrator
         moderator: Moderator
         user: User
     button:

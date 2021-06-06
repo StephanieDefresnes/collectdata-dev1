@@ -2,7 +2,6 @@ sidebar:
     dashboard: Tableau de bord
     lang:
         title: Langues
-        create: Validation
         search: Liste
         translate_files: Fichiers de traduction
     user:
@@ -93,8 +92,18 @@ invitation:
 label:
     filter_number_by_page: Nombre d'élément par page
     filter_search: Rechercher
+lang:
+    search:
+        title: Langues
+        table: Liste de langues
+    field:
+        lang: Code ISO 639-1
+        name: Nom original
+        english_name: Nom anglais
+        enabled: Activée
 'no': Non
 search:
+    action: Action
     action_th: Action(s)
     no_data_found: Aucune donnée n'a été trouvée
 user:
