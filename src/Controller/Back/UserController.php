@@ -6,9 +6,9 @@ use App\Entity\User;
 use App\Repository\UserRepository;
 use App\Form\Back\UserType;
 use App\Form\Back\UserUpdateType;
-use App\Manager\UserManager;
 use App\Form\Back\UserBatchType;
 use App\Mailer\Mailer;
+use App\Manager\UserManager;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormError;
@@ -25,13 +25,14 @@ use Symfony\Contracts\Translation\TranslatorInterface;
  */
 class UserController extends AbstractController
 {
-
     /**
-     * @var UserRepository     */
+     * @var UserRepository
+     */
     private $userRepository;
     
     /**
-     * @var UserManager     */
+     * @var UserManager
+     */
     private $userManager;
     
     /**
