@@ -192,10 +192,16 @@ body {
                         }
                         & > .lang-menu {
                             & > li {
-                                & .lang-flag {
-                                    width: 16px;
-                                    height: 12px;
-                                    vertical-align: baseline;
+                                & > a {
+                                    max-width: 150px;
+                                    white-space: nowrap;
+                                    overflow: hidden;
+                                    text-overflow: ellipsis;
+                                    & > .lang-flag {
+                                        width: 16px;
+                                        height: 12px;
+                                        vertical-align: baseline;
+                                    }
                                 }
                             }                    
                         } 
