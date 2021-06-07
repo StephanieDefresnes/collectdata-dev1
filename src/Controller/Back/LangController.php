@@ -29,7 +29,6 @@ class LangController extends AbstractController
      */
     public function search(Request $request, Session $session)
     {
-//        $this->denyAccessUnlessGranted('back_lang_search');
         $langs = $this->langService->getAll();
         
         return $this->render('back/lang/search/index.html.twig', [
