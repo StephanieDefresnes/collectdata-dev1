@@ -1,6 +1,24 @@
 // Datatables
 @import '~datatables.net-bs4/css/dataTables.bootstrap4.css';
 
+#dataTable-langsList_filter {
+    position: relative;
+    & > label {
+        & > input {
+            padding: 0.25rem 1.25rem 0.25rem 0.5rem;
+        }
+        & > .clean-search {
+            position: absolute;
+            top: 0;
+            right: 0;
+            padding: 8px 5px;
+            font-size: 10px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+    }
+}
+
 #dataTable-langsList {
     margin: 0 !important;
     & .btn {
@@ -20,19 +38,17 @@
         }
     }
     & td {
-        &:first-child {
-            padding-top: 7px;
-        }
-        &:nth-child(5) {
-            vertical-align: middle;
-        }
         &:last-child {
             vertical-align: middle;
-            & .btn {
-                width: 36.6px;
-                padding-top: 4px;
-                padding-left: 0;
-                padding-right: 0;
+        }
+    }
+}
+
+.rtl {
+    & #dataTable-langsList_filter {
+        & > label {
+            & > input {
+                padding: 0.25rem 0.5rem 0.25rem 1.25rem;
             }
         }
     }

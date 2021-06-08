@@ -35,7 +35,7 @@ var langs = {
 
 $(document).ready(function(){
     
-    // Datatables configutration
+    // Datatables configuration
     var table = $('#dataTable-langsList').DataTable({
         language: {
             url: '//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/'
@@ -44,13 +44,23 @@ $(document).ready(function(){
         dom: '<"row mb-2"<"#length.col-md-5"l><"#search.col-md-7"f>>'
                 +'<"table-responsive border"t>'
                 +'<"row"<"col-md-6 small"i><"#pagination.col-md-6 mt-3"p>>',
-        "columnDefs": [{
-            orderable: false,
-            targets: 4
-        }]
+        "fnDrawCallback": function(oSettings) {
+            $('#dataTable-langsList_filter input').addClass('search')
+        }
     })
     
     // Bootstrap tooltip
     $('.tooltip-on').tooltip()
-    
+
+    // Reset search filter
+    $('#langs-list').on('keyup paste', 'input.search', function() {
+        $(this).parent().find('.clean-search').remove('.clean-search')
+        if ($(this).val() != '') {
+            $(this).parent().append('<span class="clean-search"><i class="fas fa-times"></i></span>')
+        }
+    })
+    $('#langs-list').on('click', '.clean-search', function() {
+        table.search('').columns().search('').draw();
+        $(this).remove()
+    })
 })

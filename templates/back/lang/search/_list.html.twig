@@ -1,56 +1,38 @@
 {% trans_default_domain 'back_messages' %}
+<div class="col-lg-10 offset-lg-1 col-12 offset-0 px-0">
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">{{ 'lang.search.table'|trans() }}</h6>
+        </div>
+        <div id="langs-list" class="card-body pb-3">
 
-<div class="card shadow mb-4">
-    <div class="card-header py-3">
-        <h6 class="m-0 font-weight-bold text-primary">{{ 'lang.search.table'|trans() }}</h6>
-    </div>
-    <div class="card-body pb-3">
-        
-        <table id="dataTable-langsList" class="table table-sm mb-0 nowrap">
-            <thead class="bg-gray-600 text-white">
-                <tr>
-                    <th>{{ 'lang.field.lang'|trans() }}</th>
-                    <th>{{ 'lang.field.name'|trans() }}</th>
-                    <th>{{ 'lang.field.english_name'|trans() }}</th>
-                    <th>{{ 'lang.field.enabled'|trans() }}</th>      
-                    <th>{{ 'search.action'|trans() }}</th>                    
-                </tr>
-            </thead>
-            <tbody class="bg-white">
-                {% for lang in langs %}
-                <tr data-id="{{ lang.id }}">
-                    <td>{{ lang.lang }}</td>
-                    <td class="text-capitalize">{{ lang.name }}</td>
-                    <td>{{ lang.english_name }}</td>
-                    <td>
-                        {% if lang.enabled == 1 %}
-                            {{ 'yes'|trans() }}
-                        {% else %}
-                            {{ 'no'|trans() }}
-                        {% endif %}
-                    </td>
-                    <td>
-                        {% if lang.enabled == 1 %}
-                            <a href=""
-                               data-toggle="tooltip" data-placement="left"
-                               title="{{ 'button.disable'|trans() }}"
-                               class="btn btn-outline-danger btn-delete tooltip-on"
-                               aria-label="{{ 'button.disable'|trans() }}" role="button">
-                                <i class="fas fa-times"></i>
+            <table id="dataTable-langsList" class="table table-sm mb-0 nowrap">
+                <thead class="bg-gray-600 text-white">
+                    <tr>
+                        <th>{{ 'lang.field.lang'|trans() }}</th>
+                        <th>{{ 'lang.field.name'|trans() }}</th>
+                        <th>{{ 'lang.field.english_name'|trans() }}</th>
+                        <th>{{ 'lang.field.enabled'|trans() }}</th>              
+                    </tr>
+                </thead>
+                <tbody class="bg-white">
+                    {% for lang in langs %}
+                    <tr data-id="{{ lang.id }}">
+                        <td>{{ lang.lang }}</td>
+                        <td class="text-capitalize">{{ lang.name }}</td>
+                        <td>{{ lang.english_name }}</td>
+                        <td>
+                            <a href="{{ path('back_lang_permute_enabled', { 'ids': {0: lang.id} }) }}" role="button"
+                                class="btn btn-primary enablable{{ lang.enabled ? ' active' : '' }}{{ lang.lang == 'fr' ? ' disabled' : '' }}"
+                                aria-pressed="{{ lang.enabled ? 'true' : 'false' }}"
+                                aria-disabled="{{ lang.lang == 'fr'  ? 'true' : 'false' }}">
+                                <span>{{ lang.enabled ? 'button.disable'|trans : 'button.enable'|trans }}</span>
                             </a>
-                        {% else %}
-                            <a href=""
-                               data-toggle="tooltip" data-placement="left"
-                               title="{{ 'button.enable'|trans() }}"
-                               class="btn btn-outline-success tooltip-on"
-                               aria-label="{{ 'button.enable'|trans() }}" role="button">
-                                <i class="fas fa-check"></i>
-                            </a>
-                        {% endif %}
-                    </td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
     </div>
 </div>

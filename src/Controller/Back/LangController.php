@@ -3,6 +3,7 @@
 namespace App\Controller\Back;
 
 use App\Entity\Lang;
+use App\Manager\LangManager;
 use App\Service\LangService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -19,8 +20,11 @@ class LangController extends AbstractController
     private $langService;
     private $translator;
     
-    public function __construct(LangService $langService, TranslatorInterface $translator)
+    public function __construct(LangManager $langManager,
+                                LangService $langService,
+                                TranslatorInterface $translator)
     {
+        $this->langManager = $langManager;
         $this->langService = $langService;
         $this->translator = $translator;
     }
@@ -34,5 +38,19 @@ class LangController extends AbstractController
         return $this->render('back/lang/search/index.html.twig', [
             'langs' => $langs,
         ]);
+    }
+    
+    /**
+     * @Route("/permute/enabled", name="back_lang_permute_enabled", methods="GET")
+     */
+    public function permuteEnabled(Request $request): Response
+    {    
+        $langs = $this->langManager->getLangs();
+        foreach ($langs as $lang) {
+            $permute = $lang->getEnabled() ? false : true;
+            $lang->setEnabled($permute);
+        }
+        $this->getDoctrine()->getManager()->flush();
+        return $this->redirectToRoute('back_lang_search');
     }
 }
