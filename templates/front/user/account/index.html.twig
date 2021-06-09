@@ -265,63 +265,72 @@
                                             {{ 'account.translator.file.modal.title'|trans() }}
                                         </span>
                                         <ul id="userFiles" class="list-group my-2">
-                                        {% for translationFile in translationFiles %}
-                                            {% if translationFile.file|length >= 1 %}
-                                            <li class="list-group-item p-0 mt-2 border-0 bg-none text-secondary">
-                                                    {% if translationFile.file|length == 1 %}
-                                                        {{ 'account.translator.file.name'|trans() }}
-                                                    {% else %}
-                                                        {{ 'account.translator.file.name_s'|trans() }}
-                                                    {% endif %}
-                                                <span class="text-dark">
-                                                    {{ translationFile.lang }}
-                                                </span> :
-                                                <ul class="pl-3">
-                                                    {% for file in translationFile.file %}
+                                        {# If there is more than one translated language #}
+                                        {% if user.contributorLangs|length > 1 %}
+                                            {% for translationFile in translationFiles %}
+                                                {# If there is at least 1 translation file  #}
+                                                {% if translationFile.file|length >= 1 %}
+                                                <li class="list-group-item p-0 mt-2 border-0 bg-none text-secondary">
+                                                        {% if translationFile.file|length == 1 %}
+                                                            {{ 'account.translator.file.name'|trans() }}
+                                                        {% else %}
+                                                            {{ 'account.translator.file.name_s'|trans() }}
+                                                        {% endif %}
+                                                    <span class="text-dark">
+                                                        {{ translationFile.lang }}
+                                                    </span> :
+                                                    <ul class="pl-3">
+                                                        {% for file in translationFile.file %}
 
-                                                        <li class="d-flex justify-content-between">
-                                                            <a href="{{ asset('/uploads/user_translations/'~ file.filename) }}" target="_blank">
-                                                            {# Get complete initial Filename event if it has an "-" #}
-                                                                {# Remove SF slug #}
-                                                                {% set filename = file.filename|split('-',-1) %}
-                                                                {# Rebuild initial Filename without slug #}
-                                                                {% set newFilename %}{% for file in filename %}{{ file }}{% if not loop.last %}-{% endif %}{% endfor %}{% endset %}
-                                                            {# End on get complete.. #}
-                                                                {{ newFilename }} -
+                                                            <li class="d-flex justify-content-between">
+                                                                <a href="{{ asset('/uploads/user_translations/'~ file.filename) }}" target="_blank">
+                                                                {# Get complete initial Filename event if it has an "-" #}
+                                                                    {# Remove SF slug #}
+                                                                    {% set filename = file.filename|split('-',-1) %}
+                                                                    {# Rebuild initial Filename without slug #}
+                                                                    {% set newFilename %}{% for file in filename %}{{ file }}{% if not loop.last %}-{% endif %}{% endfor %}{% endset %}
+                                                                {# End on get complete.. #}
+                                                                    {{ newFilename }} -
+                                                                    {% if file.statusId == 2 %}
+                                                                        {{ 'account.translator.file.sent'|trans() }}
+                                                                        {{ file.dateCreation|format_datetime('short', 'short', locale=locale) }}
+                                                                    {% else %}
+                                                                        {{ 'account.translator.file.valid'|trans() }}
+                                                                        {{ file.dateValidation|format_datetime('short', 'short', locale=locale) }}
+                                                                    {% endif %}
+                                                                </a>
                                                                 {% if file.statusId == 2 %}
-                                                                    {{ 'account.translator.file.sent'|trans() }}
-                                                                    {{ file.dateCreation|format_datetime('short', 'short', locale=locale) }}
+                                                                <span   data-toggle="modal" data-target="#removeTranslationFile"
+                                                                        data-filename="{{ file.filename }}" data-short-filename="{{ newFilename }}"
+                                                                        data-lang="{{ translationFile.lang }}"
+                                                                        class="text-dark fileDelete">
+                                                                    <i  class="fas fa-times-circle" data-toggle="tooltip" data-placement="left"
+                                                                        title="{{ 'account.translator.file.btn.delete'|trans() }}"></i>
+                                                                </span>
                                                                 {% else %}
-                                                                    {{ 'account.translator.file.valid'|trans() }}
-                                                                    {{ file.dateValidation|format_datetime('short', 'short', locale=locale) }}
-                                                                {% endif %}
-                                                            </a>
-                                                            {% if file.statusId == 2 %}
-                                                            <span   data-toggle="modal" data-target="#removeTranslationFile"
-                                                                    data-filename="{{ file.filename }}" data-short-filename="{{ newFilename }}"
-                                                                    data-lang="{{ translationFile.lang }}"
-                                                                    class="text-dark fileDelete">
-                                                                <i  class="fas fa-times-circle" data-toggle="tooltip" data-placement="left"
-                                                                    title="{{ 'account.translator.file.btn.delete'|trans() }}"></i>
-                                                            </span>
-                                                            {% else %}
-                                                            <span class="text-success">
-                                                                <i  class="fas fa-check-circle"
-                                                                    data-toggle="tooltip" data-placement="left"
-                                                                    title="{{ 'account.translator.file.btn.valid'|trans() }}"></i></span>
-                                                            {% endif %} 
-                                                        </li>
-                                                    {% endfor %}
-                                                </ul>
-                                            </li>
-                                            {% endif %}
-                                        {% endfor %}
+                                                                <span class="text-success">
+                                                                    <i  class="fas fa-check-circle"
+                                                                        data-toggle="tooltip" data-placement="left"
+                                                                        title="{{ 'account.translator.file.btn.valid'|trans() }}"></i></span>
+                                                                {% endif %} 
+                                                            </li>
+                                                        {% endfor %}
+                                                    </ul>
+                                                </li>
+                                                {% endif %} 
+                                            {% endfor %}
+                                        {% else %}
+                                        {# There is there is only one translated language #}
+                                            {% for translationFile in translationFiles %}
+                                                {# And there is no translation file  #}
+                                                {% if translationFile.file|length < 1 %}
+                                                <li class="list-group-item p-0 mt-2 border-0 bg-none text-secondary">
+                                                    {{ 'account.translator.file.empty'|trans() }}
+                                                </li>
+                                                {% endif %} 
+                                            {% endfor %}
+                                        {% endif %}
                                         </ul>
-                                        {% for translationFile in translationFiles %}
-                                            {% if translationFile.file|length == 0 %}
-                                            <p class="text-secondary">{{ 'account.translator.file.empty'|trans() }}</p>
-                                            {% endif %}
-                                        {% endfor %}
                                     </div>
                                 </div>
                                     
