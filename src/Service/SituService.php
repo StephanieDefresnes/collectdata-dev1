@@ -23,22 +23,23 @@ class SituService {
     {           
         $query = $this->em->createQueryBuilder()
             ->from(Situ::class,'situ')
-            ->select(  'situ.id             id,
-                        situ.title          title, 
-                        situ.description    description, 
-                        situ.dateCreation   dateCreation, 
-                        situ.dateLastUpdate dateLastUpdate, 
-                        situ.dateSubmission dateSubmission, 
-                        situ.dateValidation dateValidation, 
-                        situ.statusId       statusId,
-                        evt.id              eventId, 
-                        evt.title           eventTitle, 
-                        cat1.id             cat1Id, 
-                        cat1.title          cat1Title, 
-                        cat2.id             cat2Id, 
-                        cat2.title          cat2Title, 
-                        status.name         statusName, 
-                        lang.name           langName')
+            ->select(  'situ.id                 id,
+                        situ.title              title, 
+                        situ.description        description, 
+                        situ.dateCreation       dateCreation, 
+                        situ.dateLastUpdate     dateLastUpdate, 
+                        situ.dateSubmission     dateSubmission, 
+                        situ.dateValidation     dateValidation, 
+                        situ.statusId           statusId,
+                        situ.translatedSituId   translatedSituId,
+                        evt.id                  eventId, 
+                        evt.title               eventTitle, 
+                        cat1.id                 cat1Id, 
+                        cat1.title              cat1Title, 
+                        cat2.id                 cat2Id, 
+                        cat2.title              cat2Title, 
+                        status.name             statusName, 
+                        lang.name               langName')
             ->leftJoin(Event::class, 'evt', 'WITH', 'situ.event=evt.id')
             ->leftJoin(CategoryLevel1::class, 'cat1', 'WITH', 'situ.categoryLevel1=cat1.id')
             ->leftJoin(CategoryLevel2::class, 'cat2', 'WITH', 'situ.categoryLevel2=cat2.id')
@@ -50,22 +51,23 @@ class SituService {
         $result = [];
         foreach ($situs as $situ) {
             $result[] = [ 
-                'id' =>             $situ['id'],
-                'title' =>          $situ['title'],
-                'description' =>    $situ['description'],
-                'dateCreation' =>   $situ['dateCreation'],
-                'dateLastUpdate' => $situ['dateLastUpdate'],
-                'dateSubmission' => $situ['dateSubmission'],
-                'dateValidation' => $situ['dateValidation'],
-                'statusId' =>       $situ['statusId'],
-                'evtId' =>          $situ['eventId'],
-                'evtTitle' =>       $situ['eventTitle'],
-                'cat1Id' =>         $situ['cat1Id'],
-                'cat1Title' =>      $situ['cat1Title'],
-                'cat2Id' =>         $situ['cat2Id'],
-                'cat2Title' =>      $situ['cat2Title'],
-                'statusName' =>     $situ['statusName'],
-                'langName' =>       html_entity_decode($situ['langName'], ENT_QUOTES, 'UTF-8'),
+                'id' =>                 $situ['id'],
+                'title' =>              $situ['title'],
+                'description' =>        $situ['description'],
+                'dateCreation' =>       $situ['dateCreation'],
+                'dateLastUpdate' =>     $situ['dateLastUpdate'],
+                'dateSubmission' =>     $situ['dateSubmission'],
+                'dateValidation' =>     $situ['dateValidation'],
+                'statusId' =>           $situ['statusId'],
+                'translatedSituId' =>   $situ['translatedSituId'],
+                'evtId' =>              $situ['eventId'],
+                'evtTitle' =>           $situ['eventTitle'],
+                'cat1Id' =>             $situ['cat1Id'],
+                'cat1Title' =>          $situ['cat1Title'],
+                'cat2Id' =>             $situ['cat2Id'],
+                'cat2Title' =>          $situ['cat2Title'],
+                'statusName' =>         $situ['statusName'],
+                'langName' =>           html_entity_decode($situ['langName'], ENT_QUOTES, 'UTF-8'),
             ];
         }
         return $result;
@@ -76,6 +78,10 @@ class SituService {
     {
         $query = $this->em->createQueryBuilder()
             ->from(Situ::class,'situ')
+            ->andWhere("situ.userId = ?1")
+            ->andWhere("situ.statusId = ?2")
+            ->setParameter(1, $userId)
+            ->setParameter(2, 3)
             ->select('count(situ.id)');
         
         return $situs = $query->getQuery()->getSingleScalarResult();
@@ -85,8 +91,9 @@ class SituService {
     {
         $query = $this->em->createQueryBuilder()
             ->from(Situ::class,'situ')
-            ->select(  'count(situ.id)  situs, 
-                        lang.name       langName')
+            ->select(  'count(situ.id)          situs, 
+                        situ.translatedSituId   translatedSituId,
+                        lang.name               langName')
             ->leftJoin(Lang::class, 'lang', 'WITH', 'situ.lang=lang.id')
             ->groupBy('lang.id')
             ->andWhere("situ.userId = ?1")
@@ -99,6 +106,7 @@ class SituService {
         foreach ($situs as $situ) {
             $result[] = [ 
                 'situs' => $situ['situs'],
+                'translatedSituId' => $situ['translatedSituId'],
                 'langName' => html_entity_decode($situ['langName'], ENT_QUOTES, 'UTF-8'),
             ];
         }
@@ -110,8 +118,8 @@ class SituService {
     {
         $query = $this->em->createQueryBuilder()
             ->from(Situ::class,'situ')
-            ->select('count(situ.id)    situs, 
-                        lang.name       langName')
+            ->select(   'count(situ.id)     situs, 
+                        lang.name           langName')
             ->leftJoin(Lang::class, 'lang', 'WITH', 'situ.lang=lang.id')
             ->groupBy('lang.id')
             ->andWhere("situ.userId = ?1")

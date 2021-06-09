@@ -43,8 +43,8 @@ account:
     contribs:
         title: 'Number of contributions :'
         empty: No contribution
-        count: contribution
-        count_s: contributions
+        count: validated contribution
+        count_s: validated contributions
         translated: 'Translated contribution :'
         translated_s: 'Translated contributions :'
     update:
@@ -57,6 +57,8 @@ account:
         checkbox: I want new languages to be added, and I want to contribute to the translation of the site
         translate: 'Select the languages proposed for the translation :'
         status: Site translator
+        choice: 'You offer to translate the site into language :'
+        choice_s: 'You offer to translate the site into languages :'
         empty: You do not suggest a language to translate
         origin:
             title: 'Download translation support :'

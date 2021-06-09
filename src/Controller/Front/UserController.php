@@ -57,8 +57,8 @@ class UserController extends AbstractController
         
         // Get User current Language
         if ($user->getLangId() == null) {
-            $user_lang = '';
-            $user_lang_lg = '';
+            $user_lang = 'Français';
+            $user_lang_lg = 'fr';
         } else {
             $lang = $this->getDoctrine()
                 ->getRepository(Lang::class)

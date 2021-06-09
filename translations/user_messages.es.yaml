@@ -43,8 +43,8 @@ account:
     contribs:
         title: 'Numero de contribuciones :'
         empty: Sin contribución
-        count: contribution
-        count_s: contributions
+        count: contribución validada
+        count_s: contribuciones validadas
         translated: 'Contribución traducida:'
         translated_s: 'Contribuciones traducidas :'
     update:
@@ -57,6 +57,8 @@ account:
         checkbox: Quiero que se agreguen nuevos idiomas y quiero contribuir a la traducción del sitio.
         translate: 'Seleccionar los idiomas propuestos para la traducción :'
         status: Traductor del sitio
+        choice: 'Ofreces traducir el sitio al idioma :'
+        choice_s: 'Ofreces traducir el sitio a idiomas :'
         empty: No sugieres un idioma para traducir
         origin:
             title: 'Descargar soporte de traducción :'
