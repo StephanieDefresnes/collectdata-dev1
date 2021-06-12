@@ -58,7 +58,4 @@ $(document).ready(function(){
         }
     })
     
-    // Bootstrap tooltip
-    $('.tooltip-on').tooltip()
-    
 })

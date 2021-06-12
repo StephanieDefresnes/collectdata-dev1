@@ -37,6 +37,7 @@
 
                 </div>
                     
+                <!-- Footer Content -->
                 <footer class="sticky-footer bg-white mt-3">
                     <div class="container my-auto">
                         <div class="copyright text-center my-auto">
@@ -49,11 +50,8 @@
 
         </div>
 
-        {% block footer %}
-            {#{% include "block/_footer.html.twig" %}#}
-        {% endblock %}
-
         {% block javascripts %}
+            {{ encore_entry_script_tags('app') }}
             {{ encore_entry_script_tags('back_app', null, 'backApp') }}
         {% endblock %}
     </body>

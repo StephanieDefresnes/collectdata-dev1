@@ -48,9 +48,6 @@ $(document).ready(function(){
             $('#dataTable-langsList_filter input').addClass('search')
         }
     })
-    
-    // Bootstrap tooltip
-    $('.tooltip-on').tooltip()
 
     // Reset search filter
     $('#langs-list').on('keyup paste', 'input.search', function() {

@@ -7,12 +7,13 @@
 {% endblock %}
 
 {% block body %}
-    <body id="page" class="bg-dark
+    <body id="page" class="bg-dark{% for locale in applocales %}
         {% if  (locale == app.request.locale and app.request.locale == 'ar')
             or (locale == app.request.locale and app.request.locale == 'he')
             or (locale == app.request.locale and app.request.locale == 'ur') %}
             rtl
-        {% endif %}">
+        {% endif %}
+    {% endfor %}">
         
         {% include "block/_slideshow.html.twig" %}
         
@@ -33,7 +34,7 @@
         {% endblock %}
 
         {% block javascripts %}
-{#            {{ encore_entry_script_tags('app') }}#}
+            {{ encore_entry_script_tags('app') }}
             {{ encore_entry_script_tags('front_app', null, 'frontApp') }}
             <script src="{{ asset('fullscreenslide/js/modernizr.custom.86080.js') }}"></script>
         {% endblock %}
