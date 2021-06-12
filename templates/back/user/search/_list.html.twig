@@ -54,7 +54,7 @@
                         {% endfor %}
                     </td>
                     <td>
-                        <a href="{{ path('back_user_permute_enabled', { 'ids': {0: user.id}}) }}" role="button"
+                        <a href="{{ path('back_user_permute_enabled', { 'ids': {0: user.id} }) }}" role="button"
                             class="btn btn-primary enablable{{ user.enabled ? ' active' : '' }}{{ user.hasRole("ROLE_SUPER_ADMIN") ? ' disabled' : '' }}"
                             aria-pressed="{{ user.enabled ? 'true' : 'false' }}"
                             aria-disabled="{{ user.hasRole("ROLE_SUPER_ADMIN") ? 'true' : 'false' }}">
