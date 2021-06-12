@@ -88,7 +88,7 @@ class UserController extends AbstractController
             $translationFiles[] = [
                 'lang' => html_entity_decode($lang->getName()),
                 'file' => $this->userFileService
-                    ->getTranslationUserFilesByLang(
+                    ->getUserFilesByLangByUser(
                             $this->getUser()->getId(), $lang->getId()
                     )];
         }

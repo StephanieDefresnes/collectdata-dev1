@@ -14,7 +14,8 @@ class UserFileService {
     {
         $this->em = $em;
     }
-    public function getTranslationUserFilesByLang($userId, $langId)
+    
+    public function getUserFilesByLangByUser($userId, $langId)
     {        
         $query = $this->em->createQueryBuilder()
             ->from(UserFile::class,'file')
@@ -48,4 +49,5 @@ class UserFileService {
         }
         return $result;        
     }
+    
 }
