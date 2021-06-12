@@ -19,7 +19,7 @@ $(function() {
     
     // Delete file
     $('.fileDelete').click(function() {
-        $('#user_files_form_filename').val($(this).attr('data-filename'))
+        $('#user_files_remove_form_filename').val($(this).attr('data-filename'))
         $('#modal-lang').text($(this).attr('data-lang'))
         $('#modal-filename').text($(this).attr('data-short-filename'))
     })

@@ -6,6 +6,7 @@ use App\Entity\User;
 use App\Entity\Lang;
 use App\Entity\UserFile;
 use App\Form\Front\User\UserFilesFormType;
+use App\Form\Front\User\UserFilesRemoveFormType;
 use App\Form\Front\User\UserUpdateFormType;
 use App\Service\LangService;
 use App\Service\SituService;
@@ -92,15 +93,15 @@ class UserController extends AbstractController
                     )];
         }
         
-        // Upload Translation file
         $file = new UserFile();
-        $form = $this->createForm(UserFilesFormType::class, $file);
-        $form->handleRequest($request);
         
-        if ($form->isSubmitted() && $form->isValid()) {
+        // Add Translation file
+        $formFiles = $this->createForm(UserFilesFormType::class, $file);
+        $formFiles->handleRequest($request);
+        
+        if ($formFiles->isSubmitted() && $formFiles->isValid()) {
             
-            $uploadedFile = $form['file']->getData();
-            $userFileName = $form['filename']->getData();
+            $uploadedFile = $formFiles['file']->getData();
             
             if ($uploadedFile) {
                 $originalFilename = pathinfo(
@@ -118,7 +119,7 @@ class UserController extends AbstractController
                     );
                 
                     $file->setUser($user);
-                    $file->setLang($form['lang']->getData());
+                    $file->setLang($formFiles['lang']->getData());
                     $file->setStatusId(2);
                     $file->setFilename($newFilename);
                     $file->setType('translation');
@@ -139,8 +140,31 @@ class UserController extends AbstractController
                         );
                     $this->addFlash('error', $msg);
                 }
-                
-            } else if ($userFileName) {
+            }
+            
+            return $this->redirectToRoute('user_account', [
+                'id' => $user->getId(), '_locale' => locale_get_default()
+            ]);      
+        
+        } elseif ($formFiles->isSubmitted() && !$formFiles->isValid()) {
+            
+            $msg = $this->translator->trans(
+                    'account.translator.file.add.flash.error', [],
+                    'user_messages', $locale = locale_get_default()
+                );
+            $this->addFlash('error', $msg);
+            
+        }
+        
+        // Remove Translation file
+        $formFilesRemove = $this->createForm(UserFilesRemoveFormType::class, $file);
+        $formFilesRemove->handleRequest($request);
+        
+        if ($formFilesRemove->isSubmitted() && $formFilesRemove->isValid()) {
+            
+            $userFileName = $formFilesRemove['filename']->getData();
+            
+            if ($userFileName) {
                 
                 try {
                     $userFile = $this->getDoctrine()->getRepository(UserFile::class)
@@ -168,7 +192,7 @@ class UserController extends AbstractController
                 'id' => $user->getId(), '_locale' => locale_get_default()
             ]);      
         
-        } elseif ($form->isSubmitted() && !$form->isValid()) {
+        } elseif ($formFilesRemove->isSubmitted() && !$formFilesRemove->isValid()) {
             
             $msg = $this->translator->trans(
                     'account.translator.file.flash.error', [],
@@ -178,7 +202,7 @@ class UserController extends AbstractController
             
         }
         
-        return $this->render('front/user/account/index.html.twig', [
+        return $this->render('front/user/account/profile/index.html.twig', [
             'user' => $user,
             'user_lang' => $user_lang,
             'user_lang_lg' => $user_lang_lg,
@@ -186,7 +210,8 @@ class UserController extends AbstractController
             'situsLangs' => $situsLangs,
             'situsTranslated' => $situsTranslated,
             'translationFiles' => $translationFiles,
-            'form' => $form->createView(),
+            'formFiles' => $formFiles->createView(),
+            'formFilesRemove' => $formFilesRemove->createView(),
         ]);
     }
 

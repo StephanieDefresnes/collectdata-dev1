@@ -51,7 +51,7 @@ class UserFilesFormType extends AbstractType
                         'mimeTypesMessage' => 'account.translator.file.mimeTypesMessage',
                     ])
                 ],
-                'required' => false,
+                'required' => true,
             ])
             ->add('lang', ChoiceType::class, [
                 'label' => 'account.translator.file.modal.lang.title',
@@ -64,10 +64,7 @@ class UserFilesFormType extends AbstractType
                 'attr' => [
                     'class' => 'custom-select'
                 ],
-                'required' => false,
-            ])
-            ->add('filename', HiddenType::class, [
-                'required' => false,
+                'required' => true,
             ])
         ;
     }

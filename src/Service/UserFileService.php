@@ -28,13 +28,10 @@ class UserFileService {
             ->leftJoin(Lang::class, 'lang', 'WITH', 'file.lang=lang.id')
             ->andWhere("file.user = ?1")
             ->andWhere("file.lang = ?2")
-            ->andWhere("file.statusId = ?3 OR file.statusId = ?4")
-            ->andWhere("file.type = ?5")
+            ->andWhere("file.type = ?3")
             ->setParameter(1, $userId)
             ->setParameter(2, $langId)
-            ->setParameter(3, 2)
-            ->setParameter(4, 3)
-            ->setParameter(5, 'translation');
+            ->setParameter(3, 'translation');
         
         $files = $query->getQuery()->getResult();
         $result = [];

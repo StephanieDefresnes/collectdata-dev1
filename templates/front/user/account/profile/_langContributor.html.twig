@@ -1,0 +1,225 @@
+{% trans_default_domain 'user_messages' %}
+
+<div id="form-translation" class="mt-4"
+     data-translation="{{ user.contributorLangs|length }}">
+{% if user.langContributor and user.contributorLangs %}
+    <div class="row">
+        <div class="col-lg-5 mb-3 text-secondary">
+            <hr class="d-lg-none d-block mt-1 mb-3">
+            <p>{{ 'account.translator.file.title'|trans() }}</p>
+            <hr class="d-lg-block d-none">
+            {% if user_lang %}
+                <p class="mb-0">{{ 'account.translator.origin.title'|trans() }}</p>
+                <p class="mb-0">
+                {% if user_lang_lg == 'ar' %}
+                    <a href="{{ url_ar }}" target="_blank" class="text-primary">
+                        {{ subtitle_ar }}
+                        <span class="small"><i class="fas fa-external-link-alt"></i></span>
+                    </a>
+                {% elseif user_lang_lg == 'en' %}
+                    <a href="{{ url_en }}" target="_blank" class="text-primary">
+                        {{ subtitle_en }}
+                        <span class="small"><i class="fas fa-external-link-alt"></i></span>
+                    </a>
+                {% elseif user_lang_lg == 'es' %}
+                    <a href="{{ url_es }}" target="_blank" class="text-primary">
+                        {{ subtitle_es }}
+                        <span class="small"><i class="fas fa-external-link-alt"></i></span>
+                    </a>
+                {% elseif user_lang_lg == 'fr' %}
+                    <a href="{{ url_fr }}" target="_blank" class="text-primary">
+                        {{ subtitle_fr }}
+                        <span class="small"><i class="fas fa-external-link-alt"></i></span>
+                    </a>
+                {% elseif user_lang_lg == 'tr' %}
+                    <a href="{{ url_tr }}" target="_blank" class="text-primary">
+                        {{ subtitle_tr }}
+                        <span class="small"><i class="fas fa-external-link-alt"></i></span>
+                    </a>
+                {% endif %}
+                </p>
+                {% for lang in user.langs %}
+                    <p class="mb-0">
+                    {% if lang.lang == 'ar' %}
+                        <a href="{{ url_ar }}" target="_blank" class="text-primary">
+                            {{ subtitle_ar }}
+                            <span class="small"><i class="fas fa-external-link-alt"></i></span>
+                        </a>
+                    {% elseif lang.lang == 'en' %}
+                        <a href="{{ url_en }}" target="_blank" class="text-primary">
+                            {{ subtitle_en }}
+                            <span class="small"><i class="fas fa-external-link-alt"></i></span>
+                        </a>
+                    {% elseif lang.lang == 'es' %}
+                        <a href="{{ url_es }}" target="_blank" class="text-primary">
+                            {{ subtitle_es }}
+                            <span class="small"><i class="fas fa-external-link-alt"></i></span>
+                        </a>
+                    {% elseif lang.lang == 'fr' %}
+                        <a href="{{ url_fr }}" target="_blank" class="text-primary">
+                            {{ subtitle_fr }}
+                            <span class="small"><i class="fas fa-external-link-alt"></i></span>
+                        </a>
+                    {% elseif lang.lang == 'tr' %}
+                        <a href="{{ url_tr }}" target="_blank" class="text-primary">
+                            {{ subtitle_tr }}
+                            <span class="small"><i class="fas fa-external-link-alt"></i></span>
+                        </a>
+                    {% endif %}
+                    </p>
+                {% endfor %}
+            {% endif %}
+        </div>
+        <div id="form-userFiles" class="col-lg-7">
+            <p class="mb-0">
+                <span class="d-inline text-secondary">
+                {% if user.contributorLangs|length == 1 %}
+                    {{ 'account.translator.choice'|trans() }}
+                {% else %}
+                    {{ 'account.translator.choice_s'|trans() }}
+                {% endif %}
+                </span>
+            </p>
+            <ul id="contributorLangs" class="pl-0">
+            {% for lang in user.contributorLangs %}
+                <li data-id="{{ lang.id }}" class="d-inline text-capitalize decode">{{ lang.name }}{% if not loop.last %}, {% endif %}</li>
+            {% endfor %}
+            </ul>
+            <span id="btn-modal" data-toggle="modal" data-target="#addTranslationFile">
+                <span class="text-primary"><i class="fas fa-plus-circle"></i></span>
+                {{ 'account.translator.file.modal.title'|trans() }}
+            </span>
+            <ul id="userFiles" class="list-group my-2">
+            {% for translationFile in translationFiles %}
+                {% if translationFile.file|length >= 1 %}
+                <li class="list-group-item p-0 mt-2 border-0 bg-none text-secondary">
+                        {% if translationFile.file|length == 1 %}
+                            {{ 'account.translator.file.name'|trans() }}
+                        {% else %}
+                            {{ 'account.translator.file.name_s'|trans() }}
+                        {% endif %}
+                    <span class="text-dark">
+                        {{ translationFile.lang }}
+                    </span> :
+                    <ul class="pl-3">
+                        {% for file in translationFile.file %}
+                            <li class="d-flex justify-content-between">
+                                <a href="{{ asset('/uploads/user_translations/'~ file.filename) }}" target="_blank">
+                                {# Get complete initial Filename event if it has an "-" #}
+                                    {# Remove SF slug #}
+                                    {% set filename = file.filename|split('-',-1) %}
+                                    {# Rebuild initial Filename without slug #}
+                                    {% set newFilename %}{% for file in filename %}{{ file }}{% if not loop.last %}-{% endif %}{% endfor %}{% endset %}
+                                {# End on get complete.. #}
+                                    {{ newFilename }} -
+                                    {% if file.statusId == 2 %}
+                                        {{ 'account.translator.file.sent'|trans() }}
+                                        {{ file.dateCreation|format_datetime('short', 'short', locale=locale) }}
+                                    {% elseif file.statusId == 3 %}
+                                        {{ 'account.translator.file.valid'|trans() }}
+                                        {{ file.dateValidation|format_datetime('short', 'short', locale=locale) }}
+                                    {% elseif file.statusId == 4 %}
+                                        {{ 'account.translator.file.refuse'|trans() }}
+                                        {{ file.dateValidation|format_datetime('short', 'short', locale=locale) }}
+                                    {% else %}
+                                        {{ 'account.translator.file.sent'|trans() }}
+                                        {{ file.dateCreation|format_datetime('short', 'short', locale=locale) }}
+                                    {% endif %}
+                                </a>
+                                {% if file.statusId == 1 %}
+                                <span class="text-warning">
+                                    <i  class="fas fa-exclamation-circle"
+                                        data-toggle="tooltip" data-placement="left"
+                                        title="{{ 'account.translator.file.btn.warning'|trans() }}"></i></span>
+                                {% elseif file.statusId == 3 %}
+                                <span class="text-success">
+                                    <i  class="fas fa-check-circle"
+                                        data-toggle="tooltip" data-placement="left"
+                                        title="{{ 'account.translator.file.btn.valid'|trans() }}"></i></span>
+                                {% elseif file.statusId == 4 %}
+                                <span   data-toggle="modal" data-target="#removeTranslationFile"
+                                        data-filename="{{ file.filename }}" data-short-filename="{{ newFilename }}"
+                                        data-lang="{{ translationFile.lang }}"
+                                        class="text-danger fileDelete">
+                                    <i  class="fas fa-times-circle" data-toggle="tooltip" data-placement="left"
+                                        title="{{ 'account.translator.file.btn.refused'|trans() }}
+                                                {{ 'account.translator.file.btn.warning'|trans() }}"></i>
+                                </span>
+                                {% else %}
+                                <span   data-toggle="modal" data-target="#removeTranslationFile"
+                                        data-filename="{{ file.filename }}" data-short-filename="{{ newFilename }}"
+                                        data-lang="{{ translationFile.lang }}"
+                                        class="text-dark fileDelete">
+                                    <i  class="fas fa-times-circle" data-toggle="tooltip" data-placement="left"
+                                        title="{{ 'account.translator.file.btn.delete'|trans() }}"></i>
+                                </span>
+                                {% endif %} 
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </li>
+                {% endif %} 
+            {% endfor %}
+            </ul>
+        </div>
+    </div>
+
+    {{ form_start(formFiles) }}
+    <div class="modal" id="addTranslationFile"
+         data-backdrop="static" data-keyboard="false" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content border-0">
+                <div class="modal-header py-2 bg-dark-50 text-white">
+                    <h5 class="modal-title">{{ 'account.translator.file.modal.title'|trans() }}</h5>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-sm-6 mb-3">
+                            {{ form_label(formFiles.lang) }}
+                        </div>
+                        <div class="col-sm-6 mb-3">
+                            {{ form_widget(formFiles.lang) }}
+                        </div>
+                        {{ form_row(formFiles.file) }}
+                    </div>
+                    <div class="d-flex justify-content-end mt-3">
+                        <span class="btn btn-outline-secondary mx-2 cancel-file"
+                              data-dismiss="modal">
+                            {{ 'account.translator.file.btn.cancel'|trans() }}
+                        </span>
+                        <button type="submit" name="user_files_form_lang[submit]" class="btn btn-primary">
+                            {{ 'account.translator.file.btn.confirm' | trans }}
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {{ form_end(formFiles) }}
+
+    {{ form_start(formFilesRemove) }}
+    <div class="modal" id="removeTranslationFile" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content border-0">
+                <div class="modal-header py-2 bg-dark-50 text-white">
+                    <h5 class="modal-title">{{ 'account.translator.file.delete' | trans }}</h5>
+                </div>
+                <div class="modal-body">
+                    <span id="modal-lang"></span> : <span id="modal-filename"></span>
+                    {{ form_row(formFilesRemove.filename) }}
+                    <div class="d-flex justify-content-end mt-3">
+                        <span class="btn btn-outline-secondary mx-2 cancel-file" data-dismiss="modal">
+                            {{ 'account.translator.file.btn.cancel'|trans() }}
+                        </span>
+                        <button type="submit" name="user_files_remove_form_filename[submit]" class="btn btn-primary">
+                            {{ 'account.translator.file.btn.confirm' | trans }}
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {{ form_end(formFilesRemove) }}
+
+{% endif %}
+</div>

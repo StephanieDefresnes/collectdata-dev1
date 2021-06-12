@@ -2,27 +2,28 @@
     display: none;
     width: 24px !important;
     border-radius: 4px;
-}
-#userLangForms button[type="submit"]:focus {
-    outline: none;
-    outline-style: solid;
-    outline-color: #d9d9d9;
-    outline-width: 4px;
-    background: #dc3545 !important;
-    color: #fff !important;
-}
-#userFiles .fileDelete,
-#btn-modal {
-    cursor: pointer;
-}
-#btn-modal:hover {
-    color: #6c757d !important;
-    & > .text-primary {
-        color: #0056b3 !important;
+    & button[type="submit"]:focus {
+        outline: none;
+        outline-style: solid;
+        outline-color: #d9d9d9;
+        outline-width: 4px;
+        background: #dc3545 !important;
+        color: #fff !important;
     }
 }
-#userFiles .fileDelete:hover {
-    color: #dc3545 !important;
+
+#userFiles .fileDelete {
+    cursor: pointer;
+}
+
+#btn-modal {
+    cursor: pointer;
+    &:hover {
+        color: #6c757d !important;
+        & > .text-primary {
+            color: #0056b3 !important;
+        }
+    }
 }
 .img-circle {
     width: 86.662px;
@@ -30,8 +31,12 @@
     margin: 0;
     padding: 0;
     clip-path:ellipse(50% 50%);
+    & img {
+        width: 86.662px;
+        height: auto;
+    }
 }
-.img-circle img {
-    width: 86.662px;
-    height: auto;
+.tooltip-inner {
+    white-space: pre-line;
+    text-align:left;
 }
