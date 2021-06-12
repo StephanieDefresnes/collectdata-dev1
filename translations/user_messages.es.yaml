@@ -81,6 +81,7 @@ account:
             delete: ¿Quieres eliminar este archivo de traducción?
             sent: enviado el
             valid: validado el
+            refuse: rechazado el
             modal: 
                 title: Enviar un archivo de traducción
                 lang:
@@ -97,6 +98,8 @@ account:
                 cancel : Cancelar
                 valid: Gracias !
                 delete: Borrar
+                refused: Rechazado
+                warning: Has recibido un mensaje
             flash:
                 add:
                     success: El archivo ha sido enviado

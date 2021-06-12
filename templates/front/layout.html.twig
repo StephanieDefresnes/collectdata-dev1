@@ -1,4 +1,5 @@
 {% extends 'base.html.twig' %}
+{% set applocales=locales|split('|') %}
 
 {% block stylesheets %}
     {{ encore_entry_link_tags('front_app', null, 'frontApp') }}
@@ -6,7 +7,12 @@
 {% endblock %}
 
 {% block body %}
-    <body id="page" class="bg-dark">
+    <body id="page" class="bg-dark
+        {% if  (locale == app.request.locale and app.request.locale == 'ar')
+            or (locale == app.request.locale and app.request.locale == 'he')
+            or (locale == app.request.locale and app.request.locale == 'ur') %}
+            rtl
+        {% endif %}">
         
         {% include "block/_slideshow.html.twig" %}
         

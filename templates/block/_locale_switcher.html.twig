@@ -15,10 +15,10 @@
         </a>
         {% endif %}
     {% endfor %}
-    <ul class="dropdown-menu lang-menu bg-dark" aria-labelledby="menu_lang">
+    <ul class="dropdown-menu pt-md-2 lang-menu" aria-labelledby="menu_lang">
         {% for locale in localesEnabled %}
             {% if locale.lang != app.request.locale %}
-                <li class="dropdown-item">
+                <li class="dropdown-item bg-dark">
                     <a class="" href="{{ path(route, params|merge({ _locale: locale.lang })) }}">
                         <img src="{{ asset('img/flag/'~ locale.lang ~'.jpg') }}" alt="{{ locale.lang }}" class="lang-flag mr-2">
                         <span class="text-capitalize d-inline d-md-inline d-sm-none">{{ locale.name }}</span>

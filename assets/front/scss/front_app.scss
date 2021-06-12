@@ -126,12 +126,21 @@ body {
                 }
             }
             & .navbar-nav {
-                &.navbar-user {
-                    & .dropdown-menu {
-                        top: 48px;
-                    }
-                }
                 & > li {
+                    margin: 0 4px;
+                    &:hover {
+                        & > .dropdown-menu {
+                            transition: 250ms;
+                            &.dropdown-menu-right {
+                                right: -16px;
+                            }
+                        }
+                    }
+                    & > .dropdown-toggle {
+                        &::after {
+                            display: none;
+                        }
+                    }
                     & > a {
                         cursor: pointer;
                     }
@@ -146,7 +155,7 @@ body {
                         padding: 0;
                         border-radius: 0 0 0.25rem 0.25rem;
                         &.lang-menu {
-                            top: 48px;
+                            /*top: 48px;*/
                             left: -4px;
                             min-width: auto;
                         }
@@ -211,6 +220,29 @@ body {
         }
     }
 }
+@media (min-width: 769px) {
+    body {
+        & > .container-fluid {
+            & .navbar {
+                & .navbar-nav {
+                    & > li {
+                        &:hover {
+                            & > .dropdown-menu {
+                                display: block;
+                                background: transparent;
+                            }
+                        }
+                        & > .dropdown-toggle {
+                            &:active {
+                                pointer-events: none;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
 @media (max-width: 768px) {
     body {
         & > .container-fluid {
@@ -258,10 +290,17 @@ body {
                             background-color: $sm-nav-background;
                             &.lang-menu {
                                 left: 0;
-                                & > li .lang-flag {
-                                    vertical-align: initial;
-                                    width: 17px;
-                                    margin-right: 6px;
+                                & > li {
+                                    & > a {
+                                        & > .lang-flag {
+                                            vertical-align: initial;
+                                            width: 17px;
+                                            margin-right: 0 !important;
+                                        }
+                                        & > span {
+                                            display: none;
+                                        }
+                                    } 
                                 }
                             }
                             & > .dropdown-item {
@@ -270,14 +309,14 @@ body {
                                 &.active,
                                 &:hover,
                                 &:active {
-                                    background-color: $sm-nav-background;
+                                    /*background-color: $sm-nav-background;*/
                                     & a {
-                                        padding: 8px 24px !important;
+                                        padding: 8px !important;
                                         color: $sm-nav-color-hover;
                                     }
                                 }
                                 & > a {
-                                    padding: 8px 24px !important;
+                                    padding: 8px !important;
                                     color: $sm-nav-color;
                                     & > .lang-flag {
                                         vertical-align: inherit;
@@ -287,6 +326,7 @@ body {
                         }
                         &.lang-item {
                             & .lang-menu {
+                                background: transparent;
                                 & > .dropdown-item {
                                     display: inline-block;
                                     width: 40px;
@@ -535,6 +575,23 @@ form label { line-height: 18px !important; }
 }
 
 
-.rtl {
-    
+.rtl .navbar .navbar-nav > li:hover > .dropdown-menu {
+    text-align: right;
+    &.dropdown-menu-right {
+        right: unset !important;
+        left: -17px;
+    }
+    & > li {
+        & > a {
+            & > i {
+                width: 25px;
+            }
+            & > img {
+                &.mr-2 {
+                    margin-right: 0 !important;
+                    margin-left: 0.5rem !important;
+                }
+            }
+        }
+    }
 }
