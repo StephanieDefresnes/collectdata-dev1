@@ -97,16 +97,15 @@ class User implements UserInterface
     private $langContributor;
 
     /**
+    * @ORM\ManyToMany(targetEntity=Lang::class, inversedBy="users")
+    */
+    private $contributorLangs;
+
+    /**
     * @ORM\ManyToMany(targetEntity=Lang::class)
     * @ORM\JoinTable(name="user_langs")
     */
     protected $langs;
-
-    /**
-    * @ORM\ManyToMany(targetEntity=Lang::class)
-    * @ORM\JoinTable(name="user_contributor_langs")
-    */
-    protected $contributorLangs;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\UserFile", cascade={"persist", "remove"}, mappedBy="user")
@@ -396,7 +395,10 @@ class User implements UserInterface
      
     public function addContributorLang(Lang $lang): self
     {
-        $this->contributorLangs[] = $lang;
+        if ($this->contributorLangs->contains($lang)) {
+            $this->contributorLangs[] = $lang;
+            $lang->addUser($this);
+        }
         
         return $this;
     }
@@ -405,6 +407,7 @@ class User implements UserInterface
     {
         if ($this->contributorLangs->contains($lang)) {
             $this->contributorLangs->removeElement($lang);
+            $lang->removeUser($this);
         }
         
         return $this;

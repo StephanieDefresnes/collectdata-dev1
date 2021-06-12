@@ -93,14 +93,28 @@ label:
     filter_number_by_page: Number by page
     filter_search: Search
 lang:
+    field:
+        action: Actions
+        contributor: Contributor
+        enabled: Enabled
+        english_name: English name
+        file: Translation
+        lang: ISO 639-1 code
+        name: Original name
+        btn:
+            danger: Alert of a problem
+            success: Notify the upload
+            warning: Alert of a modification
     search:
         title: Languages
         table: List of languages
-    field:
-        lang: ISO 639-1 code
-        name: Original name
-        english_name: English name
-        enabled: Enabled
+    translation:
+        title: Site translation
+        contrib:
+            lang:
+                table: Languages offered
+            file:
+                table: Translation files
 'no': No
 search:
     action: Action

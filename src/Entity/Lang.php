@@ -61,6 +61,11 @@ class Lang
     protected $situs;
 
     /**
+    * @ORM\ManyToMany(targetEntity=User::class, mappedBy="contributorLangs")
+    */
+    private $users;
+
+    /**
     * @ORM\OneToMany(targetEntity=UserFile::class, cascade={"persist"}, mappedBy="lang")
     */
     protected $userFiles;
@@ -70,7 +75,13 @@ class Lang
         $this->events = new ArrayCollection();
         $this->categoriesLevel1 = new ArrayCollection();
         $this->situs = new ArrayCollection();
+        $this->users = new ArrayCollection();
         $this->userFiles = new ArrayCollection();
+    }
+
+    public function __toString()
+    {
+        return $this->getUsers();
     }
 
     
@@ -248,6 +259,31 @@ class Lang
     }
 
     /**
+     * @return Collection|User[]
+     */
+    public function getUsers(): ?Collection
+    {
+        return $this->users;
+    }
+     
+    public function addUser(User $user): self
+    {
+        if (!$this->users->contains($user)) {
+            $this->users[] = $user;
+        }
+        
+        return $this;
+    }
+
+    public function removeUser(User $user): self
+    {
+        if ($this->users->contains($user)) {
+            $this->users->removeElement($user);
+        }
+        return $this;
+    }
+
+    /**
      * @return Collection|UserFile[]
      */
     public function getUserFiles(): ?Collection
@@ -268,7 +304,7 @@ class Lang
     public function removeUserFile(UserFile $userFile): self
     {
         if ($this->userFiles->contains($userFile)) {
-            $this->situs->removeElement($userFile);
+            $this->userFiles->removeElement($userFile);
             // set the owning side to null (unless already changed)
             if ($userFile->getLang() === $this) {
                 $userFile->setLang(null);

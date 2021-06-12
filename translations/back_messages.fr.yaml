@@ -3,7 +3,7 @@ sidebar:
     lang:
         title: Langues
         search: Liste
-        translate_files: Fichiers de traduction
+        translation: Traduction du site
     user:
         title: Utilisateurs
         create: Inviter
@@ -93,14 +93,28 @@ label:
     filter_number_by_page: Nombre d'élément par page
     filter_search: Rechercher
 lang:
+    field:
+        action: Actions
+        contributor: Contributeur
+        enabled: Activée
+        english_name: Nom anglais
+        file: Traduction
+        lang: Code ISO 639-1
+        name: Nom original
+        btn:
+            danger: Alerter d'un problème
+            success: Notifier la mise en ligne
+            warning: Alerter d'une modification
     search:
         title: Langues
         table: Liste de langues
-    field:
-        lang: Code ISO 639-1
-        name: Nom original
-        english_name: Nom anglais
-        enabled: Activée
+    translation:
+        title: Traduction du site
+        contrib:
+            lang:
+                table: Langues proposées
+            file:
+                table: Fichiers de traduction
 'no': Non
 search:
     action: Action

@@ -1,8 +1,6 @@
 {% trans_default_domain 'back_messages' %}
 {% extends "back/layout.html.twig" %}
-
 {% set locale = app.request.locale %}
-
 
 {% block title %}{{ 'lang.search.title'|trans() }}{% endblock %}
 
@@ -27,5 +25,4 @@
 {% block javascripts %}
     {{ parent() }}
     {{ encore_entry_script_tags('lang_search_app', null, 'backApp') }}
-
 {% endblock %}

@@ -93,14 +93,28 @@ label:
     filter_number_by_page: 'Número de elementos por página'
     filter_search: Buscar
 lang:
+    field:
+        action: Acciónes
+        contributor: Contributpr
+        enabled: Activado
+        english_name: Nombre inglés
+        file: Translation
+        lang: Código ISO 639-1
+        name: Nombre original
+        btn:
+            danger: Alertar de un problema
+            success: Notificar la carga
+            warning: Alerta de modificación
     search:
         title: Idiomas
         table: Lista de idiomas
-    field:
-        lang: Código ISO 639-1
-        name: Nombre original
-        english_name: Nombre inglés
-        enabled: Activado
+    translation:
+        title: Traducción del sitio
+        contrib:
+            lang:
+                table: Idiomas ofrecidos
+            file:
+                table: Archivos de traducción
 'no': No
 search:
     action: Acción
