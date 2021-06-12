@@ -15,7 +15,7 @@ class UserFileService {
         $this->em = $em;
     }
     
-    public function getUserFilesByLangByUser($userId, $langId)
+    public function getTransationFilesByLangByUser($userId, $langId)
     {        
         $query = $this->em->createQueryBuilder()
             ->from(UserFile::class,'file')
