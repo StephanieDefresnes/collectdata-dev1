@@ -47,13 +47,13 @@
             {{ 'nav.account_unknown'|trans() }}
         </a>
         <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdown_account">
-            <li class="dropdown-item{{ route == 'app_login' ? ' active' }}">
+            <li class="dropdown-item bg-dark{{ route == 'app_login' ? ' active' }}">
                 <a href="{{ path('app_login') }}">
                     <i class="fas fa-sign-in-alt"></i>
                     {{ 'nav.account_login'|trans() }}
                 </a>
             </li>
-            <li class="dropdown-item{{ route == 'front_register' ? ' active' }}">
+            <li class="dropdown-item bg-dark{{ route == 'front_register' ? ' active' }}">
                 <a href="{{ path('front_register') }}">
                     <i class="fas fa-user"></i>
                     {{ 'nav.account_register'|trans() }}
