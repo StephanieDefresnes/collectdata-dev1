@@ -130,7 +130,7 @@ body {
                     margin: 0 4px;
                     &:hover {
                         & > .dropdown-menu {
-                            transition: 250ms;
+                            border-width: 0;
                             &.dropdown-menu-right {
                                 right: -16px;
                             }

@@ -1,0 +1,30 @@
+{% trans_default_domain 'back_messages' %}
+{% extends "back/layout.html.twig" %}
+
+{% block title %}{{ 'lang.translation.title'|trans() }}{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {{ encore_entry_link_tags('lang_translation_app', null, 'backApp') }}
+ {% endblock %}
+
+
+{% block content %}
+    <div class="container-fluid pt-4">
+        
+        <div class="d-sm-flex align-items-center justify-content-between mb-4">
+            <h1 class="h3 mb-0 text-gray-800">{{ 'lang.translation.title'|trans() }}</h1>
+        </div>
+
+        {{ include('back/lang/translation/_lang.html.twig') }}
+
+        {{ include('back/lang/translation/_file.html.twig') }}
+
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {{ encore_entry_script_tags('lang_translation_app', null, 'backApp') }}
+
+{% endblock %}

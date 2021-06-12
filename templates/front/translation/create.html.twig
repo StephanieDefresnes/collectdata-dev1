@@ -1,0 +1,154 @@
+{% extends 'front/layout.html.twig' %}
+{% trans_default_domain 'user_messages' %}
+
+{% set locale = app.request.locale %}
+{% set subtitle_ar = 'account.translator.origin.subtitle_ar' |trans() %}
+{% set subtitle_en = 'account.translator.origin.subtitle_en' |trans() %}
+{% set subtitle_es = 'account.translator.origin.subtitle_es' |trans() %}
+{% set subtitle_fr = 'account.translator.origin.subtitle_fr' |trans() %}
+{% set subtitle_tr = 'account.translator.origin.subtitle_tr' |trans() %}
+{% set url_ar = 'account.translator.origin.url_ar' |trans() %}
+{% set url_en = 'account.translator.origin.url_en' |trans() %}
+{% set url_es = 'account.translator.origin.url_es' |trans() %}
+{% set url_fr = 'account.translator.origin.url_fr' |trans() %}
+{% set url_tr = 'account.translator.origin.url_tr' |trans() %}
+{% set modalFilename = '' %}
+
+{% block title %}{{ 'nav.account_profile'|trans() }}{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {{ encore_entry_link_tags('user_account_app', null, 'frontApp') }}
+    <style>
+        .custom-file-label::after{content:"{{ 'account.translator.file.btn.add' | trans }}";}
+    </style>
+{% endblock %}
+
+{% block content %}
+    
+    <div class="container mt-5 py-5">
+        
+        <div class="row">
+        {% block banner%}
+            <h1 class="h3 mt-3 mb-5 text-white">{{ 'nav.account_profile'|trans() }}</h1>
+        {% endblock %}
+        </div>
+                        
+        <div class="row">
+        
+            <div class="col-md-8 mx-auto p-0">
+                <div class="card mb-4 bg-light-50 border-0">
+                    
+                    <div class="card-header bg-dark-50">
+                        <div class="row{% if user.imageFilename %} mx-0{% endif %}">
+                            {% if user.imageFilename %}
+                            <div class="img-circle col-auto">
+                                <img src="{{ asset('/uploads/img/'~ user.imageFilename) }}" 
+                                    data-toggle="tooltip" data-placement="right"
+                                    id="defaultImg" alt="">
+                            </div>
+                            {% endif %}
+                            <div class="col-auto">
+                                <h5 class="text-white text-uppercase mb-0{% if user.imageFilename %} mt-4 pt-1{% endif %}">
+                                    {{ user.name }}
+                                </h5>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="card-body bg-white-70">
+                        
+                        <div class="row mb-lg-2 mb-3">
+                            <span class="col-lg-5 text-secondary">{{ 'account.email.label'|trans() }}</span>
+                            <span class="col-lg-7">{{ user.email }}</span>                                
+                        </div>
+                        
+                        <div class="row mb-lg-2 mb-3">
+                            <span class="col-lg-5 text-secondary">{{ 'account.date_create'|trans() }}</span>
+                            <span class="col-lg-7 first-letter">
+                                {{ user.dateCreate|format_datetime('full', 'short', locale=locale) }}
+                            </span>                                
+                         </div>
+                        
+                        <div class="row mb-lg-2 mb-3">
+                            <span class="col-lg-5 text-secondary">{{ 'account.lang.current'|trans() }}</span>
+                            <span class="col-md-7 first-letter">
+                                {% if user_lang is empty %}
+                                    {{ 'account.lang.default'|trans() }}
+                                {% else %}
+                                    {{ user_lang }}
+                                {% endif %}
+                            </span>                                
+                        </div>
+                        
+                        {% if user.langs %}
+                        <div class="row mb-lg-2 mb-3">
+                            <span class="col-lg-5 text-secondary">{{ 'account.lang.option'|trans() }}</span>
+                            <span class="col-md-7 first-letter list-inline">
+                                {% for lang in user.langs %}
+                                <span class="text-capitalize decode">{{ lang.name }}</span>
+                                {% endfor %}
+                            </span>                                
+                        </div>
+                        {% endif %}
+                        
+                        <div class="row mb-lg-2 mb-3">
+                            <span class="col-lg-5 text-secondary">
+                                {% if user.roles|length == 1 %}
+                                    {{ 'account.roles.title'|trans() }}
+                                {% else %}
+                                    {{ 'account.roles.title_s'|trans() }}
+                                {% endif %}
+                            </span>
+                            <span class="col-lg-7">
+                                {% for role in user.roles %}
+                                    {% if role == 'ROLE_USER' %}{{ 'account.roles.user'|trans() }}
+                                    {% elseif role == 'ROLE_MODERATOR' %}{{ 'account.roles.moderator'|trans() }}
+                                    {% elseif role == 'ROLE_ADMIN' %}{{ 'account.roles.admin'|trans() }}
+                                    {% elseif role == 'ROLE_SUPER_ADMIN' %}{{ 'account.roles.super_admin'|trans() }}{% endif %}
+                                    {% if not loop.last %} - {% endif %}
+                                {% endfor %}
+                                {% if user.langContributor %}
+                                    - {{ 'account.translator.status'|trans() }}
+                                {% endif %}
+                            </span>                                
+                        </div>
+                        
+                        {{ include('front/user/account/profile/_contribs.html.twig') }}
+                        
+                        {% if user.contributorLangs|length > 0 %}
+                            {{ include('front/user/account/profile/_langContributor.html.twig') }}
+                        {% endif %}
+                        
+                    </div>
+                        
+                    <div class="card-footer bg-secondary-40 text-right">
+                        <div class="d-flex justify-content-between">
+                            <a href="{{ path('user_update', { 'id': app.user.id }) }}"
+                               class="mr-2 px-3 pb border btn btn-light bg-light-80">
+                                {{ 'account.update.title'|trans() }}
+                            </a>
+                            <a href="{{ path('app_reset_password', { 'id': app.user.id }) }}"
+                               class="ml-2 px-3 border btn btn-light bg-light-80">
+                                {{ 'account.reset_password'|trans() }}
+                            </a>
+                        </div>
+                    </div>
+                            
+                </div>
+                        
+            </div>
+        </div>
+                    
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+    var translations = {
+       "file-placeholder" : "{{ 'account.translator.file.modal.file.placeholder' | trans }}",
+    }
+    </script>
+    {{ encore_entry_script_tags('user_account_app', null, 'frontApp') }}
+{% endblock %}
