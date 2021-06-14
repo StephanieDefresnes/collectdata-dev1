@@ -1,0 +1,16 @@
+@import '~jquery-ui/themes/base/all.css';
+
+#fields {
+    display: block;
+    & > li {
+        display: inline-block;
+        width: calc(50% - 30px);
+        margin: 0 15px;
+        cursor: move;
+        &:hover,
+        &:focus,
+        &:active {
+            background: #f6f6f6 !important;
+        }
+    }
+}

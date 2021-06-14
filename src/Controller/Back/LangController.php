@@ -3,11 +3,11 @@
 namespace App\Controller\Back;
 
 use App\Entity\Lang;
-//use App\Entity\User;
+//use App\Entity\UserFile;
 use App\Manager\LangManager;
 use App\Repository\LangRepository;
 use App\Service\LangService;
-//use App\Service\TranslationContributionService;
+use App\Service\UserFileService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -26,18 +26,21 @@ class LangController extends AbstractController
     private $langRepository;
     private $langService;
     private $translator;
+    private $userFileService;
     
     public function __construct(EntityManagerInterface $em,
                                 LangManager $langManager,
                                 LangRepository $langRepository,
                                 LangService $langService,
-                                TranslatorInterface $translator)
+                                TranslatorInterface $translator,
+                                UserFileService $userFileService)
     {
         $this->em = $em;
         $this->langManager = $langManager;
         $this->langRepository = $langRepository;
         $this->langService = $langService;
         $this->translator = $translator;
+        $this->userFileService = $userFileService;
     }
     
     /**
@@ -64,18 +67,5 @@ class LangController extends AbstractController
         }
         $this->getDoctrine()->getManager()->flush();
         return $this->redirectToRoute('back_lang_search');
-    }
-    
-    /**
-     * @Route("/translation", name="back_lang_translation", methods="GET|POST")
-     */
-    public function translation(Request $request)
-    {        
-        $repositoryLang = $this->em->getRepository(Lang::class);
-        $langs = $repositoryLang->findAll();
-        
-        return $this->render('back/lang/translation/index.html.twig', [
-            'langs' => $langs,
-        ]);
     }
 }

@@ -1,0 +1,42 @@
+{% trans_default_domain 'back_messages' %}
+{% extends "back/layout.html.twig" %}
+
+{% block title %}{{ 'lang.translation.form.title'|trans() }}{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('select2/css/select2.min.css') }}">
+    {{ encore_entry_link_tags('lang_translation_app', null, 'backApp') }}
+    <style>
+        
+    </style>
+ {% endblock %}
+
+
+{% block content %}
+    <div class="container-fluid pt-4">
+        
+        <div class="d-sm-flex align-items-center justify-content-between mb-4">
+            <h1 class="h3 mb-0 text-gray-800">{{ 'lang.translation.form.title'|trans() }}</h1>
+        </div>
+
+        {{ include('back/lang/translation/create/_create.html.twig') }}
+
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ asset('select2/js/select2.min.js') }}"></script>
+    <script>
+        var translations = {
+           "multiple-search" : "{{ 'lang.translation.form.multiple_search' | trans }}",
+        }
+    </script>
+    {{ encore_entry_script_tags('lang_translation_app', null, 'backApp') }}
+    <script>
+        jQuery(document).ready(function($) {
+            
+        })
+    </script>
+{% endblock %}

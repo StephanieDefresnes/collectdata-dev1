@@ -30,20 +30,30 @@
     <hr class="sidebar-divider mb-1">
 
     <!-- Nav Items - Pages Collapse Menu -->
-    <li class="nav-item{{ route in ['back_lang_search', 'back_lang_translation'] ?' active' }}">
+    <li class="nav-item{{ route in ['back_lang_search', 'back_translation_site', 'back_translation_create'] ?' active' }}">
         <a class="nav-link collapsed pb-1" href="#" data-toggle="collapse" data-target="#collapseLang"
             aria-expanded="true" aria-controls="collapseLang">
             <i class="fas fa-globe"></i>
             <span>{{ 'sidebar.lang.title'|trans() }}</span>
         </a>
-        <div id="collapseLang" class="collapse{{ route in ['back_lang_search', 'back_lang_translation'] ? ' show' }}"
+        <div id="collapseLang" class="collapse{{ route in ['back_lang_search', 'back_translation_site', 'back_translation_create'] ? ' show' }}"
              aria-labelledby="headingLang" data-parent="#accordionSidebar">
             <div class="bg-white mb-1 py-2 collapse-inner rounded">
-                <a class="collapse-item{{ route == 'back_lang_search' ? ' active' }}" href="{{ path('back_lang_search') }}">
+                <a class="collapse-item{{ route == 'back_lang_search' ? ' active' }}"
+                   href="{{ path('back_lang_search') }}">
                     {{ 'sidebar.lang.search'|trans() }}
                 </a>
-                <a class="collapse-item{{ route == 'back_lang_translation' ? ' active' }}" href="{{ path('back_lang_translation') }}">
+                <a class="collapse-item{{ route == 'back_translation_site' ? ' active' }}"
+                   href="{{ path('back_translation_site') }}">
                     {{ 'sidebar.lang.translation'|trans() }}
+                </a>
+                <a class="collapse-item{{ route == 'back_translation_create' ? ' active' }}"
+                   href="{{ path('back_translation_create') }}">
+                    {{ 'sidebar.lang.translator'|trans() }}
+                </a>
+                <a class="collapse-item{{ route == '' ? ' active' }}"
+                   href="">
+                    {{ 'sidebar.lang.yaml'|trans() }}
                 </a>
             </div>
         </div>
