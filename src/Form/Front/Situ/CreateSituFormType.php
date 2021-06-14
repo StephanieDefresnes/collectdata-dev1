@@ -106,16 +106,16 @@ class CreateSituFormType extends AbstractType
                 'required' => false,
                 'label' => 'contrib.form.lang',
                 'choice_label' => function($lang, $key, $value) {
-                    return ucfirst(html_entity_decode($lang->getName()));
+                    return html_entity_decode($lang->getName());
                 },
-                'placeholder' => ucfirst(html_entity_decode($userCurrentLang->getName())),
+                'placeholder' => html_entity_decode($userCurrentLang->getName()),
                 'query_builder' => function (EntityRepository $er) use ($userLangs) {
                         return $er->createQueryBuilder('lang')
                                 ->where('lang.id IN (:array)')
                                 ->setParameters(['array' => $userLangs]);
                 },
                 'choice_attr' => function($choice, $key, $value) {
-                    return ['class' => 'text-dark'];
+                    return ['class' => 'text-capitalize text-dark'];
                 },
                 'attr' => ['class' => 'custom-select'],
             ]);
