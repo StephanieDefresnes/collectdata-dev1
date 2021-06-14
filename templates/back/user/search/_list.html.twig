@@ -68,34 +68,31 @@
                         {% if can_read %}
                             <a href="{{ path('back_user_read', {'id': user.id}) }}"
                                data-toggle="tooltip" data-placement="left" title="{{ 'button.read_title'|trans() }}"
-                               class="btn btn-outline-primary tooltip-on" aria-label="{{ 'button.read_title'|trans() }}" role="button">
+                               class="btn btn-outline-primary" aria-label="{{ 'button.read_title'|trans() }}" role="button">
                                 <i class="fas fa-eye"></i>
                             </a>
                         {% endif %}
                         {% if can_update and not user.hasRole("ROLE_SUPER_ADMIN") %}
                             <a href="{{ path('back_user_update', {'id': user.id}) }}" title="{{ 'button.update_title'|trans() }}"
-                                class="btn btn-outline-warning tooltip-on"
                                 data-toggle="tooltip" data-placement="left" title="{{ 'button.update_title'|trans() }}"
-                                aria-label="{{ 'button.update_title'|trans() }}" role="button">
+                                class="btn btn-outline-warning" aria-label="{{ 'button.update_title'|trans() }}" role="button">
                                 <i class="fas fa-edit"></i>
                             </a>
                         {% endif %}
                         {% if can_delete and not user.hasRole("ROLE_SUPER_ADMIN") %}
-                            <a href="#" class="btn btn-outline-danger btn-delete tooltip-on" data-toggle="modal" data-target="#delete"
-                                data-title="{{ user }}"  role="button"
-                                data-path="{{ path('back_user_delete', { 'ids': {0: user.id}}) }}"
+                            <a href="#" data-toggle="modal" data-target="#delete"
+                                data-path="{{ path('back_user_delete', { 'ids': {0: user.id} }) }}" data-title="{{ user }}" 
                                 data-toggle="tooltip" data-placement="left" title="{{ 'button.delete_title'|trans() }}"
-                                aria-label="{{ 'button.delete_title'|trans() }}">
+                                class="btn btn-outline-danger btn-delete" aria-label="{{ 'button.delete_title'|trans() }}" role="button">
                                 <i class="fas fa-times"></i>
                             </a>
                         {% endif %}
                         {% if not user.hasRole("ROLE_SUPER_ADMIN") and is_granted("ROLE_ALLOWED_TO_SWITCH") %}
                             {% set switch_path = path('front_home', { 'id': user.id, '_switch_user': user.email }) %}
-                            <a href="{{ switch_path }}"
-                                class="btn btn-outline-primary tooltip-on{{ is_granted('ROLE_PREVIOUS_ADMIN') ? ' disabled' : '' }}" role="button"
-                                aria-disabled="{{ is_granted('ROLE_PREVIOUS_ADMIN') ? 'true' : 'false' }}"
+                            <a href="{{ switch_path }}" aria-disabled="{{ is_granted('ROLE_PREVIOUS_ADMIN') ? 'true' : 'false' }}"
                                 data-toggle="tooltip" data-placement="left" title="{{ 'button.switch'|trans() }}"
-                                aria-label="{{ 'button.switch'|trans() }}">
+                                class="btn btn-outline-primary{{ is_granted('ROLE_PREVIOUS_ADMIN') ? ' disabled' : '' }}"
+                                aria-label="{{ 'button.switch'|trans() }}" role="button">
                                 <i class="fas fa-user"></i>
                             </a>
                         {% endif %}
