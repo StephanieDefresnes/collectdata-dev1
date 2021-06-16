@@ -134,6 +134,9 @@ body {
                             &.dropdown-menu-right {
                                 right: -16px;
                             }
+                            &.dropdown-menu-right.visitor {
+                                right: -20px;
+                            }
                         }
                     }
                     & > .dropdown-toggle {

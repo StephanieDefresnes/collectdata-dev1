@@ -1,0 +1,58 @@
+{% trans_default_domain 'back_messages' %}
+
+<div class="card shadow mb-4">
+    
+    <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-primary">{{ 'lang.translation.form.field.title.create'|trans() }}</h6>
+    </div>
+    <div class="card-body pb-3">
+        
+        {{ form_start(form) }}
+        {{ form_errors(form) }}
+        
+        <div class="row">
+            <div class="col-md-6">
+            {{ form_row(form.name) }}
+            </div>
+            <div id="add-field" class="col-md-6">
+                <div class="d-flex justify-content-end row">
+                    <div class="col-auto mx-3">
+                        <div id="add-field-link" class="btn btn-primary"
+                            data-list-selector="#fields">
+                            <i class="fas fa-plus-circle"></i>
+                            {{ 'lang.translation.form.field.btn.add'|trans() }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="form-fields" class="form-row">
+            <div class="mx-4">
+                <label>{{ 'lang.translation.form.field.label'|trans() }}</label>
+            </div>
+            <ul id="fields" class="list-group list-group-flush col-12 ui-sortable"
+                data-prototype="{{ form_widget(form.fields.vars.prototype)|e }}"
+                data-widget-fields="{{ '<li class="list-group-item py-2 border rounded col-6 mb-4 bg-white clearfix ui-state-default"></li>'|e }}"
+                data-widget-counter="{{ form.fields|length }}">
+                {% for fields in form.fields %}
+                    <li class="llist-group-item py-2 border rounded col-6 mb-4 bg-white clearfix ui-state-default">
+                        {{ form_widget(fields) }}
+                        {{ form_errors(fields) }}
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+
+        <div class="d-flex justify-content-center mt-4 mb-3">
+            <div class="col-auto mx-3">
+                <button class="btn btn-primary btn-block">
+                    <i class="fas fa-cog"></i> {{ 'button.submit'|trans() }}
+                </button>
+            </div>
+        </div>
+            
+        {{ form_end(form) }}
+
+    </div>
+        
+</div>
