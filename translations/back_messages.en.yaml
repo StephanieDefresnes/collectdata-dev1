@@ -3,7 +3,9 @@ sidebar:
     lang:
         title: Languages
         search: List
-        translate_files: Translation files
+        translation: Site translations
+        translator: Forms translation
+        yaml: YAML generator
     user:
         title: Users
         create: Invite
@@ -93,28 +95,88 @@ label:
     filter_number_by_page: Number by page
     filter_search: Search
 lang:
-    field:
-        action: Actions
-        contributor: Contributor
-        enabled: Enabled
-        english_name: English name
-        file: Translation
-        lang: ISO 639-1 code
-        name: Original name
-        btn:
-            danger: Alert of a problem
-            success: Notify the upload
-            warning: Alert of a modification
     search:
+        list:
+            action: Actions
+            contributor: Contributor
+            enabled: Enabled
+            english_name: English name
+            file: Translation
+            lang: ISO 639-1 code
+            name: Original name
+            btn:
+                danger: Alert of a problem
+                success: Notify the upload
+                warning: Alert of a modification
         title: Languages
         table: List of languages
     translation:
         title: Site translation
+        table:
+            title: List of translations
+            name: Name
+            status:
+                thead: Status
+                1: In writing
+                2: To validate
+                3: Valid
+                4: Archived
+                5: Trashed
+            date:
+                creation: Creation
+                status: Status date
+                update: Update
+            user: User
+            action: Action
+            empty: No translation
+            btn:
+                archive: Archived
+                clone: Cloner
+                delete: Deleted
+                validate: Valid
+                update: Edit
         contrib:
             lang:
                 table: Languages offered
             file:
                 table: Translation files
+        form:
+            title: Traduction forms
+            field:
+                title:
+                    create: Create a translation
+                    update: Edit a translation
+                btn:
+                    add: Add a field
+                    error: Addition required
+                    remove:
+                        title: Field deletion
+                        content: Are you sure you want to delete this field?
+                label: Field List
+                name: Channel name
+                type: 
+                    label: Type
+                    text: Text
+                    textarea: Textarea
+            message:
+                lang:
+                    label: Languagee
+                    enabled: Active languages
+                    disabled: Inactive languages
+                name: Nom de la traduction
+                type: 
+                    label: Type
+                    text: Text
+                    textarea: Textarea
+                value: Value
+                sortable: Rank
+            multiple_search: Search
+            flash:
+                success: Translation data has been saved
+                error: An error occurred while saving translation data
+            alert:
+                success: Success
+                error: Error
 'no': No
 search:
     action: Action
@@ -126,6 +188,7 @@ user:
         admin: Administrator
         moderator: Moderator
         user: User
+        translator: Translator
     button:
         create: Invite
     create:
@@ -143,6 +206,10 @@ user:
         cannot_delete_super_admin: A super admin cannot be deleted.
         cannot_permute_enabled_super_admin: A super admin cannot be enabled or disabled.
     field:
+        contribs:
+            title: Number of contributions
+            count: contribution
+            count_s : contributions
         email: Email
         enabled: Enabled
         date:

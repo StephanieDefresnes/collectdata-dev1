@@ -3,7 +3,9 @@ sidebar:
     lang:
         title: Idiomas
         search: Listado
-        translate_files: Archivos de traducción
+        translation: Traducciones del sitio
+        translator: Traducción forms
+        yaml: Generador de YAML
     user:
         title: Usuarios
         create: Invitación
@@ -93,28 +95,88 @@ label:
     filter_number_by_page: 'Número de elementos por página'
     filter_search: Buscar
 lang:
-    field:
-        action: Acciónes
-        contributor: Contributpr
-        enabled: Activado
-        english_name: Nombre inglés
-        file: Translation
-        lang: Código ISO 639-1
-        name: Nombre original
-        btn:
-            danger: Alertar de un problema
-            success: Notificar la carga
-            warning: Alerta de modificación
     search:
+        list:
+            action: Acciónes
+            contributor: Contributpr
+            enabled: Activado
+            english_name: Nombre inglés
+            file: Traducción
+            lang: Código ISO 639-1
+            name: Nombre original
+            btn:
+                danger: Alertar de un problema
+                success: Notificar la carga
+                warning: Alerta de modificación
         title: Idiomas
         table: Lista de idiomas
     translation:
         title: Traducción del sitio
+        table:
+            title: Lista de traducciones
+            name: Nombre
+            status:
+                thead: Estado
+                1: Escrito
+                2: A validar
+                3: Válido
+                4: Archivado
+                5: Destrozado
+            date:
+                creation: Creación
+                status: Situación a la fecha
+                update: Actualización
+            user: Usuario
+            action: Acción
+            empty: Sin traducción
+            btn:
+                archive: Destrozado
+                clone: Clon
+                delete: Eliminado
+                validate: Válido
+                update: Editar
         contrib:
             lang:
                 table: Idiomas ofrecidos
             file:
                 table: Archivos de traducción
+        form:
+            title: Traducción forms
+            field:
+                title:
+                    create: Crea una traducción
+                    update: Editar una traducción
+                btn:
+                    add: Agregar un campo
+                    error: Adición obligatoria
+                    remove:
+                        title: Eliminación de campo
+                        content: ¿Está seguro de que desea eliminar este campo?
+                label: Lista de campo
+                name: Nombre del Canal
+                type: 
+                    label: Type
+                    text: Text
+                    textarea: Textarea
+            message:
+                lang:
+                    label: Idioma
+                    enabled: Idiomas activos
+                    disabled: Idiomas inactivos
+                name: Nombre de la traducción
+                type: 
+                    label: Type
+                    text: Text
+                    textarea: Textarea
+                value: Valor
+                sortable: Rango
+            multiple_search: Buscar
+            flash:
+                success: Se han guardado los datos de traducción
+                error: Se produjo un error al guardar los datos de la traducción.
+            alert:
+                success: Éxito
+                error: Error
 'no': No
 search:
     action: Acción
@@ -126,6 +188,7 @@ user:
         admin: Administrator
         moderator: Moderador
         user: Usuario
+        translator: Traductor
     button:
         create: Invitación
     create:
@@ -143,6 +206,10 @@ user:
         cannot_delete_super_admin: No se puede eliminar un superadministrador.
         cannot_permute_enabled_super_admin: Un superadministrador no se puede habilitar ni deshabilitar.
     field:
+        contribs:
+            title: Numero de contribuciones
+            count: contribución
+            count_s : contribuciones
         email: Email
         enabled: Habilitado
         date:

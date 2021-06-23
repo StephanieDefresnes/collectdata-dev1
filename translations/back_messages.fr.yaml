@@ -3,7 +3,9 @@ sidebar:
     lang:
         title: Langues
         search: Liste
-        translation: Traduction du site
+        translation: Traductions du site
+        translator: Traduction forms
+        yaml: Générateur YAML
     user:
         title: Utilisateurs
         create: Inviter
@@ -93,28 +95,88 @@ label:
     filter_number_by_page: Nombre d'élément par page
     filter_search: Rechercher
 lang:
-    field:
-        action: Actions
-        contributor: Contributeur
-        enabled: Activée
-        english_name: Nom anglais
-        file: Traduction
-        lang: Code ISO 639-1
-        name: Nom original
-        btn:
-            danger: Alerter d'un problème
-            success: Notifier la mise en ligne
-            warning: Alerter d'une modification
     search:
-        title: Langues
+        list:
+            action: Actions
+            contributor: Contributeur
+            enabled: Activée
+            english_name: Nom anglais
+            file: Traduction
+            lang: Code ISO 639-1
+            name: Nom original
+            btn:
+                danger: Alerter d'un problème
+                success: Notifier la mise en ligne
+                warning: Alerter d'une modification
         table: Liste de langues
+        title: Langues
     translation:
-        title: Traduction du site
+        title: Traductions du site
+        table:
+            title: Liste des traductions
+            name: Nom
+            status:
+                thead: Statut
+                1: En rédaction
+                2: À valider
+                3: Validé
+                4: Archivé
+                5: Corbeille
+            date:
+                creation: Création
+                status: Date du status
+                update: Mise à jour
+            user: Utilisateur
+            action: Action
+            empty: Aucune traduction
+            btn:
+                archive: Archivé
+                clone: Cloner
+                delete: Supprimé
+                validate: Validé
+                update: Modifier
         contrib:
             lang:
                 table: Langues proposées
             file:
                 table: Fichiers de traduction
+        form:
+            title: Traduction forms
+            field:
+                title:
+                    create: Créer une traduction
+                    update: Modifier une traduction
+                btn:
+                    add: Ajouter un champ
+                    error: Ajout obligatoire
+                    remove:
+                        title: Suppresion de champ
+                        content: Êtes-vous sur de vouloir supprimer ce champs ?
+                label: Liste de champs
+                name: Nom de la chaîne
+                type: 
+                    label: Type
+                    text: Texte
+                    textarea: Textarea
+            message:
+                lang:
+                    label: Langue
+                    enabled: Langues actives
+                    disabled: Langues inactives
+                name: Nom de la traduction
+                type: 
+                    label: Type
+                    text: Texte
+                    textarea: Textarea
+                value: Valeur
+                sortable: Rang
+            multiple_search: Rechercher
+            flash:
+                success: Les données de traduction ont bien été enregistrées
+                error: Une erreur s'est produite lors de l'enregisterment des données de traduction
+            alert:
+                success: Succès
+                error: Erreur
 'no': Non
 search:
     action: Action
@@ -126,6 +188,7 @@ user:
         admin: Administrateur
         moderator: Modérateur
         user: Utilisateur
+        translator: Traducteur
     button:
         create: Inviter
     create:
@@ -143,12 +206,16 @@ user:
         cannot_delete_super_admin: Un super administrateur ne peut pas être supprimé.
         cannot_permute_enabled_super_admin: Un super administrateur ne peut pas être activé ou désactivé.
     field:
+        contribs:
+            title: Nombre de contributions
+            count: contribution
+            count_s : contributions
         email: Email
         enabled: Activé
         date:
-            create: Créé
+            create: Créé le
             last_login: Dernière connexion
-            update: Modifié
+            update: Modifié le
         name: Nom
         roles: Rôle(s)
     label:

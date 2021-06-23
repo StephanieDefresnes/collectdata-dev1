@@ -1,11 +1,28 @@
 @import '~jquery-ui/themes/base/all.css';
+@import '~datatables.net-bs4/css/dataTables.bootstrap4.css';
 
+#card-form,
+#cancel {
+    display: none;
+}
+#message_form_name option[value=''] { 
+    background-color: #858796;
+    color: #fff;
+}
+.disabled {
+    background-color: #eaecf4;
+    cursor: no-drop;
+    & > option {
+        background-color: #eaecf4;
+    }
+}
+.to-confirm {
+    background: #e6e6e6 !important;
+}
 #fields {
     display: block;
     & > li {
         display: inline-block;
-        width: calc(50% - 30px);
-        margin: 0 15px;
         cursor: move;
         &:hover,
         &:focus,
@@ -13,4 +30,24 @@
             background: #f6f6f6 !important;
         }
     }
+}
+#dataTable-translations {
+    margin: 0 !important;
+    & > tbody {
+        & > tr {
+            height: 48px;
+        }
+    }
+}
+@media (max-width: 1047px) {
+    #dataTable-translations {
+        margin-bottom: 6px !important;
+    }
+}
+#add-error {
+    margin: 0 1rem;
+    text-align: right;
+    color: #e74a3b;
+    font-size: 14px;
+    font-weight: 600;
 }

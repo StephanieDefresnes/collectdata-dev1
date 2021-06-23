@@ -34,9 +34,6 @@ class FieldFormType extends AbstractType
                     'lang.translation.form.field.type.textarea' => 'textarea',
                 ],
             ])
-            ->add('sortaleId', HiddenType::class, [
-                'required' => true,
-            ])
         ;
         
     }

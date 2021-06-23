@@ -30,6 +30,7 @@
     <hr class="sidebar-divider mb-1">
 
     <!-- Nav Items - Pages Collapse Menu -->
+    {% if is_granted("ROLE_ADMIN") %}
     <li class="nav-item{{ route in ['back_lang_search', 'back_translation_site', 'back_translation_create'] ?' active' }}">
         <a class="nav-link collapsed pb-1" href="#" data-toggle="collapse" data-target="#collapseLang"
             aria-expanded="true" aria-controls="collapseLang">
@@ -47,6 +48,7 @@
                    href="{{ path('back_translation_site') }}">
                     {{ 'sidebar.lang.translation'|trans() }}
                 </a>
+                {% if is_granted('ROLE_SUPER_ADMIN')  %}
                 <a class="collapse-item{{ route == 'back_translation_create' ? ' active' }}"
                    href="{{ path('back_translation_create') }}">
                     {{ 'sidebar.lang.translator'|trans() }}
@@ -55,20 +57,23 @@
                    href="">
                     {{ 'sidebar.lang.yaml'|trans() }}
                 </a>
+                {% endif %}
             </div>
         </div>
     </li>
+    {% endif %}
     
-    <li class="nav-item{{ route in ['back_user_search', 'back_user_create'] ? ' active' }}">
+    {% if is_granted("ROLE_MODERATOR") %}
+    <li class="nav-item{{ route in ['back_user_search', 'back_user_create', 'back_user_read'] ? ' active' }}">
         <a class="nav-link collapsed pb-1" href="#" data-toggle="collapse" data-target="#collapseUser"
             aria-expanded="true" aria-controls="collapseUser">
             <i class="fas fa-users"></i>
             <span>{{ 'sidebar.user.title'|trans() }}</span>
         </a>
-        <div id="collapseUser" class="collapse{{ route in ['back_user_search', 'back_user_create'] ? ' show' }}"
+        <div id="collapseUser" class="collapse{{ route in ['back_user_search', 'back_user_create', 'back_user_read'] ? ' show' }}"
              aria-labelledby="headingUser" data-parent="#accordionSidebar">
             <div class="bg-white mb-1 py-2 collapse-inner rounded">
-                <a class="collapse-item{{ route == 'back_user_search' ? ' active' }}" href="{{ path('back_user_search') }}">
+                <a class="collapse-item{{ route in ['back_user_search', 'back_user_read'] ? ' active' }}" href="{{ path('back_user_search') }}">
                     {{ 'sidebar.user.search'|trans() }}
                 </a>
                 {% if can_create %}
@@ -106,7 +111,7 @@
             </div>
         </div>
     </li>
-
+    {% endif %}
     <!-- Divider -->
     <hr class="sidebar-divider d-none d-md-block mt-3">
 

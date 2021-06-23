@@ -20,15 +20,15 @@ class TranslationMessageRepository extends ServiceEntityRepository
     }
 
     // /**
-    //  * @return TranslationMessage[] Returns an array of TranslationMessage objects
+    //  * @return UserFile[] Returns an array of UserFiles objects
     //  */
     /*
     public function findByExampleField($value)
     {
-        return $this->createQueryBuilder('t')
-            ->andWhere('t.exampleField = :val')
+        return $this->createQueryBuilder('u')
+            ->andWhere('u.exampleField = :val')
             ->setParameter('val', $value)
-            ->orderBy('t.id', 'ASC')
+            ->orderBy('u.id', 'ASC')
             ->setMaxResults(10)
             ->getQuery()
             ->getResult()
@@ -37,10 +37,10 @@ class TranslationMessageRepository extends ServiceEntityRepository
     */
 
     /*
-    public function findOneBySomeField($value): ?TranslationMessage
+    public function findOneBySomeField($value): ?UserFiles
     {
-        return $this->createQueryBuilder('t')
-            ->andWhere('t.exampleField = :val')
+        return $this->createQueryBuilder('u')
+            ->andWhere('u.exampleField = :val')
             ->setParameter('val', $value)
             ->getQuery()
             ->getOneOrNullResult()

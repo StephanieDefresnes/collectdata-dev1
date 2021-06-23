@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\TranslationFieldRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\MaxDepth;
 
 /**
  * @ORM\Entity(repositoryClass=TranslationFieldRepository::class)
@@ -35,7 +36,7 @@ class TranslationField
     /**
      * @ORM\Column(type="integer")
      */
-    private $sortaleId;
+    private $sorting;
 
     /**
      * @ORM\Column(type="datetime")
@@ -43,17 +44,18 @@ class TranslationField
     private $dateCreation;
 
     /**
-     * @ORM\Column(type="datetime", nullable=true)
-     */
-    private $dateLastUpdate;
-
-    /**
      * @ORM\Column(type="integer")
      */
     private $userId;
 
     /**
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $referent;
+
+    /**
      * @ORM\ManyToOne(targetEntity="App\Entity\TranslationMessage", inversedBy="fields")
+     * @MaxDepth(4)
      */
     private $message;
     
@@ -103,14 +105,14 @@ class TranslationField
         return $this;
     }
 
-    public function getSortaleId(): ?int
+    public function getSorting(): ?int
     {
-        return $this->sortaleId;
+        return $this->sorting;
     }
 
-    public function setSortaleId(int $sortaleId): self
+    public function setSorting(int $sorting): self
     {
-        $this->sortaleId = $sortaleId;
+        $this->sorting = $sorting;
 
         return $this;
     }
@@ -127,18 +129,6 @@ class TranslationField
         return $this;
     }
 
-    public function getDateLastUpdate(): ?\DateTimeInterface
-    {
-        return $this->dateLastUpdate;
-    }
-
-    public function setDateLastUpdate(?\DateTimeInterface $dateLastUpdate): self
-    {
-        $this->dateLastUpdate = $dateLastUpdate;
-
-        return $this;
-    }
-
     public function getUserId(): ?int
     {
         return $this->userId;
@@ -151,14 +141,35 @@ class TranslationField
         return $this;
     }
 
+    public function getReferent(): ?bool
+    {
+        return $this->referent;
+    }
+
+    public function setReferent(bool $referent): self
+    {
+        $this->referent = $referent;
+
+        return $this;
+    }
+
     public function getMessage(): ?TranslationMessage
     {
         return $this->message;
     }
 
+    public function addMessage(?TranslationMessage $message): self
+    {
+        if (!$this->fields->contains($message)) {
+            $this->fields->add($message);
+        }
+        return $this;
+    }
+
     public function setMessage(?TranslationMessage $message): self
     {
         $this->message = $message;
+//        $this->message->addField($message);
 
         return $this;
     }

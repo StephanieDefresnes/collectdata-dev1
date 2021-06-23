@@ -26,36 +26,20 @@ class MessageFormType extends AbstractType
     {
         $this->langService = $langService;
     }
+    
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $enabledLangs = $this->langService->findLangsEnabledOrNot(1);
-        $disabledLangs = $this->langService->findLangsEnabledOrNot(0);
         
         $builder
-//            ->add('lang', ChoiceType::class, [
-//                'label' => 'lang.translation.form.message.langue.label',
-//                'row_attr' => ['class' => ''],
-//                'attr' => ['class' => ''],
-//                'choices'  => [
-//                    'lang.translation.form.multiple_search' => '',
-//                    'lang.translation.form.message.lang.enabled' => $enabledLangs,
-//                    'lang.translation.form.message.lang.disabled' => $disabledLangs,
-//                ],
-//                'choice_label' => function($lang, $key, $value) {
-//                    if ($value != '') {
-//                        return $lang->getLang() .' - '. html_entity_decode($lang->getName());
-//                    }
-//                },
-//                'choice_value' => 'lang',
-//                'attr' => [
-//                    'class' => 'select-multiple'
-//                ],
-//            ])
             ->add('name', ChoiceType::class, [
                 'label' => 'lang.translation.form.message.name',
                 'label_attr' => ['class' => 'col-md-6 mt-1'],
                 'row_attr' => ['class' => 'mx-3 form-row'],
-                'attr' => ['class' => 'col-md-6'],
+                'attr' => [
+                    'class' => 'col-md-6',
+                    'data-message' => '',
+                    'data-status' => '',
+                ],
                 'choices'  => [
                     'Back' => 'back_message',
                     'Front' => 'front_message',
@@ -63,6 +47,7 @@ class MessageFormType extends AbstractType
                     'Security' => 'security',
                     'User' => 'user_message',
                     'Validators' => 'validators',
+                    'Visitor' => 'visitor',
                 ],
                 'placeholder' => 'lang.translation.form.multiple_search'
             ])
@@ -72,11 +57,11 @@ class MessageFormType extends AbstractType
                 'allow_add' => true,
                 'allow_delete' => true,
                 'prototype' => true,
+                'by_reference' => false,
                 ])
             )
+            ->add('statusId', HiddenType::class)
         ;
-        
-        
     }
 
     public function configureOptions(OptionsResolver $resolver)

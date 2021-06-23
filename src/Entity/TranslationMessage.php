@@ -7,6 +7,7 @@ use App\Repository\TranslationMessageRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\MaxDepth;
 
 /**
  * @ORM\Entity(repositoryClass=TranslationMessageRepository::class)
@@ -26,7 +27,7 @@ class TranslationMessage
     private $name;
 
     /**
-     * @ORM\Column(type="string", length=2)
+     * @ORM\Column(type="string", length=2, nullable=true)
      */
     private $lang;
 
@@ -45,15 +46,11 @@ class TranslationMessage
      */
     private $dateLastUpdate;
 
-    /**
-     * @ORM\Column(type="datetime", nullable=true)
-     */
-    private $dateValidation;
 
     /**
      * @ORM\Column(type="datetime", nullable=true)
      */
-    private $dateDelete;
+    private $dateStatus;
 
     /**
      * @ORM\Column(type="integer")
@@ -61,15 +58,31 @@ class TranslationMessage
     private $userId;
 
     /**
+     * @ORM\Column(type="boolean")
+     */
+    private $referent;
+
+    /**
      * @ORM\OneToMany(targetEntity="App\Entity\TranslationField", cascade={"persist", "remove"}, mappedBy="message")
+     * @MaxDepth(4)
      */
     protected $fields;
-
+    
     public function __construct()
     {
         $this->fields = new ArrayCollection();
     }
-    
+//    
+    public function __toString() {
+//        return $this->getName();
+//        return $this->getLang();
+//        return $this->getStatusId();
+//        return $this->getDateCreation();
+//        return $this->getDateStatus();
+//        return $this->getUserId();
+//        return $this->getReferent();
+//        return $this->getFields();
+    }
 
     public function getId(): ?int
     {
@@ -136,26 +149,14 @@ class TranslationMessage
         return $this;
     }
 
-    public function getDateValidation(): ?\DateTimeInterface
+    public function getDateStatus(): ?\DateTimeInterface
     {
-        return $this->dateValidation;
+        return $this->dateStatus;
     }
 
-    public function setDateValidation(?\DateTimeInterface $dateValidation): self
+    public function setDateStatus(?\DateTimeInterface $dateStatus): self
     {
-        $this->dateValidation = $dateValidation;
-
-        return $this;
-    }
-
-    public function getDateDelete(): ?\DateTimeInterface
-    {
-        return $this->dateDelete;
-    }
-
-    public function setDateDelete(?\DateTimeInterface $dateDelete): self
-    {
-        $this->dateDelete = $dateDelete;
+        $this->dateStatus = $dateStatus;
 
         return $this;
     }
@@ -168,6 +169,18 @@ class TranslationMessage
     public function setUserId(int $userId): self
     {
         $this->userId = $userId;
+
+        return $this;
+    }
+
+    public function getReferent(): ?bool
+    {
+        return $this->referent;
+    }
+
+    public function setReferent(bool $referent): self
+    {
+        $this->referent = $referent;
 
         return $this;
     }
@@ -184,8 +197,22 @@ class TranslationMessage
     {
         if (!$this->fields->contains($field)) {
             $this->fields[] = $field;
-            $field->setField($this);
+            $field->setMessage($this);
         }
+//        if (!$this->fields->contains($field)) {
+//            $this->fields[] = $field;
+//            $field->setMessage($this);
+//        }
+//        if (!$this->fields->contains($field)) {
+//            $this->fields[] = $field;
+//            $field->setField($this);
+//            $this->fields->add($field);
+//        }
+//        if (!$this->fields->contains($field)) {
+//            $this->fields[] = $field;
+//            $field->setMessage($this);
+//            $this->fields->add($field);
+//        }
         
         return $this;
     }
@@ -195,10 +222,11 @@ class TranslationMessage
         if ($this->fields->contains($field)) {
             $this->fields->removeElement($field);
             // set the owning side to null (unless already changed)
-            if ($field->getField() === $this) {
-                $field->setField(null);
+            if ($field->getMessage() === $this) {
+                $field->setMessage(null);
             }
         }
         return $this;
     }
+    
 }

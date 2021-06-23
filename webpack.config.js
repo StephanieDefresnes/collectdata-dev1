@@ -79,6 +79,7 @@ Encore
     .addEntry('index_app', './assets/back/js/index_app.js')
     .addEntry('lang_search_app', './assets/back/js/lang_search_app.js')
     .addEntry('lang_translation_form_app', './assets/back/js/lang_translation_form_app.js')
+    .addEntry('user_read_app', './assets/back/js/user_read_app.js')
     .addEntry('user_search_app', './assets/back/js/user_search_app.js')
     .addEntry('user_can_delete', './assets/back/js/user_can_delete.js')
     .addEntry('user_can_multi_select', './assets/back/js/user_can_multi_select.js')
