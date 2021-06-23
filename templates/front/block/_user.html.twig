@@ -17,7 +17,7 @@
             {{ 'nav.account'|trans() }}
         </a>
         <ul class="dropdown-menu dropdown-menu-right pt-md-2" aria-labelledby="dropdown_account">
-            {% if is_granted("ROLE_ADMIN") %}
+            {% if is_granted("ROLE_MODERATOR") %}
                 <li class="dropdown-item bg-dark{{ route == 'back_home' ? ' active' }}">
                     <a href="{{ path('back_home') }}">
                         <i class="fas fa-fw fa-tachometer-alt"></i>
