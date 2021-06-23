@@ -9,6 +9,7 @@ use App\Form\Back\UserUpdateType;
 use App\Form\Back\UserBatchType;
 use App\Mailer\Mailer;
 use App\Manager\UserManager;
+use App\Service\SituService;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormError;
@@ -25,26 +26,20 @@ use Symfony\Contracts\Translation\TranslatorInterface;
  */
 class UserController extends AbstractController
 {
-    /**
-     * @var UserRepository
-     */
+    private $situService;
+    private $translator;
+    private $userManager;
     private $userRepository;
     
-    /**
-     * @var UserManager
-     */
-    private $userManager;
-    
-    /**
-     * @var TranslatorInterface 
-     */
-    private $translator;
-    
-    public function __construct(UserRepository $userRepository, UserManager $userManager, TranslatorInterface $translator)
+    public function __construct(SituService $situService,
+                                TranslatorInterface $translator,
+                                UserManager $userManager,
+                                UserRepository $userRepository)
     {
-        $this->userRepository = $userRepository;
-        $this->userManager = $userManager;
+        $this->situService = $situService;
         $this->translator = $translator;
+        $this->userManager = $userManager;
+        $this->userRepository = $userRepository;
     }
 
     /**
@@ -53,6 +48,7 @@ class UserController extends AbstractController
     public function search(Request $request, Session $session)
     {
         $this->denyAccessUnlessGranted('back_user_search');
+        
         $users = $this->userRepository->findAll();
         $formBatch = $this->createForm(UserBatchType::class, null, [
             'action' => $this->generateUrl('back_user_search'),
@@ -76,6 +72,7 @@ class UserController extends AbstractController
     public function create(Request $request, UserPasswordEncoderInterface $passwordEncoder, Mailer $mailer): Response
     {
         $this->denyAccessUnlessGranted('back_user_create');
+        
         $user = new User();
         $form = $this->createForm(UserType::class, $user);
         $form->handleRequest($request);
@@ -115,8 +112,12 @@ class UserController extends AbstractController
     public function read(User $user): Response
     {
         $this->denyAccessUnlessGranted('back_user_read', $user);
+        
+        $situs = $this->situService->countSitusByUser($user->getId());
+        
         return $this->render('back/user/read.html.twig', [
             'user' => $user,
+            'situs' => $situs,
             'form_delete' => $this->createFormBuilder()->getForm()->createView(),
         ]);
     }
@@ -127,6 +128,7 @@ class UserController extends AbstractController
     public function update(Request $request, User $user): Response
     {
         $this->denyAccessUnlessGranted('back_user_update', $user);
+        
         $form = $this->createForm(UserUpdateType::class, $user);
         $form->handleRequest($request);
 

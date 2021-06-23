@@ -210,6 +210,7 @@ user:
             title: Number of contributions
             count: contribution
             count_s : contributions
+            empty: No contribution
         email: Email
         enabled: Enabled
         date:

@@ -20,7 +20,7 @@ class SituService {
     }
 
     public function getSitusByUser($userId) 
-    {           
+    {   
         $query = $this->em->createQueryBuilder()
             ->from(Situ::class,'situ')
             ->select(  'situ.id                 id,
