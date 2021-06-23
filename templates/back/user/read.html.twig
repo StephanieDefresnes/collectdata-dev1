@@ -6,10 +6,15 @@
 
 {% block title %}{{ 'user.read.title'|trans() }}{% endblock %}
 
+{% block stylesheets %}
+    {{ parent() }}
+    {{ encore_entry_link_tags('user_read_app', null, 'backApp') }}
+ {% endblock %}
+ 
 {% block content %}
 {% if can_delete %}
     <div id="delete" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
-        <div class="modal-dialog" role="document">
+        <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 id="modal_title" class="modal-title">{{ 'user.delete.modal_title'|trans() }}</h5>
@@ -34,8 +39,7 @@
     </div>
 {% endif %}
 
-<section class="pt-4 pb-4">
-    <div class="container">
+    <div class="container-fluid pt-4">
         <div class="row">
             <div class="col-sm-6">
                 <h1 class="h3">{{ 'user.read.h1'|trans({ '%identifier%': user }) }}</h1>
@@ -45,13 +49,13 @@
                     <a href="{{ path('back_user_search') }}" class="btn btn-primary" role="button">
                         <i class="fas fa-reply"></i> {{ 'button.back'|trans() }}
                     </a>
-                    {% if can_update %}
+                    {% if can_update and not user.hasRole("ROLE_SUPER_ADMIN") %}
                         <a href="{{ path('back_user_update', {'id': user.id}) }}" title="{{ 'button.update_title'|trans() }}"
                             class="btn btn-warning" aria-label="{{ 'button.update_title'|trans() }}" role="button">
                             <i class="fas fa-edit"></i>
                         </a>
                     {% endif %}
-                    {% if can_delete %}
+                    {% if can_delete and not user.hasRole("ROLE_SUPER_ADMIN") %}
                         <a href="#" class="btn btn-danger btn-delete" data-toggle="modal" data-target="#delete"
                             data-title="{{ user }}" role="button"
                             data-path="{{ path('back_user_delete', { 'ids': {0: user.id}}) }}"
@@ -62,46 +66,82 @@
                 </p>
             </div>
         </div>
-        <hr>
-        <div class="card mt-4 mb-4">
-            <div class="card-body">
-                <h2 class="card-title">{{ 'user.read.h2'|trans() }}</h2>
-                <div class="card-content">
-                    <ul class="list-unstyled">
-                        <li class="p-2 mb-2">
-                            <strong>{{ 'user.field.name'|trans() }} : </strong>{{ user.lastname }}                        </li>
-                        <li class="p-2 mb-2">
-                            <strong>{{ 'user.field.email'|trans() }} : </strong><a href="mailto:{{ user.email }}">{{ user.email }}</a>                        </li>
-                        <li class="p-2 mb-2">
-                            <strong>{{ 'user.field.roles'|trans() }} : </strong>{{ user.roles ? user.roles|join(', ') : '' }}                        </li>
-                        <li class="p-2 mb-2">
-                            <strong>{{ 'user.field.enabled'|trans() }} : </strong>{{ user.enable ? 'yes'|trans : 'no'|trans }}                        </li>
-                        <li class="p-2 mb-2">
-                            <strong>{{ 'user.field.last_login_at'|trans() }} : </strong>{{ user.dateLastLogin ? user.dateLastLogin|format_datetime : '' }}                        </li>
-                        <li class="p-2 mb-2">
-                            <strong>{{ 'user.field.created_at'|trans() }} : </strong>{{ user.dateCreate ? user.dateCreate|format_datetime : '' }}                        </li>
-                        <li class="p-2 mb-2">
-                            <strong>{{ 'user.field.updated_at'|trans() }} : </strong>{{ user.dateUpdate ? user.dateUpdate|format_datetime : '' }}                        </li>
-                    </ul>
+                
+        <div class="col-lg-10 offset-lg-1 col-12 offset-0 px-0">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">{{ 'user.read.h2'|trans() }}</h2></h6>
+                </div>
+                <div class="card-body">
+                        <div class="user-field pb-3 row">
+                            <strong class="col-sm-4">{{ 'user.field.name'|trans() }} : </strong>
+                            <span class="col-sm-8">{{ user.name }}</span>
+                        </div>
+                        <div class="user-field pb-3 row">
+                            <strong class="col-sm-4">{{ 'user.field.email'|trans() }} : </strong>
+                            <span class="col-sm-8"><a href="mailto:{{ user.email }}">{{ user.email }}</a></span>
+                        </div>
+                        <div class="user-field pb-3 row">
+                            <strong class="col-sm-4">{{ 'user.field.enabled'|trans() }} : </strong>
+                            <span class="col-sm-8">{{ user.enabled ? 'yes'|trans : 'no'|trans }}</span>
+                        </div>
+                        <div class="user-field pb-3 row">
+                            <strong class="col-sm-4">{{ 'user.field.roles'|trans() }} : </strong>
+                            <span class="col-sm-8">
+                            {% for role in user.roles %}
+                                {% if role == 'ROLE_USER' %}{{ 'user.role.user'|trans() }}
+                                {% elseif role == 'ROLE_MODERATOR' %}{{ 'user.role.moderator'|trans() }}
+                                {% elseif role == 'ROLE_ADMIN' %}{{ 'user.role.admin'|trans() }}
+                                {% elseif role == 'ROLE_SUPER_ADMIN' %}{{ 'user.role.super_admin'|trans() }}{% endif %}
+                                {% if not loop.last %} - {% endif %}
+                            {% endfor %}
+                            {% if user.langContributor %}
+                                - {{ 'user.role.translator'|trans() }}
+                            {% endif %}
+                            </span>
+                        </div>
+                        <div class="user-field pb-3 row">
+                            <strong class="col-sm-4">{{ 'user.field.date.create'|trans() }} : </strong>
+                            <span class="col-sm-8">{{ user.dateCreate ? user.dateCreate|format_datetime : '' }}</span>
+                        </div>
+                        {% if user.dateLastLogin %}
+                        <div class="user-field pb-3 row">
+                            <strong class="col-sm-4">{{ 'user.field.date.last_login'|trans() }} : </strong>
+                            <span class="col-sm-8">{{ user.dateLastLogin ? user.dateLastLogin|format_datetime : '' }}</span>
+                        </div>
+                        {% endif %}
+                        {% if user.dateUpdate %}
+                        <div class="user-field pb-2 row">
+                            <strong class="col-sm-4">{{ 'user.field.date.update'|trans() }} : </strong>
+                            <span class="col-sm-8">{{ user.dateUpdate ? user.dateUpdate|format_datetime : '' }}</span>
+                        </div>
+                        {% endif %}
+                        <div class="user-field pb-3 row">
+                            <strong class="col-sm-4">{{ 'user.field.contribs.title'|trans() }} : </strong>
+                            <span class="col-sm-8">
+                            {% if situs ==  0 %}
+                                {{ 'user.field.contribs.empty'|trans() }}
+                            {% elseif situs == 1 %}
+                                {{ situs }} {{ 'user.field.contribs.count'|trans() }}
+                            {% else %}
+                                {{ situs }} {{ 'user.field.contribs.count_s'|trans() }}
+                            {% endif %}
+                            </span>
+                        </div>
                 </div>
             </div>        
         </div>
     </div>
-</section>
 {% endblock %}
 
 {% block javascripts %}
     {{ parent() }}
     {% if can_delete %}
         <script>
-            $(document).ready(function(){
-                $('.btn-delete').click(function(){
-                    var title = $(this).attr('data-title');
-                    var path = $(this).attr('data-path');
-                    $('#form_back_user_delete').attr('action', path);
-                    $('#modal_body_title').html("{{ 'delete.confirm'|trans() }} : <strong>"+title+"</strong>");
-                });
-            });
+            var translations = {
+               "deleteConfirm" : "{{ 'delete.confirm'|trans }}",
+            }
         </script>
+        {{ encore_entry_script_tags('user_read_app', null, 'backApp') }}
     {% endif %}
 {% endblock %}
