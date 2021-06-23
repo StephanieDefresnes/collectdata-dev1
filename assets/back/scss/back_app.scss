@@ -16,8 +16,29 @@ $default-color-hover:#fe9e08;
 $default-color-auther:#111;
 $default-color-text: #777;
 
+#flash_message {
+    width: 100%;
+    max-width: 350px;
+    background-color: transparent;
+    position: absolute;
+    right: 0;
+    top: 95px;
+    z-index: 999;
+    & > .alert-dismissible {
+        padding-right: 1.25rem;
+    }
+}
 #content {
     position: relative;
+    padding-bottom: 100px;
+}
+#content-wrapper {
+    position: relative;
+}
+footer {
+    position: absolute;
+    bottom: 0;
+    width: 100%
 }
 #loader {
     position: absolute;
@@ -63,6 +84,9 @@ $default-color-text: #777;
             text-overflow: ellipsis;
         }
     }
+}
+label {
+    line-height: 1;
 }
 /*#dataTable.table.dataTable {
     margin-top: 0 !important;
