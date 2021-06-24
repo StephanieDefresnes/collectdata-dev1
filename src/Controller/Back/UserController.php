@@ -9,7 +9,7 @@ use App\Form\Back\User\UserBatchType;
 use App\Form\Back\User\UserModeratorType;
 use App\Form\Back\User\UserType;
 use App\Form\Back\User\UserUpdateAdminType;
-use App\Form\Back\User\UpdateModeratorType;
+use App\Form\Back\User\UserUpdateModeratorType;
 use App\Form\Back\User\UserUpdateType;
 use App\Mailer\Mailer;
 use App\Manager\UserManager;
@@ -166,10 +166,17 @@ class UserController extends AbstractController
             if ($user == $noUser) {
                 $this->denyAccessUnlessGranted('ROLE_SUPER_ADMIN');
             }
-        }        
-        // Deny ADMIN access to MODERATOR
+        }     
+        // Deny ADMIN access to ADMIN
         $noAdminAccess = $this->userService->getRole('ADMIN');
         foreach($noAdminAccess as $noUser) {
+            if ($user == $noUser) {
+                $this->denyAccessUnlessGranted('ROLE_SUPER_ADMIN');
+            }
+        }     
+        // Deny MODERATOR access to MODERATOR
+        $noModeratornAccess = $this->userService->getRole('ROLE_MODERATOR');
+        foreach($noModeratornAccess as $noUser) {
             if ($user == $noUser) {
                 $this->denyAccessUnlessGranted('ROLE_ADMIN');
             }
@@ -244,7 +251,30 @@ class UserController extends AbstractController
      */
     public function permuteEnabled(Request $request): Response
     {    
-        $this->denyAccessUnlessGranted('ROLE_SUPER_ADMIN');
+//        $this->denyAccessUnlessGranted('ROLE_SUPER_ADMIN');
+        $this->denyAccessUnlessGranted('ROLE_MODERATOR');
+        
+        // Deny SUPER_ADMIN access to ADMIN
+        $noSuperAccess = $this->userService->getRole('SUPER_ADMIN');
+        foreach($noSuperAccess as $noUser) {
+            if ($user == $noUser) {
+                $this->denyAccessUnlessGranted('ROLE_SUPER_ADMIN');
+            }
+        }     
+        // Deny ADMIN access to ADMIN
+        $noAdminAccess = $this->userService->getRole('ADMIN');
+        foreach($noAdminAccess as $noUser) {
+            if ($user == $noUser) {
+                $this->denyAccessUnlessGranted('ROLE_SUPER_ADMIN');
+            }
+        }     
+        // Deny MODERATOR access to MODERATOR
+        $noModeratornAccess = $this->userService->getRole('ROLE_MODERATOR');
+        foreach($noModeratornAccess as $noUser) {
+            if ($user == $noUser) {
+                $this->denyAccessUnlessGranted('ROLE_ADMIN');
+            }
+        }
         
         $users = $this->userManager->getUsers();
         
