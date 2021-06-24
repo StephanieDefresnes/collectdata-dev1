@@ -3,7 +3,6 @@
 namespace App\Controller\Back;
 
 use App\Entity\Lang;
-//use App\Entity\UserFile;
 use App\Manager\LangManager;
 use App\Repository\LangRepository;
 use App\Service\LangService;
@@ -48,6 +47,8 @@ class LangController extends AbstractController
      */
     public function search(Request $request, Session $session)
     {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+        
         $langs = $this->langService->getAll();
         
         return $this->render('back/lang/search/index.html.twig', [
@@ -60,6 +61,8 @@ class LangController extends AbstractController
      */
     public function permuteEnabled(Request $request): Response
     {    
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+        
         $langs = $this->langManager->getLangs();
         foreach ($langs as $lang) {
             $permute = $lang->getEnabled() ? false : true;

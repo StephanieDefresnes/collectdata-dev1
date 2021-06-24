@@ -4,29 +4,15 @@ namespace App\Form\Back\Translation;
 
 use App\Entity\TranslationMessage;
 use App\Form\Back\Translation\FieldFormType;
-use App\Repository\TranslationMessageRepository;
-use App\Service\LangService;
-use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\ChoiceList\ChoiceList;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
-use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
-use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class MessageFormType extends AbstractType
-{   
-    private $langService;
-    
-    public function __construct(LangService $langService)
-    {
-        $this->langService = $langService;
-    }
-    
+{       
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         

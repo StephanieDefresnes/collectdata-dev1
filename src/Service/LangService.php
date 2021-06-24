@@ -45,7 +45,7 @@ class LangService {
         return $langs;
     }
 
-    public function getLangsEnabledOrNot($boolean) 
+    public function getLangsEnabledOrNot($boolean)
     {
         $langs = $this->findLangsEnabledOrNot($boolean);
         
@@ -61,7 +61,7 @@ class LangService {
         return $result;
     }
 
-    public function getAll() 
+    public function getAll()
     {
         $repository = $this->em->getRepository(Lang::class);
         $langs = $repository->findAll();
