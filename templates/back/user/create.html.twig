@@ -26,7 +26,10 @@
                     <div class="col-md-6">
                         {{ form_row(form.roles) }}
                     </div>
-                    <div class="col-md-6 mt-md-5 mt-3">
+                    <div class="{% if is_granted("ROLE_MODERATOR")
+                                    and not is_granted("ROLE_SUPER_ADMIN")
+                                    and not is_granted("ROLE_ADMIN")
+                                %}col-md-12 mb-2{% else %}col-md-6 mt-md-5 mt-3{% endif %}">
                         <div class="d-flex justify-content-center row">
                             <div class="col-auto">
                                 <button class="btn btn-primary btn-block">

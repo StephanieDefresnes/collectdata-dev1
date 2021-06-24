@@ -34,8 +34,9 @@ security:
 
     # Easy way to control access for large sections of your site
     # Note: Only the *first* access control that matches will be used
-    role_hierarchy:          
-        ROLE_MODERATOR:         ROLE_USER
+    role_hierarchy:
+        ROLE_CONTRIBUTOR:       ROLE_USER
+        ROLE_MODERATOR:         ROLE_CONTRIBUTOR
         ROLE_ADMIN:             ROLE_MODERATOR
         ROLE_SUPER_ADMIN:       [ ROLE_ADMIN, ROLE_ALLOWED_TO_SWITCH ]
     access_control:
@@ -43,17 +44,20 @@ security:
         - { path: ^/%app_locales%/forget_password, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/%app_locales%/register, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/%app_locales%, roles: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/%app_locales%/back/lang/search/*, roles: ROLE_SUPER_ADMIN }
-        - { path: ^/%app_locales%/back/lang/search/*, roles: ROLE_ADMIN }
+        - { path: ^/%app_locales%/back/lang/*, roles: ROLE_SUPER_ADMIN }
+        - { path: ^/%app_locales%/back/lang/*, roles: ROLE_ADMIN }
         - { path: ^/%app_locales%/back/translation/create, roles: ROLE_SUPER_ADMIN }
-        - { path: ^/%app_locales%/back/translation/site/*, roles: ROLE_SUPER_ADMIN }
-        - { path: ^/%app_locales%/back/translation/site/*, roles: ROLE_ADMIN }
-        - { path: ^/%app_locales%/back/user/search/*, roles: ROLE_SUPER_ADMIN }
-        - { path: ^/%app_locales%/back/user/search/*, roles: ROLE_ADMIN }
-        - { path: ^/%app_locales%/back/user/search/*, roles: ROLE_MODERATOR }
+        - { path: ^/%app_locales%/back/translation/site, roles: ROLE_SUPER_ADMIN }
+        - { path: ^/%app_locales%/back/translation/site, roles: ROLE_ADMIN }
         - { path: ^/%app_locales%/back/user/create/*, roles: ROLE_SUPER_ADMIN }
         - { path: ^/%app_locales%/back/user/create/*, roles: ROLE_ADMIN }
         - { path: ^/%app_locales%/back/user/create/*, roles: ROLE_MODERATOR }
+        - { path: ^/%app_locales%/back/user/search/*, roles: ROLE_SUPER_ADMIN }
+        - { path: ^/%app_locales%/back/user/search/*, roles: ROLE_ADMIN }
+        - { path: ^/%app_locales%/back/user/search, roles: ROLE_MODERATOR }
+        - { path: ^/%app_locales%/back/user/update/*, roles: ROLE_SUPER_ADMIN }
+        - { path: ^/%app_locales%/back/user/update/*, roles: ROLE_ADMIN }
+        - { path: ^/%app_locales%/back/user/update/*, roles: ROLE_MODERATOR }
         - { path: ^/%app_locales%/front/*, roles: ROLE_SUPER_ADMIN }
         - { path: ^/%app_locales%/front/*, roles: ROLE_ADMIN }
         - { path: ^/%app_locales%/front/*, roles: ROLE_MODERATOR }

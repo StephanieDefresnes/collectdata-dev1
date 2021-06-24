@@ -46,8 +46,9 @@ $(document).ready(function(){
                 +'<"row"<"col-md-6 small"i><"#pagination.col-md-6 mt-3"p>>',
         "columnDefs": [{
             orderable: false,
-            targets: [0,8]
+            targets: 9
         }],
+        "order": [[ 0, 'asc' ],[ 1, 'asc' ]],
         "fnDrawCallback": function(oSettings) {
             // Hide length select & pagination if only one page
             if ($('tbody tr').length <= 10) {

@@ -186,9 +186,10 @@ user:
     role:
         super_admin: Superadministrador
         admin: Administrator
+        contributor: Contribuyente
         moderator: Moderador
-        user: Usuario
         translator: Traductor
+        user: Usuario
     button:
         create: Invitación
     create:
@@ -217,6 +218,10 @@ user:
             create: Creado
             last_login: Última conexión
             update: Modificado
+        lang:
+            title: Idioma
+            default: Defecto
+        note: Nota
         name: Apellido
         roles: Rol(s)
     label:
@@ -224,17 +229,16 @@ user:
         name: Apellido
         roles: Roles
     read:
-        h1: Detalles - Usuario
+        title: Detalles Usuario
         h2: Detalles
-        title: Detalles - Usuario
     search:
-        h1: Buscar - Usuario
-        h2: Buscar
-        title: Buscar - Usuario
+        title: Usuarios
+        table: Lista de usuarios
+        actions: Acciones grupales
     update:
         flash:
             success: Usuario cambiado.
-        h1: Editar - Usuario
+        title: Editar Usuario
+        h1: Editar -
         h2: Formulario de modificación
-        title: Editar - Usuario
 'yes': Si

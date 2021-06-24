@@ -4,12 +4,19 @@ namespace App\Controller\Back;
 
 use App\Entity\User;
 use App\Repository\UserRepository;
-use App\Form\Back\UserType;
-use App\Form\Back\UserUpdateType;
+use App\Form\Back\UserAdminType;
 use App\Form\Back\UserBatchType;
+use App\Form\Back\UserModeratorType;
+use App\Form\Back\UserType;
+use App\Form\Back\UserUpdateAdminType;
+use App\Form\Back\UserUpdateModeratorType;
+use App\Form\Back\UserUpdateType;
 use App\Mailer\Mailer;
 use App\Manager\UserManager;
+use App\Service\LangService;
 use App\Service\SituService;
+use App\Service\UserService;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormError;
@@ -26,20 +33,29 @@ use Symfony\Contracts\Translation\TranslatorInterface;
  */
 class UserController extends AbstractController
 {
+    private $em;
+    private $langService;
     private $situService;
     private $translator;
     private $userManager;
     private $userRepository;
+    private $userService;
     
-    public function __construct(SituService $situService,
+    public function __construct(EntityManagerInterface $em,
+                                LangService $langService,
+                                SituService $situService,
                                 TranslatorInterface $translator,
                                 UserManager $userManager,
-                                UserRepository $userRepository)
+                                UserRepository $userRepository,
+                                UserService $userService)
     {
+        $this->em = $em;
+        $this->langService = $langService;
         $this->situService = $situService;
         $this->translator = $translator;
         $this->userManager = $userManager;
         $this->userRepository = $userRepository;
+        $this->userService = $userService;
     }
 
     /**
@@ -47,9 +63,11 @@ class UserController extends AbstractController
      */
     public function search(Request $request, Session $session)
     {
-        $this->denyAccessUnlessGranted('back_user_search');
+        $this->denyAccessUnlessGranted('ROLE_MODERATOR');
         
         $users = $this->userRepository->findAll();
+        $langs = $this->langService->getAll();
+        
         $formBatch = $this->createForm(UserBatchType::class, null, [
             'action' => $this->generateUrl('back_user_search'),
             'users' => $users,
@@ -59,8 +77,10 @@ class UserController extends AbstractController
             $url = $this->userManager->dispatchBatchForm($formBatch);
             if ($url) { return $this->redirect($url); }
         }
+        
         return $this->render('back/user/search/index.html.twig', [
             'users' => $users,
+            'langs' => $langs,
             'form_batch' => $formBatch->createView(),
             'form_delete' => $this->createFormBuilder()->getForm()->createView(),
         ]);
@@ -71,10 +91,21 @@ class UserController extends AbstractController
      */
     public function create(Request $request, UserPasswordEncoderInterface $passwordEncoder, Mailer $mailer): Response
     {
-        $this->denyAccessUnlessGranted('back_user_create');
+        $this->denyAccessUnlessGranted('ROLE_MODERATOR');
         
         $user = new User();
-        $form = $this->createForm(UserType::class, $user);
+        
+        // Form depending on user role
+        if ($this->container->get('security.authorization_checker')
+                ->isGranted('ROLE_SUPER_ADMIN')) {
+            $form = $this->createForm(UserType::class, $user);
+        } else if ($this->container->get('security.authorization_checker')
+                ->isGranted('ROLE_ADMIN')) {
+            $form = $this->createForm(UserAdminType::class, $user);
+        } else if ($this->container->get('security.authorization_checker')
+                ->isGranted('ROLE_MODERATOR')) {
+            $form = $this->createForm(UserModeratorType::class, $user);
+        }
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -111,7 +142,7 @@ class UserController extends AbstractController
      */
     public function read(User $user): Response
     {
-        $this->denyAccessUnlessGranted('back_user_read', $user);
+        $this->denyAccessUnlessGranted('ROLE_MODERATOR');
         
         $situs = $this->situService->countSitusByUser($user->getId());
         
@@ -123,13 +154,38 @@ class UserController extends AbstractController
     }
 
     /**
-     * @Route("/{id}/update", name="back_user_update", methods="GET|POST")
+     * @Route("/update/{id}", name="back_user_update", methods="GET|POST")
      */
-    public function update(Request $request, User $user): Response
+    public function updateSuper(Request $request, User $user): Response
     {
-        $this->denyAccessUnlessGranted('back_user_update', $user);
+        $this->denyAccessUnlessGranted('ROLE_MODERATOR');
         
-        $form = $this->createForm(UserUpdateType::class, $user);
+        // Deny SUPER_ADMIN access to ADMIN
+        $noSuperAccess = $this->userService->getRole('SUPER_ADMIN');
+        foreach($noSuperAccess as $noUser) {
+            if ($user == $noUser) {
+                $this->denyAccessUnlessGranted('ROLE_SUPER_ADMIN');
+            }
+        }        
+        // Deny ADMIN access to MODERATOR
+        $noAdminAccess = $this->userService->getRole('ADMIN');
+        foreach($noAdminAccess as $noUser) {
+            if ($user == $noUser) {
+                $this->denyAccessUnlessGranted('ROLE_ADMIN');
+            }
+        }
+        
+        // Form depending on user role
+        if ($this->container->get('security.authorization_checker')
+                ->isGranted('ROLE_SUPER_ADMIN')) {
+            $form = $this->createForm(UserUpdateType::class, $user);
+        } else if ($this->container->get('security.authorization_checker')
+                ->isGranted('ROLE_ADMIN')) {
+            $form = $this->createForm(UserUpdateAdminType::class, $user);
+        } else if ($this->container->get('security.authorization_checker')
+                ->isGranted('ROLE_MODERATOR')) {
+            $form = $this->createForm(UserUpdateModeratorType::class, $user);
+        }
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -150,8 +206,10 @@ class UserController extends AbstractController
      */
     public function delete(Request $request): Response
     {    
+        $this->denyAccessUnlessGranted('ROLE_SUPER_ADMIN');
+        
         $users = $this->userManager->getUsers();
-        $this->denyAccessUnlessGranted('back_user_delete', $users);
+        
         $formBuilder = $this->createFormBuilder();
         $formBuilder->addEventListener(FormEvents::POST_SUBMIT, function (FormEvent $event) use ($users) {
             $result = $this->userManager->validationDelete($users);
@@ -186,8 +244,10 @@ class UserController extends AbstractController
      */
     public function permuteEnabled(Request $request): Response
     {    
+        $this->denyAccessUnlessGranted('ROLE_SUPER_ADMIN');
+        
         $users = $this->userManager->getUsers();
-        $this->denyAccessUnlessGranted('back_user_permute_enabled', $users);
+        
         foreach ($users as $user) {
             $permute = $user->getEnabled() ? false : true;
             $user->setEnabled($permute);

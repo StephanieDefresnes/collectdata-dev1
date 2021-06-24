@@ -186,9 +186,10 @@ user:
     role:
         super_admin: Super administrator
         admin: Administrator
+        contributor: Contributor
         moderator: Moderator
-        user: User
         translator: Translator
+        user: User
     button:
         create: Invite
     create:
@@ -217,6 +218,10 @@ user:
             create: Created
             last_login: Last login
             update: Updated
+        lang:
+            title: Language
+            default: Default
+        note: Note
         name: Name
         roles: Role(s)
     label:
@@ -224,17 +229,16 @@ user:
         name: Name
         roles: Roles
     read:
-        h1: Details - User
+        title: Details User
         h2: Details
-        title: Details - User
     search:
-        h1: Search - User
-        h2: Search
-        title: Search - User
+        title: Users
+        table: User List
+        actions: Group actions
     update:
         flash:
             success: User updated.
-        h1: Update - User
+        title: Update User
+        h1: Update -
         h2: Update form
-        title: Update - User
 'yes': Yes

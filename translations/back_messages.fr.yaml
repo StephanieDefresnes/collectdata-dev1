@@ -186,9 +186,10 @@ user:
     role:
         super_admin: Super-administrateur
         admin: Administrateur
+        contributor: Contributeur
         moderator: Modérateur
-        user: Utilisateur
         translator: Traducteur
+        user: Utilisateur
     button:
         create: Inviter
     create:
@@ -217,6 +218,10 @@ user:
             create: Créé le
             last_login: Dernière connexion
             update: Modifié le
+        lang:
+            title: Langue
+            default: Défaut
+        note: Note
         name: Nom
         roles: Rôle(s)
     label:
@@ -224,9 +229,8 @@ user:
         name: Nom
         roles: Rôles
     read:
-        h1: Détails - Utilisateur
+        title: Détails Utilisateur
         h2: Détails
-        title: Détails - Utilisateur
     search:
         title: Utilisateurs
         table: Liste d'utilisateurs
@@ -234,7 +238,7 @@ user:
     update:
         flash:
             success: Utilisateur modifié.
-        h1: Modifier - Utilisateur
+        title: Modifier Utilisateur
+        h1: Modifier -
         h2: Formulaire de modification
-        title: Modifier - Utilisateur
 'yes': Oui

@@ -16,18 +16,24 @@
                 &:not(.sorting_disabled) {
                     padding-right: 25px;
                 }
+                &[name=check] {
+                    cursor: default !important;
+                    &::before,
+                    &::after {
+                        display: none;
+                    }
+                }
             }
         }
     }
     & td {
-        &:first-child {
-            padding-top: 7px;
-        }
-        &:nth-child(5) {
-            vertical-align: middle;
+        vertical-align: middle;
+        &.ckeck {
+            & .form-group {
+                margin-bottom: 0;
+            }            
         }
         &:last-child {
-            vertical-align: middle;
             & .btn {
                 width: 36.6px;
                 padding-top: 4px;
