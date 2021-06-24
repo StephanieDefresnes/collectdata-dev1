@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Form\Back;
+namespace App\Form\Back\User;
 
 use App\Entity\User;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -10,7 +10,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class UserAdminType extends AbstractType
+class UserModeratorType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
@@ -22,11 +22,7 @@ class UserAdminType extends AbstractType
                 'label' => 'user.label.email',
             ])
             ->add('roles', ChoiceType::class, [
-                'label' => 'user.label.roles',
-                'choices' => [
-                    'user.role.moderator' => 'ROLE_MODERATOR',
-                    'user.role.user' => 'ROLE_USER',
-                ],
+                'label' => false,
                 'expanded' => true,
                 'multiple' => true,
             ]);

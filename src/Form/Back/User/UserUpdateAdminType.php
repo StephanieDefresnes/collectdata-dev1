@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Form\Back;
+namespace App\Form\Back\User;
 
 
 use App\Entity\User;
@@ -10,7 +10,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class UserUpdateModeratorType extends AbstractType
+class UserUpdateAdminType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
@@ -18,11 +18,15 @@ class UserUpdateModeratorType extends AbstractType
             ->add('adminNote', TextareaType::class, [
                 'label' => 'user.field.note',
                 'attr' => [
-                    'rows' => '5',
+                    'rows' => '3',
                 ],
             ])
             ->add('roles', ChoiceType::class, [
-                'label' => false,
+                'label' => 'user.label.roles',
+                'choices' => [
+                    'user.role.moderator' => 'ROLE_MODERATOR',
+                    'user.role.contributor' => 'ROLE_CONTRIBUTOR',
+                ],
                 'expanded' => true,
                 'multiple' => true,
             ]);

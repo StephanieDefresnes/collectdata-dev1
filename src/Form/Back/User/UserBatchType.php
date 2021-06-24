@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Form\Back;
+namespace App\Form\Back\User;
 
 use App\Entity\User;
 use App\Manager\UserManager;
