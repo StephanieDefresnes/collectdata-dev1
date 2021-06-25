@@ -49,16 +49,21 @@
                     <a href="{{ path('back_user_search') }}" class="btn btn-primary" role="button">
                         <i class="fas fa-reply"></i> {{ 'button.back'|trans() }}
                     </a>
-                    {% if can_update and not user.hasRole("ROLE_SUPER_ADMIN") %}
+                    {% if can_update and not user.hasRole("ROLE_SUPER_ADMIN")  
+                        and (   is_granted("ROLE_SUPER_ADMIN")
+                            or  (is_granted("ROLE_ADMIN") and not user.hasRole("ROLE_ADMIN")
+                                and (user.hasRole("ROLE_MODERATOR") or user.hasRole("ROLE_CONTRIBUTOR")))
+                            or (is_granted("ROLE_MODERATOR") and not user.hasRole("ROLE_MODERATOR")
+                                and not user.hasRole("ROLE_ADMIN") and user.hasRole("ROLE_CONTRIBUTOR"))) %}
                         <a href="{{ path('back_user_update', {'id': user.id}) }}" title="{{ 'button.update_title'|trans() }}"
                             class="btn btn-warning" aria-label="{{ 'button.update_title'|trans() }}" role="button">
                             <i class="fas fa-edit"></i>
                         </a>
                     {% endif %}
-                    {% if can_delete and not user.hasRole("ROLE_SUPER_ADMIN") %}
+                    {% if can_delete and not user.hasRole("ROLE_SUPER_ADMIN") and is_granted("ROLE_SUPER_ADMIN") %}
                         <a href="#" class="btn btn-danger btn-delete" data-toggle="modal" data-target="#delete"
                             data-title="{{ user }}" role="button"
-                            data-path="{{ path('back_user_delete', { 'ids': {0: user.id}}) }}"
+                            data-path="{{ path('back_user_delete', { 'ids': {0: user.id} }) }}"
                             title="{{ 'button.delete_title'|trans() }}" aria-label="{{ 'button.delete_title'|trans() }}">
                             <i class="fas fa-times"></i>
                         </a>
@@ -105,27 +110,23 @@
                             <span class="col-sm-8">{{ user.dateCreate ? user.dateCreate|format_datetime : '' }}</span>
                         </div>
                         {% if user.dateLastLogin %}
-                        <div class="user-field pb-3 row">
-                            <strong class="col-sm-4">{{ 'user.field.date.last_login'|trans() }} : </strong>
-                            <span class="col-sm-8">{{ user.dateLastLogin ? user.dateLastLogin|format_datetime : '' }}</span>
-                        </div>
+                            <div class="user-field pb-3 row">
+                                <strong class="col-sm-4">{{ 'user.field.date.last_login'|trans() }} : </strong>
+                                <span class="col-sm-8">{{ user.dateLastLogin ? user.dateLastLogin|format_datetime : '' }}</span>
+                            </div>
                         {% endif %}
                         {% if user.dateUpdate %}
-                        <div class="user-field pb-2 row">
-                            <strong class="col-sm-4">{{ 'user.field.date.update'|trans() }} : </strong>
-                            <span class="col-sm-8">{{ user.dateUpdate ? user.dateUpdate|format_datetime : '' }}</span>
-                        </div>
+                            <div class="user-field pb-2 row">
+                                <strong class="col-sm-4">{{ 'user.field.date.update'|trans() }} : </strong>
+                                <span class="col-sm-8">{{ user.dateUpdate ? user.dateUpdate|format_datetime : '' }}</span>
+                            </div>
                         {% endif %}
                         <div class="user-field pb-3 row">
                             <strong class="col-sm-4">{{ 'user.field.contribs.title'|trans() }} : </strong>
                             <span class="col-sm-8">
-                            {% if situs ==  0 %}
-                                {{ 'user.field.contribs.empty'|trans() }}
-                            {% elseif situs == 1 %}
-                                {{ situs }} {{ 'user.field.contribs.count'|trans() }}
-                            {% else %}
-                                {{ situs }} {{ 'user.field.contribs.count_s'|trans() }}
-                            {% endif %}
+                                {% if situs ==  0 %}{{ 'user.field.contribs.empty'|trans() }}
+                                {% elseif situs == 1 %} {{ situs }} {{ 'user.field.contribs.count'|trans() }}
+                                {% else %}{{ situs }} {{ 'user.field.contribs.count_s'|trans() }}{% endif %}
                             </span>
                         </div>
                 </div>

@@ -61,8 +61,10 @@
                     <td class="px-2">
                         {% if not user.hasRole("ROLE_SUPER_ADMIN") %}
                             {% if (is_granted("ROLE_SUPER_ADMIN"))
-                                or (is_granted("ROLE_ADMIN") and not user.hasRole("ROLE_ADMIN") and (user.hasRole("ROLE_USER") and user.hasRole("ROLE_MODERATOR")))
-                                or (is_granted("ROLE_MODERATOR") and not user.hasRole("ROLE_ADMIN") and not user.hasRole("ROLE_MODERATOR") and user.hasRole("ROLE_USER")) %}
+                                or (is_granted("ROLE_ADMIN") and not user.hasRole("ROLE_ADMIN")
+                                    and (user.hasRole("ROLE_USER") and user.hasRole("ROLE_MODERATOR")))
+                                or (is_granted("ROLE_MODERATOR") and not user.hasRole("ROLE_ADMIN")
+                                    and not user.hasRole("ROLE_MODERATOR") and user.hasRole("ROLE_USER")) %}
                                 <a href="{{ path('back_user_permute_enabled', { 'ids': {0: user.id} }) }}" role="button"
                                     class="btn btn-primary enablable{{ user.enabled ? ' active' : '' }}{{ user.hasRole("ROLE_SUPER_ADMIN") ? ' disabled' : '' }}"
                                     aria-pressed="{{ user.enabled ? 'true' : 'false' }}"
@@ -78,23 +80,23 @@
                                 {{ lang.english_name }}
                             {% endif %}
                         {% endfor %}
-                            {% if user.langId == '' %}
-                                {{ 'user.field.lang.default'|trans() }}
-                            {% endif %}
+                        {% if user.langId == '' %}
+                            {{ 'user.field.lang.default'|trans() }}
+                        {% endif %}
                     </td>
                     <td class="px-2">
-                        {% if not user.hasRole("ROLE_SUPER_ADMIN") %}
-                            {% if (is_granted("ROLE_SUPER_ADMIN"))
-                                or (is_granted("ROLE_ADMIN") and not user.hasRole("ROLE_ADMIN") and (user.hasRole("ROLE_USER") and user.hasRole("ROLE_MODERATOR")))
-                                or (is_granted("ROLE_MODERATOR") and not user.hasRole("ROLE_ADMIN") and not user.hasRole("ROLE_MODERATOR") and user.hasRole("ROLE_USER")) %}
-                                {{ user.adminNote ? '<span class="text-success"><i class="fas fa-check-circle"></i></span>' : '' }}
-                            {% endif %}
+                        {% if not user.hasRole("ROLE_SUPER_ADMIN")
+                            and (is_granted("ROLE_SUPER_ADMIN")
+                                or (is_granted("ROLE_ADMIN") and not user.hasRole("ROLE_ADMIN"))
+                                or (is_granted("ROLE_MODERATOR") and not user.hasRole("ROLE_ADMIN") and not user.hasRole("ROLE_MODERATOR"))) %}
+                            {{ user.adminNote ? '<span class="text-success"><i class="fas fa-check-circle"></i></span>' : '' }}
                         {% endif %}
                     </td>
                     <td class="px-2">{{ user.dateLastLogin ? user.dateLastLogin|format_datetime('short', 'short', locale=locale) : '' }}</td>
                     <td class="px-2">{{ user.dateCreate ? user.dateCreate|format_datetime('short', 'short', locale=locale) : '' }}</td>
                     <td class="px-2">{{ user.dateUpdate ? user.dateUpdate|format_datetime('short', 'short', locale=locale) : '' }}</td>
                     <td class="px-2">
+                        {# Read user #}
                         {% if can_read %}
                             <a href="{{ path('back_user_read', {'id': user.id}) }}"
                                data-toggle="tooltip" data-placement="left" title="{{ 'button.read_title'|trans() }}"
@@ -102,6 +104,7 @@
                                 <i class="fas fa-eye"></i>
                             </a>
                         {% endif %}
+                        {# Update user #}
                         {% if not user.hasRole("ROLE_SUPER_ADMIN") and is_granted("ROLE_SUPER_ADMIN") %}
                             <a href="{{ path('back_user_update', {'id': user.id}) }}" title="{{ 'button.update_title'|trans() }}"
                                 data-toggle="tooltip" data-placement="left" title="{{ 'button.update_title'|trans() }}"
@@ -110,20 +113,14 @@
                             </a>
                         {% elseif not user.hasRole("ROLE_SUPER_ADMIN") %}
                             {% if is_granted("ROLE_ADMIN") and not is_granted("ROLE_SUPER_ADMIN")
-                                and (
-                                    not user.hasRole("ROLE_ADMIN") and (
-                                        user.hasRole("ROLE_MODERATOR") or user.hasRole("ROLE_USER")
-                                    )
-                            ) %}
+                                and not user.hasRole("ROLE_ADMIN") %}
                                 <a href="{{ path('back_user_update', {'id': user.id}) }}" title="{{ 'button.update_title'|trans() }}"
                                     data-toggle="tooltip" data-placement="left" title="{{ 'button.update_title'|trans() }}"
                                     class="btn btn-outline-warning" aria-label="{{ 'button.update_title'|trans() }}" role="button">
                                     <i class="fas fa-edit"></i>
                                 </a>
-                            {% elseif is_granted("ROLE_MODERATOR") and not is_granted("ROLE_ADMIN") and not is_granted("ROLE_SUPER_ADMIN")
-                                and not user.hasRole("ROLE_ADMIN")
-                                and not user.hasRole("ROLE_MODERATOR")
-                                and user.hasRole("ROLE_USER") %}
+                            {% elseif is_granted("ROLE_MODERATOR") and not is_granted("ROLE_SUPER_ADMIN") and not is_granted("ROLE_ADMIN")
+                                and not user.hasRole("ROLE_ADMIN") and not user.hasRole("ROLE_MODERATOR") %}
                                 <a href="{{ path('back_user_update', {'id': user.id}) }}" title="{{ 'button.update_title'|trans() }}"
                                     data-toggle="tooltip" data-placement="left" title="{{ 'button.update_title'|trans() }}"
                                     class="btn btn-outline-warning" aria-label="{{ 'button.update_title'|trans() }}" role="button">
@@ -131,7 +128,8 @@
                                 </a>
                             {% endif %}
                         {% endif %}
-                        {% if is_granted("ROLE_SUPER_ADMIN") and can_delete and not user.hasRole("ROLE_SUPER_ADMIN") %}
+                        {# Delete user #}
+                        {% if can_delete and is_granted("ROLE_SUPER_ADMIN") and not user.hasRole("ROLE_SUPER_ADMIN") %}
                             <a href="#" data-toggle="modal" data-target="#delete"
                                 data-path="{{ path('back_user_delete', { 'ids': {0: user.id} }) }}" data-title="{{ user }}" 
                                 data-toggle="tooltip" data-placement="left" title="{{ 'button.delete_title'|trans() }}"
@@ -139,6 +137,7 @@
                                 <i class="fas fa-times"></i>
                             </a>
                         {% endif %}
+                        {# Switch user #}
                         {% if not user.hasRole("ROLE_SUPER_ADMIN") and is_granted("ROLE_ALLOWED_TO_SWITCH") %}
                             {% set switch_path = path('front_home', { 'id': user.id, '_switch_user': user.email }) %}
                             <a href="{{ switch_path }}" aria-disabled="{{ is_granted('ROLE_PREVIOUS_ADMIN') ? 'true' : 'false' }}"
