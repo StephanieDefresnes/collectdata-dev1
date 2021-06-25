@@ -251,7 +251,6 @@ class UserController extends AbstractController
      */
     public function permuteEnabled(Request $request): Response
     {    
-//        $this->denyAccessUnlessGranted('ROLE_SUPER_ADMIN');
         $this->denyAccessUnlessGranted('ROLE_MODERATOR');
         
         // Deny SUPER_ADMIN access to ADMIN
