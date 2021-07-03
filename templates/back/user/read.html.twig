@@ -93,12 +93,13 @@
                         <div class="user-field pb-3 row">
                             <strong class="col-sm-4">{{ 'user.field.roles'|trans() }} : </strong>
                             <span class="col-sm-8">
+                            {% set rolesLength = user.roles|length %}
                             {% for role in user.roles %}
-                                {% if role == 'ROLE_USER' %}{{ 'user.role.user'|trans() }}
+                                {% if role == 'ROLE_CONTRIBUTOR' %}{{ 'user.role.contributor'|trans() }}
                                 {% elseif role == 'ROLE_MODERATOR' %}{{ 'user.role.moderator'|trans() }}
                                 {% elseif role == 'ROLE_ADMIN' %}{{ 'user.role.admin'|trans() }}
                                 {% elseif role == 'ROLE_SUPER_ADMIN' %}{{ 'user.role.super_admin'|trans() }}{% endif %}
-                                {% if not loop.last %} - {% endif %}
+                                {% if rolesLength > 2 %}{% if not loop.last and loop.first%} - {% endif %}{% endif %}
                             {% endfor %}
                             {% if user.langContributor %}
                                 - {{ 'user.role.translator'|trans() }}

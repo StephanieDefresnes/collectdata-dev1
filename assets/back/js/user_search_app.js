@@ -41,7 +41,7 @@ $(document).ready(function(){
             url: '//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/'
                     + langs[$('html').attr('lang')] +'.json',
         },
-        dom: '<"row mb-2"<"#length.col-md-5"l><"#search.col-md-7"f>>'
+        dom: '<"d-flex justify-content-between row mb-2"<"#length.col-md-5"l><"#search.col-auto"f>>'
                 +'<"table-responsive border"t>'
                 +'<"row"<"col-md-6 small"i><"#pagination.col-md-6 mt-3"p>>',
         "columnDefs": [{
@@ -50,6 +50,7 @@ $(document).ready(function(){
         }],
         "order": [[ 0, 'asc' ],[ 1, 'asc' ]],
         "fnDrawCallback": function(oSettings) {
+            $('#dataTable-usersList_filter input').addClass('search')
             // Hide length select & pagination if only one page
             if ($('tbody tr').length <= 10) {
                 $('#length, #pagination .dataTables_paginate').hide()
@@ -57,6 +58,18 @@ $(document).ready(function(){
             }
             $('#loader').hide()
         }
+    })
+
+    // Reset search filter
+    $('#users-list').on('keyup paste', 'input.search', function() {
+        $(this).parent().find('.clean-search').remove('.clean-search')
+        if ($(this).val() != '') {
+            $(this).parent().append('<span class="clean-search"><i class="fas fa-times"></i></span>')
+        }
+    })
+    $('#users-list').on('click', '.clean-search', function() {
+        table.search('').columns().search('').draw();
+        $(this).remove()
     })
     
 })

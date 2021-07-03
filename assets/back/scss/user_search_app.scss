@@ -1,6 +1,24 @@
 // Datatables
 @import '~datatables.net-bs4/css/dataTables.bootstrap4.css';
 
+#dataTable-usersList_filter {
+    position: relative;
+    & > label {
+        & > input {
+            padding: 0.25rem 1.25rem 0.25rem 0.5rem;
+        }
+        & > .clean-search {
+            position: absolute;
+            top: 0;
+            right: 0;
+            padding: 10px 5px;
+            font-size: 10px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+    }
+}
+
 #dataTable-usersList {
     margin: 0 !important;
     & .btn {
@@ -77,6 +95,16 @@
             max-width: 100% !important;
             display: block;
             margin: 5px 0 0;
+        }
+    }
+}
+
+.rtl {
+    & #dataTable-langsList_filter {
+        & > label {
+            & > input {
+                padding: 0.25rem 0.5rem 0.25rem 1.25rem;
+            }
         }
     }
 }
