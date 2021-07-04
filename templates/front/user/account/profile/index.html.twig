@@ -100,13 +100,14 @@
                                     {{ 'account.roles.title_s'|trans() }}
                                 {% endif %}
                             </span>
-                            <span class="col-lg-7">
+                                <span class="col-lg-7">
+                                {% set rolesLength = user.roles|length %}
                                 {% for role in user.roles %}
-                                    {% if role == 'ROLE_USER' %}{{ 'account.roles.user'|trans() }}
+                                    {% if role == 'ROLE_CONTRIBUTOR' %}{{ 'account.roles.contributor'|trans() }}
                                     {% elseif role == 'ROLE_MODERATOR' %}{{ 'account.roles.moderator'|trans() }}
                                     {% elseif role == 'ROLE_ADMIN' %}{{ 'account.roles.admin'|trans() }}
                                     {% elseif role == 'ROLE_SUPER_ADMIN' %}{{ 'account.roles.super_admin'|trans() }}{% endif %}
-                                    {% if not loop.last %} - {% endif %}
+                                {% if rolesLength > 2 %}{% if not loop.last and loop.first%} - {% endif %}{% endif %}
                                 {% endfor %}
                                 {% if user.langContributor %}
                                     - {{ 'account.translator.status'|trans() }}
