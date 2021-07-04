@@ -31,6 +31,25 @@
         }
     }
 }
+
+#dataTable-translations_filter {
+    position: relative;
+    & > label {
+        & > input {
+            padding: 0.25rem 1.25rem 0.25rem 0.5rem;
+        }
+        & > .clean-search {
+            position: absolute;
+            top: 0;
+            right: 0;
+            padding: 10px 5px;
+            font-size: 10px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+    }
+}
+
 #dataTable-translations {
     margin: 0 !important;
     & > tbody {
@@ -50,4 +69,14 @@
     color: #e74a3b;
     font-size: 14px;
     font-weight: 600;
+}
+
+.rtl {
+    & #dataTable-langsList_filter {
+        & > label {
+            & > input {
+                padding: 0.25rem 0.5rem 0.25rem 1.25rem;
+            }
+        }
+    }
 }

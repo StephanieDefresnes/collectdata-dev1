@@ -51,14 +51,15 @@ $(document).ready(function(){
         "order": [[ 0, 'asc' ],[ 1, 'asc' ]],
         "fnDrawCallback": function(oSettings) {
             $('#dataTable-usersList_filter input').addClass('search')
-            // Hide length select & pagination if only one page
-            if ($('tbody tr').length <= 10) {
-                $('#length, #pagination .dataTables_paginate').hide()
-                $('#search .dataTables_filter').addClass('text-left')
-            }
             $('#loader').hide()
         }
     })
+    
+    // Hide length select & pagination if only one page
+    if (table.data().count() <= 10) {
+       $('#length, #pagination .dataTables_paginate').hide()
+       $('#search .dataTables_filter').addClass('text-left')
+    }
 
     // Reset search filter
     $('#users-list').on('keyup paste', 'input.search', function() {

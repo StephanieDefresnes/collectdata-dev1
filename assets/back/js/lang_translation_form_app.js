@@ -181,27 +181,44 @@ $(function() {
      * Translations list
      */
     // Datatables configuration
-    $('#dataTable-translations').DataTable({
+    var table = $('#dataTable-translations').DataTable({
         language: {
             url: '//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/'
                     + langs[$('html').attr('lang')] +'.json',
         },
-        dom: '<"row mb-2"<"#length.col-md-5"l><"#search.col-md-7"f>>'
+//        dom: '<"row mb-2"<"#length.col-md-5"l><"#search.col-md-7"f>>'
+//                +'<"table-responsive border"t>'
+//                +'<"row"<"col-md-6 small"i><"#pagination.col-md-6 mt-3"p>>',
+        dom: '<"d-flex justify-content-between row mb-2"<"#length.col-md-5"l><"#search.col-auto"f>>'
                 +'<"table-responsive border"t>'
                 +'<"row"<"col-md-6 small"i><"#pagination.col-md-6 mt-3"p>>',
         "columnDefs": [{
             orderable: false,
             targets: 0
         }],
-        "order": [ 1, 'asc' ],
+        "order": [[ 1, 'asc' ]],
         "fnDrawCallback": function(oSettings) {
-            // Hide length select & pagination if only one page
-            if ($('tbody tr').length <= 10) {
-                $('#length, #pagination .dataTables_paginate').hide()
-                $('#search .dataTables_filter').addClass('text-left')
-            }
+            $('#dataTable-translations_filter input').addClass('search')
             $('#loader').hide()
         }
+    })
+    
+    // Hide length select & pagination if only one page
+    if (table.data().count() <= 10) {
+       $('#length, #pagination .dataTables_paginate').hide()
+       $('#search .dataTables_filter').addClass('text-left')
+    }
+
+    // Reset search filter
+    $('#langs-list').on('keyup paste', 'input.search', function() {
+        $(this).parent().find('.clean-search').remove('.clean-search')
+        if ($(this).val() != '') {
+            $(this).parent().append('<span class="clean-search"><i class="fas fa-times"></i></span>')
+        }
+    })
+    $('#langs-list').on('click', '.clean-search', function() {
+        table.search('').columns().search('').draw();
+        $(this).remove()
     })
     
     // Add new Translation
