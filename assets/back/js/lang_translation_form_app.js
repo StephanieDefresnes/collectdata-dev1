@@ -186,9 +186,6 @@ $(function() {
             url: '//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/'
                     + langs[$('html').attr('lang')] +'.json',
         },
-//        dom: '<"row mb-2"<"#length.col-md-5"l><"#search.col-md-7"f>>'
-//                +'<"table-responsive border"t>'
-//                +'<"row"<"col-md-6 small"i><"#pagination.col-md-6 mt-3"p>>',
         dom: '<"d-flex justify-content-between row mb-2"<"#length.col-md-5"l><"#search.col-auto"f>>'
                 +'<"table-responsive border"t>'
                 +'<"row"<"col-md-6 small"i><"#pagination.col-md-6 mt-3"p>>',
