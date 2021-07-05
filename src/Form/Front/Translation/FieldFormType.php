@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Form\Back\Translation;
+namespace App\Form\Front\Translation;
 
 use App\Entity\TranslationField;
 use App\Service\LangService;
@@ -19,22 +19,6 @@ class FieldFormType extends AbstractType
 {       
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder
-            ->add('name', TextType::class, [
-                'label' => 'lang.translation.form.field.name',
-                'label_attr' => ['class' => 'text-secondary'],
-            ])
-            ->add('type', ChoiceType::class, [
-                'label' => 'lang.translation.form.field.type.label',
-                'label_attr' => ['class' => 'text-secondary'],
-                'row_attr' => ['class' => ''],
-                'attr' => ['class' => ''],
-                'choices'  => [
-                    'lang.translation.form.field.type.text' => 'text',
-                    'lang.translation.form.field.type.textarea' => 'textarea',
-                ],
-            ])
-        ;
         
     }
 

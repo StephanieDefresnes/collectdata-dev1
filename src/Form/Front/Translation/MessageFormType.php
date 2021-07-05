@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Form\Back\Translation;
+namespace App\Form\Front\Translation;
 
 use App\Entity\TranslationMessage;
-use App\Form\Back\Translation\FieldFormType;
+use App\Form\Front\Translation\FieldFormType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
@@ -17,26 +17,6 @@ class MessageFormType extends AbstractType
     {
         
         $builder
-            ->add('name', ChoiceType::class, [
-                'label' => 'lang.translation.form.message.name',
-                'label_attr' => ['class' => 'col-md-6 mt-1'],
-                'row_attr' => ['class' => 'mx-3 form-row'],
-                'attr' => [
-                    'class' => 'col-md-6',
-                    'data-message' => '',
-                    'data-status' => '',
-                ],
-                'choices'  => [
-                    'Back' => 'back_message',
-                    'Front' => 'front_message',
-                    'Message' => 'message',
-                    'Security' => 'security',
-                    'User' => 'user_message',
-                    'Validators' => 'validators',
-                    'Visitor' => 'visitor',
-                ],
-                'placeholder' => 'lang.translation.form.multiple_search'
-            ])
             ->add($builder->create('fields' , CollectionType::class, [
                 'entry_type'   => FieldFormType::class,
                 'label' => false,
