@@ -5,32 +5,18 @@ namespace App\Controller\Back;
 use App\Entity\Lang;
 use App\Entity\TranslationField;
 use App\Entity\TranslationMessage;
-use App\Form\Back\Translation\FieldFormType;
 use App\Form\Back\Translation\MessageFormType;
 use App\Repository\TranslationMessageRepository;
-use App\Repository\TranslationFieldRepository;
 use App\Service\TranslationService;
 use App\Service\UserFileService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Doctrine\Common\Collections\ArrayCollection;
-//use Symfony\Component\Form\CallbackTransformer;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-use Symfony\Component\Form\Extension\Core\Type\CollectionType;
-use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Serializer\Encoder\JsonEncoder;
-use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
-use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
-use Symfony\Component\Serializer\Serializer;
-use Symfony\Component\String\Slugger\SluggerInterface;
-use Symfony\Component\Serializer\Encoder\DecoderInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
@@ -143,7 +129,6 @@ class TranslationController extends AbstractController
         ]);
     }
     
-    
     /**
      * @Route("/edit", methods="GET")
      */
@@ -165,8 +150,6 @@ class TranslationController extends AbstractController
             'fields' => $fields,
         ]);
     }
-    
-    
 
     /**
      * @Route("/updateTranslation", methods="GET|POST")
