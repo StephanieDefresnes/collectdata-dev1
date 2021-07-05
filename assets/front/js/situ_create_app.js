@@ -243,11 +243,11 @@ function addResetSituItemScoreButton(scoreSelect){
     scoreSelect.after(resetChoiceButton)
     resetChoiceButton.on('click', function() {
 
+        // Get value into Action change
+        var scoreSelected = scoreSelect.val()
+            
         // If Action change value is defined
-        if (scoreSelect.parent().find('select').val() != '') {
-
-            // Get value into Action change
-            var scoreSelected = scoreSelect.parent().find('select').val()
+        if (scoreSelected != '') {
 
             // For each SituItemLi select score
             collectionHolder.find('select').each(function() {
@@ -256,20 +256,18 @@ function addResetSituItemScoreButton(scoreSelect){
                 $(this).find('option').each(function() {
                     // If value from Action change is current option from loop
                     // Remove a fake disabled
-                    if ($(this).attr('data-id') == scoreSelected
-                     || $(this).attr('value') == '') {
+                    if ($(this).attr('data-id') == scoreSelected) {
                         $(this).show()
                     } else {
                         $(this).removeAttr('disabled')
                     }
-                    $(this).parent().removeClass('bg-readonly')
                 })
 
             })
         }
         // Reset Current select
-        $(this).addClass('d-none').parent().find('select option[value=""]')
-                .prop('selected', true).parent().attr('disabled', false)
+        $(this).addClass('d-none').prev('select').removeClass('bg-readonly')
+                .find('option[value=""]').prop('selected', true)
     })
 }
 
