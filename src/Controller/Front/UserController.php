@@ -221,6 +221,7 @@ class UserController extends AbstractController
     public function update( Request $request,
                             SluggerInterface $slugger,
                             EntityManagerInterface $em,
+                            LangService $langService,
                             User $user): Response
     {
         $entityManager = $this->getDoctrine()->getManager();
@@ -246,6 +247,9 @@ class UserController extends AbstractController
         $contribLangs = $this->langService->getLangsEnabledOrNot(0);
         
         if ($form->isSubmitted() && $form->isValid()) {
+            
+            $langid = $form['langId']->getData();
+            $user->addLang($langService->getUserLang($langid));
             
             // Avatar
             $imageFilename = $form['imageFilename']->getData();
