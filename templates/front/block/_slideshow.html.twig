@@ -6,9 +6,9 @@
     {% if imgName < 0 %}
         {% set imgName = imgName * -1 + imgRandom %}
     {% endif %}
-        {% set imgLi %}
-            <li><span style="background-image:url('{{ absolute_url(asset('fullscreenslide/img/'~ imgName ~'.jpg')) }}')"></span></li>
-        {% endset %}
+    {% set imgLi %}
+        <li><span style="background-image:url('{{ asset('fullscreenslide/img/'~ imgName ~'.jpg') }}')"></span></li>
+    {% endset %}
     {{ imgLi }}
 {% endfor %}    
 </ul>

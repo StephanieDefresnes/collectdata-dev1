@@ -29,7 +29,7 @@
     background-repeat: none;
     opacity: 0;
     z-index: -10;
-	-webkit-backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
     -webkit-animation: imageAnimation 190s linear infinite 0s;
     -moz-animation: imageAnimation 190s linear infinite 0s;
     -o-animation: imageAnimation 190s linear infinite 0s;
