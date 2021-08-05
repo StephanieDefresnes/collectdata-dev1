@@ -1,3 +1,19 @@
-table tr td:last-child {
-    width: 110px;
+@import '~datatables.net-bs4/css/dataTables.bootstrap4.css';
+
+// global
+@import "../../scss/_variables";
+
+/* datatables */
+table {
+    &.dataTable {
+        margin: 0 !important;
+        & th {
+            &.sorting {
+                &::before, 
+                &::after {
+                    bottom: 0.5em;
+                }
+            }
+        }
+    }
 }

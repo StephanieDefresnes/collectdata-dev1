@@ -3,9 +3,9 @@
 namespace App\Service;
 
 use App\Entity\Situ;
+use App\Entity\SituItem;
 use App\Entity\Event;
-use App\Entity\CategoryLevel1;
-use App\Entity\CategoryLevel2;
+use App\Entity\Category;
 use App\Entity\Status;
 use App\Entity\Lang;
 use Doctrine\ORM\EntityManagerInterface;
@@ -24,26 +24,24 @@ class SituService {
         $query = $this->em->createQueryBuilder()
             ->from(Situ::class,'situ')
             ->select(  'situ.id                 id,
-                        situ.title              title, 
-                        situ.description        description, 
-                        situ.dateCreation       dateCreation, 
-                        situ.dateLastUpdate     dateLastUpdate, 
-                        situ.dateSubmission     dateSubmission, 
-                        situ.dateValidation     dateValidation, 
+                        situ.title              title,
+                        situ.description        description,
+                        situ.dateCreation       dateCreation,
+                        situ.dateLastUpdate     dateLastUpdate,
+                        situ.dateSubmission     dateSubmission,
+                        situ.dateValidation     dateValidation,
                         situ.statusId           statusId,
                         situ.translatedSituId   translatedSituId,
-                        evt.id                  eventId, 
-                        evt.title               eventTitle, 
-                        cat1.id                 cat1Id, 
-                        cat1.title              cat1Title, 
-                        cat2.id                 cat2Id, 
-                        cat2.title              cat2Title, 
-                        status.name             statusName, 
+                        evt.id                  eventId,
+                        evt.title               eventTitle,
+                        cat1.id                 cat1Id,
+                        cat1.title              cat1Title,
+                        cat2.id                 cat2Id,
+                        cat2.title              cat2Title,
                         lang.name               langName')
             ->leftJoin(Event::class, 'evt', 'WITH', 'situ.event=evt.id')
-            ->leftJoin(CategoryLevel1::class, 'cat1', 'WITH', 'situ.categoryLevel1=cat1.id')
-            ->leftJoin(CategoryLevel2::class, 'cat2', 'WITH', 'situ.categoryLevel2=cat2.id')
-            ->leftJoin(Status::class, 'status', 'WITH', 'situ.statusId=status.id')
+            ->leftJoin(Category::class, 'cat1', 'WITH', 'situ.categoryLevel1=cat1.id')
+            ->leftJoin(Category::class, 'cat2', 'WITH', 'situ.categoryLevel2=cat2.id')
             ->leftJoin(Lang::class, 'lang', 'WITH', 'situ.lang=lang.id')
             ->where("situ.userId = '$userId' ");
         
@@ -66,12 +64,48 @@ class SituService {
                 'cat1Title' =>          $situ['cat1Title'],
                 'cat2Id' =>             $situ['cat2Id'],
                 'cat2Title' =>          $situ['cat2Title'],
-                'statusName' =>         $situ['statusName'],
                 'langName' =>           html_entity_decode($situ['langName'], ENT_QUOTES, 'UTF-8'),
             ];
         }
         return $result;
         
+    }
+
+    public function getSituById($situId) 
+    {   
+        $query = $this->em->createQueryBuilder()
+            ->from(Situ::class,'situ')
+            ->select(  'situ.id                 id,
+                        situ.title              title, 
+                        situ.description        description,
+                        evt.id                  eventId, 
+                        cat1.id                 categoryLevel1Id, 
+                        cat2.id                 categoryLevel2Id,
+                        lang.id                 langId')
+            ->leftJoin(Event::class, 'evt', 'WITH', 'situ.event=evt.id')
+            ->leftJoin(Category::class, 'cat1', 'WITH', 'situ.categoryLevel1=cat1.id')
+            ->leftJoin(Category::class, 'cat2', 'WITH', 'situ.categoryLevel2=cat2.id')
+            ->leftJoin(Lang::class, 'lang', 'WITH', 'situ.lang=lang.id')
+            ->andWhere('situ.id = ?1')
+            ->setParameter(1, $situId);
+        
+        return $query->getQuery()->getOneOrNullResult();
+    }
+    
+    public function getSituItemsBySituId($situId)
+    {
+        $query = $this->em->createQueryBuilder()
+            ->from(SituItem::class,'item')
+            ->select('  item.id             id,
+                        item.title          title, 
+                        item.description    description,
+                        item.score          score')
+            ->andWhere('item.situ = ?1')
+            ->setParameter(1, $situId)
+            ->orderBy('item.score', 'ASC');
+        
+        $message = $query->getQuery()->getResult();
+        return $message;
     }
     
     public function countSitusByUser($userId)
@@ -139,5 +173,5 @@ class SituService {
         
         return $result;
     }
-
+    
 }

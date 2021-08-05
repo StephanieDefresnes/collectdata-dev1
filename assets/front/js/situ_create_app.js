@@ -1,67 +1,107 @@
 // css
 import '../scss/situ_create_app.scss'
+import 'select2/src/scss/core.scss';
+import 'select2-theme-bootstrap4/dist/select2-bootstrap.min.css'
 
-// js
+require('select2')
+
+function initSelect2(select) {
+    $(select).select2({
+        minimumResultsForSearch: Infinity,
+        width: 'resolve'
+    });
+}
+
 
 /**
  * Load datas or create them depending on User action
  */
 // Init forms
 function initSelectData(dataId) {
-    var select = '<select id="create_situ_form_'+ dataId +'"'
+    let select = '<select id="create_situ_form_'+ dataId +'"'
                     +' name="create_situ_form['+ dataId +']"'
                     +' class="form-control custom-select"></select>'
     return select
 }
 function initCreateData(dataId) {
-    var mb = dataId  == 'event' ? ' mb-0' : ''
-    var fields =
-        '<div id="create_situ_form_'+ dataId +'"><div class="form-group mt-1' + mb + '">'
-            +'<label for="create_situ_form_'+ dataId +'_title" class="required">Titre :</label>'
-            +'<input type="text" id="'+ dataId +'_title"'
-                +' name="create_situ_form['+ dataId +'][title]" required="required"'
-                +' placeholder="'+ translations[dataId +'-titlePlaceholder'] +'" class="form-control">'
+    let mb = dataId  == 'event' ? ' mb-0' : ''
+    let fields =
+        '<div id="create_situ_form_'+ dataId +'">'
+            +'<div class="form-group mt-1' + mb + '">'
+                +'<label for="create_situ_form_'+ dataId +'_title" class="required">Titre :</label>'
+                +'<input type="text" id="'+ dataId +'_title"'
+                    +' name="create_situ_form['+ dataId +'][title]" required="required"'
+                    +' placeholder="'+ translations[dataId +'-titlePlaceholder'] +'" class="form-control">'
             +'</div>'
     if (dataId == 'categoryLevel1' || dataId == 'categoryLevel2') {
         fields +=
             '<div class="mb-0 form-group">'
-            +'<label for="create_situ_form_'+ dataId +'_description" class="required">Description :</label>'
-            +'<textarea id="create_situ_form_'+ dataId +'_description"'
-                +' name="create_situ_form['+ dataId +'][description]" required="required" rows="3"'
-                +' placeholder="'+ translations[dataId +'-descriptionPlaceholder'] +'" class="form-control"></textarea>'
+                +'<label for="create_situ_form_'+ dataId +'_description" class="required">Description :</label>'
+                +'<textarea id="create_situ_form_'+ dataId +'_description"'
+                    +' name="create_situ_form['+ dataId +'][description]" required="required" rows="3"'
+                    +' placeholder="'+ translations[dataId +'-descriptionPlaceholder'] +'" class="form-control"></textarea>'
             +'</div>'
     }
     fields += '</div>'
     return fields
 }
 
-// Action when option select is changed
-function changeAction(selectId) {
-    var nextSelectId = selectId.parents('.formData').next().find('select').attr('id'),
-        lastData = 'categoryLevel2',
+// Action change on select
+function changeEvent(selectId) {
+    let nextSelectId = selectId.parents('.formData').next().find('select').attr('id'),
         $form = selectId.closest('form'),
         data = {}
     data[selectId.attr('name')] = selectId.val()
-    loadCategories($form, data, selectId, '#'+ nextSelectId, lastData)
+    loadOrCreateData($form, data, selectId, '#'+ nextSelectId)
 }
 
-// Load categories if exist or create them
-function loadCategories($form, data, selectId, nextSelectId, lastData) {
-    
-    if ($(nextSelectId).parents('.formData').hasClass('d-none')) {
-        $(nextSelectId)
-                .parents('.formData').removeClass('d-none').addClass('on-load')
-                .children('div').each(function() {
-                    $(this).animate({ opacity: 0}, 250); 
-                })
+// Show field with effect on action change
+function showField(id, classes) {
+    if (id.hasClass(classes))
+        id.removeClass(classes).children().animate({ opacity: 1}, 250)
+}
+
+// Toogle adding data button
+function toggleAddingButton(colClass, event) {
+    if (event == 'hide') {
+        $(colClass).each(function(){
+            $(this).html(initCreateData($(this).parents('.formData').attr('id')))
+                    .next('.colBtn').hide()
+        })
     } else {
-        $(nextSelectId)
-                .parents('.formData').addClass('on-load')
-                .children('div').each(function() {
-                    $(this).animate({ opacity: 0}, 250); 
-                })
+        $(colClass).each(function(){
+            if ($(this).children().is('select')) $(this).next('.colBtn').show()
+            else $(this).next('.colBtn').hide()
+        })
     }
+}
+
+// Add comment to unvalidated user option
+function unvalidatedOption(element) {
+        $(element).find('option').each(function() {
+            if ($(this).hasClass('to-validate')) {
+                $(this).append(' '+ translations['toValidate'])
+            }
+        })
+}
+
+// Load options select if exist or create new (eventListener)
+function loadOrCreateData($form, data, selectId, nextSelectId) {
     
+    let nextSelectParent = $(nextSelectId).parents('.formData')
+    
+    if ($(selectId).val() != '') {
+        // Show loader
+        nextSelectParent.addClass('on-load')
+                .children('div').each(function() {
+                    $(this).css({ opacity: 0}); 
+                })
+        if (nextSelectParent.hasClass('d-none')) nextSelectParent.removeClass('d-none')    
+        
+    }
+    else nextSelectParent.addClass('d-none on-load')
+    
+    // Load data from eventListener
     $.ajax({
         url: $form.attr('action'),
         type: $form.attr('method'),
@@ -70,56 +110,48 @@ function loadCategories($form, data, selectId, nextSelectId, lastData) {
             $(nextSelectId).replaceWith(
                 $(html).find(nextSelectId)
             )
-            if (!$(nextSelectId).is('select')
-              && $(selectId).attr('id') == 'create_situ_form_lang') {
-                $('.colDataLang').each(function(){
-                    $(this).html(initCreateData($(this).parents('.formData').attr('id')))
-                            .next('.colBtn').hide()
-                })
-                if ($('#categoryLevel1, #categoryLevel2').hasClass('d-none')
-                 || $('#categoryLevel1, #categoryLevel2').hasClass('on-load'))
-                    $('#categoryLevel1, #categoryLevel2').removeClass('d-none on-load')
-                        .children().animate({ opacity: 1}, 250)
-            } else if (!$(nextSelectId).is('select')
-              && $(selectId).attr('id') == 'create_situ_form_event') {
-                $('.colData').each(function(){
-                    $(this).html(initCreateData($(this).parents('.formData').attr('id')))
-                            .next('.colBtn').hide()
-                })
-                if ($('#categoryLevel1, #categoryLevel2').hasClass('d-none')
-                 || $('#categoryLevel1, #categoryLevel2').hasClass('on-load'))
-                    $('#categoryLevel1, #categoryLevel2').removeClass('d-none on-load')
-                        .children().animate({ opacity: 1}, 250)
-            } else if ($(nextSelectId).is('select')) {
+            // If data have to be created
+            if (!$(nextSelectId).is('select')) {
+                
+                if ($(selectId).attr('id') == 'create_situ_form_lang')
+                    toggleAddingButton('.colDataLang', 'hide')
+                else if ($(selectId).attr('id') == 'create_situ_form_event')
+                    toggleAddingButton('.colData', 'hide')
+                
+                showField($('#categoryLevel1, #categoryLevel2'), 'd-none') 
+                showField($('#categoryLevel1, #categoryLevel2'), 'on-load')
+                
+            } else {
+            // If options select exist
+            
+                initSelect2(nextSelectId)
+                
+                // Show column of adding/remove buttons
+                if ( $(selectId).attr('id') == 'create_situ_form_lang')
+                    toggleAddingButton('.colDataLang', 'show')
+                else if ($(selectId).attr('id') == 'create_situ_form_event')
+                    toggleAddingButton('.colData', 'show')
+                
+                // Reset adding/remove buttons
                 $('.formData').each(function(){
-                    $(this).find('button').remove()
-                    $(this).find('span').show()
+                    $(this).find('.btnRemove').remove()
+                    $(this).find('.btnAdd').show()
                 })
-            }
-            if ( $(selectId).attr('id') == 'create_situ_form_lang') {
-                $('.colDataLang').each(function(){
-                    if ($(this).children().is('select')) $(this).next('.colBtn').show()
-                    else $(this).next('.colBtn').hide()
-                })
-            } else if ($(selectId).attr('id') == 'create_situ_form_event') {
-                $('.colData').each(function(){
-                    if ($(this).children().is('select')) $(this).next('.colBtn').show()
-                    else $(this).next('.colBtn').hide()
-                })
-            }
-            if ($(nextSelectId).is('select')) {
-                $(nextSelectId).find('option').each(function() {
-                    if ($(this).hasClass('to-validate')) {
-                        $(this).append(' '+ translations['toValidate'])
-                    }
-                })
+                unvalidatedOption(nextSelectId)
             }
             
-            if($(nextSelectId).parents('.formData').hasClass('on-load')) {
-                $(nextSelectId)
-                        .parents('.formData').removeClass('on-load')
+            // Show next selection container
+            if ($(selectId).val() != '') {
+                if(nextSelectParent.hasClass('on-load')) {
+                    nextSelectParent.removeClass('d-none on-load')
+                            .children('div').each(function() {
+                                $(this).animate({ opacity: 1}, 250);
+                            })
+                }
+            } else {
+                nextSelectParent.addClass('d-none on-load')
                         .children('div').each(function() {
-                            $(this).animate({ opacity: 1}, 250);
+                            $(this).css({ opacity: 0}); 
                         })
             }
         }
@@ -128,36 +160,50 @@ function loadCategories($form, data, selectId, nextSelectId, lastData) {
 
 // Toggle fields to keep current categories
 function toggleFields(dataEntity) {
-    var objFields = {
+    let objFields = {
         'oldFields': [],
         'newFields': []
     }
+    $('#create_situ_form_'+ dataEntity).select2('destroy');
     objFields['oldFields'].push($('#form-'+ dataEntity).html())
     objFields['newFields'].push(initCreateData(dataEntity))
 
     return objFields;
 }
-// Add Event or category level 1&2
+
+// Add Data
 function toggleNewFields(newFields, dataEntity) {
+    
     // Replace select with new fields
-    $('#form-'+ dataEntity).html(newFields).next('.colBtn').find('span').hide()
-    // Deploy new fields depending on Add button
+    $('#form-'+ dataEntity).html(newFields).next('.colBtn').find('.btnAdd').hide()
+    
+    // Deploy new fields depending on Add button click
     if (dataEntity == 'event') {
-        // If add eventID, create category level 1&2
+        
+        // If add event, create categories too and show fields
         $('#form-categoryLevel1').html(initCreateData('categoryLevel1'))
         $('#form-categoryLevel2').html(initCreateData('categoryLevel2'))
+        
+        // Reset adding/remove buttons
         $('#add-categoryLevel1-btn, #add-categoryLevel2-btn').hide()
-        $('#add-categoryLevel1, #add-categoryLevel2').find('button').remove()
+        $('#add-categoryLevel1, #add-categoryLevel2').find('.btnRemove').remove()
+        
+        // And show fields for adding data
         if ($('#categoryLevel1, #categoryLevel2').hasClass('on-load')
          || $('#categoryLevel1, #categoryLevel2').hasClass('d-none')) {
             $('#categoryLevel1, #categoryLevel2').removeClass('d-none on-load')
                 .children().animate({ opacity: 1}, 250)
         }
+        
     } else if (dataEntity == 'categoryLevel1') {
-        // If add categoryLevelId, create categoryLevel2Id
+        // If add category Level 1, create category Level
         $('#form-categoryLevel2').html(initCreateData('categoryLevel2'))
+        
+        // Reset adding/remove buttons
         $('#add-categoryLevel2-btn').hide()
-        $('#add-categoryLevel2').find('button').remove()
+        $('#add-categoryLevel2').find('.btnRemove').remove()
+        
+        // And show fields for adding data
         if ($('#categoryLevel2').hasClass('on-load')
          || $('#categoryLevel2').hasClass('d-none')) {
             $('#categoryLevel2').removeClass('d-none on-load')
@@ -165,17 +211,18 @@ function toggleNewFields(newFields, dataEntity) {
         }
     }
 }
+
 // Reset Event or category level 1&2 select
 function toggleOldFields(oldFields, dataEntity) {
-    var resetNewFields = 
-        $('<button type="button" class="m-0 pt-0 px-0 border-0 btn bg-transparent h6 text-danger">'
+    let resetNewFields = 
+        $('<button type="button" class="btnRemove m-0 pt-0 px-0 border-0 btn bg-transparent h6 text-danger">'
             +'<i class="fas fa-times-circle"></i>'
             +'</button>')
         $('#add-'+ dataEntity).append(resetNewFields)
 
     resetNewFields.on('click', function() {
         // Get back data from select
-        $('#form-'+ dataEntity).html(oldFields).next('.colBtn').find('span').show()
+        $('#form-'+ dataEntity).html(oldFields).next('.colBtn').find('.btnAdd').show()
         resetNewFields.remove()
 
         // Reset select depending on ResetNewFields button
@@ -191,29 +238,43 @@ function toggleOldFields(oldFields, dataEntity) {
             $('#categoryLevel2').addClass('d-none on-load')
                 .children().animate({ opacity: 1}, 250)
         }
+        initSelect2('select')
+        $('select').each(function() {
+            if ($(this).val() != '')
+                $(this).parent().find('.select2-selection__rendered').addClass('selection-on')
+        })
     })
-}
-    
+} 
 
 /**
  * Add SituItem collection functions
  */
 // Get the ul that holds the collection of tags
-var collectionHolder = $('#situItems')
+let collectionHolder = $('#situItems')
+
+function addInfoTooltip(situItemLi) {
+    let info =
+            '<span class="p-2 score-info" data-toggle="tooltip" data-placement="right"'
+                +' title="'+ translations['scoreInfo'] +'">'
+                +'<i class="far fa-question-circle"></i></span>'
+        
+    situItemLi.find('.label-score').append(info)
+    situItemLi.find('.score-info').tooltip()
+}
 
 // Add Delete button for each situItem added
 function addSituItemLiDeleteButton(situItemLi) {
-    var removeFormButton = 
-            $('<button type="button" class="btn btn-outline-danger float-right mt-1">'
+    let removeLiBtn = 
+            $('<button type="button" class="btn btn-outline-danger float-right mt-1 mx-3">'
                 +'<i class="far fa-trash-alt"></i>'
             +'</button>')
-    situItemLi.prepend(removeFormButton)
+    situItemLi.prepend(removeLiBtn)
     
-    removeFormButton.on('click', function() {
+    $(removeLiBtn).on('click', function() {
         // If Current value is defined
         if (situItemLi.find('select').val() != '') {
             // Get current value
-            var scoreSelected = situItemLi.find('select').val()
+            let scoreSelected = situItemLi.find('select').val()
             // For each SituItemLi select score
             collectionHolder.find('select').each(function() {
                 // Check options
@@ -229,113 +290,105 @@ function addSituItemLiDeleteButton(situItemLi) {
         situItemLi.remove()
         // Hide Adding button when all options are selected
         if (collectionHolder.find('li').length < 4 ) {
-            $('#add-situ').show()
+            $('#add-situItem').show()
         }
     })
 }
 
-// Add reset button for each score situItem seleted
-function addResetSituItemScoreButton(scoreSelect){
-    var resetChoiceButton = 
-            $('<button type="button" class="h5 border-0 bg-transparent position-absolute d-none">'
-                +'<i class="fas fa-times-circle"></i>'
-                +'</button>')
-    scoreSelect.after(resetChoiceButton)
-    resetChoiceButton.on('click', function() {
+// Add Score selection info tooltip
+function addInfo(scoreSelect) {
+    let info = '<span class="p-2 score-info" data-toggle="tooltip" data-placement="right"'
+                +' title="'+ translations['scoreInfo'] +'">'
+                +'<i class="far fa-question-circle"></i>'
+    $('.score-info').tooltip()
+    scoreSelect.after(info)
+}
 
-        // Get value into Action change
-        var scoreSelected = scoreSelect.val()
-            
-        // If Action change value is defined
-        if (scoreSelected != '') {
-
-            // For each SituItemLi select score
-            collectionHolder.find('select').each(function() {
-
-                // Check options
-                $(this).find('option').each(function() {
-                    // If value from Action change is current option from loop
-                    // Remove a fake disabled
-                    if ($(this).attr('data-id') == scoreSelected) {
-                        $(this).show()
-                    } else {
-                        $(this).removeAttr('disabled')
-                    }
-                })
-
+// Add a placeholder class to empty option score selection
+function addPlaceholderClass(newElem) {
+    if (newElem == '') {
+        collectionHolder.find('select').each(function() {
+            $(this).find('option').each(function() {
+                if ($(this).val() == '') $(this).addClass('placeholder')
             })
-        }
-        // Reset Current select
-        $(this).addClass('d-none').prev('select').removeClass('bg-readonly')
-                .find('option[value=""]').prop('selected', true)
-    })
-}
-
-// Update free or used scores options for each situItem score selected
-function updateAllScores(newValue, oldValue) {
-    // Check all Score select fields
-    collectionHolder.find('select').each(function() {
-
-        // Value from current select
-        var currentValue = $(this).val()
-
-        // Check options from current select
-        $(this).find('option').each(function() {
-
-            // If new value into Action change
-            if (oldValue == '') {
-
-                // If new value from Action change is current option from loop
-                if ($(this).attr('data-id') == newValue) {
-
-                    $(this).hide()
-                    // If Value from current select is defined
-                    if (currentValue != '') {
-                        // Show Reset SituItemScore Button
-                        $(this).parent().next('button').removeClass('d-none')
-
-                    } else {
-                        $(this).parent().next('button').addClass('d-none')
-                    }
-
-                } else if ($(this).attr('data-id') == '') {
-                    $(this).parent().next('button').addClass('d-none')
-                }
-
-            }
         })
+    } else {
+        newElem.find('select').each(function() {
+            $(this).find('option').each(function() {
+                if ($(this).val() == '') $(this).addClass('placeholder')
+            })
+        })
+    }
+}
+
+// Toggle Score selection placeholder text
+function togglePlaceholder(select, newValue) {
+    if (newValue == '')
+        select.find('.placeholder').text(translations['scoreLabel'])
+    else
+        select.find('.placeholder').text(translations['scoreLabelAlt'])
+}
+
+// Toggle class to placeholder if empty
+function toggleClassSelection(newElem) {
+    newElem.find('select').on('change', function() {
+        if ($(this).val() == '' && $(this).hasClass('selection-on'))
+            $(this).removeClass('selection-on')
+        else $(this).addClass('selection-on')
     })
 }
 
-// Update free or used scores options for current situItem score action
-function updateCurrentScore(newElem) {
-    var oldValue = ''
-    newElem.find('select').on('focus', function () {
-        // Get old value
-        oldValue = this.value
-    }).change(function(){
-    // When change value
-        // Get new value
-        var newValue = $(this).val()
+// Update all options for each score when adding a situItem
+function newScore() {
+    collectionHolder.find('select').each(function() {
+        let newValue = '', oldValue = ''
+        $(this).on('focus', function () { oldValue = this.value })
+                .change(function(){
+                    // Add a class to current
+                    $(this).addClass('onSelect')
+                    newValue = $(this).val()
+                    checkScores(newValue, oldValue)
+                    togglePlaceholder($(this), newValue)
+                    $(this).find('option').each(function() {
+                        if ($(this).val() == newValue && newValue != '')
+                            $(this).addClass('selected')
+                    })
+                })
+    })
+}
 
-        // If new value
-        if (oldValue == '') {
-            $(this).find('option').each(function(){
-                $(this).removeAttr('selected');
-                if ($(this).attr('data-id') == newValue) {
-                    $(this).attr('selected', 'selected')
-                // Make a fake disabled
-                } else if ($(this).attr('value') == '') {
-                    $(this).hide()
-                } else {
-                    $(this).attr('disabled', 'disabled')
+// Update all options for each situItem score depending on new elem value
+function checkScores(newValue, oldValue) {
+    collectionHolder.find('select').each(function() {
+        // If current Score selection
+        if ($(this).hasClass('onSelect')) {
+            $(this).find('option').each(function() {
+                // If reset selection
+                if ($(this).hasClass('selectable')
+                        && oldValue != ''
+                        && $(this).attr('data-id') == oldValue
+                        && $(this).hasClass('selected')) {
+                    $(this).removeClass('selected')
                 }
-                $(this).parent().addClass('bg-readonly')
             })
         }
-
-        // Check all score selects
-        updateAllScores(newValue, oldValue)
+        // Any else Score selection
+        else {
+            $(this).find('option').each(function() {
+                if ($(this).hasClass('selectable')) {
+                    // Disable selected option from current Score selection
+                    if ($(this).attr('data-id') == newValue && newValue != '') {
+                        $(this).addClass('bg-readonly').prop('disabled', true)
+                    }
+                    // Enable unselected option from current Score selection
+                    if ($(this).attr('data-id') == oldValue && oldValue != '') {
+                        $(this).removeClass('bg-readonly').prop('disabled', false)
+                    }
+                }
+            })
+        }
+        // And the end of change, reset current Score selection
+        if ($(this).hasClass('onSelect')) $(this).removeClass('onSelect')
     })
 }
 
@@ -347,56 +400,55 @@ function checkField(formKO, newElem, field) {
     })
     return formKO
 }
-function showFooter(newElem) {
-    newElem.find('select, input, textarea').on('keyup paste change', function() {
-        var formKO = 0
-        formKO += checkField(formKO, newElem, 'select')
-        formKO += checkField(formKO, newElem, 'input')
-        formKO += checkField(formKO, newElem, 'textarea')
-        if (formKO == 0 && $('.card-footer').hasClass('d-none')) {
-            $('.card-footer').delay(1500).removeClass('d-none')
-                    .animate({ opacity: 1}, 500);
-        }
+function showFooter(elem) {
+    elem.find('select, input, textarea').on('keyup paste change', function() {
+        let formKO = 0
+        formKO += checkField(formKO, elem, 'select:not(#create_situ_form_situItems_0_score)')
+        formKO += checkField(formKO, elem, 'input')
+        formKO += checkField(formKO, elem, 'textarea')
+        if (formKO == 0 && $('.card-footer').hasClass('d-none'))
+            $('.card-footer').removeClass('d-none').animate({ opacity: 1}, 250)
     })
 }
 
 // Add itemSitu from prototype
 function addSituItem(button) {
 
-    var list = $(button.attr('data-list-selector'))
-    var counter = list.attr('data-widget-counter') || list.children().length
-    var newWidget = list.attr('data-prototype')
+    let list = $(button.attr('data-list-selector'))
+    let counter = list.attr('data-widget-counter') || list.children().length
+    let newWidget = list.attr('data-prototype')
 
     newWidget = newWidget.replace(/__name__/g, counter)
     counter++
     list.attr('data-widget-counter', counter)
 
-    var newElem = $(list.attr('data-widget-situItems')).html(newWidget)
+    let newElem = $(list.attr('data-widget-situItems')).html(newWidget)
 
-    var selected = []
+    // Update newElem depending on scores already selected
+    let selected = []
     collectionHolder.find('select').each(function() {
-        if ($(this).val() != '') {
+        if ($(this).val() != '' && $(this).val() != 0) {
             selected.push($(this).val())
         }
     })
-
     newElem.find('option').each(function() {
         if (selected.includes($(this).attr('data-id'))) {
-
-            if ($(this).is('[selected]')) $(this).removeAttr('selected')
-            $(this).hide()
+            $(this).addClass('bg-readonly').prop('disabled', true)
         }
-        if ($(this).attr('data-id') == 0) $(this).hide()
+        $(this).removeAttr('selected')
     })
-    addSituItemLiDeleteButton(newElem)
-    addResetSituItemScoreButton(newElem.find('select'))
-    updateCurrentScore(newElem)
+    
+    addInfoTooltip(newElem)
+    addSituItemLiDeleteButton(newElem)  
+    addPlaceholderClass(newElem)
+    toggleClassSelection(newElem)
     newElem.appendTo(list)
+    newScore()
     showFooter(newElem)
 
     // Hide Adding button when all options are selected
     if (collectionHolder.find('li').length == 4 ) {
-        $('#add-situ').hide()
+        $('#add-situItem').hide()
     }
 }
     
@@ -405,34 +457,154 @@ function addSituItem(button) {
  */
 // Set status value depending on submitted button
 function submissionStatus(buttonId) {
-    var statusId;
+    let statusId;
     buttonId == 'save-btn' ? statusId = 1 : statusId = 2
     $('#create_situ_form_statusId').val(statusId)
 }
 
+// Set data if selected or created
+function setData(entity) {
+    let data;
+    if (!$('#create_situ_form_'+entity).is('select')) {
+        if (entity != 'event') {
+            data = {
+                'title':        $('input[name="create_situ_form['+ entity +'][title]"]').val(),
+                'description':  $('textarea[name="create_situ_form['+ entity +'][description]"]').val(),
+            }
+        } else
+            data = {
+                'title': $('input[name="create_situ_form['+ entity +'][title]"]').val()
+            }
+    }
+    else data = $('#create_situ_form_'+ entity).val()
+        console.log()
+    return data
+}
+
+// Send data Situ
+function createOrUpdateSitu(dataForm) {
+    $.ajax({
+        url: "/"+ path['locale'] +"/ajaxSitu",
+        method: 'POST',
+        data: {dataForm},
+        success: function(data) {
+            location.href = data['redirection']['targetUrl'];
+        },
+        error: function() {
+            let statusId = $('#create_situ_form_statusId').val()
+            
+            $('#flash_message').find('.icon').remove()
+            $('#flash_message').find('.alert')
+                    .prepend('<span class="icon text-danger">'
+                                +'<i class="fas fa-exclamation-circle"></i>'
+                            +'</span>')
+                    .find('.msg').html(translations['flashError'+ statusId])
+            window.scrollTo({top: 0, behavior: 'smooth'});
+            $('#flash_message').show().delay(3000).fadeOut();
+        }
+    })
+}
+
+/*
+ * Update Situ
+ */
+// Get data Translation
+function selectSitu(id) {
+    $.ajax({
+        url: "/"+ path['locale'] +"/situ/edit",
+        method: 'GET',
+        data: { id: id },
+        success: function(data) {
+            $('h1').html(translations['h1Update'])
+            loadData('lang', data.situ.langId)
+            loadData('event', data.situ.eventId)
+            loadData('categoryLevel1', data.situ.categoryLevel1Id)
+            loadData('categoryLevel2', data.situ.categoryLevel2Id)
+            $('#create_situ_form_title').val(data.situ.title)
+            $('#create_situ_form_description').val(data.situ.description)
+            loadSituItems(data.situItems, data.situItems.length)
+            if(data.situItems.length == 4) $('#add-situItem').hide()
+        },
+        error: function(data) {
+            console.log('ko')
+        }
+    })
+}
+// Load Event & categories
+function loadData(name, value) {
+    let dataExist = setInterval(function() {
+        if ($('#create_situ_form_'+ name +' option').length) {
+           $('#create_situ_form_'+ name).val(value).trigger('change')
+                .parent().find('.select2-selection__rendered').addClass('selection-on')
+           clearInterval(dataExist)
+           if (name == 'categoryLevel2') $('#loader').hide()
+        }
+    }, 50);
+}
+
+// Load SituItems from prototype
+function loadSituItems(data, counter) {
+    let list = $('#situItems')
+    
+    // Reset persistent SituItem
+    list.find('li').remove()
+    
+    // Reload all SituItems
+    for (let i = 0; i < counter; i++) {
+        let newWidget = list.attr('data-prototype')
+        newWidget = newWidget.replace(/__name__/g, i)
+        let newElem = $(list.attr('data-widget-situItems')).html(newWidget)
+        
+        addInfoTooltip(newElem)
+        addSituItemLiDeleteButton(newElem)
+        addPlaceholderClass(newElem)
+        loadItemsValue(data, newElem, i)
+        toggleClassSelection(newElem)
+        newElem.appendTo(list)
+        newScore()
+        showFooter(newElem)
+    }
+    list.attr('data-widget-counter', counter)
+}
+
+// Load Values fields
+function loadItemsValue(data, newElem, i) {
+    $(newElem).find('input').val(data[i].title)
+    $(newElem).find('textarea').val(data[i].description)
+    $(newElem).find('select option').each(function() {
+        if ($(this).val() == '') {
+            $(this).text(translations['scoreLabelAlt'])
+        }
+        else if ($(this).val() == data[i].score) {
+            $(this).prop('selected', true).addClass('selected')
+            $(this).parent().addClass('selection-on')
+        } else {
+            $(this).addClass('bg-readonly').prop('disabled', true)
+        }
+    })
+}
 
 $(function() {
     
+    // User lang or optional user lang empty case
+    if ($('#create_situ_form_lang option').length <= 2) $('#lang').remove()
+    
+    initSelect2('.card-header select')
+
     // Load translation if need
     $('body').find('select').each(function() {
-        $(this).find('option').each(function() {
-            if ($(this).hasClass('to-validate')) {
-                $(this).append(' '+ translations['toValidate'])
-            }
-        })
+        unvalidatedOption(this)
     })
     
-    if ( !$('#create_situ_form_event').is('select')
-       && $('#categoryLevel1').hasClass('d-none')
-       && $('#categoryLevel2').hasClass('d-none') ) {
-        $('#categoryLevel1, #categoryLevel2').removeClass('d-none on-load')
-                .children().animate({ opacity: 1}, 250)
+    // Show fields if no event exist on locale
+    if (!$('#create_situ_form_event').is('select')) {
+        showField($('#categoryLevel1'), 'd-none on-load') 
+        showField($('#categoryLevel2'), 'd-none on-load') 
     }
     
-    // Ajustments
-    $('#create_situ_form_lang option').first().addClass('text-dark')
+    // Hide adding data button if data must have to be created (choices empty)
     $('.colDataLang').each(function(){
-        if (!$(this).children().is('select')) $(this).next().find('span').hide()
+        if (!$(this).children().is('select')) $(this).next().find('.btnAdd').hide()
     })
     
     /**
@@ -446,17 +618,17 @@ $(function() {
                                 +'#create_situ_form_event, '
                                 +'#create_situ_form_categoryLevel1, '
                                 +'#create_situ_form_categoryLevel2', function() {
-            if ($(this).is('select')) {                
+            if ($(this).is('select')) {
                 
-                // Reset selects before action
+                let rendered = $(this).parent().find('.select2-selection__rendered')
+                if ($(this).val() == '' && rendered.hasClass('selection-on'))
+                    rendered.removeClass('selection-on')
+                else rendered.addClass('selection-on')
+                    
+                // Reset selects before loading data
                 if ($(this).attr('id') == 'create_situ_form_lang') {
+                    if ($(this).val() == '') $('#event').addClass('d-none')
                     $('#categoryLevel1, #categoryLevel2').addClass('d-none')
-                    if ($(this).val != '') $(this).addClass('text-capitalize')
-                    else {
-                        if ($(this).hasClass('text-capitalize')) {
-                            $(this).removeClass('text-capitalize')
-                        }
-                    }
                     $('.formData').each(function(){
                         $(this).find('.colDataLang')
                                 .html(initSelectData($(this).attr('id')))
@@ -471,44 +643,46 @@ $(function() {
                     $(this).parents('.formData').next().find('.colData')
                         .html(initSelectData('categoryLevel2'))
                 } else {
-                    if ($('.card-body').hasClass('d-none')) {
-                        $('.card-body').removeClass('d-none')
-                                .animate({ opacity: 1}, 500);
-                    }
+                    if ($('.card-body').hasClass('d-none'))
+                        $('.card-body').removeClass('d-none').animate({ opacity: 1}, 250)
                 }
             }
-            // Load event/categories on create it in ajax
-            changeAction($(this))
+            // Load data or create them on action change
+            changeEvent($(this))
         })
         
     } else {
-        // If no optional language neither no eventId, change Bootstrap class & hide add button
-        $('.colBtn').each(function(){
-            $(this).hide()
-        })
+        // If no optional language neither no eventId, hide add button
+        $('.colBtn').each(function(){ $(this).hide() })
+        
     }
+    
+    // Show card-body if create categoryLevel2
+    $('form').on('keyup paste', '#create_situ_form_categoryLevel2_description', function() {
+        if ($('.card-body').hasClass('d-none'))
+            $('.card-body').removeClass('d-none').animate({ opacity: 1}, 250)
+    })
     
     // Toogle Add / Select data
     $('form').on('click', '#add-event-btn, #add-categoryLevel1-btn, '+
             '#add-categoryLevel2-btn', function() {
-        var objFields = toggleFields($(this).attr('data-id'))
+        let objFields = toggleFields($(this).attr('data-id'))
         toggleNewFields(objFields['newFields'], $(this).attr('data-id'))
         toggleOldFields(objFields['oldFields'], $(this).attr('data-id'))
+        let entity = $(this).attr('data-id')
     })
     
 
     /**
      * Add SituItem collection
      */
-    // Add a delete link to all of the existing situItem form li elements
+    // Show footer depending on SituItems lenght
     collectionHolder.find('li').each(function() {
-        addSituItemLiDeleteButton($(this))
+        showFooter($(this))
     })
     
     // Init once required
-    $(document).ready(function() {
-        addSituItem($('#add-itemSitu-link'))
-    });
+    addSituItem($('#add-itemSitu-link'))
     
     // Than add until 4 itemSitu
     $('#add-itemSitu-link').click(function () {
@@ -520,7 +694,90 @@ $(function() {
      * Submission
      */
     $('#save-btn, #submit-btn').click(function(){
-        submissionStatus($(this).attr('id'))
+        
+        $('form').find('.form-control').each(function() {
+            if ($(this).val() == '' && !$(this).is('select')) 
+                $(this).addClass('empty-value')
+            else if ($(this).val() == '' && $(this).is('select')) {
+                $(this).parent().find('.select2-selection__rendered')
+                        .addClass('empty-value')
+            }
+        })
+        
+        if ($('.empty-value').length == 0) {
+        
+            $('#loader').show()
+
+            let lang, event, categoryLevel1, categoryLevel2,
+                title, description, statusId, id, dataForm,
+                situItems = []
+
+            submissionStatus($(this).attr('id'))
+
+            lang = $('#create_situ_form_lang').val() == '' ? 47
+                    : $('#create_situ_form_lang').val()
+            event = setData('event')
+            categoryLevel1 = setData('categoryLevel1')
+            categoryLevel2 = setData('categoryLevel2')        
+            title = $('#create_situ_form_title').val()
+            description = $('#create_situ_form_description').val()
+            statusId = $('#create_situ_form_statusId').val()
+            id = $('#situ').attr('data-id')
+
+            $('#situItems li').each(function() {
+                let score, titleItem, descItem
+                $(this).find('.form-control').each(function() {
+                    if($(this).hasClass('score-item')) {
+                        score =     $(this).val()
+                    } else if($(this).hasClass('score-title')) {
+                        titleItem = $(this).val()
+                    } else {
+                        descItem =  $(this).val()
+                    }
+                })
+                situItems.push({
+                    'score':        score,
+                    'title':        titleItem,
+                    'description':  descItem
+                })
+            })
+
+            dataForm = {
+                'id': id,
+                'lang': lang,
+                'event': event,
+                'categoryLevel1': categoryLevel1,
+                'categoryLevel2': categoryLevel2,
+                'title': title,
+                'description': description,
+                'situItems': situItems,
+                'statusId': statusId
+            }
+            createOrUpdateSitu(dataForm)
+            
+        } else {
+            let error =
+                    '<div class="alert alert-danger mt-4" role="alert">'
+                        +'<span class="icon text-danger">'
+                            +'<i class="fas fa-exclamation-circle"></i>'
+                            +translations['formError']
+                        +'</span>'
+                    +'</div>'
+            $('#form-error').css('opacity', 0).empty().append(error).animate({ opacity: 1}, 250)
+        }
     })
+    
+    /**
+     * Update situ
+     */
+    let situId = $('#situ').attr('data-id')
+    if (situId != '') {
+        selectSitu(situId)
+        $('#event, #categoryLevel1, #categoryLevel2, .card-body, .card-footer')
+                .removeClass('d-none')
+        addPlaceholderClass('')
+    } else {
+        $('#loader').hide()
+    }
     
 })

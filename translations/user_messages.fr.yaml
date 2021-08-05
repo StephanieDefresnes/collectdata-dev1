@@ -9,6 +9,10 @@ nav:
         user: Mes contributions
         add: Ajouter une contribution
         translate: Traduire une contribution
+    translation:
+        title: Traduction
+        dashboard: Mes traductions
+        create: Traduire le site        
 account:
     reset_password: Modifier mon mot de passe
     image:
@@ -28,14 +32,17 @@ account:
         label: 'Email :'
         unique_email: Il y a déjà un compte avec cet email. Veuillez entrer un nouvel e-mail.
     lang:
-        current: 'Langue usuelle :'
+        current: 'Langue :'
+        all: 'Langues :'
         option: 'Langues optionnelles :'
         placeholder: Choisir une langue
         default: Défaut (FR)
+        search_multiple: Rechercher
     roles: 
         title: 'Statut :'
         title_s: 'Statuts :'
-        user: Contributeur
+        user: Utilisateur
+        contributor: Contributeur
         moderator: Modérateur
         admin: Administrateur
         super_admin: Super administrateur
@@ -55,7 +62,7 @@ account:
             success: Votre profil a bien été modifié
     translator:
         checkbox: Je souhaite que de nouvelles langues soient ajoutées, et je veux contribuer à la traduction du site
-        translate: 'Sélectionner la ou les langues proposée(s) à la traduction :'
+        translate: 'Sélectionner la ou les langue(s) proposée(s) à la traduction :'
         status: Traducteur du site
         choice: 'Vous proposez de traduire le site en langue :'
         choice_s: 'Vous proposez de traduire le site en langues :'
@@ -108,6 +115,27 @@ account:
                     success: Le fichier a bien été supprimé
                     error: Une erreur s'est produite lors de la suppression du fichier
                 error: Une erreur s'est produite lors du traitement du fichier
+button:
+    add: Ajout
+    back: Retour
+    cancel: Annuler
+    create: Ajouter
+    delete: Supprimer
+    delete_title: Supprimer
+    disable: Désactiver
+    down: Descendre
+    enable: Activer
+    filter: Filtre
+    next: Suivant
+    previous: Précédent
+    read_title: Détails
+    remove: Supprimer
+    save: Enregistrer
+    submit: Soumettre
+    switch: Explorer
+    up: Monter
+    update_title: Modifier
+    validate: Valider
 contrib:
     title: Mes contributions
     table:
@@ -135,17 +163,23 @@ contrib:
             read: Lire
             edit: Modifier
             delete: Supprimer
+        update:
+            flash:
+                error: Une erreur s'est produite lors de la récupération de la situation
     form:
         multiple_search: Rechercher
         to_validate: ( validation en cours )
         situ:
-            h2: La situation à risque
-            label: Ajouter une situation à risque
+            h1: Ajouter une situation à risque
+            h1_update: Modifier une situation à risque
+            label: La situation à risque
             title: 'Titre :'
             title_placeholder: Courte description de la situation
             description: 'Description :'
             description_placeholder: Description détaillée de la situation
-        lang: Langue de la situation
+        lang:
+            label: Langue de la situation
+            placeholder: Choisir une langue
         event:
             label: Ajouter un événement
             placeholder: Choisir un événement
@@ -184,13 +218,31 @@ contrib:
                 warning: Attention
                 danger: Danger
                 placeholder: Attribuer un score
-        submit:
-            btn: Envoyer
-            flash:
-                success: La situation a bien été envoyée
-                error: Une erreur s'est produite lors de l'envoi de la situation
+                placeholder_alt: Libérer le score
+                tooltip: Si besoin, libérez un score pour le sélectionner ici
         save:
             btn: Enregistrer
             flash:
                 success: La situation a bien été enregistrée
+                success_update: Les modifications ont bien été enregistrées
                 error: Une erreur s'est produite lors de l'enregistrement de la situation
+        submit:
+            btn: Envoyer
+            flash:
+                success: La situation a bien été envoyée
+                success_update: Les modifications ont bien été envoyées
+                error: Une erreur s'est produite lors de l'envoi de la situation
+        error: Veuillez renseigner tous les champs.
+translation:
+    title: Mes traductions
+    form:
+        title: Créer une traduction du site
+        create: 'Créer une traduction environnement :'
+        update: Modifier une traduction du site
+        table:
+            title: Tableau de données/texte à traduire
+    table:
+        empty: Aucune traduction de site
+        name: Nom
+        date_status: Création
+        langs: Langue(s)

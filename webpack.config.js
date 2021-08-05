@@ -10,6 +10,7 @@ Encore
         pattern: /\.(png|jpg|jpeg)$/
     })
     .addEntry('app', './assets/js/app.js')
+    .addEntry('flp_theme', './assets/js/flp_theme.js')
     .splitEntryChunks()
     .enableSingleRuntimeChunk()
     .cleanupOutputBeforeBuild()

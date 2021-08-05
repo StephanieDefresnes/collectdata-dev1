@@ -2,15 +2,15 @@
 
 namespace App\Entity;
 
-use App\Repository\CategoryLevel1Repository;
+use App\Repository\CategoryRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass=CategoryLevel1Repository::class)
+ * @ORM\Entity(repositoryClass=CategoryRepository::class)
  */
-class CategoryLevel1
+class Category
 {
     /**
      * @ORM\Id
@@ -45,36 +45,44 @@ class CategoryLevel1
     private $validated;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Lang", inversedBy="categoriesLevel1")
+     * @ORM\ManyToOne(targetEntity=Lang::class, inversedBy="categories")
+     * @ORM\JoinColumn(nullable=false)
      */
     private $lang;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Event", inversedBy="categoriesLevel1")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Event", inversedBy="categories")
      */
     private $event;
     
-    /*
-     * @ORM\OneToMany(targetEntity="App\Entity\CategoryLevel2", cascade={"persist"}, mappedBy="categoryLevel1")
+    /**
+     * @ORM\ManyToOne(targetEntity=Category::class, inversedBy="categoriesLevel2")
      */
-    protected $categoriesLevel2;
+    private $parent;
+    
+    /**
+     * @ORM\OneToMany(targetEntity=Category::class, cascade={"persist"}, mappedBy="parent")
+     */
+    private $categoriesLevel2;
 
-    /*
-    * @ORM\OneToMany(targetEntity=Situ::class, cascade={"persist"}, mappedBy="categoryLevel1")
+    /**
+     * @ORM\OneToMany(targetEntity=Situ::class, mappedBy="category1")
      */
-    protected $situs;
+    private $situs1;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Situ::class, mappedBy="category2")
+     */
+    private $situs2;
 
     public function __construct()
     {
-        $this->categoriesLevel2 = new ArrayCollection();
-        $this->situs = new ArrayCollection();
+        $this->situs1 = new ArrayCollection();
+        $this->situs2 = new ArrayCollection();
+//        $this->situCategoriesLevel1 = new ArrayCollection();
+//        $this->categoriesLevel2 = new ArrayCollection();
     }
 
-    public function __toString(): ?string
-    {
-        return $this->langId;
-    }
-    
     public function getId(): ?int
     {
         return $this->id;
@@ -140,7 +148,7 @@ class CategoryLevel1
         return $this;
     }
 
-    public function getLang(): ?int
+    public function getLang(): ?Lang
     {
         return $this->lang;
     }
@@ -163,64 +171,76 @@ class CategoryLevel1
 
         return $this;
     }
-    
-    /**
-     * @return Collection|CategoryLevel2[]
-     */
-    public function getCategoriesLevel2(): Collection
+
+    public function getParent(): ?int
     {
-        return $this->categoriesLevel2;
-    }
-     
-    public function addCategoryLevel2(CategoryLevel2 $categoryLevel2): self
-    {
-        if (!$this->categoriesLevel2->contains($categoryLevel2)) {
-            $this->categoriesLevel2[] = $categoryLevel2;
-            $categoryLevel2->setEvent($this);
-        }
-        
-        return $this;
+        return $this->parent;
     }
 
-    public function removeCategoryLevel2(CategoryLevel2 $categoryLevel2): self
+    public function setParent(?Category $parent): self
     {
-        if ($this->categoriesLevel2->contains($categoryLevel2)) {
-            $this->categoriesLevel2->removeElement($categoryLevel2);
-            // set the owning side to null (unless already changed)
-            if ($categoryLevel2->getCategoryLevel1() === $this) {
-                $categoryLevel2->setCategoryLevel1(null);
-            }
-        }
+        $this->parent = $parent;
+
         return $this;
     }
     
     /**
      * @return Collection|Situ[]
      */
-    public function getSitus(): Collection
+    public function getSitus1(): Collection
     {
-        return $this->situs;
+        return $this->situs1;
     }
-     
-    public function addSitu(Situ $situ): self
-    {        
-        if (!$this->situs->contains($situ)) {
-            $this->situs[] = $situ;
-            $situ->setCategoryLevel1($this);
+
+    public function addSitu1(Situ $situ1): self
+    {
+        if (!$this->situs1->contains($situ1)) {
+            $this->situs1[] = $situ1;
+            $situ1->setCategory($this);
         }
-        
+
         return $this;
     }
 
-    public function removeSitu(Situ $situ): self
+    public function removeSitu1(Situ $situ1): self
     {
-        if ($this->situs->contains($situ)) {
-            $this->situs->removeElement($situ);
+        if ($this->situs1->removeElement($situ1)) {
             // set the owning side to null (unless already changed)
-            if ($situ->getCategoryLevel1() === $this) {
-                $situ->setCategoryLevel1(null);
+            if ($situ1->getCategory() === $this) {
+                $situ1->setCategory(null);
             }
         }
+
+        return $this;
+    }
+    
+    /**
+     * @return Collection|Situ[]
+     */
+    public function getSitus2(): Collection
+    {
+        return $this->situs2;
+    }
+
+    public function addSitu2(Situ $situ2): self
+    {
+        if (!$this->situs2->contains($situ2)) {
+            $this->situs2[] = $situ2;
+            $situ2->setCategory($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSitu2(Situ $situ2): self
+    {
+        if ($this->situs2->removeElement($situ2)) {
+            // set the owning side to null (unless already changed)
+            if ($situ2->getCategory() === $this) {
+                $situ2->setCategory(null);
+            }
+        }
+
         return $this;
     }
 }

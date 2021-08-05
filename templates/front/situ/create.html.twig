@@ -2,32 +2,34 @@
 {% trans_default_domain 'user_messages' %}
 {% set locale = app.request.locale %}
 
-{% block title %}{{ 'contrib.form.situ.label'|trans() }}{% endblock %}
+{% block title %}{{ 'contrib.form.situ.h1'|trans() }}{% endblock %}
 
 {% block stylesheets %}
     {{ parent() }}
-    <link rel="stylesheet" href="{{ asset('select2/css/select2.min.css') }}">
+    {{ encore_entry_link_tags('flp_theme') }}
     {{ encore_entry_link_tags('situ_create_app', null, 'frontApp') }}
 {% endblock %}
 
 {% block content %}
+    <div id="loader"></div>
     
-    <div class="container mt-5 py-5">
+    <div class="container mt-5 py-sm-5 py-4">
         
         {% block banner%}
-            <h1 class="h3 my-3 mb-5 text-white">{{ 'contrib.form.situ.label'|trans() }}</h1>
+            <h1 class="h3 mt-lg-3 mt-2 mb-lg-5 mb-2 text-white">
+                {{ 'contrib.form.situ.h1'|trans() }}
+            </h1>
         {% endblock %}
-                        
+    
         <div class="row">
         
-            <div class="col-lg-7 mx-auto p-0">
+            <div id="situ" class="col-lg-7 mx-auto p-0"
+                 data-id="{% if situ %}{{ situ.id }}{% endif %}">
             {{ form_start(form) }}
-                <div class="card my-4 bg-none border-0 shadow">
+                <div class="card my-4 mx-3 bg-none border-0 shadow">
+                    
                     <div class="card-header py-4 pl-4 bg-secondary-80 border text-white">
-                        <div class="my-custom-class-for-errors">
-                            {{ form_errors(form) }}
-                        </div>
-                        <div id="lang" class="formData form-row mt-1 mb-4{% if langs is empty %} d-none{% endif %}">
+                        <div id="lang" class="formData form-row mt-1 mb-4">
                             <div class="col-md-4 pt-md-1">
                                 {{ form_label(form.lang) }}
                             </div>
@@ -40,7 +42,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div id="event" class="formData form-row{% if langs is empty %} mt-1{% endif %} mb-4">
+                        <div id="event" class="formData form-row mb-4{% if langs|length > 1 %} d-none on-load{% else %} mt-1{% endif %}">
                             <div class="col-md-4 pt-md-1">
                                 {{ form_label(form.event) }}
                             </div>
@@ -51,13 +53,13 @@
                                         {{ form_errors(form.event) }}
                                     </div>
                                     <div id="add-event" class="col-1 pt-1 pl-md-2 text-center colBtn">
-                                        <span id="add-event-btn" class="mt-1 text-light" data-id="event">
+                                        <span id="add-event-btn" class="btnAdd mt-1 text-light" data-id="event">
                                             <i class="fas fa-plus-circle"></i>
                                         </span>
                                     </div>
                                 </div>
                             </div>
-                        </div>  
+                        </div>
                         <div id="categoryLevel1" class="formData form-row mb-4 d-none on-load">
                             <div class="col-md-4 pt-md-1">
                                 {{ form_label(form.categoryLevel1) }}
@@ -69,7 +71,7 @@
                                         {{ form_errors(form.categoryLevel1) }}
                                     </div>
                                     <div id="add-categoryLevel1" class="col-1 pt-1 pl-md-2 text-center colBtn">
-                                        <span id="add-categoryLevel1-btn" class="mt-1 text-light" data-id="categoryLevel1">
+                                        <span id="add-categoryLevel1-btn" class="btnAdd mt-1 text-light" data-id="categoryLevel1">
                                             <i class="fas fa-plus-circle"></i>
                                         </span>
                                     </div>
@@ -87,7 +89,7 @@
                                         {{ form_errors(form.categoryLevel2) }}
                                     </div>
                                     <div id="add-categoryLevel2" class="col-1 pt-1 pl-md-2 text-center colBtn">
-                                        <span id="add-categoryLevel2-btn" class="mt-1 text-light" data-id="categoryLevel2">
+                                        <span id="add-categoryLevel2-btn" class="btnAdd mt-1 text-light" data-id="categoryLevel2">
                                             <i class="fas fa-plus-circle"></i>
                                         </span>
                                     </div>
@@ -95,25 +97,26 @@
                             </div>
                         </div>
                     </div>
+                                    
                     <div class="card-body p-4 bg-white-70 d-none">
-                        <h2 class="h5 font-weight-normal">{{ 'contrib.form.situ.h2'|trans() }}</h2>
+                        <h2 class="h5 font-weight-normal">{{ 'contrib.form.situ.label'|trans() }}</h2>
                         {{ form_row(form.title) }}
                         {{ form_row(form.description) }} 
                         <div id="form-items" class="form-row">
                             {{ form_label(form.situItems) }}
                             <ul id="situItems" class="list-group list-group-flush col-12"
                                 data-prototype="{{ form_widget(form.situItems.vars.prototype)|e }}"
-                                data-widget-situItems="{{ '<li class="list-group-item pt-1 px-0 mb-2 bg-none clearfix"></li>'|e }}"
+                                data-widget-situItems="{{ '<li class="list-group-item pt-1 px-0 mb-2 bg-none clearfix row"></li>'|e }}"
                                 data-widget-counter="{{ form.situItems|length }}">
                                 <legend class="col-form-label">{{ 'contrib.form.item.label'|trans() }}</legend>
                                 {% for situItems in form.situItems %}
-                                    <li class="list-group-item pt-1 px-0 mb-2 bg-none clearfix">
+                                    <li class="list-group-item pt-1 px-0 mb-2 bg-none clearfix row">
                                         {{ form_widget(situItems) }}
                                         {{ form_errors(situItems) }}
                                     </li>
                                 {% endfor %}
                             </ul>
-                            <div id="add-situ" class="col-12">
+                            <div id="add-situItem" class="col-12">
                                 <p class="h6">{{ 'contrib.form.item.add_item.title'|trans() }}</p>
                                 <div class="small d-block my-4 pb-1">
                                     {{ 'contrib.form.item.add_item.comment-begin'|trans() }}
@@ -131,36 +134,54 @@
                                 </div>
                             </div>
                         </div>
+                                
+                        <div id="form-error"></div>
+
                     </div>
+                                
                     {{ form_row(form.statusId) }}
+                    
                     <div class="card-footer bg-light text-right d-none">
                         <div class="d-flex justify-content-between">
-                            <button id="save-btn" class="btn btn-outline-primary px-3" type="submit">
+                            <div id="save-btn" class="btn btn-outline-primary px-3">
                                 {{ 'contrib.form.save.btn'|trans() }}
-                            </button>
-                            <button id="submit-btn" class="btn btn-primary px-4" type="submit">
+                            </div>
+                            <div id="submit-btn" class="btn btn-primary px-4">
                                 {{ 'contrib.form.submit.btn'|trans() }}
-                            </button>
+                            </div>
                         </div>
                     </div>
                 </div>
+            {{ form_end(form) }}
             </div>
-        {{ form_end(form) }}
+            
+        </div>
+            
     </div>
 {% endblock %}
 
 {% block javascripts %}
     {{ parent() }}
-    {{ encore_entry_script_tags('situ_create_app', null, 'frontApp') }}
     <script src="{{ asset('fullscreenslide/js/modernizr.custom.86080.js') }}"></script>
+    {{ encore_entry_script_tags('situ_create_app', null, 'frontApp') }}
 <script>
+    var path = {
+       "locale" : "{{ locale }}",
+    }
     var translations = {
+       "h1Update" : "{{ 'contrib.form.situ.h1_update' | trans }}",
+       "flashError1" : "{{ 'contrib.form.save.flash.error' | trans }}",
+       "flashError2" : "{{ 'contrib.form.submit.flash.error' | trans }}",
        "toValidate" : "{{ 'contrib.form.to_validate' | trans }}",
        "event-titlePlaceholder" : "{{ 'contrib.form.event.add.placeholder' | trans }}",
        "categoryLevel1-titlePlaceholder" : "{{ 'contrib.form.category.level1.title_placeholder' | trans }}",
        "categoryLevel2-titlePlaceholder" : "{{ 'contrib.form.category.level2.title_placeholder' | trans }}",
        "categoryLevel1-descriptionPlaceholder" : "{{ 'contrib.form.category.level1.description_placeholder' | trans }}",
        "categoryLevel2-descriptionPlaceholder" : "{{ 'contrib.form.category.level2.description_placeholder' | trans }}",
+       "scoreLabel" : "{{ 'contrib.form.item.score.placeholder' | trans }}",
+       "scoreLabelAlt" : "{{ 'contrib.form.item.score.placeholder_alt' | trans }}",
+       "scoreInfo" : "{{ 'contrib.form.item.score.tooltip' | trans }}",
+       "formError" : "{{ 'contrib.form.error' | trans }}",
     }
 </script>
 {% endblock %}

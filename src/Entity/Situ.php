@@ -3,8 +3,9 @@
 namespace App\Entity;
 
 use App\Entity\Event;
-use App\Entity\CategoryLevel1;
-use App\Entity\CategoryLevel2;
+use App\Entity\Category;
+//use App\Entity\CategoryLevel1;
+//use App\Entity\CategoryLevel2;
 use App\Entity\SituItem;
 use App\Repository\SituRepository;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -74,12 +75,12 @@ class Situ
     private $event;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\CategoryLevel1", inversedBy="situs")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Category", inversedBy="situs1")
      */
     private $categoryLevel1;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\CategoryLevel2", inversedBy="situs")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Category", inversedBy="situs2")
      */
     private $categoryLevel2;
 
@@ -103,6 +104,7 @@ class Situ
         return $this->event;
         return $this->categoryLevel1;
         return $this->categoryLevel2;
+//        return $this->category;
 //        return $this->getSituItems();
     }
 
@@ -236,7 +238,7 @@ class Situ
         return $this->categoryLevel1;
     }
 
-    public function setCategoryLevel1(?CategoryLevel1 $categoryLevel1): self
+    public function setCategoryLevel1(?Category $categoryLevel1): self
     {
         $this->categoryLevel1 = $categoryLevel1;
 
@@ -248,7 +250,7 @@ class Situ
         return $this->categoryLevel2;
     }
 
-    public function setCategoryLevel2(?CategoryLevel2 $categoryLevel2): self
+    public function setCategoryLevel2(?Category $categoryLevel2): self
     {
         $this->categoryLevel2 = $categoryLevel2;
 
@@ -285,7 +287,7 @@ class Situ
         return $this;
     }
 
-    public function removeItem(SituItem $situItem): self
+    public function removeSituItem(SituItem $situItem): self
     {
         if ($this->situItems->contains($situItem)) {
             $this->situItems->removeElement($situItem);

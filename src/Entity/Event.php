@@ -40,9 +40,9 @@ class Event
     private $lang;
 
     /**
-     * @ORM\OneToMany(targetEntity=CategoryLevel1::class, cascade={"persist"}, mappedBy="event")
+     * @ORM\OneToMany(targetEntity=Category::class, mappedBy="event")
      */
-    protected $categoriesLevel1;
+    private $categories;
 
     /**
     * @ORM\OneToMany(targetEntity=Situ::class, cascade={"persist"}, mappedBy="event")
@@ -53,6 +53,7 @@ class Event
     {
         $this->categoriesLevel1 = new ArrayCollection();
         $this->situs = new ArrayCollection();
+        $this->categories = new ArrayCollection();
     }
 
     public function __toString(): ?string
@@ -115,32 +116,32 @@ class Event
     }
 
     /**
-     * @return Collection|CategoryLevel1[]
+     * @return Collection|Category[]
      */
-    public function getCategoriesLevel1(): ?Collection
+    public function getCategories(): Collection
     {
-        return $this->categoriesLevel1;
+        return $this->categories;
     }
-     
-    public function addCategoryLevel1(CategoryLevel1 $categoryLevel1): self
+
+    public function addCategory(Category $category): self
     {
-        if (!$this->categoriesLevel1->contains($categoryLevel1)) {
-            $this->categoriesLevel1[] = $categoryLevel1;
-            $categoryLevel1->setEvent($this);
+        if (!$this->categories->contains($category)) {
+            $this->categories[] = $category;
+            $category->setEvent($this);
         }
-        
+
         return $this;
     }
 
-    public function removeCategoryLevel1(CategoryLevel1 $categoryLevel1): self
+    public function removeCategory(Category $category): self
     {
-        if ($this->categoriesLevel1->contains($categoryLevel1)) {
-            $this->categoriesLevel1->removeElement($categoryLevel1);
+        if ($this->categories->removeElement($category)) {
             // set the owning side to null (unless already changed)
-            if ($categoryLevel1->getEvent() === $this) {
-                $categoryLevel1->setEvent(null);
+            if ($category->getEvent() === $this) {
+                $category->setEvent(null);
             }
         }
+
         return $this;
     }
 

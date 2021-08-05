@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Form\Front\Situ;
+namespace App\Form\Situ;
 
 use App\Entity\SituItem;
 use Symfony\Component\Form\AbstractType;
@@ -17,8 +17,9 @@ class CreateSituItemType extends AbstractType {
         $builder
             ->add('score', ChoiceType::class, [
                 'label' => 'contrib.form.item.label_item',
-                'row_attr' => ['class' => 'score-group'],
-                'attr' => ['class' => 'col-md-5 col-sm-7 col-8 custom-select d-block'],
+                'label_attr' => ['class' => 'label-score'],
+                'row_attr' => ['class' => 'col-md-6 col-sm-7 col-8 score-group'],
+                'attr' => ['class' => 'custom-select d-block score-item'],
                 'choices'  => [
                     'success'   => 0,
                     'info'      => 1,
@@ -32,21 +33,27 @@ class CreateSituItemType extends AbstractType {
                 'choice_attr' => function($choice, $key, $value) {
                     if ($value == 0) {
                         return [
-                            'class' => 'text-'.$key,
+                            'class' => 'd-none',
                             'data-id' => $value,
                             'selected' => true,
                         ];
                     }
-                    return ['class' => 'text-'.$key, 'data-id' => $value];
+                    return ['class' => 'selectable text-'.$key, 'data-id' => $value];
                 },
             ])
             ->add('title', TextType::class, [
                 'label' => false,
-                'attr' => ['placeholder' => 'contrib.form.item.title_placeholder'],
+                'row_attr' => ['class' => 'col-12'],
+                'attr' => [
+                    'class' => 'score-title',
+                    'placeholder' => 'contrib.form.item.title_placeholder'
+                    ],
             ])
             ->add('description', TextareaType::class, [
                 'label' => false,
+                'row_attr' => ['class' => 'col-12'],
                 'attr' => [
+                    'class' => 'score-description',
                     'rows' => '3',
                     'placeholder' => 'contrib.form.item.description_placeholder'
                 ],

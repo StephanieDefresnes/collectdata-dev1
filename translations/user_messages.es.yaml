@@ -9,6 +9,10 @@ nav:
         user: Mis contribuciones
         add: Agregar una contribución
         translate: Traducir contribución
+    translation:
+        title: Traducciones
+        dashboard: Mis traducciones
+        create: Traducir el sitio
 account:
     reset_password: Cambiar la contraseña
     image:
@@ -28,14 +32,17 @@ account:
         label: 'Email :'
         unique_email: Ya existe este email. Ingrese un nuevo email.
     lang:
-        current: 'Idioma habitual :'
+        current: 'Idioma :'
+        all: 'Idiomas :'
         option: 'Idiomas opcionales :'
         placeholder: Elige un idioma
         default: Defecto (FR)
+        search_multiple: Buscar
     roles: 
         title: 'Estado :'
         title_s: 'Estados :'
-        user: Contribuyente
+        user: Usuario
+        contributor: Contribuyente
         moderator: Moderador
         admin: Administrador
         super_admin: Superadministrador
@@ -108,6 +115,27 @@ account:
                     success: El archivo ha sido eliminado
                     error: Ocurrió un error al eliminar el archivo.
                 error: Ocurrió un error al procesar el archivo
+button:
+    add: Añadiendo
+    back: Espalda
+    cancel: Regreso
+    create: Añadir
+    delete: Eliminar
+    delete_title: Eliminar
+    disable: Desactivar
+    down: Bajar
+    enable: Activar
+    filter: Filtrado
+    next: Próximo
+    previous: Anterior
+    read_title: Detalles
+    remove: Eliminar
+    save: Grabar
+    submit: Enviar
+    switch: Para explorar
+    up: Subir
+    update_title: Editar
+    validate: Validar
 contrib:
     title: Mis contribuciones
     table:
@@ -135,17 +163,23 @@ contrib:
             read: Leer
             edit: Editar
             delete: Eliminar
+        update:
+            flash:
+                error: Ocurrió un error mientras se recuperaba de la situación
     form:
         multiple_search: Buscar
         to_validate: ( validación en curso )
         situ:
-            h2: La situación de riesgo
-            label: Agrega una situación de riesgo
+            h1: Agrega una situación de riesgo
+            h1_update: Cambiar una situación de riesgo
+            label: La situación de riesgo
             title: 'Título :'
             title_placeholder: Breve descripción de la situación.
             description: 'Descripción :'
             description_placeholder: Descripción detallada de la situación
-        lang: Idioma de la situación
+        lang:
+            label: Idioma de la situación
+            placeholder: Elige un idioma
         event:
             label: Agregar un evento
             placeholder: Elige un evento
@@ -184,13 +218,31 @@ contrib:
                 warning: Advertencia
                 danger: Peligro
                 placeholder: Asignar una puntuación
-        submit:
-            btn: Enviar
-            flash:
-                success: La situación ha sido enviada
-                danger: Se produjo un error al enviar la situación.
+                placeholder_alt: Lanzar una puntuación
+                tooltip: Si es necesario, libera una puntuación para seleccionarla aquí
         record:
             btn: Salvar
             flash:
                 success: La situación se ha salvado
-                danger: Se produjo un error al salvad la situación
+                success_update: Los cambios han sido guardados
+                error: Ocurrió un error al guardar la situación.
+        submit:
+            btn: Enviar
+            flash:
+                success: La situación ha sido enviada
+                success_update: Los cambios han sido enviados
+                error: Se produjo un error al enviar la situación.
+        error: Porfavor complete todos los campos.
+translation:
+    title: Mis traducciones 
+    form:
+        title: Crear una traducción del sitio
+        create: 'Crea una traducción medioambiental :'
+        update: Editar la traducción de un sitio
+        table:
+            title: Tabla de datos/textos a traducir
+    table:
+        empty: Aucune traduction de site
+        name: Nombre
+        date_status: Creación
+        langs: Idioma(s)

@@ -9,6 +9,10 @@ nav:
         user: My contributions
         add: Add contribution
         translate: Translate contribution
+    translation:
+        title: Translation
+        dashboard: My translations
+        create: Translate the site
 account:
     reset_password: Reset password
     image:
@@ -28,14 +32,17 @@ account:
         label: 'Email :'
         unique_email: This email already exists. Please enter a new address.
     lang:
-        current: 'Usual language :'
+        current: 'Language :'
+        all: 'Languages :'
         option: 'Optional languages :'
         placeholder: Choose a language
         default: Default (FR)
+        search_multiple: Search
     roles: 
         title: 'Status :'
         title_s: 'Status :'
-        user: Contributor
+        user: User
+        contributor: Contributor
         moderator: Moderator
         admin: Administrator
         super_admin: Super administrator
@@ -108,6 +115,27 @@ account:
                     success: The file has been deleted
                     error: An error occurred while deleting the file
                 error: An error occurred while processing the file
+button:
+    add: Addition
+    back: Back
+    cancel: Cancel
+    create: Add
+    delete: Delete
+    delete_title: Delete
+    disable: Disable
+    down: Down
+    enable: Enable
+    filter: Filter
+    next: Next
+    previous: Previous
+    read_title: Details
+    remove: Remove
+    save: Save
+    submit: Submit
+    switch: Switch
+    up: Up
+    update_title: Update
+    validate: Validate
 contrib:
     title: My contributions
     table:
@@ -135,17 +163,24 @@ contrib:
             read: Read
             edit: Edit
             delete: Delete
+        update:
+            flash:
+                error: An error occurred while recovering from the situation
     form:
         multiple_search: Search
         to_validate: ( validation in progress )
         situ:
-            h2: Risky situation
-            label: Add a risky situation
+            h1: Add a risky situation
+            h1_update: Edit a risky situation
+            label: Risky situation
             title: 'Title :'
             title_placeholder: Short description of the situation
             description: 'Description :'
             description_placeholder: Detailed description of the situation
         lang: Language of the situation
+        lang:
+            label: Language of the situation
+            placeholder: Choose a language
         event:
             label: Add an event
             placeholder: Choose an event
@@ -184,13 +219,30 @@ contrib:
                 warning: Warning
                 danger: Danger
                 placeholder: Assign a score
-        submit:
-            btn: Submit
-            flash:
-                success: The situation has been submitted
-                danger: An error occurred while submitting the situation
+                placeholder_alt: Release the score
+                tooltip: If necessary, release a score to select it here
         record:
             btn: Save
             flash:
                 success: The situation has been saved
-                danger: An error occurred while saving the situation
+                success_update: The changes have been saved
+                error: An error occurred while saving the situation
+        submit:
+            btn: Submit
+            flash:
+                success: The situation has been submitted
+                success_update: The changes have been submitted
+                danger: An error occurred while submitting the situation
+translation:
+    title: My translations
+    form:
+        title: Create a site translation
+        create: 'Create an environmental translation :'
+        update: Edit a site translation
+        table:
+            title: Table of data/texts to be translated
+    table:
+        empty: Aucune traduction de site
+        name: Nom
+        date_status: Création
+        langs: Language(s)

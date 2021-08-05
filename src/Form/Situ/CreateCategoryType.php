@@ -1,15 +1,15 @@
 <?php
 
-namespace App\Form\Front\Situ;
+namespace App\Form\Situ;
 
-use App\Entity\CategoryLevel2;
+use App\Entity\Category;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class CreateCategoryLevel2Type extends AbstractType
+class CreateCategoryType extends AbstractType
 {    
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
@@ -32,7 +32,7 @@ class CreateCategoryLevel2Type extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'data_class' => CategoryLevel2::class,
+            'data_class' => Category::class,
             'translation_domain' => 'user_messages',
         ]);
     }

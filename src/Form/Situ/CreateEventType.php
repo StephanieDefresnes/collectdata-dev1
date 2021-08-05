@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Form\Front\Situ;
+namespace App\Form\Situ;
 
 use App\Entity\Event;
 use Symfony\Component\Form\AbstractType;

@@ -25,6 +25,8 @@
     "dependencies": {
         "del": "^6.0.0",
         "jquery-ui": "^1.12.1",
+        "select2": "^4.1.0-rc.0",
+        "select2-theme-bootstrap4": "^1.0.0",
         "startbootstrap-sb-admin-2": "^4.1.4"
     }
 }

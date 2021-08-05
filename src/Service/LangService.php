@@ -3,6 +3,7 @@
 namespace App\Service;
 
 use App\Entity\Lang;
+use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
 
 class LangService {
@@ -17,6 +18,7 @@ class LangService {
     public function getUserLang($user_lang_id)
     {
         $repository = $this->em->getRepository(Lang::class);
+        if ($user_lang_id == '') $user_lang_id = 47;
         
         $lang = $repository->findOneBy(
             ['id' => $user_lang_id]
@@ -79,4 +81,17 @@ class LangService {
         return $result;
     }
     
+    
+    public function getUsedUserLangs($userId)
+     {
+        $query = $this->em->createQueryBuilder()
+            ->from(Lang::class,'lang')
+            ->select('user.langId, user.langs')
+            ->leftJoin(User::class, 'user', 'WITH', 'user.langId=lang.id')
+            ->where("user.langId = '$userId' ");
+        
+        $langs = $query->getQuery()->getResult();
+        
+        return $langs;
+    }
 }
