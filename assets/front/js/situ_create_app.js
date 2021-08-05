@@ -525,7 +525,7 @@ function selectSitu(id) {
             loadSituItems(data.situItems, data.situItems.length)
             if(data.situItems.length == 4) $('#add-situItem').hide()
         },
-        error: function(data) {
+        error: function() {
             $('#flash_message').find('.icon').remove()
             $('#flash_message').find('.alert')
                     .prepend('<span class="icon text-danger">'

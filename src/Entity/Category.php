@@ -66,12 +66,12 @@ class Category
     private $categoriesLevel2;
 
     /**
-     * @ORM\OneToMany(targetEntity=Situ::class, mappedBy="category1")
+     * @ORM\OneToMany(targetEntity=Situ::class, mappedBy="categoryLevel1")
      */
     private $situs1;
 
     /**
-     * @ORM\OneToMany(targetEntity=Situ::class, mappedBy="category2")
+     * @ORM\OneToMany(targetEntity=Situ::class, mappedBy="categoryLevel2")
      */
     private $situs2;
 
