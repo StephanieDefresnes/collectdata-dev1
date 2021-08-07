@@ -136,7 +136,7 @@ button:
     up: Monter
     update_title: Modifier
     validate: Valider
-access_deny: Accès interdit
+access_deny: Accès refusé
 contrib:
     title: Mes contributions
     table:
