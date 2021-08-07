@@ -136,6 +136,7 @@ button:
     up: Up
     update_title: Update
     validate: Validate
+access_deny: Access denied
 contrib:
     title: My contributions
     table:
@@ -177,7 +178,6 @@ contrib:
             title_placeholder: Short description of the situation
             description: 'Description :'
             description_placeholder: Detailed description of the situation
-        lang: Language of the situation
         lang:
             label: Language of the situation
             placeholder: Choose a language
@@ -233,6 +233,13 @@ contrib:
                 success: The situation has been submitted
                 success_update: The changes have been submitted
                 danger: An error occurred while submitting the situation
+        error: Please complete all fields.
+        sr_only:
+            error: "Error alert :"
+            success: "Success alert :"
+    situ:
+        title: Risky situation
+        by_author: "- proposed by"
 translation:
     title: My translations
     form:

@@ -17,7 +17,14 @@
     <div class="container mt-5 py-5">
         
         {% block banner%}
-         <h1 class="h3 mt-3 mb-5 text-white">{{ 'contrib.title'|trans() }}</h1>
+        <div class="d-flex justify-content-between mt-3 mb-5">
+            <h1 class="h3 text-white">{{ 'contrib.title'|trans() }}</h1>
+            <a href="{{ path('create_situ') }}" class="btn btn-outline-light bg-dark-50-0 px-3">
+                <i class="fas fa-plus ltr pr-2"></i>
+                {{ 'nav.contribs.add'|trans() }}
+                <i class="fas fa-plus rtl pl-2"></i>
+            </a>
+        </div>
         {% endblock %}
         
         <div class="card card bg-secondary-50">
@@ -47,12 +54,12 @@
                     <tbody class="small bg-white-80">
                     {% for situ in situs %}
                         {% if situ.statusId != 5 %}
-                        <tr data-id="{{ situ.id }}" data-user="{{ app.user.id }}">
-                            <th class="pt-3"
+                        <tr data-id="{{ situ.id }}">
+                            <th class="first-letter pt-3"
                                 scope="row" data-toggle="tooltip" data-placement="right" title="{{ situ.title }}">
                                 {{ situ.title|u.truncate(20, '...') }}
                             </th>
-                            <td class="pt-3"
+                            <td class="first-letter pt-3"
                                 data-toggle="tooltip" data-placement="right" title="{{ situ.description }}">
                                 {{ situ.description|u.truncate(20, '...') }}
                             </td>
@@ -60,20 +67,20 @@
                                 data-toggle="tooltip" data-placement="right" title="{{ situ.dateCreation is empty ? '' : situ.dateCreation|format_datetime('short', 'short', locale=locale) }}">
                                 {{ situ.dateCreation|format_datetime('short', 'none', locale=locale) }}
                             </td>
-                            <td class="pt-3"
+                            <td class="first-letter pt-3"
                                 data-toggle="tooltip" data-placement="right" title="{{ situ.evtTitle }}">
                                 {{ situ.evtTitle|u.truncate(20, '...') }}
                             </td>
-                            <td class="pt-3"
+                            <td class="first-letter pt-3"
                                 data-toggle="tooltip" data-placement="right" title="{{ situ.cat1Title }}">
                                 {{ situ.cat1Title|u.truncate(20, '...') }}
                             </td>
-                            <td class="pt-3"
+                            <td class="first-letter pt-3"
                                 data-toggle="tooltip" data-placement="right" title="{{ situ.cat2Title }}">
                                 {{ situ.cat2Title|u.truncate(20, '...') }}
                             </td>
                             <td class="pt-3 first-letter">{{ situ.langName }}</td>
-                            <td class="pt-3">
+                            <td class="pt-3 situStatus">
                                 {% if situ.statusId == 1 %}
                                     {{ 'contrib.table.status.writing'|trans() }}
                                 {% elseif situ.statusId == 2 %}
@@ -87,6 +94,9 @@
                             <td class="width-max-40 px-2">
                                 <span role="button" class="situUpdate btn btn-outline-secondary btn-sm px-1"
                                     data-toggle="tooltip" data-placement="left"
+                                    {% if situ.statusId == 2 or situ.statusId == 3 %}
+                                    data-target="#editModal"
+                                    {% endif %}
                                     title="{{ 'contrib.table.actions.edit'|trans() }}"
                                     aria-label="{{ 'contrib.table.actions.edit'|trans() }}">
                                     <i class="fas fa-pen"></i>
@@ -94,8 +104,7 @@
                             </td>
                             {% if situ.statusId == 1 %}
                             <td class="width-max-26 px-0">
-                                <span role="button" class="btn btn-outline-success btn-sm pcx-2"
-                                    data-id="{{ situ.id }}"
+                                <span role="button" class="situValidation btn btn-outline-success btn-sm pcx-2"
                                     data-toggle="tooltip" data-placement="left"
                                     title="{{ 'contrib.table.actions.validation'|trans() }}">
                                     <i class="far fa-paper-plane"></i>
@@ -103,12 +112,13 @@
                             </td>
                             {% elseif situ.statusId == 2 or situ.statusId == 3 %}
                             <td class="width-max-26 px-0">
-                                <span role="button" class="btn btn-outline-success btn-sm px-1"
+                                <a href="{{ path('read_situ', { 'id': situ.id }) }}"
+                                   role="button" class="btn btn-outline-success btn-sm px-1"
                                     data-id="{{ situ.id }}"
                                     data-toggle="tooltip" data-placement="left"
                                     title="{{ 'contrib.table.actions.read'|trans() }}">
                                     <i class="fas fa-eye"></i>
-                                </span>
+                                </a>
                             </td>
                             {% else %}
                             <td class="width-max-26 px-0"></td>
@@ -126,6 +136,26 @@
                     </tbody>
                 </table>
                 {% endif %}
+                        
+                <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                ...
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                <button type="button" class="btn btn-primary">Save changes</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
             </div>
         </div>
@@ -137,7 +167,16 @@
     {{ parent() }}
     {{ encore_entry_script_tags('situ_list_app', null, 'frontApp') }}
     <script>
-        var path = { "locale" : "{{ locale }}" }
-        var translations = { "flashError" : "{{ 'contrib.form.table.update.flash.error' | trans }}" }
+        let path = { "locale" : "{{ locale }}" }
+        let translations = {
+            "flashError" : "{{ 'contrib.table.update.flash.error' | trans }}",
+            "flashValid-error" : "{{ 'contrib.form.submit.flash.error' | trans }}",
+            "flashValid-success" : "{{ 'contrib.form.submit.flash.success' | trans }}",
+            "srOnly-error" : "{{ 'contrib.form.sr_only.error' | trans }}",
+            "srOnly-success" : "{{ 'contrib.form.sr_only.success' | trans }}",
+            "statusValidation" : "{{ 'contrib.table.status.validation'|trans() }}",
+            "actionRead" : "{{ 'contrib.table.actions.read'|trans() }}",
+            "statusValidation" : "{{ 'contrib.table.status.validation'|trans() }}",
+        }
     </script>
 {% endblock %}

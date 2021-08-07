@@ -136,6 +136,7 @@ button:
     up: Monter
     update_title: Modifier
     validate: Valider
+access_deny: Accès interdit
 contrib:
     title: Mes contributions
     table:
@@ -233,6 +234,12 @@ contrib:
                 success_update: Les modifications ont bien été envoyées
                 error: Une erreur s'est produite lors de l'envoi de la situation
         error: Veuillez renseigner tous les champs.
+        sr_only:
+            error: "Alerte erreur :"
+            success: "Alerte succès :"
+    situ:
+        title: Situation à risque
+        by_author: "- proposée par"
 translation:
     title: Mes traductions
     form:

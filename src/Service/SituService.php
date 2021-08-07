@@ -32,6 +32,7 @@ class SituService {
                         situ.dateValidation     dateValidation,
                         situ.statusId           statusId,
                         situ.translatedSituId   translatedSituId,
+                        situ.userId             userId,
                         evt.id                  eventId,
                         evt.title               eventTitle,
                         cat1.id                 cat1Id,
@@ -43,7 +44,8 @@ class SituService {
             ->leftJoin(Category::class, 'cat1', 'WITH', 'situ.categoryLevel1=cat1.id')
             ->leftJoin(Category::class, 'cat2', 'WITH', 'situ.categoryLevel2=cat2.id')
             ->leftJoin(Lang::class, 'lang', 'WITH', 'situ.lang=lang.id')
-            ->where("situ.userId = '$userId' ");
+            ->where("situ.userId = '$userId'")
+            ->orderBy('situ.id', 'DESC');
         
         $situs = $query->getQuery()->getResult();
         $result = [];
@@ -58,6 +60,7 @@ class SituService {
                 'dateValidation' =>     $situ['dateValidation'],
                 'statusId' =>           $situ['statusId'],
                 'translatedSituId' =>   $situ['translatedSituId'],
+                'userId' =>             $situ['userId'],
                 'evtId' =>              $situ['eventId'],
                 'evtTitle' =>           $situ['eventTitle'],
                 'cat1Id' =>             $situ['cat1Id'],
@@ -78,6 +81,7 @@ class SituService {
             ->select(  'situ.id                 id,
                         situ.title              title, 
                         situ.description        description,
+                        situ.userId             userId, 
                         evt.id                  eventId, 
                         cat1.id                 categoryLevel1Id, 
                         cat2.id                 categoryLevel2Id,

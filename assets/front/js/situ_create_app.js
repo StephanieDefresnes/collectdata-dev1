@@ -12,6 +12,24 @@ function initSelect2(select) {
     });
 }
 
+function flashMessage(status) {
+    $('body').find('#flash_message').remove()
+    let i = status == 'success' ? '<i class="fas fa-check-circle"></i>'
+                                : '<i class="fas fa-exclamation-circle"></i>'
+    let textClass = status == 'success' ? 'text-success' : 'text-danger'
+    let flashMessage =
+            '<div id="flash_message" class="container">'
+                +'<div class="alert alert-secondary alert-dismissible px-3 fade show" role="alert">'
+                        +'<span class="sr-only">'+ translations['srOnly-'+status] +'</span>'
+                        +'<span class="icon '+ textClass +'">'+ i +'</span>'
+                        +'<span class="msg">'+ translations['flashError'+status] +'</span>'
+                +'</div>'
+            +'</div>'
+    $('body > .container-fluid').before(flashMessage)
+    window.scrollTo({top: 0, behavior: 'smooth'});
+    $('#flash_message').delay(3000).fadeOut(); 
+}
+
 
 /**
  * Load datas or create them depending on User action
@@ -491,16 +509,7 @@ function createOrUpdateSitu(dataForm) {
             location.href = data['redirection']['targetUrl'];
         },
         error: function() {
-            let statusId = $('#create_situ_form_statusId').val()
-            
-            $('#flash_message').find('.icon').remove()
-            $('#flash_message').find('.alert')
-                    .prepend('<span class="icon text-danger">'
-                                +'<i class="fas fa-exclamation-circle"></i>'
-                            +'</span>')
-                    .find('.msg').html(translations['flashError'+ statusId])
-            window.scrollTo({top: 0, behavior: 'smooth'});
-            $('#flash_message').show().delay(3000).fadeOut();
+            flashMessage('error')
         }
     })
 }
@@ -526,14 +535,7 @@ function selectSitu(id) {
             if(data.situItems.length == 4) $('#add-situItem').hide()
         },
         error: function() {
-            $('#flash_message').find('.icon').remove()
-            $('#flash_message').find('.alert')
-                    .prepend('<span class="icon text-danger">'
-                                +'<i class="fas fa-exclamation-circle"></i>'
-                            +'</span>')
-                    .find('.msg').html(translations['flashErrorUpdate'])
-            window.scrollTo({top: 0, behavior: 'smooth'});
-            $('#flash_message').show().delay(3000).fadeOut();
+            flashMessage('error')
         }
     })
 }

@@ -136,6 +136,7 @@ button:
     up: Subir
     update_title: Editar
     validate: Validar
+access_deny: Acceso denegado
 contrib:
     title: Mis contribuciones
     table:
@@ -233,6 +234,12 @@ contrib:
                 success_update: Los cambios han sido enviados
                 error: Se produjo un error al enviar la situación.
         error: Porfavor complete todos los campos.
+        sr_only:
+            error: "Alerta de error :"
+            success: "Alerta de éxito :"
+    situ:
+        title: Situación de riesgo
+        by_author: "- propuesto por"
 translation:
     title: Mis traducciones 
     form:

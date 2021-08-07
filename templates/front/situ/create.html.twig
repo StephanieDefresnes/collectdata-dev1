@@ -164,25 +164,27 @@
     {{ parent() }}
     <script src="{{ asset('fullscreenslide/js/modernizr.custom.86080.js') }}"></script>
     {{ encore_entry_script_tags('situ_create_app', null, 'frontApp') }}
-<script>
-    var path = {
-       "locale" : "{{ locale }}",
-    }
-    var translations = {
-       "h1Update" : "{{ 'contrib.form.situ.h1_update' | trans }}",
-       "flashError1" : "{{ 'contrib.form.save.flash.error' | trans }}",
-       "flashError2" : "{{ 'contrib.form.submit.flash.error' | trans }}",
-       "flashErrorUpdate" : "{{ 'contrib.table.update.flash.error' | trans }}",
-       "toValidate" : "{{ 'contrib.form.to_validate' | trans }}",
-       "event-titlePlaceholder" : "{{ 'contrib.form.event.add.placeholder' | trans }}",
-       "categoryLevel1-titlePlaceholder" : "{{ 'contrib.form.category.level1.title_placeholder' | trans }}",
-       "categoryLevel2-titlePlaceholder" : "{{ 'contrib.form.category.level2.title_placeholder' | trans }}",
-       "categoryLevel1-descriptionPlaceholder" : "{{ 'contrib.form.category.level1.description_placeholder' | trans }}",
-       "categoryLevel2-descriptionPlaceholder" : "{{ 'contrib.form.category.level2.description_placeholder' | trans }}",
-       "scoreLabel" : "{{ 'contrib.form.item.score.placeholder' | trans }}",
-       "scoreLabelAlt" : "{{ 'contrib.form.item.score.placeholder_alt' | trans }}",
-       "scoreInfo" : "{{ 'contrib.form.item.score.tooltip' | trans }}",
-       "formError" : "{{ 'contrib.form.error' | trans }}",
-    }
-</script>
+    <script>
+        var path = {
+            "locale" : "{{ locale }}",
+        }
+        var translations = {
+            "h1Update" : "{{ 'contrib.form.situ.h1_update' | trans }}",
+            "flashError" : "{{ 'contrib.table.update.flash.error' | trans }}",
+            "srOnly-error" : "{{ 'contrib.form.sr_only.error' | trans }}",
+            "flashError1" : "{{ 'contrib.form.save.flash.error' | trans }}",
+            "flashError2" : "{{ 'contrib.form.submit.flash.error' | trans }}",
+            "flashErrorUpdate" : "{{ 'contrib.table.update.flash.error' | trans }}",
+            "toValidate" : "{{ 'contrib.form.to_validate' | trans }}",
+            "event-titlePlaceholder" : "{{ 'contrib.form.event.add.placeholder' | trans }}",
+            "categoryLevel1-titlePlaceholder" : "{{ 'contrib.form.category.level1.title_placeholder' | trans }}",
+            "categoryLevel2-titlePlaceholder" : "{{ 'contrib.form.category.level2.title_placeholder' | trans }}",
+            "categoryLevel1-descriptionPlaceholder" : "{{ 'contrib.form.category.level1.description_placeholder' | trans }}",
+            "categoryLevel2-descriptionPlaceholder" : "{{ 'contrib.form.category.level2.description_placeholder' | trans }}",
+            "scoreLabel" : "{{ 'contrib.form.item.score.placeholder' | trans }}",
+            "scoreLabelAlt" : "{{ 'contrib.form.item.score.placeholder_alt' | trans }}",
+            "scoreInfo" : "{{ 'contrib.form.item.score.tooltip' | trans }}",
+            "formError" : "{{ 'contrib.form.error' | trans }}",
+        }
+    </script>
 {% endblock %}

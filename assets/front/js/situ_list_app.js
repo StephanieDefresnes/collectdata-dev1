@@ -6,6 +6,24 @@ require('datatables.net/js/jquery.dataTables.min.js');
 require('datatables.net-bs4/js/dataTables.bootstrap4.min.js');
 const lang = require('../../datatables.json')
 
+function flashMessage(status) {
+    $('body').find('#flash_message').remove()
+    let i = status == 'success' ? '<i class="fas fa-check-circle"></i>'
+                                : '<i class="fas fa-exclamation-circle"></i>'
+    let textClass = status == 'success' ? 'text-success' : 'text-danger'
+    let flashMessage =
+            '<div id="flash_message" class="container">'
+                +'<div class="alert alert-secondary alert-dismissible px-3 fade show" role="alert">'
+                        +'<span class="sr-only">'+ translations['srOnly-'+status] +'</span>'
+                        +'<span class="icon '+ textClass +'">'+ i +'</span>'
+                        +'<span class="msg">'+ translations['flashValid-'+status] +'</span>'
+                +'</div>'
+            +'</div>'
+    $('body > .container-fluid').before(flashMessage)
+    window.scrollTo({top: 0, behavior: 'smooth'});
+    $('#flash_message').delay(3000).fadeOut(); 
+}
+
 function selectSitu(id) {
     $.ajax({
         url: "/"+ path['locale'] +"/situ/edit",
@@ -15,18 +33,34 @@ function selectSitu(id) {
             location.href = data['redirection']['targetUrl'];            
         },
         error: function() {
-            $('#flash_message').find('.icon').remove()
-            $('#flash_message').find('.alert')
-                    .prepend('<span class="icon text-danger">'
-                                +'<i class="fas fa-exclamation-circle"></i>'
-                            +'</span>')
-                    .find('.msg').html(translations['flashError'])
-            window.scrollTo({top: 0, behavior: 'smooth'});
-            $('#flash_message').show().delay(3000).fadeOut();
+            flashMessage('error')
         }
     })
 }
 
+function requestReceived(button) {
+    button.removeClass('pcx-2').addClass('px-1')
+            .attr('data-original-title', translations['actionRead'])
+            .html('<i class="fas fa-eye"></i>')
+            .parents('tr').find('.situStatus').text(translations['statusValidation'])
+}
+
+function validationRequest(id, button) {
+    $.ajax({
+        url: "/"+ path['locale'] +"/ajaxValidationRequest",
+        method: 'GET',
+        data: { id: id },
+        success: function() {            
+            requestReceived(button)
+            flashMessage('success')
+            $('#loader').hide()
+        },
+        error: function() {
+            flashMessage('error')
+            $('#loader').hide()
+        }
+    })
+}
 
 $(document).ready(function() {
     
@@ -42,7 +76,6 @@ $(document).ready(function() {
             'targets': 'no-sort',
             'orderable': false,
         }],
-        'order': [[ 2, 'desc' ]],
         'fnDrawCallback': function(oSettings) {
             // Add class to load reset button search
             $('#dataTable-situs_filter input').addClass('search')
@@ -57,7 +90,6 @@ $(document).ready(function() {
         },
         
     });
-    
 
     // Reset search filter
     let table = $('#dataTable-situs').DataTable()
@@ -72,10 +104,16 @@ $(document).ready(function() {
         $(this).remove()
     })
     
-    
+    // Update situ
     $('.situUpdate').click(function() {
         $('#loader').show()
         selectSitu($(this).parents('tr').attr('data-id'))
+    })
+    
+    // Validation request
+    $('.situValidation').click(function() {
+        $('#loader').show()
+        validationRequest($(this).parents('tr').attr('data-id'), $(this))
     })
     
     

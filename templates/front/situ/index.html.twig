@@ -1,5 +1,81 @@
 {% extends 'front/layout.html.twig' %}
+{% trans_default_domain 'user_messages' %}
+{% set locale = app.request.locale %}
+
+{% block title %}{{ 'contrib.situ.title'|trans() }}{% endblock %}
 
 {% block content %}
-    {% block banner%}{% endblock %}
+    
+    <div class="container mt-5 py-5">
+        
+        {% block banner%}
+        <div class="d-flex justify-content-between mt-3 mb-5">
+            <h1 class="h3 text-white">{{ 'contrib.situ.title'|trans() }}</h1>
+            <span>
+                <a href="{{ path('user_situs') }}" class="btn btn-outline-light bg-dark-50-0 px-3">
+                    <i class="fas fa-chevron-left ltr pr-2"></i>
+                    {{ 'nav.contribs.user'|trans() }}
+                    <i class="fas fa-chevron-right rtl pl-2"></i>
+                </a>
+                <a href="{{ path('all_situs') }}" class="btn btn-outline-light bg-dark-50-0 px-3">
+                    <i class="fas fa-chevron-left ltr pr-2"></i>
+                    {{ 'nav.contribs.all'|trans() }}
+                    <i class="fas fa-chevron-right rtl pl-2"></i>
+                </a>
+            </span>
+        </div>
+        {% endblock %}
+        
+        <div class="row">
+        
+            <div class="col-md-8 mx-auto p-0">
+                
+                <div class="card mb-4 bg-light-50 border-0 rounded-lg shadow">
+                    
+                    <div class="card-header bg-dark-50 p-4 text-white">
+                        <div class="position-absolute">
+                            <img src="{{ asset('img/flag/'~ lang.lang ~'.jpg') }}" alt="{{ lang.lang }}" class="text-uppercase">
+                        </div>
+                        <div class="h5 pb-2">
+                            <div class="text-center first-letter">{{ event }}</div>
+                            <div class="text-center">
+                                <span class="first-letter">{{ categoryLevel1 }}</span>
+                                /
+                                <span class="first-letter">{{ categoryLevel2 }}</span></div>
+                        </div>
+                        <div class="h5 d-flex flex-row mb-1">
+                            <span class="first-letter">{{ situ.title }}</span>
+                            <span class="pt-1 px-1 small">{{ 'contrib.situ.by_author'|trans() }}</span>
+                            <span class="pt-1 small">{{ user.name }}</span>
+                        </div>
+                    </div>
+                    
+                    <div class="card-body bg-white-70 p-4">
+                        <div class="first-letter mb-3">{{ situ.description }}</div>
+                        <div class="h5 mt-4 mb-2">{{ 'contrib.form.item.label'|trans() }}</div>
+                        {% for situItem in situItems %}
+                            {% if situItem.score == 0 %}
+                            <div class="first-letter mb-2 font-weight-bold">{{ situItem.title }}</div>
+                            <div class="first-letter mb-1">{{ situItem.description }}</div>
+                            {% endif %}
+                            {% if app.user.id == situ.userId and situItem.score != 0 %}
+                                {% if situItem.score == 1 %}
+                                    <div class="h5 mt-4 mb-2 text-info">{{ 'contrib.form.item.score.info'|trans()~' :' }}</div>
+                                {% elseif situItem.score == 2 %}
+                                    <div class="h5 mt-4 mb-2 text-warning">{{ 'contrib.form.item.score.warning'|trans()~' :' }}</div>
+                                {% elseif situItem.score == 3 %}
+                                    <div class="h5 mt-4 mb-2 text-danger">{{ 'contrib.form.item.score.danger'|trans()~' :' }}</div>
+                                {% endif %}
+                                <div class="first-letter mb-2 font-weight-bold">{{ situItem.title }}</div>
+                                <div class="first-letter mb-1">{{ situItem.description }}</div>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                            
+                </div>
+                        
+            </div>
+        </div>
+                    
+    </div>
 {% endblock %}

@@ -350,6 +350,12 @@ body {
 // Fontawesome
 .fa, .fas {
     width: 20px;
+    &.ltr {
+        display: inline;
+    }
+    &.rtl {
+        display: none;
+    }
 }
 
 /*
@@ -393,6 +399,9 @@ th.cust-nowrap {
 // Custom background
 .bg-none {
     background: none !important;
+}
+.bg-dark-50-0 {
+    background: $dark-50;
 }
 .bg-dark-50 {
     background: $dark-50 !important;
@@ -551,6 +560,14 @@ table {
                     }
                 }
             }
+        }
+    }
+    .fa, .fas {
+        &.ltr {
+            display: none;
+        }
+        &.rtl {
+            display: inline;
         }
     }
 }

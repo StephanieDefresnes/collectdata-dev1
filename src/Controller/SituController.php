@@ -16,6 +16,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\Security;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
@@ -24,62 +25,54 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 class SituController extends AbstractController
 {
     private $em;
+    private $security;
     private $situService;
     private $translator;
     
     public function __construct(EntityManagerInterface $em,
+                                Security $security,
                                 SituService $situService,
                                 TranslatorInterface $translator)
     {
         $this->em = $em;
+        $this->security = $security;
         $this->situService = $situService;
         $this->translator = $translator;
     }
-    
-    /**
-     * @Route("/situ", name="situ")
-     */
-    public function index(): Response
-    {
-        return $this->render('situ/index.html.twig', [
-            'controller_name' => 'SituController',
-        ]);
-    }
-    
-    /**
-     * @Route("/{id}/situs", name="user_situs", methods="GET")
-     */
-    public function getSitusByUser()
-    {
-        $situs = $this->situService->getSitusByUser($this->getUser()->getId());
-        
-        return $this->render('front/situ/list.html.twig', [
-            'situs' => $situs,
-        ]);
-    }
 
     /**
-     * @Route("/{id}/situ/{situ}", defaults={"situ" = null}, name="create_situ", methods="GET|POST")
+     * @Route("/situ/{id}", defaults={"id" = null}, name="create_situ", methods="GET|POST")
      */
     public function createSitu( Request $request,
                                 EntityManagerInterface $em,
-                                User $user,
-                                $situ): Response
+                                $id): Response
     {
-        // Current user
-        $user = $this->getDoctrine()
-            ->getRepository(User::class)
-            ->findOneBy([
-                'id' => $this->getUser()->getId()
-            ]);
+        $this->denyAccessUnlessGranted('ROLE_CONTRIBUTOR');
         
-        // Get user langs
+        // Current user
+        $user = $this->security->getUser();
+        $userId = $user->getId();
         $langs = $user->getLangs()->getValues();
         
         $situData = '';
-        if ($situ != null) {
+        if ($id != null) {
             $repository = $this->getDoctrine()->getRepository(Situ::class);
-            $situData = $repository->findOneBy(['id' => $situ]);
+            $situData = $repository->findOneBy(['id' => $id]);
+        }
+        
+        // Only situ author of moderator can update situ
+        if (!empty($situData) && !$user->hasRole('ROLE_MODERATOR')
+                && $userId != $situData->getUserId()) {
+            
+            $msg = $this->translator->trans(
+                    'access_deny', [],
+                    'user_messages', $locale = locale_get_default()
+                );
+            $this->addFlash('error', $msg);
+
+            return $this->redirectToRoute('user_situs', [
+                'id' => $userId, '_locale' => locale_get_default()
+            ]);
         }
         
         // Form
@@ -95,42 +88,14 @@ class SituController extends AbstractController
     }
     
     /**
-     * @Route("/situ/edit", methods="GET")
-     */
-    public function editSitu(Request $request): JsonResponse
-    {
-        $this->denyAccessUnlessGranted('ROLE_CONTRIBUTOR');
-        
-        // Get Situ
-        $id = $request->query->get('id');
-        $situ = $this->situService->getSituById($id);
-        $situItems = $this->situService->getSituItemsBySituId($situ['id']);
-        $url = $request->query->get('location') == true
-                ? $this->redirectToRoute('create_situ', [
-                       'id' => $this->getUser()->getId(), 'situ' => $situ['id'], 
-                       '_locale' => locale_get_default()
-                   ])
-                : '';
-        
-        if (!$situ) { return new NotFoundHttpException(); }
-        
-        return $this->json([
-            'success' => true,
-            'redirection' => $url,
-            'situ' => $situ,
-            'situItems' => $situItems,
-        ]);
-    }
-    
-    /**
      * @Route("/ajaxSitu", methods="GET|POST")
      */
     public function ajaxSitu(): JsonResponse
     {
         $this->denyAccessUnlessGranted('ROLE_CONTRIBUTOR');
             
-        // Get current user id
-        $user = $this->getUser();
+        // Get current user
+        $user = $this->security->getUser();
         $userId = $user->getId();
         $userLang = $user->getLangId() != '' ? $user->getLangId() : 47;
             
@@ -167,6 +132,25 @@ class SituController extends AbstractController
             $situ->setUserId($userId); 
         } else {
             $situ = $this->em->getRepository(Situ::class)->find($data['id']);
+            
+            // Only situ author of moderator can update situ
+            if (!$user->hasRole('ROLE_MODERATOR') && $userId != $situ['userId']) {
+
+                $msg = $this->translator->trans(
+                    'access_deny', [],
+                    'user_messages', $locale = locale_get_default()
+                    );
+                $request->getSession()->getFlashBag()->add('error', $msg);
+                
+                return $this->json([
+                    'success' => false,
+                    'redirection' => $this->redirectToRoute('user_situs', [
+                        'id' => $userId, '_locale' => locale_get_default()
+                    ]),
+                ]);
+                
+            }
+            
             $situ->setDateLastUpdate($dateNow);
 
             // Clear original collection
