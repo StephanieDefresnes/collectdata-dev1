@@ -85,6 +85,11 @@ class Situ
     private $categoryLevel2;
 
     /**
+     * @ORM\Column(type="boolean")
+     */
+    private $initialSitu;
+
+    /**
      * @ORM\Column(type="integer", nullable=true)
      */
     private $translatedSituId;
@@ -253,6 +258,18 @@ class Situ
     public function setCategoryLevel2(?Category $categoryLevel2): self
     {
         $this->categoryLevel2 = $categoryLevel2;
+
+        return $this;
+    }
+
+    public function getInitialSitu(): ?bool
+    {
+        return $this->initialSitu;
+    }
+
+    public function setInitialSitu(?bool $initialSitu): self
+    {
+        $this->initialSitu = $initialSitu;
 
         return $this;
     }
