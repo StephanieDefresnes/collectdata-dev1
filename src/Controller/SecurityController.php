@@ -36,15 +36,9 @@ class SecurityController extends AbstractController
     /**
      * @Route("/{_locale<%app_locales%>}/login",name="app_login")
      */
-    public function login(Request $request, AuthenticationUtils $authenticationUtils): Response
+    public function login(  Request $request,
+                            AuthenticationUtils $authenticationUtils): Response
     {
-        $locale = $request->getLocale();
-        
-        // if ($this->getUser()) {
-        //     return $this->redirectToRoute('target_path');
-        // }
-        
-
         // get the login error if there is one
         $error = $authenticationUtils->getLastAuthenticationError();
         // last username entered by the user
@@ -64,7 +58,10 @@ class SecurityController extends AbstractController
     /**
      * @Route("/registration_confirm", name="app_registration_confirm")
      */
-    public function registrationConfirm(Request $request, UserRepository $userRepository, GuardAuthenticatorHandler $guardHandler, LoginFormAuthenticator $authenticator): Response
+    public function registrationConfirm(Request $request,
+                                        UserRepository $userRepository,
+                                        GuardAuthenticatorHandler $guardHandler,
+                                        LoginFormAuthenticator $authenticator): Response
     {
         $token = $request->query->get('token');
         $user = $userRepository->findOneByConfirmationToken($token);
@@ -90,7 +87,9 @@ class SecurityController extends AbstractController
     /**
      * @Route("/{_locale<%app_locales%>}/forget_password", name="app_forget_password")
      */
-    public function forgetPassword(Request $request, UserRepository $userRepository, Mailer $mailer): Response
+    public function forgetPassword( Request $request,
+                                    UserRepository $userRepository,
+                                    Mailer $mailer): Response
     {
         $form = $this->createForm(ForgetPasswordFormType::class);
         $form->handleRequest($request);
@@ -113,14 +112,13 @@ class SecurityController extends AbstractController
     /**
      * @Route("/{_locale<%app_locales%>}/reset_password/{id}", defaults={"id"=null}, name="app_reset_password")
      */
-    public function resetPassword(
-        Request $request,
-        UserRepository $userRepository,
-        UserPasswordEncoderInterface $passwordEncoder,
-        GuardAuthenticatorHandler $guardHandler,
-        LoginFormAuthenticator $authenticator,
-        User $user=null
-    ): response {
+    public function resetPassword(  Request $request,
+                                    UserRepository $userRepository,
+                                    UserPasswordEncoderInterface $passwordEncoder,
+                                    GuardAuthenticatorHandler $guardHandler,
+                                    LoginFormAuthenticator $authenticator,
+                                    User $user = null): Response
+    {
         if ($token = $request->query->get('token')) {
             $user = $userRepository->findOneByConfirmationToken($token);
             if (!$user) { throw $this->createNotFoundException(sprintf('The user with confirmation token "%s" does not exist', $token)); }
