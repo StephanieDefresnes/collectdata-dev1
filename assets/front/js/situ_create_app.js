@@ -705,19 +705,21 @@ $(function() {
     $('#save-btn, #submit-btn').click(function(){
         
         $('form').find('.form-control').each(function() {
-            if ($(this).val() == '') {
-                if (!$(this).is('select')) $(this).addClass('empty-value')
-                else $(this).parent().find('.select2-selection__rendered')
-                        .addClass('empty-value')
-            }
-            else {
-                if (!$(this).is('select')) {
-                    if ($(this).hasClass('empty-value')) $(this).removeClass('empty-value')
-                } else {
-                    if ($(this).parent().find('.select2-selection__rendered')
-                        .hasClass('empty-value')) {
-                        $(this).parent().find('.select2-selection__rendered')
-                            .removeClass('empty-value')
+            if ($(this).attr('id') != 'create_situ_form_situItems_0_score') {
+                if ($(this).val() == '') {
+                    if (!$(this).is('select')) $(this).addClass('empty-value')
+                    else $(this).parent().find('.select2-selection__rendered')
+                            .addClass('empty-value')
+                }
+                else {
+                    if (!$(this).is('select')) {
+                        if ($(this).hasClass('empty-value')) $(this).removeClass('empty-value')
+                    } else {
+                        if ($(this).parent().find('.select2-selection__rendered')
+                            .hasClass('empty-value')) {
+                            $(this).parent().find('.select2-selection__rendered')
+                                .removeClass('empty-value')
+                        }
                     }
                 }
             }
