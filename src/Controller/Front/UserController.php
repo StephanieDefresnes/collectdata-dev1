@@ -18,6 +18,7 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\Security;
 use Symfony\Component\String\Slugger\SluggerInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
@@ -27,37 +28,34 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 class UserController extends AbstractController
 {    
     private $langService;
+    private $security;
     private $situService;
     private $userFileService;
     private $translator;
     
     public function __construct(LangService $langService,
+                                Security $security,
                                 SituService $situService,
                                 UserFileService $userFileService,
                                 TranslatorInterface $translator)
     {
         $this->langService = $langService;
+        $this->security = $security;
         $this->situService = $situService;
         $this->userFileService = $userFileService;
         $this->translator = $translator;
     }
 
     /**
-     * @Route("/profile/{id}", name="user_account", methods="GET|POST")
+     * @Route("/profile", name="user_account", methods="GET|POST")
      */
-    public function read(   Request $request,
-                            SluggerInterface $slugger,
-                            EntityManagerInterface $em,
-                            User $user): Response
+    public function read(Request $request): Response
     {
-        $user = $this->getDoctrine()
-            ->getRepository(User::class)
-            ->findOneBy([
-                'id' => $this->getUser()->getId()
-            ]);
+        // Get current user
+        $user = $this->security->getUser();
         
-        // Get User current Language
-        if ($user->getLangId() == null) {
+        // Get user Language
+        if (!$user->getLangId()) {
             $user_lang = 'Français';
             $user_lang_lg = 'fr';
         } else {
@@ -81,127 +79,6 @@ class UserController extends AbstractController
         $situsTranslated = $this->situService
                 ->countSitusTranslatedByLangByUser($this->getUser()->getId());
         
-        // Uploaded Translation files
-        $contributorLangs = $user->getContributorLangs();
-        $translationFiles = [];
-        foreach ($contributorLangs as $lang) {
-            $translationFiles[] = [
-                'lang' => html_entity_decode($lang->getName()),
-                'file' => $this->userFileService
-                    ->getTransationFilesByLangByUser(
-                            $this->getUser()->getId(), $lang->getId()
-                    )];
-        }
-        
-        $file = new UserFile();
-        
-        // Add Translation file
-        $formFiles = $this->createForm(UserFilesFormType::class, $file);
-        $formFiles->handleRequest($request);
-        
-        if ($formFiles->isSubmitted() && $formFiles->isValid()) {
-            
-            $uploadedFile = $formFiles['file']->getData();
-            
-            if ($uploadedFile) {
-                $originalFilename = pathinfo(
-                        $uploadedFile->getClientOriginalName(),
-                        PATHINFO_FILENAME
-                    );
-                $safeFilename = $slugger->slug($originalFilename);
-                $newFilename = $safeFilename.'-'.uniqid().'.'
-                        .$uploadedFile->guessExtension();
-                
-                try {
-                    $uploadedFile->move(
-                        $this->getParameter('user_translations'),
-                        $newFilename
-                    );
-                
-                    $file->setUser($user);
-                    $file->setLang($formFiles['lang']->getData());
-                    $file->setStatusId(2);
-                    $file->setFilename($newFilename);
-                    $file->setType('translation');
-                    $file->setDateCreation(new \DateTime('now'));
-                    $em->persist($file);
-                    $em->flush();
-
-                    $msg = $this->translator->trans(
-                            'account.translator.file.flash.add.success', [],
-                            'user_messages', $locale = locale_get_default()
-                        );
-                    $this->addFlash('success', $msg);
-                    
-                } catch (FileException $e) {
-                    $msg = $this->translator->trans(
-                            'account.translator.file.flash.add.error', [],
-                            'user_messages', $locale = locale_get_default()
-                        );
-                    $this->addFlash('error', $msg);
-                }
-            }
-            
-            return $this->redirectToRoute('user_account', [
-                'id' => $user->getId(), '_locale' => locale_get_default()
-            ]);      
-        
-        } elseif ($formFiles->isSubmitted() && !$formFiles->isValid()) {
-            
-            $msg = $this->translator->trans(
-                    'account.translator.file.add.flash.error', [],
-                    'user_messages', $locale = locale_get_default()
-                );
-            $this->addFlash('error', $msg);
-            
-        }
-        
-        // Remove Translation file
-        $formFilesRemove = $this->createForm(UserFilesRemoveFormType::class, $file);
-        $formFilesRemove->handleRequest($request);
-        
-        if ($formFilesRemove->isSubmitted() && $formFilesRemove->isValid()) {
-            
-            $userFileName = $formFilesRemove['filename']->getData();
-            
-            if ($userFileName) {
-                
-                try {
-                    $userFile = $this->getDoctrine()->getRepository(UserFile::class)
-                        ->findOneBy(['filename' => $userFileName]);
-                    $em->remove($userFile);
-                    $em->flush();
-                    unlink($this->getParameter('user_translations').'/'.$userFileName);
-                    
-                    $msg = $this->translator->trans(
-                            'account.translator.file.flash.delete.success', [],
-                            'user_messages', $locale = locale_get_default()
-                        );
-                    $this->addFlash('success', $msg);
-                } catch (FileException $e) {
-                    $msg = $this->translator->trans(
-                            'account.translator.file.flash.delete.error', [],
-                            'user_messages', $locale = locale_get_default()
-                        );
-                    $this->addFlash('error', $msg);
-                }
-                
-            }
-            
-            return $this->redirectToRoute('user_account', [
-                'id' => $user->getId(), '_locale' => locale_get_default()
-            ]);      
-        
-        } elseif ($formFilesRemove->isSubmitted() && !$formFilesRemove->isValid()) {
-            
-            $msg = $this->translator->trans(
-                    'account.translator.file.flash.error', [],
-                    'user_messages', $locale = locale_get_default()
-                );
-            $this->addFlash('error', $msg);
-            
-        }
-        
         return $this->render('front/user/account/profile/index.html.twig', [
             'user' => $user,
             'user_lang' => $user_lang,
@@ -209,33 +86,26 @@ class UserController extends AbstractController
             'situs' => $situs,
             'situsLangs' => $situsLangs,
             'situsTranslated' => $situsTranslated,
-            'translationFiles' => $translationFiles,
-            'formFiles' => $formFiles->createView(),
-            'formFilesRemove' => $formFilesRemove->createView(),
         ]);
     }
 
     /**
-     * @Route("/edit/{id}", name="user_update", methods="GET|POST")
+     * @Route("/profile/edit", name="user_update", methods="GET|POST")
      */
     public function update( Request $request,
                             SluggerInterface $slugger,
                             EntityManagerInterface $em,
-                            LangService $langService,
-                            User $user): Response
+                            LangService $langService): Response
     {
+        // Get current user
+        $user = $this->security->getUser();
+        
         $entityManager = $this->getDoctrine()->getManager();
         
         $form = $this->createForm(UserUpdateFormType::class, $user, array(
             'entity_manager' => $entityManager,
         ));
         $form->handleRequest($request);
-
-        $user = $this->getDoctrine()
-            ->getRepository(User::class)
-            ->findOneBy([
-                'id' => $this->getUser()->getId()
-            ]);
         
         // User image
         $userImageFilename = $this->getUser()->getImageFilename();

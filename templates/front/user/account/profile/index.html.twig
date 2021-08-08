@@ -28,11 +28,9 @@
     
     <div class="container mt-5 py-5">
         
-        <div class="row">
         {% block banner%}
             <h1 class="h3 mt-3 mb-5 text-white">{{ 'nav.account_profile'|trans() }}</h1>
         {% endblock %}
-        </div>
                         
         <div class="row">
         
@@ -107,14 +105,17 @@
                                 {% endif %}
                             </span>
                                 <span class="col-lg-7">
-                                {% set rolesLength = user.roles|length %}
-                                {% for role in user.roles %}
-                                    {% if role == 'ROLE_CONTRIBUTOR' %}{{ 'account.roles.contributor'|trans() }}
-                                    {% elseif role == 'ROLE_MODERATOR' %}{{ 'account.roles.moderator'|trans() }}
-                                    {% elseif role == 'ROLE_ADMIN' %}{{ 'account.roles.admin'|trans() }}
-                                    {% elseif role == 'ROLE_SUPER_ADMIN' %}{{ 'account.roles.super_admin'|trans() }}{% endif %}
-                                {% if rolesLength > 2 %}{% if not loop.last and loop.first%} - {% endif %}{% endif %}
-                                {% endfor %}
+                                    {% set roles =  user.roles %}
+                                    {% set newRoles = [] %}
+                                    {% for role in user.roles %}
+                                        {% if role != 'ROLE_USER' %}
+                                            {% if role == 'ROLE_CONTRIBUTOR' %}{% set newRoles = newRoles|merge(['account.roles.contributor'|trans()]) %}
+                                            {% elseif role == 'ROLE_MODERATOR' %}{% set newRoles = newRoles|merge(['account.roles.moderator'|trans()]) %}
+                                            {% elseif role == 'ROLE_ADMIN' %}{% set newRoles = newRoles|merge(['account.roles.admin'|trans()]) %}
+                                            {% elseif role == 'ROLE_SUPER_ADMIN' %}{% set newRoles = newRoles|merge(['account.roles.super_admin'|trans()]) %}{% endif %}
+                                        {% endif %}
+                                    {% endfor %}
+                                    {{ newRoles|join(' - ') }}
                                 {% if user.langContributor %}
                                     - {{ 'account.translator.status'|trans() }}
                                 {% endif %}
@@ -131,7 +132,7 @@
                         
                     <div class="card-footer bg-secondary-40 text-right">
                         <div class="d-flex justify-content-between">
-                            <a href="{{ path('user_update', { 'id': app.user.id }) }}"
+                            <a href="{{ path('user_update') }}"
                                class="mr-2 px-3 pb border btn btn-light bg-light-80">
                                 {{ 'account.update.title'|trans() }}
                             </a>

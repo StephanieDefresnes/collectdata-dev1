@@ -26,7 +26,7 @@
                 </li>
             {% endif %}
             <li class="dropdown-item bg-dark{{ route == 'user_account' ? ' active' }}">
-                <a href="{{ path('user_account', { 'id': app.user.id }) }}">
+                <a href="{{ path('user_account') }}">
                     <i class="fas fa-user-cog"></i>
                     {{ 'nav.account_profile'|trans() }}
                 </a>
@@ -40,7 +40,6 @@
         </ul>
     </li>
 {% else %}
-{#    <li class="nav-item">#}
     <li class="nav-item dropdown{{ route in ['app_login', 'front_register'] ? ' active' }}">
         <a class="nav-link dropdown-toggle" id="dropdown_account" 
            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">

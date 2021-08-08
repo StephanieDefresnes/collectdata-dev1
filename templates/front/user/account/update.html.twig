@@ -6,7 +6,7 @@
 
 {% block stylesheets %}
     {{ parent() }}
-    <link rel="stylesheet" href="{{ asset('select2/css/select2.min.css') }}">
+    {{ encore_entry_link_tags('flp_theme') }}
     {{ encore_entry_link_tags('user_update_app', null, 'frontApp') }}
 {% endblock %}
     
@@ -76,6 +76,7 @@
                                 </div>
                                 <div class="col-sm-8">
                                     {{ form_widget(form.email) }}
+                                    {{ form_errors(form.email) }}
                                 </div>
                             </div>
 
@@ -85,6 +86,7 @@
                                 </div>
                                 <div class="col-sm-8">
                                     {{ form_widget(form.name) }}
+                                    {{ form_errors(form.name) }}
                                 </div>
                             </div>
 
@@ -92,8 +94,8 @@
                                 <div class="col-sm-4 pt-2">
                                     {{ form_label(form.langId) }}
                                 </div>
-                                <div class="col-sm-8">
-                                    <select class="form-control custom-select text-capitalize" 
+                                <div class="col-md-4 col-sm-8">
+                                    <select class="form-control select-single" 
                                             id="select_user_langId">
                                         <option value="" data-id=""
                                                 class="text-black-50"{% if user.langId == '' %} selected{% endif %}>
@@ -114,6 +116,7 @@
                                 </div>
                                 <div class="col-sm-8 text-capitalize">
                                     {{ form_widget(form.langs) }}
+                                    {{ form_errors(form.langs) }}
                                </div>
                             </div>
 
@@ -129,6 +132,7 @@
                                 </div>
                                 <div class="col-sm-5 text-capitalize">
                                     {{ form_widget(form.contributorLangs) }}
+                                    {{ form_errors(form.contributorLangs) }}
                                </div>
                             </div>
                                
@@ -159,14 +163,14 @@
 
 {% block javascripts %}
     {{ parent() }}
-    <script src="{{ asset('select2/js/select2.min.js') }}"></script>
+    {{ encore_entry_script_tags('user_update_app', null, 'frontApp') }}
     <script>
         var translations = {
-           "multiple-search" : "{{ 'contrib.form.multiple_search' | trans }}",
+           "single-searchLang" : "{{ 'account.lang.default' | trans }}",
+           "multiple-search" : "{{ 'account.lang.search_multiple' | trans }}",
         }
         var img = {
             "default" : "{{ asset('/img/unknown.jpg') }}",
         }
     </script>
-    {{ encore_entry_script_tags('user_update_app', null, 'frontApp') }}
 {% endblock %}
