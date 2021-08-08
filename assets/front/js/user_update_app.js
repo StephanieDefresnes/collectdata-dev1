@@ -1,5 +1,8 @@
 // css
 import '../scss/user_update_app.scss';
+import 'select2/src/scss/core.scss';
+
+require('select2')
 
 // js
 $(function() {
@@ -7,8 +10,15 @@ $(function() {
     // Init select2 to multpiple
     $('.select-multiple').select2({
         placeholder: translations['multiple-search'],
-        allowClear: true
+        allowClear: true,
+        width: 'resolve'
     })
+    
+    // Init select2 to single
+    $('.select-single').select2({
+        minimumResultsForSearch: Infinity,
+        width: 'resolve'
+    });
 
     // Remove User lang form Oprional langs
     $('#user_update_form_langs').find('option').each(function(){

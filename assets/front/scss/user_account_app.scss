@@ -1,14 +1,16 @@
-#userLangForms button {
-    display: none;
-    width: 24px !important;
-    border-radius: 4px;
-    & button[type="submit"]:focus {
-        outline: none;
-        outline-style: solid;
-        outline-color: #d9d9d9;
-        outline-width: 4px;
-        background: #dc3545 !important;
-        color: #fff !important;
+#userLangForms {
+    & button {
+        display: none;
+        width: 24px !important;
+        border-radius: 4px;
+        &[type="submit"]:focus {
+            outline: none;
+            outline-style: solid;
+            outline-color: #d9d9d9;
+            outline-width: 4px;
+            background: #dc3545 !important;
+            color: #fff !important;
+        }
     }
 }
 

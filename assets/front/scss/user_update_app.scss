@@ -1,16 +1,6 @@
-#userLangForms button {
-    display: none;
-    width: 24px !important;
-    border-radius: 4px;
-}
-#userLangForms button[type="submit"]:focus {
-    outline: none;
-    outline-style: solid;
-    outline-color: #d9d9d9;
-    outline-width: 4px;
-    background: #dc3545 !important;
-    color: #fff !important;
-}
+// global
+@import "../../scss/_variables";
+
 .img-circle {
     width: 86.662px;
     height: 86.662px;
@@ -26,6 +16,14 @@
 }
 .unupload-img:hover i,
 .delete-img:hover i {
-    color: #343a40;
+    color: $dark;
     cursor: pointer;
+}
+
+.select2-selection {
+    &:not(.select2-selection--multiple) {
+        & .select2-selection__rendered {
+            color: $dark !important;
+        }
+    }
 }
