@@ -41,7 +41,7 @@ class SituController extends AbstractController
     }
 
     /**
-     * @Route("/situ/{id}", defaults={"id" = null}, name="create_situ", methods="GET|POST")
+     * @Route("/contrib/{id}", defaults={"id" = null}, name="create_situ", methods="GET|POST")
      */
     public function createSitu( Request $request,
                                 EntityManagerInterface $em,
@@ -88,9 +88,9 @@ class SituController extends AbstractController
     }
     
     /**
-     * @Route("/ajaxSitu", methods="GET|POST")
+     * @Route("/ajaxCreate", methods="GET|POST")
      */
-    public function ajaxSitu(): JsonResponse
+    public function ajaxCreate(): JsonResponse
     {
         $this->denyAccessUnlessGranted('ROLE_CONTRIBUTOR');
             

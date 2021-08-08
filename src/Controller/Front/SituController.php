@@ -39,17 +39,17 @@ class SituController extends AbstractController
     }
     
     /**
-     * @Route("/all-situs", name="all_situs")
+     * @Route("/contribs", name="all_situs")
      */
     public function index(): Response
     {
-        return $this->render('front/situ/all.html.twig', [
+        return $this->render('front/situ/index.html.twig', [
             'controller_name' => 'SituController',
         ]);
     }
     
     /**
-     * @Route("/situs", name="user_situs", methods="GET")
+     * @Route("/my-contribs", name="user_situs", methods="GET")
      */
     public function getSitusByUser()
     {
@@ -62,9 +62,9 @@ class SituController extends AbstractController
     }
     
     /**
-     * @Route("/situ/edit", methods="GET")
+     * @Route("/ajaxEdit", methods="GET")
      */
-    public function editSitu(Request $request): JsonResponse
+    public function ajaxEdit(Request $request): JsonResponse
     {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
         
@@ -146,7 +146,7 @@ class SituController extends AbstractController
                 'id' => $situData['categoryLevel2Id']
             ]);
         
-        return $this->render('front/situ/index.html.twig', [
+        return $this->render('front/situ/read.html.twig', [
             'situ' => $situData,
             'situItems' => $situItems,
             'user' => $user,

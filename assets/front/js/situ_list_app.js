@@ -26,7 +26,7 @@ function flashMessage(status) {
 
 function selectSitu(id) {
     $.ajax({
-        url: "/"+ path['locale'] +"/situ/edit",
+        url: "/"+ path['locale'] +"/ajaxEdit",
         method: 'GET',
         data: { id: id, location: true },
         success: function(data) {

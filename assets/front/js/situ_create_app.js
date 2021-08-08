@@ -502,7 +502,7 @@ function setData(entity) {
 // Send data Situ
 function createOrUpdateSitu(dataForm) {
     $.ajax({
-        url: "/"+ path['locale'] +"/ajaxSitu",
+        url: "/"+ path['locale'] +"/ajaxCreate",
         method: 'POST',
         data: {dataForm},
         success: function(data) {
@@ -520,7 +520,7 @@ function createOrUpdateSitu(dataForm) {
 // Get data Translation
 function selectSitu(id) {
     $.ajax({
-        url: "/"+ path['locale'] +"/situ/edit",
+        url: "/"+ path['locale'] +"/ajaxEdit",
         method: 'GET',
         data: { id: id },
         success: function(data) {
