@@ -56,22 +56,17 @@ class Category
     private $event;
     
     /**
-     * @ORM\ManyToOne(targetEntity=Category::class, inversedBy="categoriesLevel2")
+     * @ORM\Column(type="integer", nullable=true)
      */
-    private $parent;
-    
-    /**
-     * @ORM\OneToMany(targetEntity=Category::class, cascade={"persist"}, mappedBy="parent")
-     */
-    private $categoriesLevel2;
+    private $parentId;
 
     /**
-     * @ORM\OneToMany(targetEntity=Situ::class, mappedBy="categoryLevel1")
+     * @ORM\OneToMany(targetEntity=Situ::class, cascade={"persist"}, mappedBy="categoryLevel1")
      */
     private $situs1;
 
     /**
-     * @ORM\OneToMany(targetEntity=Situ::class, mappedBy="categoryLevel2")
+     * @ORM\OneToMany(targetEntity=Situ::class, cascade={"persist"}, mappedBy="categoryLevel2")
      */
     private $situs2;
 
@@ -79,8 +74,11 @@ class Category
     {
         $this->situs1 = new ArrayCollection();
         $this->situs2 = new ArrayCollection();
-//        $this->situCategoriesLevel1 = new ArrayCollection();
-//        $this->categoriesLevel2 = new ArrayCollection();
+    }
+
+    public function __toString(): ?string
+    {
+        return $this->getId();
     }
 
     public function getId(): ?int
@@ -172,14 +170,14 @@ class Category
         return $this;
     }
 
-    public function getParent(): ?int
+    public function getParentId(): ?int
     {
-        return $this->parent;
+        return $this->parentId;
     }
 
-    public function setParent(?Category $parent): self
+    public function setParentId(int $parent): self
     {
-        $this->parent = $parent;
+        $this->parentId = $parentId;
 
         return $this;
     }

@@ -32,6 +32,7 @@ class SituService {
                         situ.dateValidation     dateValidation,
                         situ.statusId           statusId,
                         situ.translatedSituId   translatedSituId,
+                        situ.initialSitu        initialSitu,
                         situ.userId             userId,
                         evt.id                  eventId,
                         evt.title               eventTitle,
@@ -39,7 +40,8 @@ class SituService {
                         cat1.title              cat1Title,
                         cat2.id                 cat2Id,
                         cat2.title              cat2Title,
-                        lang.name               langName')
+                        lang.name               langName,
+                        lang.id                 langId')
             ->leftJoin(Event::class, 'evt', 'WITH', 'situ.event=evt.id')
             ->leftJoin(Category::class, 'cat1', 'WITH', 'situ.categoryLevel1=cat1.id')
             ->leftJoin(Category::class, 'cat2', 'WITH', 'situ.categoryLevel2=cat2.id')
@@ -59,6 +61,7 @@ class SituService {
                 'dateSubmission' =>     $situ['dateSubmission'],
                 'dateValidation' =>     $situ['dateValidation'],
                 'statusId' =>           $situ['statusId'],
+                'initialSitu' =>        $situ['initialSitu'],
                 'translatedSituId' =>   $situ['translatedSituId'],
                 'userId' =>             $situ['userId'],
                 'evtId' =>              $situ['eventId'],
@@ -68,6 +71,7 @@ class SituService {
                 'cat2Id' =>             $situ['cat2Id'],
                 'cat2Title' =>          $situ['cat2Title'],
                 'langName' =>           html_entity_decode($situ['langName'], ENT_QUOTES, 'UTF-8'),
+                'langId' =>             $situ['langId'],
             ];
         }
         return $result;
@@ -140,6 +144,7 @@ class SituService {
             ->setParameter(2, 3);
         
         $situs = $situs = $query->getQuery()->getScalarResult();
+        
         $result = [];
         foreach ($situs as $situ) {
             $result[] = [ 
@@ -167,6 +172,7 @@ class SituService {
             ->setParameter(2, 3);
         
         $situs = $situs = $query->getQuery()->getScalarResult();
+        
         $result = [];
         foreach ($situs as $situ) {
             $result[] = [ 
@@ -176,6 +182,21 @@ class SituService {
         }
         
         return $result;
+    }
+    
+    public function searchTranslation($situId, $langId)
+    {
+        $query = $this->em->createQueryBuilder()
+            ->from(Situ::class,'situ')
+            ->select('situ')
+            ->andWhere('situ.translatedSituId = ?1')
+            ->andWhere('situ.lang = ?2')
+            ->setParameter(1, $situId)
+            ->setParameter(2, $langId);
+        
+        $situs = $query->getQuery()->getScalarResult();
+        
+        return $situs;
     }
     
 }

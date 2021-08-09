@@ -4,8 +4,6 @@ namespace App\Entity;
 
 use App\Entity\Event;
 use App\Entity\Category;
-//use App\Entity\CategoryLevel1;
-//use App\Entity\CategoryLevel2;
 use App\Entity\SituItem;
 use App\Repository\SituRepository;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -70,17 +68,17 @@ class Situ
     private $lang;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Event", inversedBy="situs")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Event", inversedBy="situs", fetch="EAGER")
      */
     private $event;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Category", inversedBy="situs1")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Category", inversedBy="situs1", fetch="EAGER")
      */
     private $categoryLevel1;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Category", inversedBy="situs2")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Category", inversedBy="situs2", fetch="EAGER")
      */
     private $categoryLevel2;
 
@@ -109,8 +107,6 @@ class Situ
         return $this->event;
         return $this->categoryLevel1;
         return $this->categoryLevel2;
-//        return $this->category;
-//        return $this->getSituItems();
     }
 
     public function getId(): ?int
@@ -226,7 +222,7 @@ class Situ
         return $this;
     }
 
-    public function getEvent(): ?int
+    public function getEvent(): ?Event
     {
         return $this->event;
     }
@@ -238,7 +234,7 @@ class Situ
         return $this;
     }
 
-    public function getCategoryLevel1()
+    public function getCategoryLevel1(): ?Category
     {
         return $this->categoryLevel1;
     }
@@ -250,7 +246,7 @@ class Situ
         return $this;
     }
 
-    public function getCategoryLevel2()
+    public function getCategoryLevel2(): ?Category
     {
         return $this->categoryLevel2;
     }

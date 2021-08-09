@@ -51,14 +51,12 @@ class Event
 
     public function __construct()
     {
-        $this->categoriesLevel1 = new ArrayCollection();
-        $this->situs = new ArrayCollection();
         $this->categories = new ArrayCollection();
+        $this->situs = new ArrayCollection();
     }
 
     public function __toString(): ?string
     {
-        return $this->categoriesLevel1;
         return $this->getId();
     }
 
