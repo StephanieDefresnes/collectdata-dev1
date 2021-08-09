@@ -11,7 +11,7 @@
         {% block banner%}
         <div class="d-flex justify-content-between mt-3 mb-5">
             <h1 class="h3 text-white">{{ 'contrib.situ.title'|trans() }}</h1>
-            <span>
+            <div>
                 <a href="{{ path('user_situs') }}" class="btn btn-outline-light bg-dark-50-0 px-3">
                     <i class="fas fa-chevron-left ltr pr-2"></i>
                     {{ 'nav.contribs.user'|trans() }}
@@ -22,7 +22,7 @@
                     {{ 'nav.contribs.all'|trans() }}
                     <i class="fas fa-chevron-right rtl pl-2"></i>
                 </a>
-            </span>
+            </div>
         </div>
         {% endblock %}
         
@@ -34,7 +34,7 @@
                     
                     <div class="card-header bg-dark-50 p-4 text-white">
                         <div class="position-absolute">
-                            <img src="{{ asset('img/flag/'~ lang.lang ~'.jpg') }}" alt="{{ lang.lang }}" class="text-uppercase">
+                            <img src="{{ asset('img/flag/'~ lang.lang ~'.jpg') }}" alt="{{ lang.lang }}" class="scale-12 text-uppercase">
                         </div>
                         <div class="h5 pb-2">
                             <div class="text-center first-letter">{{ event }}</div>

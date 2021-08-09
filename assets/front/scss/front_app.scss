@@ -328,6 +328,16 @@ body {
         }
     }
 }
+.user-notify {
+    & > a {
+        & > .badge {
+            position: absolute;
+            right: 0;
+            bottom: 0;
+        }
+    }
+}
+
 .list-inline {
     & span {
         &::after {
@@ -361,6 +371,9 @@ body {
 /*
  * Custom classes
  */
+.scale-12 {
+    transform: scale(1.2);
+}
 .opacity-0 {
     opacity: 0;
 }
