@@ -1,0 +1,45 @@
+// global
+@import "../../scss/_variables";
+
+.translation-flag {
+    transform: scale(1.2);
+    border: 2px solid $gray-b;
+    vertical-align: initial;
+    border-radius: 3px;
+}
+.dropdown-category {
+    & .dropdown-toggle {
+        &::after {
+            margin: 0 8px;
+        }
+    }
+}
+.h-title {
+    height: 36.4px;
+    overflow-y: auto;
+    line-height: 1.2;
+}
+.h-description {
+    height: 136px;
+    overflow-y: auto;
+    line-height: 1.2;
+}
+.pt-score {
+    margin-bottom: 34px;
+    padding-top: 54px;
+}
+
+@media screen and (max-width: 768px) {
+    .h-title,.h-description {
+        height: auto;
+        overflow-y: none;
+    }
+    .title-success {
+        margin-bottom: 12px !important;
+        padding-bottom: 0 !important;
+    }
+    .pt-score {
+        margin-bottom: 12px;
+        padding-top: 12px;
+    }
+}
