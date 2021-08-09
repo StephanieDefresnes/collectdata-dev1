@@ -45,6 +45,7 @@
                 <table id="dataTable-situs" class="shadow table table-borderless table-hover text-nowrap">
                     <thead class="bg-black-40 text-white">
                         <tr>
+                            <th class="d-none"></th>
                             <th class="py-2">{{ 'contrib.table.title'|trans() }}</th>
                             <th class="py-2">{{ 'contrib.table.description'|trans() }}</th>
                             <th class="py-2">{{ 'contrib.table.date_creation'|trans() }}</th>
@@ -63,6 +64,7 @@
                     {% for situ in situs %}
                         {% if situ.statusId != 5 %}
                         <tr data-id="{{ situ.id }}">
+                            <td class="d-none">{{ situ.id }}</td>
                             <th class="first-letter pt-3 situ-title"
                                 scope="row" data-toggle="tooltip" data-placement="right" title="{{ situ.title }}">
                                 {{ situ.title|u.truncate(20, '...') }}

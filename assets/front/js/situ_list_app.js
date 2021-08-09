@@ -114,6 +114,7 @@ $(document).ready(function() {
             'targets': 'no-sort',
             'orderable': false,
         }],
+        'order': [[ 0, 'desc' ]],
         'fnDrawCallback': function(oSettings) {
             // Add class to load reset button search
             $('#dataTable-situs_filter input').addClass('search')
