@@ -76,12 +76,12 @@ class CategoryService {
         $qb = $this->em->createQueryBuilder();
         
         $categoriesByCategoryId = $qb->expr()->andX(
-            $qb->expr()->eq('c.parent', '?1'),
+            $qb->expr()->eq('c.parentId', '?1'),
             $qb->expr()->eq('c.validated', '?2')
         );
         
         $categoriesByUser = $qb->expr()->andX(
-            $qb->expr()->eq('c.parent', '?1'),
+            $qb->expr()->eq('c.parentId', '?1'),
             $qb->expr()->eq('c.validated', '?3'),
             $qb->expr()->eq('c.userId', '?4'),
             $qb->expr()->eq('c.lang', '?5')
