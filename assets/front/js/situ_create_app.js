@@ -708,17 +708,27 @@ $(function() {
             if ($(this).attr('id') != 'create_situ_form_situItems_0_score') {
                 if ($(this).val() == '') {
                     if (!$(this).is('select')) $(this).addClass('empty-value')
-                    else $(this).parent().find('.select2-selection__rendered')
-                            .addClass('empty-value')
-                }
-                else {
+                    else {
+                        if ($(this).attr('data-select2-id') !== undefined) {
+                            $(this).parent().find('.select2-selection__rendered')
+                                .addClass('empty-value')
+                        } else {
+                            $(this).addClass('empty-value')
+                        }
+                        
+                    }
+                } else {
                     if (!$(this).is('select')) {
                         if ($(this).hasClass('empty-value')) $(this).removeClass('empty-value')
                     } else {
-                        if ($(this).parent().find('.select2-selection__rendered')
-                            .hasClass('empty-value')) {
-                            $(this).parent().find('.select2-selection__rendered')
-                                .removeClass('empty-value')
+                        if ($(this).attr('data-select2-id') !== undefined) {
+                            if ($(this).parent().find('.select2-selection__rendered')
+                                .hasClass('empty-value')) {
+                                $(this).parent().find('.select2-selection__rendered')
+                                    .removeClass('empty-value')
+                            }
+                        } else {
+                            if ($(this).hasClass('empty-value')) $(this).removeClass('empty-value')
                         }
                     }
                 }
@@ -730,7 +740,7 @@ $(function() {
             $('#loader').show()
 
             let lang, event, categoryLevel1, categoryLevel2,
-                title, description, statusId, id, dataForm,
+                title, description, statusId, id, initialId, dataForm,
                 situItems = []
 
             submissionStatus($(this).attr('id'))
@@ -744,6 +754,7 @@ $(function() {
             description = $('#create_situ_form_description').val()
             statusId = $('#create_situ_form_statusId').val()
             id = $('#situ').attr('data-id')
+            initialId = $('#situ').attr('data-initial-id')
 
             $('#situItems li').each(function() {
                 let score, titleItem, descItem
@@ -765,6 +776,7 @@ $(function() {
 
             dataForm = {
                 'id': id,
+                'initialId': initialId,
                 'lang': lang,
                 'event': event,
                 'categoryLevel1': categoryLevel1,
@@ -798,7 +810,7 @@ $(function() {
                 .removeClass('d-none')
         addPlaceholderClass('')
     } else {
-        $('#loader').hide()
+        if ($('#situ').attr('data-lang') == '') $('#loader').hide()
     }
     
 })

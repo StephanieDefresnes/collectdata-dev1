@@ -7,6 +7,7 @@ use App\Entity\Lang;
 use App\Entity\Event;
 use App\Entity\Category;
 use App\Entity\User;
+use App\Form\Situ\CreateSituFormType;
 use App\Service\SituService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -55,9 +56,11 @@ class SituController extends AbstractController
     {
         $user = $this->security->getUser();
         $situs = $this->situService->getSitusByUser($user->getId());
+        $userLangs = $user->getLangs();
         
         return $this->render('front/situ/list.html.twig', [
             'situs' => $situs,
+            'userLangs' => $userLangs,
         ]);
     }
     
@@ -154,6 +157,61 @@ class SituController extends AbstractController
             'event' => $event->getTitle(),
             'categoryLevel1' => $categoryLevel1->getTitle(),
             'categoryLevel2' => $categoryLevel2->getTitle(),
+        ]);
+    }
+    
+    /**
+     * @Route("/ajaxFindTranslate", methods="GET")
+     */
+    public function ajaxFindTranslate(Request $request): JsonResponse
+    {
+        $this->denyAccessUnlessGranted('ROLE_CONTRIBUTOR');
+        
+        // Get Situ
+        $situId = $request->query->get('id');
+        $situLangId = $request->query->get('langId');
+        $situTranslated = $this->situService->searchTranslation($situId, $situLangId);
+        
+        return $this->json([
+            'situTranslated' => $situTranslated,
+        ]);
+    }
+
+    /**
+     * @Route("/translate/{id}/{langId}", name="translate_situ", methods="GET|POST")
+     */
+    public function translateSitu( Request $request,
+                                EntityManagerInterface $em,
+                                $id, $langId): Response
+    {
+        $this->denyAccessUnlessGranted('ROLE_CONTRIBUTOR');
+        
+        // Current user langs
+        $langs = $this->security->getUser()->getLangs()->getValues();
+        
+        // Translation lang
+        $repository = $this->em->getRepository(Lang::class);
+        $translationLang = $repository->findOneBy(
+            ['id' => $langId]
+        );
+        
+        // Situ to translate
+        $repoSitu = $this->getDoctrine()->getRepository(Situ::class);
+        $situData = $repoSitu->findOneBy(['id' => $id]);
+        
+        $repoEvent = $this->getDoctrine()->getRepository(Event::class);
+        
+        // Form
+        $situ = new Situ();
+        $formSitu = $this->createForm(CreateSituFormType::class, $situ);
+        $formSitu->handleRequest($request);
+        
+        return $this->render('front/situ/translation.html.twig', [
+            'form' => $formSitu->createView(),
+            'langs' => $langs,
+            'situ' => $situData,
+            'translationLang' => $translationLang,
+            'initialId' => $id,
         ]);
     }
     

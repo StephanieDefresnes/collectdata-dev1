@@ -164,9 +164,24 @@ contrib:
             read: Read
             edit: Edit
             delete: Delete
+            translate: Translate
         update:
             flash:
                 error: An error occurred while recovering from the situation
+    translation:
+        modal:
+            title: Translate a situation
+            text: What language do you want to translate this situation into?
+            result:
+                error: This translation already exists. Do you want to see this translation?
+                success: This translation does not exist. You can translate it.
+            btn:
+                read: See
+                translate: Translate
+        label:
+            event: "Événement :"
+            catLevel1: "Catégorie :"
+            catLevel2: "Sous-catégorie :"  
     form:
         multiple_search: Search
         to_validate: ( validation in progress )

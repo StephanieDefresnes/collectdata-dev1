@@ -6,6 +6,13 @@
     {{ parent() }}
     {{ encore_entry_link_tags('flp_theme') }}
     {{ encore_entry_link_tags('situ_list_app', null, 'frontApp') }}
+    <style>
+            #spinner {
+                display: none !important;
+            }
+            #spinner.show {
+                display: flex !important;
+            }
     </style>
 {% endblock %}
 
@@ -49,13 +56,14 @@
                             <th class="cust-nowrap p-2 no-sort">{{ 'contrib.table.actions.title'|trans() }}</th>
                             <th class="no-sort"></th>
                             <th class="no-sort"></th>
+                            {% if userLangs|length > 1 %}<th class="no-sort"></th>{% endif %}
                         </tr>
                     </thead>
                     <tbody class="small bg-white-80">
                     {% for situ in situs %}
                         {% if situ.statusId != 5 %}
                         <tr data-id="{{ situ.id }}">
-                            <th class="first-letter pt-3"
+                            <th class="first-letter pt-3 situ-title"
                                 scope="row" data-toggle="tooltip" data-placement="right" title="{{ situ.title }}">
                                 {{ situ.title|u.truncate(20, '...') }}
                             </th>
@@ -79,7 +87,12 @@
                                 data-toggle="tooltip" data-placement="right" title="{{ situ.cat2Title }}">
                                 {{ situ.cat2Title|u.truncate(20, '...') }}
                             </td>
-                            <td class="pt-3 first-letter">{{ situ.langName }}</td>
+                            <td class="pt-3 first-letter">
+                                {{ situ.langName }}
+                                {% if situ.initialSitu == 0 %}
+                                    <i class="fas fa-globe"></i>
+                                {% endif %}
+                            </td>
                             <td class="pt-3 situStatus">
                                 {% if situ.statusId == 1 %}
                                     {{ 'contrib.table.status.writing'|trans() }}
@@ -91,17 +104,33 @@
                                     {{ 'contrib.table.status.refused'|trans() }}
                                 {% endif %}
                             </td>
-                            <td class="width-max-40 px-2">
+                            <td class="px-0">
                                 <span role="button" class="situUpdate btn btn-outline-secondary btn-sm px-1"
                                     data-toggle="tooltip" data-placement="left"
-                                    {% if situ.statusId == 2 or situ.statusId == 3 %}
-                                    data-target="#editModal"
-                                    {% endif %}
                                     title="{{ 'contrib.table.actions.edit'|trans() }}"
                                     aria-label="{{ 'contrib.table.actions.edit'|trans() }}">
                                     <i class="fas fa-pen"></i>
                                 </span>
                             </td>
+                            {% if userLangs|length > 1 %}
+                            <td class="width-max-26 pl-0 pr-2">
+                                {% if situ.initialSitu == 1 %}
+                                <span role="button" class="situTranslate btn btn-outline-primary btn-sm px-1"
+                                    data-lang="{{ situ.langId }}" data-toggle="tooltip" data-placement="left"
+                                    title="{{ 'contrib.table.actions.translate'|trans() }}"
+                                    aria-label="{{ 'contrib.table.actions.translate'|trans() }}">
+                                    <i class="fas fa-globe"></i>
+                                </span>
+                                {% else %}
+                                <span class="btn btn-outline-secondary btn-sm px-1 situ-translation"
+                                    data-toggle="tooltip" data-placement="left"
+                                    title="{{ 'contrib.table.actions.translate'|trans() }}"
+                                    aria-label="{{ 'contrib.table.actions.translate'|trans() }}">
+                                    <i class="fas fa-globe"></i>
+                                </span>
+                                {% endif %}
+                            </td>
+                            {% endif %}
                             {% if situ.statusId == 1 %}
                             <td class="width-max-26 px-0">
                                 <span role="button" class="situValidation btn btn-outline-success btn-sm pcx-2"
@@ -136,27 +165,54 @@
                     </tbody>
                 </table>
                 {% endif %}
-                        
-                <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                    <div class="modal-dialog">
+
+
+                <!-- Modal -->
+                <div class="modal fade" id="translateModal" data-backdrop="static" data-keyboard="false"
+                     tabindex="-1" aria-labelledby="translateModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered">
                         <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                    <span aria-hidden="true">&times;</span>
-                                </button>
+                            <div class="modal-header bg-dark">
+                                <h5 class="modal-title" id="translateModalLabel">
+                                    {{ 'contrib.translation.modal.title'|trans() }}
+                                </h5>
                             </div>
-                            <div class="modal-body">
-                                ...
+                            <div class="modal-body text-secondary pb-4">
+                                <p class="mb-1">{{ 'contrib.translation.modal.text'|trans() }}</p>
+                                <p id="situ-title" data-id="" class="text-center font-weight-bold first-letter"></p>
+                                <div class="row mt-4 mb-2">
+                                    <div class="col-md-6 offset-md-3">
+                                        <select id="translateLangs" class="form-control">
+                                            <option value="" class="d-none">
+                                                {{ 'contrib.form.lang.placeholder'|trans() }}
+                                            </option>
+                                            {% for userLang in userLangs%}
+                                                <option class="decode" value="{{ userLang.id }}">
+                                                    {{ userLang.name }}
+                                                </option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                </div>
+                                <div id="spinner" class="d-flex justify-content-center">
+                                    <div class="spinner-border spinner-border-sm" role="status">
+                                        <span class="sr-only">Loading...</span>
+                                    </div>
+                                </div>
+                                <p id="result" class="text-center mt-3 mb-0 d-none">
+                                    <span class="success">{{ 'contrib.translation.modal.result.success'|trans() }}</span>
+                                    <span class="error">{{ 'contrib.translation.modal.result.error'|trans() }}</span>
+                                </p>
                             </div>
                             <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                <button type="button" class="btn btn-primary">Save changes</button>
+                                <span id="valid" class="btn btn-primary d-none" data-id=""></span>
+                                <span class="btn btn-secondary" data-dismiss="modal">
+                                    {{ 'button.cancel'|trans() }}
+                                </span>
                             </div>
                         </div>
                     </div>
                 </div>
-
             </div>
         </div>
         
@@ -177,6 +233,8 @@
             "statusValidation" : "{{ 'contrib.table.status.validation'|trans() }}",
             "actionRead" : "{{ 'contrib.table.actions.read'|trans() }}",
             "statusValidation" : "{{ 'contrib.table.status.validation'|trans() }}",
+            "modalBtnRead" : "{{ 'contrib.translation.modal.btn.read'|trans() }}",
+            "modalBtnValid" : "{{ 'contrib.translation.modal.btn.translate'|trans() }}",
         }
     </script>
 {% endblock %}

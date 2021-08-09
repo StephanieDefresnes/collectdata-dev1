@@ -164,9 +164,24 @@ contrib:
             read: Lire
             edit: Modifier
             delete: Supprimer
+            translate: Traduire
         update:
             flash:
                 error: Une erreur s'est produite lors de la récupération de la situation
+    translation:
+        modal:
+            title: Traduire une situation
+            text: Dans quelle langue voulez-vous traduire cette situation ?
+            result:
+                error: Cette traduction existe déjà. Voulez-vous voir cette traduction ?
+                success: Cette traduction n'existe pas. Vous pouvez la traduire.
+            btn:
+                read: Voir
+                translate: Traduire
+        label:
+            event: "Événement :"
+            catLevel1: "Catégorie :"
+            catLevel2: "Sous-catégorie :"            
     form:
         multiple_search: Rechercher
         to_validate: ( validation en cours )

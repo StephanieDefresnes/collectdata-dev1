@@ -159,6 +159,13 @@ class SituController extends AbstractController
                 $this->em->remove($item);
             }
         }
+        
+        if (empty($data['initialId'])) {
+            $situ->setInitialSitu(true);
+        } else {
+            $situ->setInitialSitu(false);
+            $situ->setTranslatedSituId($data['initialId']);
+        }
 
         $situ->setTitle($data['title']);
         $situ->setDescription($data['description']);
@@ -217,9 +224,8 @@ class SituController extends AbstractController
 
         return $this->json([
             'success' => true,
-            'redirection' => $this->redirectToRoute('user_situs', [
-                'id' => $userId, '_locale' => locale_get_default()
-            ]),
+            'redirection' => $this->redirectToRoute('user_situs',
+                    ['_locale' => locale_get_default()]),
         ]);
     }
     

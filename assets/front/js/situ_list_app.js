@@ -24,6 +24,7 @@ function flashMessage(status) {
     $('#flash_message').delay(3000).fadeOut(); 
 }
 
+// Redirection to edit situ
 function selectSitu(id) {
     $.ajax({
         url: "/"+ path['locale'] +"/ajaxEdit",
@@ -38,13 +39,13 @@ function selectSitu(id) {
     })
 }
 
+// Update button status when validation is resquested
 function requestReceived(button) {
     button.removeClass('pcx-2').addClass('px-1')
             .attr('data-original-title', translations['actionRead'])
             .html('<i class="fas fa-eye"></i>')
             .parents('tr').find('.situStatus').text(translations['statusValidation'])
 }
-
 function validationRequest(id, button) {
     $.ajax({
         url: "/"+ path['locale'] +"/ajaxValidationRequest",
@@ -62,8 +63,45 @@ function validationRequest(id, button) {
     })
 }
 
+// Search if translations exist
+function translationRequest(id, langId) {
+    $.ajax({
+        url: "/"+ path['locale'] +"/ajaxFindTranslate",
+        method: 'GET',
+        data: { id: id, langId: langId},
+        success: function(data) {
+            if ($('#valid').hasClass('createTranslation'))
+                $('#valid').removeClass('createTranslation')
+            if ($('#valid').hasClass('readTranslation'))
+                $('#valid').removeClass('readTranslation')
+            verifyTranslatedSitu(data['situTranslated'])
+        }
+    })
+}
+
+// Load modal to read existing translation or create it
+function verifyTranslatedSitu(data) {
+    if (data.length == 0) {
+        if ($('#result').find('.success').hasClass('d-none'))
+            $('#result').find('.success').removeClass('d-none')
+        $('#result').find('.error').addClass('d-none')
+        $('#valid').text(translations['modalBtnValid'])
+                .removeClass('d-none').addClass('createTranslation')
+    } else {
+        $('#valid').attr('data-id', data[0]['situ_id'])
+        if ($('#result').find('.error').hasClass('d-none'))
+            $('#result').find('.error').removeClass('d-none')
+        $('#result').find('.success').addClass('d-none')
+        $('#valid').text(translations['modalBtnRead'])
+                .removeClass('d-none').addClass('readTranslation')                        
+    }
+    $('#spinner').removeClass('show')
+    $('#result').removeClass('d-none')
+}
+
 $(document).ready(function() {
     
+    // Init datatables
     $('#dataTable-situs').dataTable({
         language: {
             url: '//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/'
@@ -114,6 +152,48 @@ $(document).ready(function() {
     $('.situValidation').click(function() {
         $('#loader').show()
         validationRequest($(this).parents('tr').attr('data-id'), $(this))
+    })
+
+    // Show modal with data situ to translation and hide language choice if is situ langId
+    $('.situTranslate').click(function() {
+        
+        let title = $(this).parents('tr').find('.situ-title').attr('data-original-title')
+        let langId = $(this).attr('data-lang')
+        
+        $('#situ-title').text(title).attr('data-id', $(this).parents('tr').attr('data-id'))
+        
+        $('#translateLangs option').each(function() {
+            if ($(this).val() != '') {
+                if ($(this).val() == langId) $(this).addClass('d-none')
+                else {
+                    if ($(this).hasClass('d-none')) $(this).removeClass('d-none')
+                }
+            }
+        })
+        
+        $('#translateLangs').val('')
+        $('#translateModal').modal('show')
+    })
+    
+    // Search if translations exist
+    $('#translateLangs').focus(function() {
+        $('#translateLangs').val('')
+    }).change(function() {
+        let situId = $('#situ-title').attr('data-id')        
+        $('#result').addClass('d-none')
+        $('#spinner').addClass('show')
+        translationRequest(situId, $(this).val())
+    })
+    
+    // Read existing translation or create it
+    $('#valid').click(function() {
+        if ($(this).hasClass('createTranslation')) {            
+            location.href = '/'+ path['locale'] 
+                    +'/translate/'+ $('#situ-title').attr('data-id')
+                    +'/'+ $('#translateLangs').val();            
+        } else {
+            location.href = '/'+ path['locale'] +'/read/' +$(this).attr('data-id');
+        }
     })
     
     
