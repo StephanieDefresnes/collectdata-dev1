@@ -165,6 +165,7 @@ contrib:
             edit: Edit
             delete: Delete
             translate: Translate
+            translated: Translation
         update:
             flash:
                 error: An error occurred while recovering from the situation

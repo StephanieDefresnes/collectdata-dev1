@@ -165,6 +165,7 @@ contrib:
             edit: Editar
             delete: Eliminar
             translate: Traducir
+            translated: Traducción
         update:
             flash:
                 error: Ocurrió un error mientras se recuperaba de la situación
