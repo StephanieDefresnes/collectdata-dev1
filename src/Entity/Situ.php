@@ -210,7 +210,7 @@ class Situ
         return $this;
     }
 
-    public function getLang(): ?int
+    public function getLang(): ?Lang
     {
         return $this->lang;
     }
