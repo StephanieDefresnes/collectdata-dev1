@@ -57,7 +57,7 @@ class SituController extends AbstractController
         $situs = $this->situService->getSitusByUser($user->getId());
         $userLangs = $user->getLangs();
         
-        return $this->render('front/situ/list.html.twig', [
+        return $this->render('front/situ/user.html.twig', [
             'situs' => $situs,
             'userLangs' => $userLangs,
         ]);
