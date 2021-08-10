@@ -6,7 +6,6 @@
 
 {% block stylesheets %}
     {{ parent() }}
-    <link rel="stylesheet" href="{{ asset('select2/css/select2.min.css') }}">
     <link rel="stylesheet" href="{{ asset('jquery-confirm/css/jquery-confirm.css') }}">
     {{ encore_entry_link_tags('flp_theme') }}
     {{ encore_entry_link_tags('lang_translation_form_app', null, 'backApp') }}
@@ -41,7 +40,6 @@
 
 {% block javascripts %}
     {{ parent() }}
-    <script src="{{ asset('select2/js/select2.min.js') }}"></script>
     <script src="{{ asset('jquery-confirm/js/jquery-confirm.js') }}"></script>
     <script>
         var translations = {
