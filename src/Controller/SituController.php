@@ -7,7 +7,6 @@ use App\Entity\SituItem;
 use App\Entity\Lang;
 use App\Entity\Event;
 use App\Entity\Category;
-use App\Service\SituService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -22,17 +21,14 @@ class SituController extends AbstractController
 {
     private $em;
     private $security;
-    private $situService;
     private $translator;
     
     public function __construct(EntityManagerInterface $em,
                                 Security $security,
-                                SituService $situService,
                                 TranslatorInterface $translator)
     {
         $this->em = $em;
         $this->security = $security;
-        $this->situService = $situService;
         $this->translator = $translator;
     }
     
