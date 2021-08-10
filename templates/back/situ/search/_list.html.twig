@@ -1,0 +1,83 @@
+{% trans_default_domain 'back_messages' %}
+<div id="card-list" class="card shadow mb-4">
+    
+    <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-primary">{{ 'lang.translation.table.title'|trans() }}</h6>
+    </div>
+    <div id="langs-list" class="card-body pb-3">
+        
+        {% if translations is empty %}
+            {{ 'lang.translation.table.empty'|trans() }}
+        {% else %}
+            
+        <table id="dataTable-translations" class="table table-sm mb-0 nowrap">
+            <thead class="bg-gray-600 text-white">
+                <tr>
+                    <th>{{ 'lang.translation.table.action'|trans() }}</th>
+                    <th class="pl-2">{{ 'lang.translation.table.name'|trans() }}</th>
+                    <th class="pl-2">{{ 'lang.translation.table.status.thead'|trans() }}</th>
+                    <th class="pl-2">{{ 'lang.translation.table.date.status'|trans() }}</th>
+                    <th class="pl-2">{{ 'lang.translation.table.date.update'|trans() }}</th> 
+                    <th class="pl-2">{{ 'lang.translation.table.user'|trans() }}</th>
+                    <th class="pl-2">{{ 'lang.translation.table.date.creation'|trans() }}</th>        
+                </tr>
+            </thead>
+            <tbody class="bg-white">
+                {% for translation in translations %}
+                <tr>
+                    <td class="updateMssage">
+                    {% if app.user.id == translation.userId %}
+                        {% if translation.statusId == 1 or translation.statusId == 2 %}
+                            <span role="button" class="selectMessage btn btn-outline-primary"
+                               data-id="{{ translation.id }}" data-action=""
+                               data-toggle="tooltip" data-placement="left"
+                               title="{{ 'lang.translation.table.btn.update'|trans() }}"
+                               aria-label="{{ 'lang.translation.table.btn.update'|trans() }}">
+                                <i class="fas fa-edit"></i>
+                            </span>
+                        {% elseif translation.statusId == 3 %}
+                            <span role="button" class="selectMessage btn btn-outline-warning"
+                               data-id="{{ translation.id }}" data-action="clone"
+                               data-toggle="tooltip" data-placement="left"
+                               title="{{ 'lang.translation.table.btn.clone'|trans() }}"
+                               aria-label="{{ 'lang.translation.table.btn.clone'|trans() }}">
+                                <i class="far fa-clone"></i>
+                            </span>
+                        {% endif %}
+                    {% else %}
+                        {% if translation.statusId == 1 or translation.statusId == 2 or translation.statusId == 3%}
+                            <span role="button" class="selectMessage btn btn-outline-warning"
+                               data-id="{{ translation.id }}" data-action="clone"
+                               data-toggle="tooltip" data-placement="left"
+                               title="{{ 'lang.translation.table.btn.clone'|trans() }}"
+                               aria-label="{{ 'lang.translation.table.btn.clone'|trans() }}">
+                                <i class="far fa-clone"></i>
+                            </span>
+                        {% endif %}
+                    {% endif %}
+                    </td>
+                    <td class="px-2">{{ translation.name }}</td>
+                    <td class="px-2">
+                        {% if translation.statusId == 1 %}
+                            {{ 'lang.translation.table.status.1'|trans() }}
+                        {% elseif translation.statusId == 2 %}
+                            {{ 'lang.translation.table.status.2'|trans() }}
+                        {% elseif translation.statusId == 3 %}
+                            {{ 'lang.translation.table.status.3'|trans() }}
+                        {% elseif translation.statusId == 4 %}
+                            {{ 'lang.translation.table.status.4'|trans() }}
+                        {% else %}
+                            {{ 'lang.translation.table.status.5'|trans() }}
+                        {% endif %}
+                    </td>
+                    <td class="px-2">{{ translation.dateStatus ? translation.dateStatus|format_datetime('short', 'medium', locale=locale) : '' }}</td>
+                    <td class="px-2">{{ translation.dateLastUpdate ? translation.dateLastUpdate|format_datetime('short', 'medium', locale=locale) : '' }}</td>
+                    <td class="px-2">{{ translation.userName }}</td>
+                    <td class="px-2">{{ translation.dateCreation|format_datetime('short', 'medium', locale=locale) }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>            
+        {% endif %}
+    </div>
+</div>

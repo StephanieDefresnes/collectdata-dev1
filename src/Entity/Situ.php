@@ -63,7 +63,7 @@ class Situ
     private $statusId;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Lang", inversedBy="situs")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Lang", inversedBy="situs", fetch="EAGER")
      */
     private $lang;
 
