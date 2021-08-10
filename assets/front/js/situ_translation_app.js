@@ -1,13 +1,6 @@
 // css
 import '../scss/situ_translation_app.scss'
 
-function initSelect2(select) {
-    $(select).select2({
-        minimumResultsForSearch: Infinity,
-        width: 'resolve'
-    });
-}
-
 // Load translation lang & show fields
 function loadTranslation(langId) {
     $('#create_situ_form_lang').val(langId).trigger('change')

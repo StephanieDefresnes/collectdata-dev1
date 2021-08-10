@@ -225,7 +225,6 @@
 
 {% block javascripts %}
     {{ parent() }}
-    <script src="{{ asset('fullscreenslide/js/modernizr.custom.86080.js') }}"></script>
     {{ encore_entry_script_tags('situ_create_app', null, 'frontApp') }}
     {{ encore_entry_script_tags('situ_translation_app', null, 'frontApp') }}
     <script>
@@ -233,7 +232,6 @@
             "locale" : "{{ locale }}",
         }
         let translations = {
-            "h1Update" : "{{ 'contrib.form.situ.h1_update' | trans }}",
             "flashError" : "{{ 'contrib.table.update.flash.error' | trans }}",
             "srOnly-error" : "{{ 'contrib.form.sr_only.error' | trans }}",
             "flashError1" : "{{ 'contrib.form.save.flash.error' | trans }}",

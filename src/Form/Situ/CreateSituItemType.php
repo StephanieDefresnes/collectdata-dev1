@@ -18,7 +18,7 @@ class CreateSituItemType extends AbstractType {
             ->add('score', ChoiceType::class, [
                 'label' => 'contrib.form.item.label_item',
                 'label_attr' => ['class' => 'label-score'],
-                'row_attr' => ['class' => 'col-md-6 col-sm-7 col-8 score-group'],
+                'row_attr' => ['class' => 'col-lg-6 col-md-5 col-9 score-group'],
                 'attr' => ['class' => 'custom-select d-block score-item'],
                 'choices'  => [
                     'success'   => 0,
@@ -54,7 +54,7 @@ class CreateSituItemType extends AbstractType {
                 'row_attr' => ['class' => 'col-12'],
                 'attr' => [
                     'class' => 'score-description',
-                    'rows' => '3',
+                    'rows' => '5',
                     'placeholder' => 'contrib.form.item.description_placeholder'
                 ],
             ])
