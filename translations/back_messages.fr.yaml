@@ -11,15 +11,11 @@ sidebar:
         create: Inviter
         search: Liste
     contrib:
-        title: Contributions
-        create: Validation
         search: Liste
-    event:
-        title: Événements
-    categories_level_1:
-        title: Catégories
-    categories_level_2:
-        title: Sous-catégories
+        title: Contributions
+        validation: Validation
+    event: Événements
+    category: Catégories
 nav:
     account: Compte
     account_logout: Déconnexion
@@ -57,6 +53,16 @@ button:
     up: Monter
     update_title: Modifier
     validate: Valider
+contrib:
+    category:
+        title: Liste des catégories
+    event:
+        title: Liste des événements
+    list:
+        title: Liste des situations
+    validation:
+        title: Validation des contributions
+        verify: Valider une contribution    
 delete:
     confirm: Confirmation de la suppression
     warning: La suppression sera définitive.

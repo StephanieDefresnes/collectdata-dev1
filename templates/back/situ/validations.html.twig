@@ -1,0 +1,23 @@
+{% trans_default_domain 'back_messages' %}
+{% extends "back/layout.html.twig" %}
+
+{% block title %}{{ 'contrib.validation.title'|trans() }}{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+ {% endblock %}
+
+
+{% block content %}
+    <div class="container-fluid pt-4">
+        
+        <div class="d-sm-flex align-items-center justify-content-between mb-4">
+            <h1 class="h3 mb-0 text-gray-800">{{ 'contrib.validation.title'|trans() }}</h1>
+        </div>
+
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+{% endblock %}

@@ -11,15 +11,11 @@ sidebar:
         create: Invitación
         search: Listado
     contrib:
-        title: Contribuciones
-        create: Validación
         search: Listado
-    event:
-        title: Événements
-    categories_level_1:
-        title: Categorías
-    categories_level_2:
-        title: Subcategorías
+        title: Contribuciones
+        validation: Validación
+    event: Eventos
+    category: Categorías
 nav:
     account: Cuenta
     account_logout: Desconexión
@@ -57,6 +53,16 @@ button:
     up: Subir
     update_title: Editar
     validate: Validar
+contrib:
+    category:
+        title: Lista de categorías
+    event:
+        title: Lista de eventos
+    list:
+        title: Lista de situaciones
+    validation:
+        title: Validación de contribuciones
+        verify: Validar una contribución  
 delete:
     confirm: 'Confirmación de eliminación'
     warning: 'La eliminación será definitiva.'
