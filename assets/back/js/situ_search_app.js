@@ -16,7 +16,7 @@ $(function() {
         },
         dom: '<"d-flex justify-content-between row mb-2"<"#length.col-md-5"l><"#search.col-auto"f>>'
                 +'<"table-responsive border"t>'
-                +'<"row"<"col-md-6 small"i><"#pagination.col-md-6 mt-3"p>>',
+                +'<"row"<"#info.col-md-6 small"i><"#pagination.col-md-6 mt-3"p>>',
         "columnDefs": [{
             orderable: false,
             targets: 0
