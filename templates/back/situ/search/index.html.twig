@@ -7,8 +7,7 @@
 {% block stylesheets %}
     {{ parent() }}
     {{ encore_entry_link_tags('situ_search_app', null, 'backApp') }}
- {% endblock %}
-
+{% endblock %}
 
 {% block content %}
     <div id="loader"></div>
@@ -20,7 +19,6 @@
 
         {{ include('back/situ/search/_list.html.twig') }}
         
-
     </div>
 {% endblock %}
 

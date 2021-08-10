@@ -12,23 +12,23 @@
         <h6 class="m-0 font-weight-bold text-primary">{{ 'user.search.table'|trans() }}</h6>
     </div>
     <div id="users-list" class="card-body pb-3">
-        <table id="dataTable-usersList" class="table table-sm mb-0 nowrap">
+        <table id="dataTable-usersList" class="table table-sm mb-0">
             <thead class="bg-gray-600 text-white">
                 <tr>
                     {% if is_granted("ROLE_SUPER_ADMIN") %}
                         {% set col_count = col_count + 1 %}
                         <th name="check"><div class="form-check pl-1"><input type="checkbox" id="select_all" /></div></th>
                     {% endif %}
-                    <th class="px-2">{{ 'user.field.name'|trans() }}</th>
-                    <th class="px-2">{{ 'user.field.email'|trans() }}</th>
-                    <th class="px-2">{{ 'user.field.roles'|trans() }}</th>
-                    <th class="px-2">{{ 'user.field.enabled'|trans() }}</th>
-                    <th class="px-2">{{ 'user.field.lang.title'|trans() }}</th>
-                    <th class="px-2">{{ 'user.field.note'|trans() }}</th>
-                    <th class="px-2">{{ 'user.field.date.last_login'|trans() }}</th>
-                    <th class="px-2">{{ 'user.field.date.create'|trans() }}</th>
-                    <th class="px-2">{{ 'user.field.date.update'|trans() }}</th>
-                    <th class="px-2">{{ 'search.action_th'|trans() }}</th>
+                    <th class="px-2" nowrap>{{ 'user.field.name'|trans() }}</th>
+                    <th class="px-2" nowrap>{{ 'user.field.email'|trans() }}</th>
+                    <th class="px-2" nowrap>{{ 'user.field.roles'|trans() }}</th>
+                    <th class="px-2" nowrap>{{ 'user.field.enabled'|trans() }}</th>
+                    <th class="px-2" nowrap>{{ 'user.field.lang.title'|trans() }}</th>
+                    <th class="px-2" nowrap>{{ 'user.field.note'|trans() }}</th>
+                    <th class="px-2" nowrap>{{ 'user.field.date.last_login'|trans() }}</th>
+                    <th class="px-2" nowrap>{{ 'user.field.date.create'|trans() }}</th>
+                    <th class="px-2" nowrap>{{ 'user.field.date.update'|trans() }}</th>
+                    <th class="px-2" nowrap>{{ 'search.action_th'|trans() }}</th>
                 </tr>
             </thead>
             <tbody class="bg-white">

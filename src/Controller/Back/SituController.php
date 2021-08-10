@@ -38,7 +38,7 @@ class SituController extends AbstractController
     }
     
     /**
-     * @Route("/validations", name="back_situs_validation", methods="GET")
+     * @Route("/validation", name="back_situs_validation", methods="GET")
      */
     public function getSitusToValidate()
     {

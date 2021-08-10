@@ -58,7 +58,7 @@ status:
     1: En rédaction
     2: À valider
     3: Validé
-    4: Archivé
+    4: Refusé
     5: Corbeille
 badge:
     new: Nouveau

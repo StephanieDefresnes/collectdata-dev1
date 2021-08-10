@@ -6,8 +6,6 @@ require('datatables.net/js/jquery.dataTables.min.js');
 require('datatables.net-bs4/js/dataTables.bootstrap4.min.js');
 const lang = require('../../datatables.json')
 
-
-
 $(function() {
     
     // Datatables configuration
