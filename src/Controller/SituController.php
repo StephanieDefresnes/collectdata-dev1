@@ -7,14 +7,10 @@ use App\Entity\SituItem;
 use App\Entity\Lang;
 use App\Entity\Event;
 use App\Entity\Category;
-use App\Entity\User;
-use App\Form\Situ\CreateSituFormType;
 use App\Service\SituService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -38,53 +34,6 @@ class SituController extends AbstractController
         $this->security = $security;
         $this->situService = $situService;
         $this->translator = $translator;
-    }
-
-    /**
-     * @Route("/contrib/{id}", defaults={"id" = null}, name="create_situ", methods="GET|POST")
-     */
-    public function createSitu( Request $request,
-                                EntityManagerInterface $em,
-                                $id): Response
-    {
-        $this->denyAccessUnlessGranted('ROLE_CONTRIBUTOR');
-        
-        // Current user
-        $user = $this->security->getUser();
-        $userId = $user->getId();
-        $langs = $user->getLangs()->getValues();
-        
-        $situData = '';
-        if ($id != null) {
-            $repository = $this->getDoctrine()->getRepository(Situ::class);
-            $situData = $repository->findOneBy(['id' => $id]);
-        }
-        
-        // Only situ author of moderator can update situ
-        if (!empty($situData) && !$user->hasRole('ROLE_MODERATOR')
-                && $userId != $situData->getUserId()) {
-            
-            $msg = $this->translator->trans(
-                    'access_deny', [],
-                    'user_messages', $locale = locale_get_default()
-                );
-            $this->addFlash('error', $msg);
-
-            return $this->redirectToRoute('user_situs', [
-                'id' => $userId, '_locale' => locale_get_default()
-            ]);
-        }
-        
-        // Form
-        $situ = new Situ();
-        $formSitu = $this->createForm(CreateSituFormType::class, $situ);
-        $formSitu->handleRequest($request);
-        
-        return $this->render('front/situ/create.html.twig', [
-            'form' => $formSitu->createView(),
-            'langs' => $langs,
-            'situ' => $situData,
-        ]);
     }
     
     /**
@@ -160,11 +109,12 @@ class SituController extends AbstractController
             }
         }
         
-        if (empty($data['initialId'])) {
-            $situ->setInitialSitu(true);
-        } else {
+        if (!empty($data['initialId']) || $situ->getTranslatedSituId() != '') {
             $situ->setInitialSitu(false);
-            $situ->setTranslatedSituId($data['initialId']);
+            if (!empty($data['initialId']))
+                $situ->setTranslatedSituId($data['initialId']);
+        } else {
+            $situ->setInitialSitu(true);
         }
 
         $situ->setTitle($data['title']);
