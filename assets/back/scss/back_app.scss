@@ -5,7 +5,6 @@
 @import '~@fortawesome/fontawesome-free/scss/brands';
 
 // SB Admin 2
-/*@import 'bootstrap';*/
 @import '~startbootstrap-sb-admin-2/scss/sb-admin-2';
 @import '~startbootstrap-sb-admin-2/vendor/bootstrap/scss/bootstrap';
 
@@ -79,13 +78,19 @@ footer {
         text-overflow: ellipsis;
     }
     & > .nav-item {
-        & > .nav-link:not(.dashboard) {
-            display: inline-block;
-            flex: 1;
-            font-size: 0.85rem;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
+        & > .nav-link {
+            &:not(.dashboard) {
+                display: inline-block;
+                flex: 1;
+                font-size: 0.85rem;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+            & > i {
+                width: 17px;
+                margin: 0 0.125rem !important;
+            }
         }
     }
 }
@@ -99,4 +104,54 @@ label {
 .pcx-2 {
     padding-left: 0.5rem;
     padding-right: 10px;
+}
+
+/*
+ * sb admin 2
+ */
+[dir="rtl"] {
+    h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 { text-align: right !important; }
+    .navbar {
+        & > div {
+            margin-right: 1rem !important;
+            margin-left: auto !important;
+        }
+        & > ul {
+            margin-left: 1rem !important;
+            margin-right: auto !important;
+        }
+    }
+    #accordionSidebar {
+        padding-right: 0;
+        padding-left: unset;
+        & > .nav-item {
+            & > .nav-link {
+                text-align: right !important;
+                &[data-toggle="collapse"] {
+                    &::after {
+                        float: left !important;
+                    }
+                    &.collapsed::after {
+                        content: '\f104';
+                    }
+                }
+            }
+            & > .collapse,
+            & > .collapsing {
+                text-align: right !important;
+            }
+        }
+        & #sidebarToggle {
+            &::after {
+                content: '\f105';
+            }
+        }
+        &.toggled {
+            & #sidebarToggle {
+                &::after {
+                    content: '\f104';
+                }
+            }
+        }
+    }
 }
