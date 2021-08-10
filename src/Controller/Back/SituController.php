@@ -62,6 +62,36 @@ class SituController extends AbstractController
             'userLangs' => $userLangs,
         ]);
     }
+    
+    /**
+     * @Route("/ajaxEdit", methods="GET")
+     */
+    public function ajaxEdit(Request $request): JsonResponse
+    {
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+        
+        // Get Situ
+        $id = $request->query->get('id');
+        $situ = $this->situService->getSituById($id);
+        
+        if (!$situ) { return new NotFoundHttpException(); }
+        
+        $situItems = $this->situService->getSituItemsBySituId($situ['id']);
+        
+        $url = $request->query->get('location') == true
+                ? $this->redirectToRoute('create_situ', [
+                       'id' => $situ['id'], 
+                       '_locale' => locale_get_default()
+                   ])
+                : '';
+        
+        return $this->json([
+            'success' => true,
+            'redirection' => $url,
+            'situ' => $situ,
+            'situItems' => $situItems,
+        ]);
+    }
 
     /**
      * @Route("/contrib/{id}", defaults={"id" = null}, name="create_situ", methods="GET|POST")

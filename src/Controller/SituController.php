@@ -7,9 +7,11 @@ use App\Entity\SituItem;
 use App\Entity\Lang;
 use App\Entity\Event;
 use App\Entity\Category;
+use App\Service\SituService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -21,14 +23,17 @@ class SituController extends AbstractController
 {
     private $em;
     private $security;
+    private $situService;
     private $translator;
     
     public function __construct(EntityManagerInterface $em,
                                 Security $security,
+                                SituService $situService,
                                 TranslatorInterface $translator)
     {
         $this->em = $em;
         $this->security = $security;
+        $this->situService = $situService;
         $this->translator = $translator;
     }
     
@@ -225,6 +230,36 @@ class SituController extends AbstractController
             }
         }
         return $data;
+    }
+    
+    /**
+     * @Route("/ajaxEdit", methods="GET")
+     */
+    public function ajaxEdit(Request $request): JsonResponse
+    {
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+        
+        // Get Situ
+        $id = $request->query->get('id');
+        $situ = $this->situService->getSituById($id);
+        
+        if (!$situ) { return new NotFoundHttpException(); }
+        
+        $situItems = $this->situService->getSituItemsBySituId($situ['id']);
+        
+        $url = $request->query->get('location') == true
+                ? $this->redirectToRoute('create_situ', [
+                       'id' => $situ['id'], 
+                       '_locale' => locale_get_default()
+                   ])
+                : '';
+        
+        return $this->json([
+            'success' => true,
+            'redirection' => $url,
+            'situ' => $situ,
+            'situItems' => $situItems,
+        ]);
     }
     
 }
