@@ -53,16 +53,49 @@ button:
     up: Monter
     update_title: Modifier
     validate: Valider
+status:
+    title: Statut
+    1: En rédaction
+    2: À valider
+    3: Validé
+    4: Archivé
+    5: Corbeille
+badge:
+    new: Nouveau
 contrib:
+    action: Action
     category:
         title: Liste des catégories
     event:
         title: Liste des événements
-    list:
+    situ:
         title: Liste des situations
-    validation:
-        title: Validation des contributions
-        verify: Valider une contribution    
+        details:
+            title: Titre
+            description: Description
+            date:
+                creation: Création
+                update: Modification
+                submit: Soumission
+                validation: Validation
+            user: Contributeur
+            lang: Langue
+            event: Événements
+            category:
+                level1: Catégorie
+                level2: Sous-catégorie
+            initial: Initial
+            translated: Traduction
+        table:
+            empty: Aucune contribution
+            btn:
+                read: Lire
+                valid: Valider
+        validation:
+            title: Validation des contributions
+            verify: Valider une contribution
+        read:
+            title: Lire une contribution
 delete:
     confirm: Confirmation de la suppression
     warning: La suppression sera définitive.

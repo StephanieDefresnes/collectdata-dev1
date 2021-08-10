@@ -1,10 +1,11 @@
 {% trans_default_domain 'back_messages' %}
 {% extends "back/layout.html.twig" %}
 
-{% block title %}{{ 'contrib.validation.verify'|trans() }}{% endblock %}
+{% block title %}{{ 'contrib.situ.validation.verify'|trans() }}{% endblock %}
 
 {% block stylesheets %}
     {{ parent() }}
+    {{ encore_entry_link_tags('situ_validation_app', null, 'backApp') }}
  {% endblock %}
 
 
@@ -12,7 +13,7 @@
     <div class="container-fluid pt-4">
         
         <div class="d-sm-flex align-items-center justify-content-between mb-4">
-            <h1 class="h3 mb-0 text-gray-800">{{ 'contrib.validation.verify'|trans() }}</h1>
+            <h1 class="h3 mb-0 text-gray-800">{{ 'contrib.situ.validation.verify'|trans() }}</h1>
         </div>
 
     </div>
@@ -20,4 +21,5 @@
 
 {% block javascripts %}
     {{ parent() }}
+    {{ encore_entry_script_tags('situ_validation_app', null, 'backApp') }}
 {% endblock %}

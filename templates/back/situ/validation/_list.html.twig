@@ -3,9 +3,9 @@
 <div id="card-list" class="card shadow mb-4">
     
     <div class="card-header py-3">
-        <h6 class="m-0 font-weight-bold text-primary">{{ 'contrib.situ.title'|trans() }}</h6>
+        <h6 class="m-0 font-weight-bold text-primary">{{ 'contrib.situ.validation.title'|trans() }}</h6>
     </div>
-    <div id="situs" class="card-body pb-3 back-dataTable">
+    <div id="situs" class="card-body pb-3">
         
         {% if situs is empty %}
             {{ 'contrib.situ.table.empty'|trans() }}
@@ -17,10 +17,8 @@
                     <th>{{ 'contrib.action'|trans() }}</th>
                     <th class="px-2 text-center">#</th>
                     <th class="px-2">{{ 'contrib.situ.details.title'|trans() }}</th>
-                    <th class="px-2">{{ 'status.title'|trans() }}</th>
                     <th class="px-2">{{ 'contrib.situ.details.date.creation'|trans() }}</th>
                     <th class="px-2">{{ 'contrib.situ.details.date.submit'|trans() }}</th>
-                    <th class="px-2">{{ 'contrib.situ.details.date.validation'|trans() }}</th>
                     <th class="px-2">{{ 'contrib.situ.details.lang'|trans() }}</th>
                     <th class="px-2">{{ 'contrib.situ.details.initial'|trans() }}</th>
                     <th class="px-2">{{ 'contrib.situ.details.event'|trans() }}</th>
@@ -46,8 +44,8 @@
                                role="button" class="btn btn-outline-primary px-2 py-1"
                                data-id="{{ situ.id }}" data-action=""
                                data-toggle="tooltip" data-placement="left"
-                               title="{{ 'contrib.situ.table.btn.read'|trans() }}"
-                               aria-label="{{ 'contrib.situ.table.btn.read'|trans() }}">
+                               title="{{ 'contrib.table.btn.read'|trans() }}"
+                               aria-label="{{ 'contrib.table.btn.read'|trans() }}">
                                 <i class="fas fa-eye"></i>
                             </a>                            
                         {% endif %}
@@ -55,22 +53,8 @@
                     </td>
                     <td class="px-2 text-center">{{ situ.id }}</td>
                     <td class="px-2 firstletter text-nowrap">{{ situ.title|u.truncate(20, '...') }}</td>
-                    <td class="px-2 text-nowrap">
-                        {% if situ.statusId == 1 %}
-                            {{ 'status.1'|trans() }}
-                        {% elseif situ.statusId == 2 %}
-                            {{ 'status.2'|trans() }}
-                        {% elseif situ.statusId == 3 %}
-                            {{ '.status.3'|trans() }}
-                        {% elseif situ.statusId == 4 %}
-                            {{ 'status.4'|trans() }}
-                        {% else %}
-                            {{ 'status.5'|trans() }}
-                        {% endif %}
-                    </td>
                     <td class="px-2">{{ situ.dateCreation|format_datetime('short', 'none', locale=locale) }}</td>
                     <td class="px-2">{{ situ.dateSubmission ? situ.dateSubmission|format_datetime('short', 'none', locale=locale) : '' }}</td>
-                    <td class="px-2">{{ situ.dateValidation ? situ.dateValidation|format_datetime('short', 'none', locale=locale) : '' }}</td>
                     <td class="px-2">{{ situ.lang.englishName }}</td>
                     <td class="px-2 text-nowrap">
                         {% if situ.initialSitu%}

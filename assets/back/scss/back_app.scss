@@ -10,11 +10,16 @@
 @import '~startbootstrap-sb-admin-2/vendor/bootstrap/scss/bootstrap';
 
 // global
-$base-font-size: 14px;
-$default-color: #ff8a00;
-$default-color-hover:#fe9e08;
-$default-color-auther:#111;
-$default-color-text: #777;
+@import "../../scss/_variables";
+
+a:focus,
+.btn:focus,
+input:focus,
+select:focus,
+textarea:focus {
+    outline: none !important;
+    box-shadow: none !important;
+}
 
 #flash_message {
     width: 100%;
@@ -44,7 +49,7 @@ footer {
     position: absolute;
     width: 100%;
     height: 100%;
-    background: rgba(255, 255, 255, 0.8) url('../img/loader.gif') 50% 100px / 170px no-repeat;
+    background: $white-80 url('../img/loader.gif') 50% 100px / 170px no-repeat;
     z-index: 100;
 }
 .container, .container-fluid, .container-sm, .container-md, .container-lg, .container-xl {
@@ -69,7 +74,6 @@ footer {
         align-items: flex-start;
     }
     & > .sidebar-heading {
-        /*flex: 1;*/
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
@@ -88,25 +92,11 @@ footer {
 label {
     line-height: 1;
 }
-/*#dataTable.table.dataTable {
-    margin-top: 0 !important;
-    margin-bottom: 0 !important;
-    border-bottom: 1px solid #e3e6f0;
-    & > thead {
-        & > tr {
-            & > th {
-                border-bottom-width: 1px;
-            }
-        }
-    }
-    & .btn {
-        padding-top: 5px;
-    }
-}*/
-/*.rtl {
-    #accordionSidebar {
-        & > .sidebar-card {
-            align-items: flex-start;
-        }
-    }
-}*/
+
+.first-letter::first-letter {
+    text-transform: capitalize !important;
+}
+.pcx-2 {
+    padding-left: 0.5rem;
+    padding-right: 10px;
+}

@@ -2,6 +2,7 @@
 
 namespace App\Controller\Back;
 
+use App\Entity\Situ;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -27,30 +28,51 @@ class SituController extends AbstractController
      * @Route("/list", name="back_situs_search")
      */
     public function index(): Response
-    {
-        return $this->render('back/situ/list.html.twig', [
-            'controller_name' => 'SituController',
+    {   
+        $repository = $this->getDoctrine()->getRepository(Situ::class);
+        $situs = $repository->findAll();
+
+        return $this->render('back/situ/search/index.html.twig', [
+            'situs' => $situs,
         ]);
     }
     
     /**
      * @Route("/validations", name="back_situs_validation", methods="GET")
      */
-    public function getSitusByUser()
+    public function getSitusToValidate()
     {
-        return $this->render('back/situ/validations.html.twig', [
-            'controller_name' => 'SituController',
+        $repository = $this->getDoctrine()->getRepository(Situ::class);
+        $situs = $repository->findBy(['statusId' => 2]);
+        
+        return $this->render('back/situ/validation/index.html.twig', [
+            'situs' => $situs,
         ]);
     }
     
     /**
-     * @Route("/verify/situ/{id}", name="back_situ_verify", methods="GET")
+     * @Route("/verify/{id}", name="back_situ_verify", methods="GET")
      */
-    public function getSitu(Situ $situ): Response
+    public function verifySitu($id): Response
     {
+        $repository = $this->getDoctrine()->getRepository(Situ::class);
+        $situ = $repository->findOneBy(['id' => $id]);
         
-        return $this->render('back/situ/verify.html.twig', [
-            'controller_name' => 'SituController',
+        return $this->render('back/situ/verify/index.html.twig', [
+            'situ' => $situ,
+        ]);
+    }
+    
+    /**
+     * @Route("/read/{id}", name="back_situ_read", methods="GET")
+     */
+    public function getSitu($id): Response
+    {
+        $repository = $this->getDoctrine()->getRepository(Situ::class);
+        $situ = $repository->findOneBy(['id' => $id]);
+        
+        return $this->render('back/situ/read/index.html.twig', [
+            'situ' => $situ,
         ]);
     }
     

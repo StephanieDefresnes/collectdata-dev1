@@ -1,10 +1,57 @@
-/*
-To change this license header, choose License Headers in Project Properties.
-To change this template file, choose Tools | Templates
-and open the template in the editor.
-*/
-/* 
-    Created on : 10 août 2021, 13:46:39
-    Author     : sedsi
-*/
+@import '~jquery-ui/themes/base/all.css';
+@import '~datatables.net-bs4/css/dataTables.bootstrap4.css';
+
+#dataTable-situs_filter {
+    position: relative;
+    & > label {
+        & > input {
+            padding: 0.25rem 1.25rem 0.25rem 0.5rem;
+        }
+        & > .clean-search {
+            position: absolute;
+            top: 0;
+            right: 0;
+            padding: 10px 5px;
+            font-size: 10px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+    }
+}
+
+#dataTable-situs {
+    margin: 0 !important;
+    & > tbody {
+        & > tr {
+            height: 48px;
+        }
+    }
+}
+@media screen and (max-width: 768px) {
+    #dataTable-situs_length {
+        text-align: left;
+    }
+}
+@media (max-width: 1047px) {
+    #dataTable-situs {
+        margin-bottom: 6px !important;
+    }
+}
+
+.rtl {
+    & #dataTable-situs_filter {
+        & > label {
+            & > input {
+                padding: 0.25rem 0.5rem 0.25rem 1.25rem;
+            }
+        }
+    }
+}
+@media screen and (max-width: 768px) {
+    .rtl {
+        & #dataTable-situs_length {
+            text-align: right;
+        }   
+    }
+}
 

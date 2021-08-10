@@ -53,6 +53,15 @@ button:
     up: Subir
     update_title: Editar
     validate: Validar
+status:
+    title: Status
+    1: Escrito
+    2: A validar
+    3: Válido
+    4: Rechazado
+    5: Destrozado
+badge:
+    new: Nouveau
 contrib:
     category:
         title: Lista de categorías

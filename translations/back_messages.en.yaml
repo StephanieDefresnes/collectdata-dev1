@@ -53,6 +53,15 @@ button:
     up: Up
     update_title: Update
     validate: Validate
+status:
+    title: Status
+    1: In writing
+    2: To validate
+    3: Valid
+    4: Refused
+    5: Trashed
+badge:
+    new: Nouveau
 contrib:
     category:
         title: List of categories

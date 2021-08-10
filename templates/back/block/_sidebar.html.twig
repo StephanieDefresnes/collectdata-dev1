@@ -85,13 +85,23 @@
         </div>
     </li>
     
-    <li class="nav-item{{ route in ['back_situs_validation', 'back_situs_search', 'back_events', 'back_categories'] ? ' active' }}">
+    <li class="nav-item{{ route in ['back_situs_search',
+                                    'back_situ_read',
+                                    'back_situ_verify',
+                                    'back_situs_validation',
+                                    'back_events',
+                                    'back_categories'] ? ' active' }}">
         <a class="nav-link collapsed pb-1" href="#" data-toggle="collapse" data-target="#collapseContrib"
             aria-expanded="true" aria-controls="collapseContrib">
             <i class="fas fa-list-ul"></i>
             <span>{{ 'sidebar.contrib.title'|trans() }}</span>
         </a>
-        <div id="collapseContrib" class="collapse{{ route in ['back_situs_validation', 'back_situs_search', 'back_events', 'back_categories'] ? ' show' }}"
+        <div id="collapseContrib" class="collapse{{ route in [  'back_situs_search',
+                                                                'back_situ_read',
+                                                                'back_situ_verify',
+                                                                'back_situs_validation',
+                                                                'back_events',
+                                                                'back_categories'] ? ' show' }}"
              aria-labelledby="headingContrib" data-parent="#accordionSidebar">
             <div class="bg-white mb-1 py-2 collapse-inner rounded">
                 <a class="collapse-item{{ route == 'back_situs_validation' ? ' active' }}"

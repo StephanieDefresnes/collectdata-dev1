@@ -2,13 +2,12 @@
 {% extends "back/layout.html.twig" %}
 {% set locale = app.request.locale %}
 
-{% block title %}{{ 'contrib.situ.title'|trans() }}{% endblock %}
+{% block title %}{{ 'contrib.situ.validation.title'|trans() }}{% endblock %}
 
 {% block stylesheets %}
     {{ parent() }}
     {{ encore_entry_link_tags('situ_search_app', null, 'backApp') }}
  {% endblock %}
-
 
 {% block content %}
     <div id="loader"></div>
@@ -18,8 +17,7 @@
             <h1 class="h3 mb-0 text-gray-800">{{ 'sidebar.contrib.title'|trans() }}</h1>
         </div>
 
-        {{ include('back/situ/search/_list.html.twig') }}
-        
+        {{ include('back/situ/validation/_list.html.twig') }}
 
     </div>
 {% endblock %}
