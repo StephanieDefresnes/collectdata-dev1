@@ -3,20 +3,6 @@
 // global
 @import "../../scss/_variables";
 
-/* datatables */
-table {
-    &.dataTable {
-        margin: 0 !important;
-        & th {
-            &.sorting {
-                &::before, 
-                &::after {
-                    bottom: 0.5em;
-                }
-            }
-        }
-    }
-}
 .situ-translation {
     position: relative;
     cursor: default !important;

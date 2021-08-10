@@ -4,7 +4,8 @@
     <div class="card-header py-3">
         <h6 class="m-0 font-weight-bold text-primary">{{ 'lang.translation.table.title'|trans() }}</h6>
     </div>
-    <div id="langs-list" class="card-body pb-3">
+    
+    <div id="langs-list" class="card-body pb-3 back-dataTable">
         
         {% if translations is empty %}
             {{ 'lang.translation.table.empty'|trans() }}

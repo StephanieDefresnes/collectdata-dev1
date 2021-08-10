@@ -6,6 +6,7 @@
 
 {% block stylesheets %}
     {{ parent() }}
+    {{ encore_entry_link_tags('flp_theme') }}
     {{ encore_entry_link_tags('lang_search_app', null, 'backApp') }}
  {% endblock %}
 
