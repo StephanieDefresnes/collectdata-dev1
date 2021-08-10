@@ -19,6 +19,7 @@ table {
 }
 .situ-translation {
     position: relative;
+    cursor: default !important;
     &::after {
         content: '';
         display: block;

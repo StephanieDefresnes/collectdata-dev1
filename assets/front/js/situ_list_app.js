@@ -181,8 +181,8 @@ $(document).ready(function() {
     $('#translateLangs').focus(function() {
         $('#translateLangs').val('')
     }).change(function() {
-        let situId = $('#situ-title').attr('data-id')        
-        $('#result').addClass('d-none')
+        let situId = $('#situ-title').attr('data-id') 
+        $('#result, #valid').addClass('d-none')
         $('#spinner').addClass('show')
         translationRequest(situId, $(this).val())
     })
@@ -198,5 +198,10 @@ $(document).ready(function() {
         }
     })
     
+    // Cancel modal
+    $('#cancel').click(function() {
+        $('#translateModal').modal('hide')
+        $('#result, #valid').addClass('d-none')
+    })
     
 });

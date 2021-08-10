@@ -356,6 +356,12 @@ body {
 .modal .close {
     outline: 0;
 }
+#spinner {
+    display: none !important;
+    &.show {
+        display: flex !important;
+    }
+}
 
 // Fontawesome
 .fa, .fas {
