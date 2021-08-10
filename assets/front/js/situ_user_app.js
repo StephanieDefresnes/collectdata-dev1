@@ -1,5 +1,5 @@
 // css
-import '../scss/situ_list_app.scss'
+import '../scss/situ_user_app.scss'
 
 // js
 require('datatables.net/js/jquery.dataTables.min.js');
