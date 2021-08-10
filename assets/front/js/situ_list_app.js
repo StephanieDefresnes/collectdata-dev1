@@ -66,7 +66,7 @@ function validationRequest(id, button) {
 // Search if translations exist
 function translationRequest(id, langId) {
     $.ajax({
-        url: "/"+ path['locale'] +"/ajaxFindTranslate",
+        url: "/"+ path['locale'] +"/ajaxFindTranslation",
         method: 'GET',
         data: { id: id, langId: langId},
         success: function(data) {

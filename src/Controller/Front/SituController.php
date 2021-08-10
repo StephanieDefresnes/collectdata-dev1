@@ -175,23 +175,6 @@ class SituController extends AbstractController
             'categoryLevel2' => $categoryLevel2->getTitle(),
         ]);
     }
-    
-    /**
-     * @Route("/ajaxFindTranslate", methods="GET")
-     */
-    public function ajaxFindTranslate(Request $request): JsonResponse
-    {
-        $this->denyAccessUnlessGranted('ROLE_CONTRIBUTOR');
-        
-        // Get Situ
-        $situId = $request->query->get('id');
-        $situLangId = $request->query->get('langId');
-        $situTranslated = $this->situService->searchTranslation($situId, $situLangId);
-        
-        return $this->json([
-            'situTranslated' => $situTranslated,
-        ]);
-    }
 
     /**
      * @Route("/translate/{id}/{langId}", name="translate_situ", methods="GET|POST")
