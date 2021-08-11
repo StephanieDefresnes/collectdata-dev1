@@ -66,55 +66,6 @@ account:
         status: Traductor del sitio
         choice: 'Ofreces traducir el sitio al idioma :'
         choice_s: 'Ofreces traducir el sitio a idiomas :'
-        empty: No sugieres un idioma para traducir
-        origin:
-            title: 'Descargar soporte de traducción :'
-            subtitle_ar: En árabe
-            subtitle_en: En inglés
-            subtitle_es: En español
-            subtitle_fr: En francés
-            subtitle_tr: En turco
-            # Non soumis à traduction
-            url_ar: '#'
-            url_en: '#'
-            url_es: '#'
-            url_fr: '#'
-            url_tr: '#'
-        file:
-            title: Traducción del sitio
-            empty: No se han enviado archivos
-            name: Tu archivo de traducción
-            name_s: Tus archivos de traducción
-            delete: ¿Quieres eliminar este archivo de traducción?
-            sent: enviado el
-            valid: validado el
-            refuse: rechazado el
-            modal: 
-                title: Enviar un archivo de traducción
-                lang:
-                    title: 'Selecciona un idioma  :'
-                    placeholder: Elige un idioma
-                file:
-                    title: 'Cargar un archivo de traducción :'
-                    placeholder: Seleccione un archivo .xls
-            mimeTypesMessage: Sube un archivo .xls / .xlsx válido con un máximo de 1024 kb.
-            btn: 
-                add: Navegar
-                submit: Send
-                confirm: Confirmar
-                cancel : Cancelar
-                valid: Gracias !
-                delete: Borrar
-                refused: Rechazado
-                warning: Has recibido un mensaje
-            flash:
-                add:
-                    success: El archivo ha sido enviado
-                    error: Ocurrió un error al enviar el archivo.
-                delete:
-                    success: El archivo ha sido eliminado
-                    error: Ocurrió un error al eliminar el archivo.
-                error: Ocurrió un error al procesar el archivo
 button:
     add: Añadiendo
     back: Espalda

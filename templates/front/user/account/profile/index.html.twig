@@ -1,27 +1,12 @@
 {% extends 'front/layout.html.twig' %}
 {% trans_default_domain 'user_messages' %}
-
 {% set locale = app.request.locale %}
-{% set subtitle_ar = 'account.translator.origin.subtitle_ar' |trans() %}
-{% set subtitle_en = 'account.translator.origin.subtitle_en' |trans() %}
-{% set subtitle_es = 'account.translator.origin.subtitle_es' |trans() %}
-{% set subtitle_fr = 'account.translator.origin.subtitle_fr' |trans() %}
-{% set subtitle_tr = 'account.translator.origin.subtitle_tr' |trans() %}
-{% set url_ar = 'account.translator.origin.url_ar' |trans() %}
-{% set url_en = 'account.translator.origin.url_en' |trans() %}
-{% set url_es = 'account.translator.origin.url_es' |trans() %}
-{% set url_fr = 'account.translator.origin.url_fr' |trans() %}
-{% set url_tr = 'account.translator.origin.url_tr' |trans() %}
-{% set modalFilename = '' %}
 
 {% block title %}{{ 'nav.account_profile'|trans() }}{% endblock %}
 
 {% block stylesheets %}
     {{ parent() }}
     {{ encore_entry_link_tags('user_account_app', null, 'frontApp') }}
-    <style>
-        .custom-file-label::after{content:"{{ 'account.translator.file.btn.add' | trans }}";}
-    </style>
 {% endblock %}
 
 {% block content %}
@@ -70,18 +55,7 @@
                             <span class="col-lg-7 first-letter">
                                 {{ user.dateCreate|format_datetime('full', 'short', locale=locale) }}
                             </span>                                
-                         </div>{#
-                        
-                        <div class="row mb-lg-2 mb-3">
-                            <span class="col-lg-5 text-secondary">{{ 'account.lang.current'|trans() }}</span>
-                            <span class="col-md-7 first-letter">
-                                {% if user_lang is empty %}
-                                    {{ 'account.lang.default'|trans() }}
-                                {% else %}
-                                    {{ user_lang }}
-                                {% endif %}
-                            </span>                                
-                        </div>#}
+                         </div>
                         
                         {% if user.langs %}
                         <div class="row mb-lg-2 mb-3">
@@ -108,18 +82,18 @@
                                     {{ 'account.roles.title_s'|trans() }}
                                 {% endif %}
                             </span>
-                                <span class="col-lg-7">
-                                    {% set roles =  user.roles %}
-                                    {% set newRoles = [] %}
-                                    {% for role in user.roles %}
-                                        {% if role != 'ROLE_USER' %}
-                                            {% if role == 'ROLE_CONTRIBUTOR' %}{% set newRoles = newRoles|merge(['account.roles.contributor'|trans()]) %}
-                                            {% elseif role == 'ROLE_MODERATOR' %}{% set newRoles = newRoles|merge(['account.roles.moderator'|trans()]) %}
-                                            {% elseif role == 'ROLE_ADMIN' %}{% set newRoles = newRoles|merge(['account.roles.admin'|trans()]) %}
-                                            {% elseif role == 'ROLE_SUPER_ADMIN' %}{% set newRoles = newRoles|merge(['account.roles.super_admin'|trans()]) %}{% endif %}
-                                        {% endif %}
-                                    {% endfor %}
-                                    {{ newRoles|join(' - ') }}
+                            <span class="col-lg-7">
+                                {% set roles =  user.roles %}
+                                {% set newRoles = [] %}
+                                {% for role in user.roles %}
+                                    {% if role != 'ROLE_USER' %}
+                                        {% if role == 'ROLE_CONTRIBUTOR' %}{% set newRoles = newRoles|merge(['account.roles.contributor'|trans()]) %}
+                                        {% elseif role == 'ROLE_MODERATOR' %}{% set newRoles = newRoles|merge(['account.roles.moderator'|trans()]) %}
+                                        {% elseif role == 'ROLE_ADMIN' %}{% set newRoles = newRoles|merge(['account.roles.admin'|trans()]) %}
+                                        {% elseif role == 'ROLE_SUPER_ADMIN' %}{% set newRoles = newRoles|merge(['account.roles.super_admin'|trans()]) %}{% endif %}
+                                    {% endif %}
+                                {% endfor %}
+                                {{ newRoles|join(' - ') }}
                                 {% if user.langContributor %}
                                     - {{ 'account.translator.status'|trans() }}
                                 {% endif %}

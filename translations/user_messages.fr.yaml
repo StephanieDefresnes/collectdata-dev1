@@ -66,55 +66,6 @@ account:
         status: Traducteur du site
         choice: 'Vous proposez de traduire le site en langue :'
         choice_s: 'Vous proposez de traduire le site en langues :'
-        empty: Vous ne proposez pas de langue à traduire
-        origin:
-            title: 'Télécharger le support de traduction :'
-            subtitle_ar: En arabe
-            subtitle_en: En anglais
-            subtitle_es: En espagnol
-            subtitle_fr: En français
-            subtitle_tr: En turc
-            # Non soumis à traduction
-            url_ar: '#'
-            url_en: '#'
-            url_es: '#'
-            url_fr: '#'
-            url_tr: '#'
-        file:
-            title: Traduction du site
-            empty: Aucun fichier n'a été envoyé
-            name: Votre fichier de traduction
-            name_s: Vos fichiers de traduction
-            delete: Voulez-vous supprimer ce fichier de traduction ?
-            sent: envoyé le
-            valid: validé le
-            refuse: refusé le
-            modal: 
-                title: Envoyer un fichier de traduction
-                lang:
-                    title: 'Sélectionner une langue :'
-                    placeholder: Choisir une langue
-                file:
-                    title: 'Téléverser un fichier de traduction :'
-                    placeholder: Sélectionner un fichier .xls
-            mimeTypesMessage: Veuillez téléverser un fichier valide .xls/.xlsx maximum 1024ko
-            btn: 
-                add: Parcourir
-                submit: Envoyer
-                confirm: Confirmer
-                cancel : Annuler
-                valid: Merci !
-                delete: Supprimer
-                refused: Refusé
-                warning: Vous avez reçu un message
-            flash:
-                add:
-                    success: Le fichier a bien été envoyé
-                    error: Une erreur s'est produite lors de l'envoi du fichier
-                delete:
-                    success: Le fichier a bien été supprimé
-                    error: Une erreur s'est produite lors de la suppression du fichier
-                error: Une erreur s'est produite lors du traitement du fichier
 button:
     add: Ajout
     back: Retour

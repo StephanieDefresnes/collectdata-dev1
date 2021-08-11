@@ -66,55 +66,6 @@ account:
         status: Site translator
         choice: 'You offer to translate the site into language :'
         choice_s: 'You offer to translate the site into languages :'
-        empty: You do not suggest a language to translate
-        origin:
-            title: 'Download translation support :'
-            subtitle_ar: In Arabic
-            subtitle_en: In English
-            subtitle_es: In Spanish
-            subtitle_fr: In French
-            subtitle_tr: In Turkish
-            # Non soumis à traduction
-            url_ar: '#'
-            url_en: '#'
-            url_es: '#'
-            url_fr: '#'
-            url_tr: '#'
-        file:
-            title: Site translation
-            empty: No files have been sent
-            name: Your translation file
-            name_s: Your translation files
-            delete: Do you want to delete this translation file?
-            sent: sent on
-            valid: validated on
-            refuse: refused on
-            modal: 
-                title: Send a translation file
-                lang:
-                    title: 'Select a language :'
-                    placeholder: Choose a language
-                file:
-                    title: 'Upload a translation file :'
-                    placeholder: Select an .xls file
-            mimeTypesMessage: Please upload a valid .xls/.xlsx file maximum 1024kb
-            btn: 
-                add: Browse
-                submit: Send
-                confirm: Confirm
-                cancel : Cancel
-                valid: Thank you !
-                delete: Delete
-                refused: Refused
-                warning: You have received a message
-            flash:
-                add:
-                    success: The file has been sent
-                    error: An error occurred while sending the file
-                delete:
-                    success: The file has been deleted
-                    error: An error occurred while deleting the file
-                error: An error occurred while processing the file
 button:
     add: Addition
     back: Back
