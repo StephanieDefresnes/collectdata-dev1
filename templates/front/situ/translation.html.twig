@@ -19,8 +19,8 @@
         {% block banner%}
             <h1 class="h3 mt-lg-3 mt-2 mb-lg-3 mb-2 text-white">
                 {{ 'contrib.translation.modal.title'|trans() }}
-                <img src="{{ asset('img/flag/'~ translationLang.lang ~'.jpg') }}"
-                     alt="{{ translationLang.lang }}" class="translation-flag mx-2">
+                <img src="{{ asset('img/flag/'~ lang.lang ~'.jpg') }}"
+                     alt="{{ lang.lang }}" class="translation-flag mx-2">
             </h1>
         {% endblock %}
         
@@ -98,24 +98,14 @@
         </div>
         
         <div id="situ" class="col-md-6 p-0" data-id=""
-             data-lang="{{ translationLang.id }}"
-             data-initial-id="{{ initialId }}">
+             data-lang="{{ lang.id }}"
+             data-initial-id="{{ situ.lang.id }}">
         {{ form_start(form) }}
             <div class="card my-4 mx-3 bg-none border-0 shadow">
 
                 <div class="card-header py-4 pl-4 bg-secondary-80 border text-white">
-                    <div id="lang" class="formData form-row mt-1 mb-4 d-none">
-                        <div class="col-md-4 pt-md-1">
-                            {{ form_label(form.lang) }}
-                        </div>
-                        <div class="col-md-5 col-sm-8 col-11">
-                            <div class="form-row">
-                                <div id="form-lang" class="col-md-12">
-                                    {{ form_widget(form.lang) }}
-                                    {{ form_errors(form.lang) }}
-                                </div>
-                            </div>
-                        </div>
+                    <div id="lang" class="formData form-row d-none">
+                        {{ form_row(form.lang) }}
                     </div>
                     <div id="event" class="formData form-row mb-4">
                         <div class="col-md-4 pt-md-1">

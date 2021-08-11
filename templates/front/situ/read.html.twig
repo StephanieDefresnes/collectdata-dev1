@@ -34,14 +34,14 @@
                     
                     <div class="card-header bg-dark-50 p-4 text-white">
                         <div class="position-absolute">
-                            <img src="{{ asset('img/flag/'~ lang.lang ~'.jpg') }}" alt="{{ lang.lang }}" class="scale-12 text-uppercase">
+                            <img src="{{ asset('img/flag/'~ situ.lang.lang ~'.jpg') }}" alt="{{ situ.lang.lang }}" class="scale-12 text-uppercase">
                         </div>
                         <div class="h5 pb-2">
-                            <div class="text-center first-letter">{{ event }}</div>
+                            <div class="text-center first-letter">{{ situ.event.title }}</div>
                             <div class="text-center">
-                                <span class="first-letter">{{ categoryLevel1 }}</span>
+                                <span class="first-letter">{{ situ.categoryLevel1.title }}</span>
                                 /
-                                <span class="first-letter">{{ categoryLevel2 }}</span></div>
+                                <span class="first-letter">{{ situ.categoryLevel2.title }}</span></div>
                         </div>
                         <div class="h5 mb-1">
                             <span class="first-letter">{{ situ.title }}</span>
@@ -53,7 +53,7 @@
                     <div class="card-body bg-white-70 p-4">
                         <div class="first-letter mb-3">{{ situ.description }}</div>
                         <div class="h5 mt-4 mb-2">{{ 'contrib.form.item.label'|trans() }}</div>
-                        {% for situItem in situItems %}
+                        {% for situItem in situ.situItems %}
                             {% if situItem.score == 0 %}
                             <div class="first-letter mb-2 font-weight-bold">{{ situItem.title }}</div>
                             <div class="first-letter mb-1">{{ situItem.description }}</div>
