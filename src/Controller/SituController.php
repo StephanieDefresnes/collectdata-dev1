@@ -277,10 +277,32 @@ class SituController extends AbstractController
         // Get Situ
         $situId = $request->query->get('id');
         $situLangId = $request->query->get('langId');
-        $situTranslated = $this->situService->searchTranslation($situId, $situLangId);
+        
+        // Check if lang denied
+        $langDeny = $this->translator->trans(
+            'lang_deny', [],
+            'user_messages', $locale = locale_get_default()
+            );
+        $situData = $this->getDoctrine()
+                ->getRepository(Situ::class)
+                ->findOneBy([ 'id' => $situId ]);
+        $langData = $this->getDoctrine()
+                ->getRepository(Lang::class)
+                ->findOneBy([ 'id' => $situLangId ]);
+        
+        // If Lang situ is wanted lang or wanted lang is not enabled
+        if ($situLangId == $situData->getLang()->getId() || !$langData->getEnabled()) {
+            $situTranslated = '';
+            $erroMsg = $langDeny;
+        } else {
+            $situTranslated = $this->situService->searchTranslation($situId, $situLangId);
+            $erroMsg = '';
+        }
+        
         
         return $this->json([
             'situTranslated' => $situTranslated,
+            'error' => $erroMsg,
         ]);
     }
     

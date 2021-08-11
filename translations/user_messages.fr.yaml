@@ -137,6 +137,7 @@ button:
     update_title: Modifier
     validate: Valider
 access_deny: Accès refusé
+lang_deny: Langue refusée
 contrib:
     title: Mes contributions
     table:
@@ -166,9 +167,6 @@ contrib:
             delete: Supprimer
             translate: Traduire
             translated: Traduction
-        update:
-            flash:
-                error: Une erreur s'est produite lors de la récupération de la situation
     translation:
         modal:
             title: Traduire une situation
@@ -249,6 +247,9 @@ contrib:
                 success: La situation a bien été envoyée
                 success_update: Les modifications ont bien été envoyées
                 error: Une erreur s'est produite lors de l'envoi de la situation
+        edit:
+            flash:
+                error: Une erreur s'est produite lors de la récupération de la situation
         error: Veuillez renseigner tous les champs.
         sr_only:
             error: "Alerte erreur :"

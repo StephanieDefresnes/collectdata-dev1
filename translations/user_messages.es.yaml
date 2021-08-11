@@ -137,6 +137,7 @@ button:
     update_title: Editar
     validate: Validar
 access_deny: Acceso denegado
+lang_deny: Idioma denegado
 contrib:
     title: Mis contribuciones
     table:
@@ -166,9 +167,6 @@ contrib:
             delete: Eliminar
             translate: Traducir
             translated: Traducción
-        update:
-            flash:
-                error: Ocurrió un error mientras se recuperaba de la situación
     translation:
         modal:
             title: Traducir una situación
@@ -249,6 +247,9 @@ contrib:
                 success: La situación ha sido enviada
                 success_update: Los cambios han sido enviados
                 error: Se produjo un error al enviar la situación.
+        edit:
+            flash:
+                error: Ocurrió un error mientras se recuperaba de la situación
         error: Porfavor complete todos los campos.
         sr_only:
             error: "Alerta de error :"

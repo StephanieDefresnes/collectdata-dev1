@@ -12,17 +12,14 @@ function initSelect2(select) {
     });
 }
 
-function flashMessage(status) {
+function flashError() {
     $('body').find('#flash_message').remove()
-    let i = status == 'success' ? '<i class="fas fa-check-circle"></i>'
-                                : '<i class="fas fa-exclamation-circle"></i>'
-    let textClass = status == 'success' ? 'text-success' : 'text-danger'
     let flashMessage =
             '<div id="flash_message" class="container">'
                 +'<div class="alert alert-secondary alert-dismissible px-3 fade show" role="alert">'
-                        +'<span class="sr-only">'+ translations['srOnly-'+status] +'</span>'
-                        +'<span class="icon '+ textClass +'">'+ i +'</span>'
-                        +'<span class="msg">'+ translations['flashError'+status] +'</span>'
+                        +'<span class="sr-only">'+ translations['srOnly-error'] +'</span>'
+                        +'<span class="icon text-danger"><i class="fas fa-exclamation-circle"></i</span>'
+                        +'<span class="msg">'+ translations['flashError'] +'</span>'
                 +'</div>'
             +'</div>'
     $('body > .container-fluid').before(flashMessage)
@@ -509,7 +506,7 @@ function createOrUpdateSitu(dataForm) {
             location.href = data['redirection']['targetUrl'];
         },
         error: function() {
-            flashMessage('error')
+            location.href = data['redirection']['targetUrl'];
         }
     })
 }
@@ -535,7 +532,7 @@ function selectSitu(id) {
             if(data.situItems.length == 4) $('#add-situItem').hide()
         },
         error: function() {
-            flashMessage('error')
+            flashError()
         }
     })
 }

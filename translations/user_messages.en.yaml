@@ -137,6 +137,7 @@ button:
     update_title: Update
     validate: Validate
 access_deny: Access denied
+lang_deny: Language denied
 contrib:
     title: My contributions
     table:
@@ -166,9 +167,6 @@ contrib:
             delete: Delete
             translate: Translate
             translated: Translation
-        update:
-            flash:
-                error: An error occurred while recovering from the situation
     translation:
         modal:
             title: Translate a situation
@@ -249,6 +247,9 @@ contrib:
                 success: The situation has been submitted
                 success_update: The changes have been submitted
                 danger: An error occurred while submitting the situation
+        edit:
+            flash:
+                error: An error occurred while recovering from the situation
         error: Please complete all fields.
         sr_only:
             error: "Error alert :"
