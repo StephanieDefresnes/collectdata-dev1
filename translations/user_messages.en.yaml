@@ -168,8 +168,8 @@ contrib:
             translate: Translate
             translated: Translation
     translation:
+        title: Translate a situation
         modal:
-            title: Translate a situation
             text: What language do you want to translate this situation into?
             result:
                 error: This translation already exists. Do you want to see this translation?

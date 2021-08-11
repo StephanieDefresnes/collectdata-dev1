@@ -168,8 +168,8 @@ contrib:
             translate: Traducir
             translated: Traducción
     translation:
+        title: Traducir una situación
         modal:
-            title: Traducir una situación
             text: ¿A qué idioma quieres traducir esta situación?
             result:
                 error: Esta traducción ya existe. ¿Quieres ver esta traducción?
