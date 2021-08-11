@@ -14,11 +14,13 @@
     
     <div class="container mt-5 py-5">
         
-        <div class="row">
         {% block banner%}
-            <h1 class="h3 mt-3 mb-5 text-white">{{ 'account.update.title'|trans() }}</h1>
-        {% endblock %}
+        <div class="mt-3 mb-5 pt-5">
+            <h1 class="h3 text-white">
+                {{ 'account.update.title'|trans() }}
+            </h1>
         </div>
+        {% endblock %}
                         
         <div class="row">
             <div class="col-lg-7 mx-auto p-0">
