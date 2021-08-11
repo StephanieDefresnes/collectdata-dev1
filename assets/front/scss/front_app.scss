@@ -75,19 +75,44 @@ body {
     & > .container-fluid {
         & .navbar {
             margin: 0 -15px;
+            padding: 24px 16px;
+            -webkit-transition: 150ms;
+            -moz-transition: 150ms;
+            -o-transition: 150ms;
+            transition: 150ms;
             & .navbar-brand {
                 margin : 0;
+                font-size: 1.5rem;
                 font-weight: normal;
+                -webkit-transition: font-size 150ms;
+                -moz-transition: font-size 150ms;
+                -o-transition: font-size 150ms;
+                transition: font-size 150ms;
                 & > .nav-logo {
                     width: 30px;
                     height: 30px;
-                    vertical-align: top;
+                    vertical-align: text-top;
                 }
                 & > span {
                     margin: 0 15px;
                     position: relative;
                 }
-            } 
+            }
+            &.scrolled {
+                padding: 8px 16px;
+                background: $dark-95 !important;
+                -webkit-transition: 150ms;
+                -moz-transition: 150ms;
+                -o-transition: 150ms;
+                transition: 150ms;
+                & .navbar-brand {
+                    font-size: 1.25rem;
+                    -webkit-transition: font-size 150ms;
+                    -moz-transition: font-size 150ms;
+                    -o-transition: font-size 150ms;
+                    transition: font-size 150ms;
+                }
+            }
             & a.navbar-brand {
                 & > span {
                     &::after {

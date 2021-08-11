@@ -10,6 +10,14 @@ require('bootstrap');
 // js add on
 $(document).ready(function(){
     
+    $(window).scroll(function(){
+        if ($(this).scrollTop() > 10) {
+           $('nav.navbar').addClass('scrolled')
+        } else {
+           $('nav.navbar').removeClass('scrolled')
+        }
+    })
+    
     // UTF8 decode
     $('body').find('.decode').each(function(){
         $(this).html($(this).html($(this).html()).text()).text()
