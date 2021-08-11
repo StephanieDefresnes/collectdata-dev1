@@ -146,8 +146,8 @@ table.dataTable { margin: 0 !important; }
             }
             & > .clean-search {
                 position: absolute;
-                top: 0;
-                right: 0;
+                top: 1px;
+                right: 2px;
                 padding: 10px 5px;
                 font-size: 10px;
                 font-weight: bold;
@@ -157,7 +157,17 @@ table.dataTable { margin: 0 !important; }
         }
     }
 }
+#length {
+    & > .dataTables_length {
+        text-align: left;
+    }
+}
 [dir="rtl"] {
+    #length {
+        & > .dataTables_length {
+            text-align: right;
+        }
+    }
     #search {
         & .dataTables_filter {
             & > label {
@@ -165,10 +175,8 @@ table.dataTable { margin: 0 !important; }
                     padding: 0.25rem 0.5rem 0.25rem 1.25rem !important;
                 }
                 & > .clean-search {
-                    top: 0;
                     right: unset;
-                    left: 7px;
-                    padding: 10px 5px;
+                    left: 9px;
                 }
             }
         }
@@ -237,7 +245,8 @@ table.dataTable { margin: 0 !important; }
     }
     & .dataTables_wrapper {
         & .form-control {
-            background-color: $light-80 !important;
+            background-color: $light-50 !important;
+            border-color: $dark-50 !important;
             &:focus {
                 background-color: $white !important;
             }
@@ -266,6 +275,28 @@ table.dataTable { margin: 0 !important; }
                     color: $dark;
                     &:hover {
                         background-color: $white;
+                    }
+                }
+            }
+        }
+    }
+    #search {
+        & > .dataTables_filter {
+            & > label {
+                & > .clean-search {
+                    top: -1px;
+                    right: -9px;
+                }
+            }
+        }
+    }
+    [dir="rtl"] {
+        #search {
+            & > .dataTables_filter {
+                & > label {
+                    & > .clean-search {
+                        right: unset;
+                        left: 9px;
                     }
                 }
             }
