@@ -19,65 +19,6 @@ class SituService {
         $this->em = $em;
     }
 
-    public function getSitusByUser($userId) 
-    {   
-        $query = $this->em->createQueryBuilder()
-            ->from(Situ::class,'situ')
-            ->select(  'situ.id                 id,
-                        situ.title              title,
-                        situ.description        description,
-                        situ.dateCreation       dateCreation,
-                        situ.dateLastUpdate     dateLastUpdate,
-                        situ.dateSubmission     dateSubmission,
-                        situ.dateValidation     dateValidation,
-                        situ.statusId           statusId,
-                        situ.translatedSituId   translatedSituId,
-                        situ.initialSitu        initialSitu,
-                        situ.userId             userId,
-                        evt.id                  eventId,
-                        evt.title               eventTitle,
-                        cat1.id                 cat1Id,
-                        cat1.title              cat1Title,
-                        cat2.id                 cat2Id,
-                        cat2.title              cat2Title,
-                        lang.name               langName,
-                        lang.id                 langId')
-            ->leftJoin(Event::class, 'evt', 'WITH', 'situ.event=evt.id')
-            ->leftJoin(Category::class, 'cat1', 'WITH', 'situ.categoryLevel1=cat1.id')
-            ->leftJoin(Category::class, 'cat2', 'WITH', 'situ.categoryLevel2=cat2.id')
-            ->leftJoin(Lang::class, 'lang', 'WITH', 'situ.lang=lang.id')
-            ->where("situ.userId = '$userId'")
-            ->orderBy('situ.id', 'DESC');
-        
-        $situs = $query->getQuery()->getResult();
-        $result = [];
-        foreach ($situs as $situ) {
-            $result[] = [ 
-                'id' =>                 $situ['id'],
-                'title' =>              $situ['title'],
-                'description' =>        $situ['description'],
-                'dateCreation' =>       $situ['dateCreation'],
-                'dateLastUpdate' =>     $situ['dateLastUpdate'],
-                'dateSubmission' =>     $situ['dateSubmission'],
-                'dateValidation' =>     $situ['dateValidation'],
-                'statusId' =>           $situ['statusId'],
-                'initialSitu' =>        $situ['initialSitu'],
-                'translatedSituId' =>   $situ['translatedSituId'],
-                'userId' =>             $situ['userId'],
-                'evtId' =>              $situ['eventId'],
-                'evtTitle' =>           $situ['eventTitle'],
-                'cat1Id' =>             $situ['cat1Id'],
-                'cat1Title' =>          $situ['cat1Title'],
-                'cat2Id' =>             $situ['cat2Id'],
-                'cat2Title' =>          $situ['cat2Title'],
-                'langName' =>           html_entity_decode($situ['langName'], ENT_QUOTES, 'UTF-8'),
-                'langId' =>             $situ['langId'],
-            ];
-        }
-        return $result;
-        
-    }
-
     public function getSituById($situId) 
     {   
         $query = $this->em->createQueryBuilder()

@@ -59,6 +59,21 @@ class SituController extends AbstractController
         $langData = $this->getDoctrine()
                 ->getRepository(Lang::class)
                 ->findOneBy([ 'id' => $landId ]);
+        
+        if (!$langData->getEnabled()) {
+            $msg = $this->translator->trans(
+                'lang_deny', [],
+                'user_messages', $locale = locale_get_default()
+                );
+            $request->getSession()->getFlashBag()->add('error', $msg);
+
+            return $this->json([
+                'success' => false,
+                'redirection' => $this->redirectToRoute('user_situs', [
+                    'id' => $userId, '_locale' => locale_get_default()
+                ]),
+            ]);  
+        }
 
         $eventData = $this->createOrChooseData(
                 $data['event'], 'event', $langData, '', $userId
@@ -97,8 +112,7 @@ class SituController extends AbstractController
                     'redirection' => $this->redirectToRoute('user_situs', [
                         'id' => $userId, '_locale' => locale_get_default()
                     ]),
-                ]);
-                
+                ]);                
             }
             
             $situ->setDateLastUpdate($dateNow);
@@ -245,18 +259,9 @@ class SituController extends AbstractController
         
         if (!$situ) { return new NotFoundHttpException(); }
         
-        $situItems = $this->situService->getSituItemsBySituId($situ['id']);
-        
-        $url = $request->query->get('location') == true
-                ? $this->redirectToRoute('create_situ', [
-                       'id' => $situ['id'], 
-                       '_locale' => locale_get_default()
-                   ])
-                : '';
-        
+        $situItems = $this->situService->getSituItemsBySituId($id);
         return $this->json([
             'success' => true,
-            'redirection' => $url,
             'situ' => $situ,
             'situItems' => $situItems,
         ]);

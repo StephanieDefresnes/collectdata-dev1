@@ -4,10 +4,8 @@ namespace App\Controller\Front;
 
 use App\Entity\Situ;
 use App\Entity\Lang;
-use App\Entity\Event;
-use App\Entity\Category;
+use App\Entity\User;
 use App\Form\Situ\CreateSituFormType;
-use App\Service\SituService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -24,17 +22,14 @@ class SituController extends AbstractController
 {
     private $em;
     private $security;
-    private $situService;
     private $translator;
     
     public function __construct(EntityManagerInterface $em,
                                 Security $security,
-                                SituService $situService,
                                 TranslatorInterface $translator)
     {
         $this->em = $em;
         $this->security = $security;
-        $this->situService = $situService;
         $this->translator = $translator;
     }
     
@@ -51,11 +46,13 @@ class SituController extends AbstractController
     /**
      * @Route("/my-contribs", name="user_situs", methods="GET")
      */
-    public function getSitusByUser()
+    public function getUserSitus()
     {
         $user = $this->security->getUser();
-        $situs = $this->situService->getSitusByUser($user->getId());
         $userLangs = $user->getLangs();
+        
+        $situs = $this->getDoctrine()->getRepository(Situ::class)
+                ->findBy(['userId' => $user->getId()]);
         
         return $this->render('front/situ/user.html.twig', [
             'situs' => $situs,
@@ -78,9 +75,10 @@ class SituController extends AbstractController
         $langs = $user->getLangs()->getValues();
         
         $situData = '';
-        if ($id != null) {
-            $repository = $this->getDoctrine()->getRepository(Situ::class);
-            $situData = $repository->findOneBy(['id' => $id]);
+        if ($id) {
+            $situData = $this->em->getRepository(Situ::class)
+                    ->findOneBy(['id' => $id]);
+            if (!$situData) {dd('redirect page error');}
         }
         
         // Only situ author of moderator can update situ
@@ -134,45 +132,14 @@ class SituController extends AbstractController
     /**
      * @Route("/read/{id}", name="read_situ", methods="GET")
      */
-    public function getSitu(Situ $situ): Response
-    {   
-        $situData = $this->situService->getSituById($situ->getId());
-        $situItems = $this->situService->getSituItemsBySituId($situ->getId());
-        
-        $user = $this->security->getUser();
-        
-        $lang = $this->getDoctrine()
-            ->getRepository(Lang::class)
-            ->findOneBy([
-                'id' => $situData['langId']
-            ]);
-        
-        $event = $this->getDoctrine()
-            ->getRepository(Event::class)
-            ->findOneBy([
-                'id' => $situData['eventId']
-            ]);
-        
-        $categoryLevel1 = $this->getDoctrine()
-            ->getRepository(Category::class)
-            ->findOneBy([
-                'id' => $situData['categoryLevel1Id']
-            ]);
-        
-        $categoryLevel2 = $this->getDoctrine()
-            ->getRepository(Category::class)
-            ->findOneBy([
-                'id' => $situData['categoryLevel2Id']
-            ]);
+    public function readSitu(Situ $situ): Response
+    {           
+        $user = $this->em->getRepository(User::class)
+                ->findOneBy(['id' => $situ->getUserId()]);
         
         return $this->render('front/situ/read.html.twig', [
-            'situ' => $situData,
-            'situItems' => $situItems,
+            'situ' => $situ,
             'user' => $user,
-            'lang' => $lang,
-            'event' => $event->getTitle(),
-            'categoryLevel1' => $categoryLevel1->getTitle(),
-            'categoryLevel2' => $categoryLevel2->getTitle(),
         ]);
     }
 
@@ -188,17 +155,13 @@ class SituController extends AbstractController
         // Current user langs
         $langs = $this->security->getUser()->getLangs()->getValues();
         
-        // Translation lang
-        $repository = $this->em->getRepository(Lang::class);
-        $translationLang = $repository->findOneBy(
-            ['id' => $langId]
-        );
-        
         // Situ to translate
-        $repoSitu = $this->getDoctrine()->getRepository(Situ::class);
-        $situData = $repoSitu->findOneBy(['id' => $id]);
+        $situData = $this->getDoctrine()->getRepository(Situ::class)
+                ->findOneBy(['id' => $id]);
         
-        $repoEvent = $this->getDoctrine()->getRepository(Event::class);
+        // Translation lang
+        $langData = $this->em->getRepository(Lang::class)
+                ->findOneBy(['id' => $langId]);
         
         // Form
         $situ = new Situ();
@@ -209,8 +172,7 @@ class SituController extends AbstractController
             'form' => $formSitu->createView(),
             'langs' => $langs,
             'situ' => $situData,
-            'translationLang' => $translationLang,
-            'initialId' => $id,
+            'lang' => $langData,
         ]);
     }
     
