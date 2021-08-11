@@ -14,7 +14,7 @@
             {% else %}
                 <i class="fas fa-user"></i>
             {% endif %}
-            {{ 'nav.account'|trans() }}
+            <span class="mx-1 text-capitalize">{{  app.user.name }}</span>
         </a>
         <ul class="dropdown-menu dropdown-menu-right pt-md-2" aria-labelledby="dropdown_account">
             {% if is_granted("ROLE_MODERATOR") %}
