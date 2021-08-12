@@ -98,7 +98,7 @@ class SituController extends AbstractController
         } else {
             $situ = $this->em->getRepository(Situ::class)->find($data['id']);
             
-            // Only situ author of moderator can update situ
+            // Only situ author or moderator can update situ
             if (!$user->hasRole('ROLE_MODERATOR') && $userId != $situ->getUserId()) {
 
                 $msg = $this->translator->trans(

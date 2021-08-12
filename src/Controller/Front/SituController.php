@@ -76,7 +76,6 @@ class SituController extends AbstractController
         
         // Current user
         $user = $this->security->getUser();
-        $userId = $user->getId();
         $langs = $user->getLangs()->getValues();
         
         $situData = '';
@@ -86,9 +85,8 @@ class SituController extends AbstractController
             if (!$situData) {dd('redirect page error');}
         }
         
-        // Only situ author of moderator can update situ
-        if (!empty($situData) && !$user->hasRole('ROLE_MODERATOR')
-                && $userId != $situData->getUserId()) {
+        // Only situ author can update situ
+        if (!empty($situData) && $user->getId() != $situData->getUserId()) {
             
             $msg = $this->translator->trans(
                     'access_deny', [],
