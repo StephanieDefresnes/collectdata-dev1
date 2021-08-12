@@ -278,7 +278,7 @@ class SituController extends AbstractController
         $situId = $request->query->get('id');
         
         // Lang wanted
-        $situLangId = $request->query->get('langId');
+        $langId = $request->query->get('langId');
         
         // Check if lang denied
         $langDeny = $this->translator->trans(
@@ -290,14 +290,14 @@ class SituController extends AbstractController
                 ->findOneBy([ 'id' => $situId ]);
         $langData = $this->getDoctrine()
                 ->getRepository(Lang::class)
-                ->findOneBy([ 'id' => $situLangId ]);
+                ->findOneBy([ 'id' => $langId ]);
         
         // If wanted lang is Lang situ ti translate or wanted lang is not enabled
-        if ($situLangId == $situData->getLang()->getId() || !$langData->getEnabled()) {
+        if ($langId == $situData->getLang()->getId() || !$langData->getEnabled()) {
             $situTranslated = '';
             $erroMsg = $langDeny;
         } else {
-            $situTranslated = $this->situService->searchTranslation($situId, $situLangId);
+            $situTranslated = $this->situService->searchTranslation($situId, $langId);
             $erroMsg = '';
         }
         
