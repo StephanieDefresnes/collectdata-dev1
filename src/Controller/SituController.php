@@ -274,8 +274,10 @@ class SituController extends AbstractController
     {
         $this->denyAccessUnlessGranted('ROLE_CONTRIBUTOR');
         
-        // Get Situ
+        // Situ to translate
         $situId = $request->query->get('id');
+        
+        // Lang wanted
         $situLangId = $request->query->get('langId');
         
         // Check if lang denied
@@ -290,7 +292,7 @@ class SituController extends AbstractController
                 ->getRepository(Lang::class)
                 ->findOneBy([ 'id' => $situLangId ]);
         
-        // If Lang situ is wanted lang or wanted lang is not enabled
+        // If wanted lang is Lang situ ti translate or wanted lang is not enabled
         if ($situLangId == $situData->getLang()->getId() || !$langData->getEnabled()) {
             $situTranslated = '';
             $erroMsg = $langDeny;
