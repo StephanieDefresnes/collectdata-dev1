@@ -216,6 +216,20 @@ body {
                     }
                 }
             }
+            & .toggler-expanded {
+                & > .navbar-nav {
+                    & > li {
+                        & > .dropdown-menu {
+                            &.pt-md-2 {
+                                padding-top: 0.5rem !important;
+                            }
+                            & .bg-dark-95 {
+                                background: transparent !important;
+                            }
+                        }
+                    }
+                }
+            }
             &.scrolled {
                 padding: 8px 16px;
                 background: $dark-95 !important;

@@ -10,6 +10,7 @@ require('bootstrap');
 // js add on
 $(document).ready(function(){
     
+    // Navbar scroll effect
     $(window).scroll(function(){
         if ($(this).scrollTop() > 10) {
            $('nav.navbar').addClass('scrolled')
@@ -17,6 +18,12 @@ $(document).ready(function(){
            $('nav.navbar').removeClass('scrolled')
         }
     })
+    $('.navbar-toggler').click(function() {
+        if ($('.navbar-toggler').attr('aria-expanded') == 'false') {
+            $('#navbarCollapse').toggleClass('toggler-expanded')
+        }
+    })
+    
     
     // UTF8 decode
     $('body').find('.decode').each(function(){
