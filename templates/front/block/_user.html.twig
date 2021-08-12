@@ -18,20 +18,20 @@
         </a>
         <ul class="dropdown-menu dropdown-menu-right pt-md-2" aria-labelledby="dropdown_account">
             {% if is_granted("ROLE_MODERATOR") %}
-                <li class="dropdown-item bg-dark{{ route == 'back_home' ? ' active' }}">
+                <li class="dropdown-item bg-dark-95{{ route == 'back_home' ? ' active' }}">
                     <a href="{{ path('back_home') }}">
                         <i class="fas fa-fw fa-tachometer-alt"></i>
                         {{ 'nav.account_back'|trans() }}
                     </a>
                 </li>
             {% endif %}
-            <li class="dropdown-item bg-dark{{ route == 'user_account' ? ' active' }}">
+            <li class="dropdown-item bg-dark-95{{ route == 'user_account' ? ' active' }}">
                 <a href="{{ path('user_account') }}">
                     <i class="fas fa-user-cog"></i>
                     {{ 'nav.account_profile'|trans() }}
                 </a>
             </li>
-            <li class="dropdown-item bg-dark">
+            <li class="dropdown-item bg-dark-95">
                 <a href="{{ path('app_logout') }}">
                     <i class="fas fa-sign-out-alt"></i>
                     {{ 'nav.account_logout'|trans() }}

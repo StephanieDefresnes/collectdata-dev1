@@ -65,7 +65,6 @@ a:focus,
 body {
     #flash_message {
         width: auto;
-        /*max-width: 350px;*/
         background-color: transparent;
         position: absolute;
         right: 15px;
@@ -96,21 +95,6 @@ body {
                 & > span {
                     margin: 0 15px;
                     position: relative;
-                }
-            }
-            &.scrolled {
-                padding: 8px 16px;
-                background: $dark-95 !important;
-                -webkit-transition: 150ms;
-                -moz-transition: 150ms;
-                -o-transition: 150ms;
-                transition: 150ms;
-                & .navbar-brand {
-                    font-size: 1.25rem;
-                    -webkit-transition: font-size 150ms;
-                    -moz-transition: font-size 150ms;
-                    -o-transition: font-size 150ms;
-                    transition: font-size 150ms;
                 }
             }
             & a.navbar-brand {
@@ -165,9 +149,12 @@ body {
                     & > .dropdown-menu {
                         margin: 0;
                         padding: 0;
+                        background: transparent !important;
                         border-radius: 0 0 0.25rem 0.25rem;
+                        &.pt-md-2 {
+                            padding-top: 1.7rem !important;
+                        }
                         &.lang-menu {
-                            /*top: 48px;*/
                             left: -4px;
                             min-width: auto;
                         }
@@ -226,6 +213,30 @@ body {
                                 }
                             }                    
                         } 
+                    }
+                }
+            }
+            &.scrolled {
+                padding: 8px 16px;
+                background: $dark-95 !important;
+                -webkit-transition: 150ms;
+                -moz-transition: 150ms;
+                -o-transition: 150ms;
+                transition: 150ms;
+                & .navbar-brand {
+                    font-size: 1.25rem;
+                    -webkit-transition: font-size 150ms;
+                    -moz-transition: font-size 150ms;
+                    -o-transition: font-size 150ms;
+                    transition: font-size 150ms;
+                }
+                & .navbar-nav {
+                    & > li {
+                        & > .dropdown-menu {
+                            &.pt-md-2 {
+                                padding-top: 0.5rem !important;
+                            }
+                        }
                     }
                 }
             }
@@ -452,6 +463,12 @@ th.cust-nowrap {
 }
 .bg-dark-80 {
     background: $dark-70 !important;
+}
+.bg-dark-85 {
+    background: $dark-85 !important;
+}
+.bg-dark-95 {
+    background: $dark-95 !important;
 }
 .bg-light-50 {
     background: $light-50 !important;
