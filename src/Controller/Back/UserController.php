@@ -63,6 +63,7 @@ class UserController extends AbstractController
      */
     public function search(Request $request, Session $session)
     {
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
         $this->denyAccessUnlessGranted('ROLE_MODERATOR');
         
         $users = $this->userRepository->findAll();
@@ -91,6 +92,7 @@ class UserController extends AbstractController
      */
     public function create(Request $request, UserPasswordEncoderInterface $passwordEncoder, Mailer $mailer): Response
     {
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
         $this->denyAccessUnlessGranted('ROLE_MODERATOR');
         
         $user = new User();
@@ -142,6 +144,7 @@ class UserController extends AbstractController
      */
     public function read(User $user): Response
     {
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
         $this->denyAccessUnlessGranted('ROLE_MODERATOR');
         
         $situs = $this->situService->countSitusByUser($user->getId());
@@ -158,6 +161,7 @@ class UserController extends AbstractController
      */
     public function updateSuper(Request $request, User $user): Response
     {
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
         $this->denyAccessUnlessGranted('ROLE_MODERATOR');
         
         // Deny SUPER_ADMIN access to ADMIN
@@ -213,6 +217,7 @@ class UserController extends AbstractController
      */
     public function delete(Request $request): Response
     {    
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
         $this->denyAccessUnlessGranted('ROLE_SUPER_ADMIN');
         
         $users = $this->userManager->getUsers();
@@ -251,6 +256,7 @@ class UserController extends AbstractController
      */
     public function permuteEnabled(Request $request): Response
     {    
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
         $this->denyAccessUnlessGranted('ROLE_MODERATOR');
         
         // Deny SUPER_ADMIN access to ADMIN

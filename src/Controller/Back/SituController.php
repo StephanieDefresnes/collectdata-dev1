@@ -29,6 +29,8 @@ class SituController extends AbstractController
      */
     public function index(): Response
     {   
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+        
         $repository = $this->getDoctrine()->getRepository(Situ::class);
         $situs = $repository->findAll();
 
@@ -42,6 +44,8 @@ class SituController extends AbstractController
      */
     public function getSitusToValidate()
     {
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+        
         $repository = $this->getDoctrine()->getRepository(Situ::class);
         $situs = $repository->findBy(['statusId' => 2]);
         
@@ -55,6 +59,8 @@ class SituController extends AbstractController
      */
     public function verifySitu($id): Response
     {
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+        
         $repository = $this->getDoctrine()->getRepository(Situ::class);
         $situ = $repository->findOneBy(['id' => $id]);
         
@@ -68,6 +74,8 @@ class SituController extends AbstractController
      */
     public function getSitu($id): Response
     {
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+        
         $repository = $this->getDoctrine()->getRepository(Situ::class);
         $situ = $repository->findOneBy(['id' => $id]);
         

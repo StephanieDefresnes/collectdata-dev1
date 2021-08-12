@@ -29,6 +29,8 @@ class EventController extends AbstractController
      */
     public function index(): Response
     {
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+        
         return $this->render('back/event/index.html.twig', [
             'controller_name' => 'EventController',
         ]);

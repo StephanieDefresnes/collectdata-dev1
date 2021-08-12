@@ -16,6 +16,8 @@ class PageController extends AbstractController
      */
     public function index(): Response
     {
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+        
         return $this->render('back/page/index.html.twig', [
             
         ]);

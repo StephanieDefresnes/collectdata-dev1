@@ -51,6 +51,8 @@ class UserController extends AbstractController
      */
     public function read(Request $request): Response
     {
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+        
         // Get current user
         $user = $this->security->getUser();
         
@@ -97,6 +99,8 @@ class UserController extends AbstractController
                             EntityManagerInterface $em,
                             LangService $langService): Response
     {
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+        
         // Get current user
         $user = $this->security->getUser();
         

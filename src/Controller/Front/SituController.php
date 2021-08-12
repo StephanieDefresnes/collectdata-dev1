@@ -38,6 +38,8 @@ class SituController extends AbstractController
      */
     public function index(): Response
     {
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+        
         return $this->render('front/situ/index.html.twig', [
             'controller_name' => 'SituController',
         ]);
@@ -48,6 +50,8 @@ class SituController extends AbstractController
      */
     public function getUserSitus()
     {
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+        
         $user = $this->security->getUser();
         $userLangs = $user->getLangs();
         
@@ -67,6 +71,7 @@ class SituController extends AbstractController
                                 EntityManagerInterface $em,
                                 $id): Response
     {
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
         $this->denyAccessUnlessGranted('ROLE_CONTRIBUTOR');
         
         // Current user
@@ -113,6 +118,7 @@ class SituController extends AbstractController
      */
     function ajaxValidationRequest(Request $request): JsonResponse
     {
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
         $this->denyAccessUnlessGranted('ROLE_CONTRIBUTOR');
         
         // Get Situ
@@ -150,6 +156,7 @@ class SituController extends AbstractController
                                 EntityManagerInterface $em,
                                 $id, $langId): Response
     {
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
         $this->denyAccessUnlessGranted('ROLE_CONTRIBUTOR');
         
         // Current user langs

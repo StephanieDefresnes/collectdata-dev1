@@ -47,6 +47,7 @@ class LangController extends AbstractController
      */
     public function search(Request $request, Session $session)
     {
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
         $this->denyAccessUnlessGranted('ROLE_ADMIN');
         
         $langs = $this->langService->getAll();
@@ -61,6 +62,7 @@ class LangController extends AbstractController
      */
     public function permuteEnabled(Request $request): Response
     {    
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
         $this->denyAccessUnlessGranted('ROLE_ADMIN');
         
         $langs = $this->langManager->getLangs();

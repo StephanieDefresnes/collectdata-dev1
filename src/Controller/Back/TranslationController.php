@@ -48,6 +48,7 @@ class TranslationController extends AbstractController
      */
     public function translationSite(Request $request): Response
     {   
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
         $this->denyAccessUnlessGranted('ROLE_ADMIN');
         
         $repositoryLang = $this->em->getRepository(Lang::class);
@@ -67,6 +68,7 @@ class TranslationController extends AbstractController
     public function create( EntityManagerInterface $em,
                             Request $request): Response 
    {
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
         $this->denyAccessUnlessGranted('ROLE_SUPER_ADMIN');
         
         // Translations list
@@ -134,6 +136,7 @@ class TranslationController extends AbstractController
      */
     public function getById(Request $request): JsonResponse
     {
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
         $this->denyAccessUnlessGranted('ROLE_SUPER_ADMIN');
         
         // Get TranslationMessage
@@ -156,6 +159,7 @@ class TranslationController extends AbstractController
      */
     public function updateTranslation()
     {
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
         $this->denyAccessUnlessGranted('ROLE_SUPER_ADMIN');
         
         $entityManager = $this->getDoctrine()->getManager();
@@ -165,6 +169,8 @@ class TranslationController extends AbstractController
             // Get request data
             $request = $this->get('request_stack')->getCurrentRequest();
             $data = $request->request->all();
+            
+            dd($data);
 
             // Current user
             $user = $this->getUser();
