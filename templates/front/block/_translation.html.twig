@@ -1,0 +1,29 @@
+{% trans_default_domain 'user_messages' %}
+
+{#{% if app.user %}#}
+    <li class="nav-item dropdown{{ route in ['front_translations', 'front_translation_add'] ? ' active' }}">
+        <a class="nav-link dropdown-toggle mx-md-0 mx-4" id="dropdown_translation" 
+           data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            {{ 'nav.translation.title'|trans() }}
+        </a>
+        <ul class="dropdown-menu pt-md-2" aria-labelledby="dropdown_translation">
+            <li class="dropdown-item bg-dark-95{{ route == 'front_translations' ? ' active' }}">
+                <a href="{{ path('front_translations', { 'id': app.user.id }) }}">
+                    <i class="fas fa-list-ul"></i>
+                    {{ 'nav.translation.dashboard'|trans() }}
+                </a>
+            </li>
+            <li class="dropdown-item bg-dark-95{{ route == 'front_translation_add' ? ' active' }}">
+                <a href="{{ path('front_translation_add', { 'id': app.user.id }) }}">
+                    <i class="far fa-edit"></i>
+                    {{ 'nav.translation.create'|trans() }}
+                </a>
+            </li>
+            <li class="dropdown-item bg-dark-95{{ route == '' ? ' active' }}">
+                <a href="">
+                    <i class="fas fa-globe"></i> {{ 'nav.contribs.translate'|trans() }}
+                </a>
+            </li>
+        </ul>
+    </li>
+{#{% endif %}#}

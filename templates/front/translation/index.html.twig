@@ -1,0 +1,30 @@
+{% extends 'front/layout.html.twig' %}
+{% trans_default_domain 'user_messages' %}
+
+{% block title %}{{ 'nav.translation.title'|trans() }}{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+{% endblock %}
+
+{% block content %}
+    
+    <div class="container mt-5 py-5">
+        
+        {% block banner%}
+            <h1 class="h3 my-3 mb-5 text-white">{{ 'translation.title'|trans() }}</h1>
+        {% endblock %}
+                        
+        <div class="row">
+        
+            <div class="col-lg-7 mx-auto p-0">
+                        toto
+            </div>
+        </div>
+                    
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+{% endblock %}
