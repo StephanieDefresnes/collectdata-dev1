@@ -59,18 +59,17 @@ a:focus,
     background: $dark url('../img/page-loader.gif') center / 120px no-repeat;
     z-index: 10000;
 }
-
+#flash_message {
+    width: auto;
+    background-color: transparent;
+    position: absolute;
+    right: 0;
+    top: 110px;
+    z-index: 999;
+}
 
 // Override Bootstrap and custom class for navbar
 body {
-    #flash_message {
-        width: auto;
-        background-color: transparent;
-        position: absolute;
-        right: 15px;
-        top: 90px;
-        z-index: 999;
-    }
     & > .container-fluid {
         & .navbar {
             margin: 0 -15px;
@@ -612,10 +611,10 @@ table {
 /*
  * RTL
  */
-.rtl {
+[dir="rtl"] {
     & #flash_message {
         right: unset;
-        left: 15px;
+        left: 0;
     }
     & .navbar .navbar-nav > li:hover > .dropdown-menu {
         text-align: right;
@@ -643,6 +642,18 @@ table {
         }
         &.rtl {
             display: inline;
+        }
+    }
+    table {
+        & td {
+            &.pl-0.pr-2 {
+                padding-left: 0.5rem !important;
+                padding-right: 0 !important;
+            }
+            &.first-action {
+                padding-right: 0.25rem;
+                padding-left: 0.25rem;
+            }
         }
     }
 }
