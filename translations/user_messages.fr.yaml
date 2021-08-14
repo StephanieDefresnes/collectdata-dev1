@@ -213,6 +213,9 @@ contrib:
             success: "Alerte succès :"
     situ:
         title: Situation à risque
+        status:
+            writing: En cours de rédaction
+            validation: Validation demandée
         by_author: "- proposée par"
 translation:
     title: Mes traductions

@@ -213,6 +213,9 @@ contrib:
             success: "Success alert :"
     situ:
         title: Risky situation
+        status:
+            writing: On going redaction
+            validation: Validation requested
         by_author: "- proposed by"
 translation:
     title: My translations

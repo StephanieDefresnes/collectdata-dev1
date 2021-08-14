@@ -10,13 +10,26 @@
         
         {% block banner%}
         <div class="d-flex justify-content-between mt-3 mb-5 pt-5">
-            <h1 class="h3 text-white">{{ 'contrib.situ.title'|trans() }}</h1>
+            <h1 class="h3 text-white">
+                {{ 'contrib.situ.title'|trans() }}
+                {% if app.user %}
+                    <small>
+                        {% if situ.statusId == 1 %}
+                            - {{ 'contrib.situ.status.writing'|trans() }}
+                        {% elseif situ.statusId == 2 %}
+                            - {{ 'contrib.situ.status.validation'|trans() }}
+                        {% endif %}
+                    </small>
+                {% endif %}
+            </h1>
             <div>
-                <a href="{{ path('user_situs') }}" class="btn btn-outline-light bg-dark-50-0 px-3">
-                    <i class="fas fa-chevron-left ltr pr-2"></i>
-                    {{ 'nav.contribs.user'|trans() }}
-                    <i class="fas fa-chevron-right rtl pl-2"></i>
-                </a>
+                {% if app.user %}
+                    <a href="{{ path('user_situs') }}" class="btn btn-outline-light bg-dark-50-0 px-3">
+                        <i class="fas fa-chevron-left ltr pr-2"></i>
+                        {{ 'nav.contribs.user'|trans() }}
+                        <i class="fas fa-chevron-right rtl pl-2"></i>
+                    </a>
+                {% endif %}
                 <a href="{{ path('all_situs') }}" class="btn btn-outline-light bg-dark-50-0 px-3">
                     <i class="fas fa-chevron-left ltr pr-2"></i>
                     {{ 'nav.contribs.all'|trans() }}
@@ -46,7 +59,9 @@
                         <div class="h5 mb-1">
                             <span class="first-letter">{{ situ.title }}</span>
                             <span class="pt-1 px-1 small">{{ 'contrib.situ.by_author'|trans() }}</span>
-                            <span class="pt-1 small">{{ user.name }}</span>
+                            <span class="pt-1 small">
+                                <a href="" class="text-white font-weight-bold">{{ user.name }}</a>
+                            </span>
                         </div>
                     </div>
                     
