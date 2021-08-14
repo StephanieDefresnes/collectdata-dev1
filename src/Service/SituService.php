@@ -127,8 +127,7 @@ class SituService {
     
     public function searchTranslation($situId, $langId)
     {
-        $qb = $this->em->createQueryBuilder();
-        
+        $qb = $this->em->createQueryBuilder();        
         $qb->from(Situ::class,'situ')
             ->select('situ.id')
             ->where('situ.translatedSituId = ?1')
