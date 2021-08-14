@@ -215,6 +215,7 @@ class Situ
         return $this;
     }
 
+    
     public function getStatusId(): ?int
     {
         return $this->statusId;
