@@ -68,7 +68,6 @@ class SituController extends AbstractController
      */
     public function readSitu(Situ $situ): Response
     {
-        
         // Only user can read not validated situ
         if ($situ->getStatusId() != 3) {
             $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
