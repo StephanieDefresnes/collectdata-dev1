@@ -53,6 +53,11 @@ class Situ
     private $dateValidation;
 
     /**
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $dateDeletion;
+
+    /**
      * @ORM\Column(type="integer")
      */
     private $userId;
@@ -182,6 +187,18 @@ class Situ
     public function setDateValidation(?\DateTimeInterface $dateValidation): self
     {
         $this->dateValidation = $dateValidation;
+
+        return $this;
+    }
+
+    public function getDateDeletion(): ?\DateTimeInterface
+    {
+        return $this->dateDeletion;
+    }
+
+    public function setDateDeletion(?\DateTimeInterface $dateDeletion): self
+    {
+        $this->dateDeletion = $dateDeletion;
 
         return $this;
     }
