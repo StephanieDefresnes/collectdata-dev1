@@ -239,5 +239,6 @@ class SituController extends AbstractController
         } catch (Exception $e) {
             throw new \Exception('An exception appeared while deleting the translation');
         }
-    }    
+    }
+    
 }
