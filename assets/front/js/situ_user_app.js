@@ -6,48 +6,6 @@ require('datatables.net/js/jquery.dataTables.min.js');
 require('datatables.net-bs4/js/dataTables.bootstrap4.min.js');
 const lang = require('../../datatables.json')
 
-function flashMessage(status, LangDeny) {
-    $('body').find('#flash_message').remove()
-    let i = status == 'success' ? '<i class="fas fa-check-circle"></i>'
-                                : '<i class="fas fa-exclamation-circle"></i>'
-    let textClass = status == 'success' ? 'text-success' : 'text-danger'
-    let flashMessage =
-            '<div id="flash_message" class="container">'
-                +'<div class="alert alert-secondary alert-dismissible px-3 fade show" role="alert">'
-                        +'<span class="sr-only">'+ translations['srOnly-'+status] +'</span>'
-                        +'<span class="icon '+ textClass +'">'+ i +'</span>'
-                        +'<span class="msg">'+ translations['flashValid-'+status+LangDeny] +'</span>'
-                +'</div>'
-            +'</div>'
-    $('body > .container-fluid').before(flashMessage)
-    window.scrollTo({top: 0, behavior: 'smooth'});
-    $('#flash_message').delay(3000).fadeOut(); 
-}
-
-// Update button status when validation is resquested
-function requestReceived(button) {
-    button.removeClass('pcx-2').addClass('px-1')
-            .attr('data-original-title', translations['actionRead'])
-            .html('<i class="fas fa-eye"></i>')
-            .parents('tr').find('.situStatus').text(translations['statusValidation'])
-}
-function validationRequest(id, button) {
-    $.ajax({
-        url: "/"+ path['locale'] +"/ajaxValidationRequest",
-        method: 'GET',
-        data: { id: id },
-        success: function() {            
-            requestReceived(button)
-            flashMessage('success', '')
-            $('#loader').hide()
-        },
-        error: function() {
-            flashMessage('error', '')
-            $('#loader').hide()
-        }
-    })
-}
-
 // Search if translations exist
 function translationRequest(id, langId) {
     $.ajax({
@@ -55,6 +13,7 @@ function translationRequest(id, langId) {
         method: 'GET',
         data: { id: id, langId: langId},
         success: function(data) {
+            console.log(data)
             if (!data['error']) {
                 if ($('#valid').hasClass('createTranslation'))
                     $('#valid').removeClass('createTranslation')
@@ -62,10 +21,19 @@ function translationRequest(id, langId) {
                     $('#valid').removeClass('readTranslation')
                 verifyTranslatedSitu(data['situTranslated'])
             } else {
+                let flashMessage =
+                    '<div id="flash_message" class="container">'
+                        +'<div class="alert alert-secondary alert-dismissible px-3 fade show" role="alert">'
+                                +'<span class="sr-only">'+ translations['errorSrOnly'] +'</span>'
+                                +'<span class="icon text-danger"><i class="fas fa-exclamation-circle"></i></span>'
+                                +'<span class="msg">'+ translations['errorLangDeny'] +'</span>'
+                        +'</div>'
+                    +'</div>'
+                $('body > .container-fluid').before(flashMessage)
                 $('#translateModal').modal('hide')
-                flashMessage('error', 'LangDeny')
+                window.scrollTo({top: 0, behavior: 'smooth'});
+                $('#flash_message').delay(3000).fadeOut(); 
             }
-            
         }
     })
 }
@@ -79,7 +47,7 @@ function verifyTranslatedSitu(data) {
         $('#valid').text(translations['modalBtnValid'])
                 .removeClass('d-none').addClass('createTranslation')
     } else {
-        $('#valid').attr('data-id', data[0]['situ_id'])
+        $('#valid').attr('data-id', data[0]['id'])
         if ($('#result').find('.error').hasClass('d-none'))
             $('#result').find('.error').removeClass('d-none')
         $('#result').find('.success').addClass('d-none')
@@ -138,16 +106,21 @@ $(document).ready(function() {
     // Validation request
     $('.situValidation').click(function() {
         $('#loader').show()
-        validationRequest($(this).parents('tr').attr('data-id'), $(this))
+        let situId = $(this).parents('tr').attr('data-id')
+        location.href = '/'+ path['locale'] +'/validation/'+ situId        
     })
 
-    // Show modal with data situ to translation and hide language choice if is situ langId
+    /**
+     * Translation situ
+     */
+    // Show modal with data situ to translate and hide language choice if is situ langId
     $('.situTranslate').click(function() {
-        
         let title = $(this).parents('tr').find('.situ-title').attr('data-original-title')
         let langId = $(this).attr('data-lang')
         
-        $('#situ-title').text(title).attr('data-id', $(this).parents('tr').attr('data-id'))
+        $('#translateModal .situ-title')
+                .text(title)
+                .attr('data-id', $(this).parents('tr').attr('data-id'))
         
         $('#translateLangs option').each(function() {
             if ($(this).val() != '') {
@@ -167,7 +140,7 @@ $(document).ready(function() {
     $('#translateLangs').focus(function() {
         $('#translateLangs').val('')
     }).change(function() {
-        let situId = $('#situ-title').attr('data-id') 
+        let situId = $('#translateModal .situ-title').attr('data-id') 
         $('#result, #valid').addClass('d-none')
         $('#spinner').addClass('show')
         translationRequest(situId, $(this).val())
@@ -175,19 +148,41 @@ $(document).ready(function() {
     
     // Read existing translation or create it
     $('#valid').click(function() {
+        $('#loader').show()
         if ($(this).hasClass('createTranslation')) {            
             location.href = '/'+ path['locale'] 
-                    +'/translate/'+ $('#situ-title').attr('data-id')
+                    +'/translate/'+ $('#translateModal .situ-title').attr('data-id')
                     +'/'+ $('#translateLangs').val();            
         } else {
-            location.href = '/'+ path['locale'] +'/read/' +$(this).attr('data-id');
+            location.href = '/'+ path['locale'] +'/read/'+ $(this).attr('data-id');
         }
     })
     
-    // Cancel modal
-    $('#cancel').click(function() {
+    // Cancel translateModal
+    $('#translateModal .cancel').click(function() {
         $('#translateModal').modal('hide')
         $('#result, #valid').addClass('d-none')
     })
+    
+    /**
+     * Deletion situ
+     */
+    // Show modal with data situ to delete
+    $('.situDelete').click(function() {
+        let title = $(this).parents('tr').find('.situ-title').attr('data-original-title')
+        $('#deleteModal .situ-title')
+                .text(title)
+                .attr('data-id', $(this).parents('tr').attr('data-id'))
+        
+        $('#deleteModal').modal('show')
+    })
+    
+    // Deletion situ
+    $('#delete').click(function() {
+        $('#loader').show()
+        let situId = $('#deleteModal .situ-title').attr('data-id')
+        location.href = '/'+ path['locale'] +'/delete/'+ situId        
+    })
+    
     
 });

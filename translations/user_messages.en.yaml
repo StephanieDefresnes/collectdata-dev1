@@ -118,6 +118,12 @@ contrib:
             delete: Delete
             translate: Translate
             translated: Translation
+        deletion:
+            title: Deleting a contribution
+            text: Are you sure you want to remove this contribution?
+            btn: Confirm
+            error: An error occurred while deleting the contribution.
+            success: The contribution has been deleted.
     translation:
         title: Translate a situation
         modal:

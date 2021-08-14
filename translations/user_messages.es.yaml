@@ -118,6 +118,12 @@ contrib:
             delete: Eliminar
             translate: Traducir
             translated: Traducción
+        deletion:
+            title: Eliminar una contribución
+            text: ¿Está seguro de que desea eliminar esta contribución?
+            btn: Confirmar
+            error: Se produjo un error al eliminar la contribución.
+            success: La contribución ha sido eliminada.
     translation:
         title: Traducir una situación
         modal:

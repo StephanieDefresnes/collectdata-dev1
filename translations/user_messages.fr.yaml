@@ -118,6 +118,12 @@ contrib:
             delete: Supprimer
             translate: Traduire
             translated: Traduction
+        deletion:
+            title: Suppression d'une contribution
+            text: Êtes-vous certain(e) de vouloir supprimer cette contribution ?
+            btn: Confirmer
+            error: Une erreur s'est produite lors de la suppression de la contribution.
+            success: La contribution a bien été contribution.
     translation:
         title: Traduire une situation
         modal:
@@ -193,11 +199,11 @@ contrib:
                 success_update: Les modifications ont bien été enregistrées
                 error: Une erreur s'est produite lors de l'enregistrement de la situation
         submit:
-            btn: Envoyer
+            btn: Soumettre
             flash:
-                success: La situation a bien été envoyée
-                success_update: Les modifications ont bien été envoyées
-                error: Une erreur s'est produite lors de l'envoi de la situation
+                success: La situation a bien été soumise
+                success_update: Les modifications ont bien été soumises
+                error: Une erreur s'est produite lors de la soumission de la situation
         edit:
             flash:
                 error: Une erreur s'est produite lors de la récupération de la situation
