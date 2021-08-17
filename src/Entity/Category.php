@@ -51,14 +51,19 @@ class Category
     private $lang;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Event", inversedBy="categories")
+     * @ORM\ManyToOne(targetEntity=Event::class, inversedBy="categories")
      */
     private $event;
     
     /**
-     * @ORM\Column(type="integer", nullable=true)
+     * @ORM\ManyToOne(targetEntity=Category::class, inversedBy="parents")
      */
-    private $parentId;
+    private $parent;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Category::class, cascade={"persist"}, mappedBy="parentId")
+     */
+    private $parents;
 
     /**
      * @ORM\OneToMany(targetEntity=Situ::class, cascade={"persist"}, mappedBy="categoryLevel1")
@@ -72,6 +77,7 @@ class Category
 
     public function __construct()
     {
+        $this->parents = new ArrayCollection();
         $this->situs1 = new ArrayCollection();
         $this->situs2 = new ArrayCollection();
     }
@@ -170,14 +176,44 @@ class Category
         return $this;
     }
 
-    public function getParentId(): ?int
+    public function getParent(): ?int
     {
-        return $this->parentId;
+        return $this->parent;
     }
 
-    public function setParentId(int $parent): self
+    public function setParent(?Category $parent): self
     {
-        $this->parentId = $parentId;
+        $this->parent = $parent;
+
+        return $this;
+    }
+    
+    /**
+     * @return Collection|Category[]
+     */
+    public function getParents(): Collection
+    {
+        return $this->parents;
+    }
+
+    public function addParent(Category $parent): self
+    {
+        if (!$this->parents->contains($parent)) {
+            $this->parents[] = $parent;
+            $parent->setParent($this);
+        }
+
+        return $this;
+    }
+
+    public function removeParent(Situ $parent): self
+    {
+        if ($this->parents->removeElement($parent)) {
+            // set the owning side to null (unless already changed)
+            if ($parent->getParent() === $this) {
+                $parent->setParent(null);
+            }
+        }
 
         return $this;
     }
