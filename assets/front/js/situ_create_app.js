@@ -542,8 +542,8 @@ function loadData(name, value) {
         if ($('#create_situ_form_'+ name +' option').length) {
            $('#create_situ_form_'+ name).val(value).trigger('change')
                 .parent().find('.select2-selection__rendered').addClass('selection-on')
-           clearInterval(dataExist)
            if (name == 'categoryLevel2') $('#loader').hide()
+           clearInterval(dataExist)
         }
     }, 50);
 }
