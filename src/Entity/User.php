@@ -112,6 +112,11 @@ class User implements UserInterface
     */
     protected $userFiles;
 
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $forbiddenAccess;
+
     public function __construct()
     {
         $this->langs = new ArrayCollection();
@@ -441,6 +446,18 @@ class User implements UserInterface
             }
         }
         
+        return $this;
+    }
+
+    public function getForbiddenAccess(): ?int
+    {
+        return $this->forbiddenAccess;
+    }
+
+    public function setForbiddenAccess(?int $forbidden_access): self
+    {
+        $this->forbiddenAccess = $forbidden_access;
+
         return $this;
     }
 }

@@ -130,6 +130,14 @@
                                 {% else %}{{ situs }} {{ 'user.field.contribs.count_s'|trans() }}{% endif %}
                             </span>
                         </div>
+                        {% if user.forbiddenAccess >= 1 %}
+                        <div class="user-field pb-3 row">
+                            <strong class="col-sm-4">{{ 'user.field.forbidden_acces.label'|trans() }} : </strong>
+                            <span class="col-sm-8">
+                                {{ user.forbiddenAccess }}
+                            </span>
+                        </div>
+                        {% endif %}
                 </div>
             </div>        
         </div>

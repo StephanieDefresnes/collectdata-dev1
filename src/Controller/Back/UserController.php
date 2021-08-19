@@ -25,6 +25,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
@@ -289,5 +290,37 @@ class UserController extends AbstractController
         }
         $this->getDoctrine()->getManager()->flush();
         return $this->redirectToRoute('back_user_search');
+    }
+
+    /**
+     * @Route("/forbiden", name="back_user_forbiden", methods="GET|POST")
+     */
+    public function forbiden(Security $security): Response
+    {
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+        
+        // Current user
+        $user = $security->getUser();
+        
+        $forbiddenAccess = $user->getForbiddenAccess();
+        $adminNote = $user->getAdminNote();
+        
+        $msg = 'Forbidden access on '.date('Y-m-d H:i:s');
+        
+        $user->setForbiddenAccess(intval($forbiddenAccess)+1);
+        $user->setAdminNote($adminNote.'\n '.$msg);
+        $this->em->persist($user);
+        $this->em->flush();
+        
+        if ($user->getForbiddenAccess() == 3) {
+            $user->setEnabled(0);
+            $user->setDateDelete(new \DateTime('now'));
+            $adminNote = $user->getAdminNote();
+            $user->setAdminNote($adminNote.'\n '.'Deleted ForbiddenAccess');
+            $this->em->persist($user);
+            $this->em->flush();
+        }
+        
+        return $this->redirectToRoute('app_logout');
     }
 }
