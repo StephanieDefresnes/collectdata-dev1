@@ -1,10 +1,55 @@
-/*
-To change this license header, choose License Headers in Project Properties.
-To change this template file, choose Tools | Templates
-and open the template in the editor.
-*/
-/* 
-    Created on : 10 août 2021, 13:47:51
-    Author     : sedsi
-*/
+// global
+@import "../../scss/_variables";
 
+.line-11 {
+    line-height: 1.1;
+}
+.more {
+    background-image: url('~@fortawesome/fontawesome-free/svgs/solid/caret-up.svg') !important;
+    background-position: right center !important;
+    background-repeat: no-repeat;
+    background-size: 10px;
+    cursor: pointer;
+    &.collapsed {
+        background-image: url('~@fortawesome/fontawesome-free/svgs/solid/caret-down.svg') !important;            
+    }
+}
+.check {
+    cursor: pointer;
+    & .more {
+        display: inline-block;
+        width: 10px;
+        height: 10px;
+        background-image: url('~@fortawesome/fontawesome-free/svgs/solid/caret-up.svg') !important;
+        background-position: right center !important;
+        background-repeat: no-repeat;
+        background-size: 10px;
+        /*line-height: 1;*/
+    }
+    &.collapsed {
+        & .more {
+            background-image: url('~@fortawesome/fontawesome-free/svgs/solid/caret-down.svg') !important;            
+        }           
+    }
+}
+.select2.select2-container {
+    width: 100% !important;
+}
+.modified {
+    & > .small i {
+        font-size: 11px;
+        vertical-align: top;
+    }
+}
+#accordion {
+    position: relative;
+}
+#form-loading {
+    display: none;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 100%;
+    background: $white-70 url('../img/loading.gif') 50% no-repeat;
+    z-index: 99;
+}

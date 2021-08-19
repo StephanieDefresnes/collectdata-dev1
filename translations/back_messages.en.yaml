@@ -63,15 +63,75 @@ status:
 badge:
     new: Nouveau
 contrib:
+    action: Action
     category:
         title: List of categories
     event:
         title: Events list
-    list:
+    situ:
         title: List of situations
-    validation:
-        title: Validation of contributions
-        verify: Validate a contribution   
+        details:
+            title: Title
+            description: Description
+            date:
+                creation: Creation
+                update: Modification
+                submit: Submission
+                validation: Validation
+            user: Contributor
+            lang: Language
+            event: Events
+            category:
+                level1: Category
+                level2: Sub-category
+            initial: Initial
+            translated: Translation
+        table:
+            empty: No contribution
+            btn:
+                read: Read
+                valid: Validate
+        validation:
+            title: Validation of contributions
+        verify:
+            verify: Validate a contribution  
+            data:
+                title: Contribution to be validated
+                event: 'Event :'
+                category_level1: 'Category:'
+                category_level2: 'Sub-category :'
+                lang: Language
+                to_validate: '- To validate !'
+                situ:
+                    label: The risky situation
+                    title: 'Title :'
+                    description: 'Description :'
+                item:
+                    label: 'The best attitude to adopt:'
+                    label_item: 'Other possible answer:'
+                    label_items: 'Other possible answers:'
+                    score:
+                        title: 'Score :'
+                        info: Can do better
+                        warning: Warning
+                        danger: Danger 
+            form:
+                title: Fields to be verified
+                event:
+                    title: Check the event
+                category_level1:
+                    title: Check the category
+                category_level2:
+                    title: Check the subcategory
+                action:
+                    placeholder: Action
+                    modified: Changed
+                    modify: Change
+                    validate: Validate
+                    validated: Validated
+                select: Select
+        read:
+            title: Read a contribution
 delete:
     confirm: Confirmation of deletion
     warning: The deletion will be final.
@@ -197,6 +257,8 @@ search:
     action: Action
     action_th: Action(s)
     no_data_found: No data found
+select2:
+    no_result: No result
 user:
     role:
         super_admin: Super administrator
@@ -239,6 +301,9 @@ user:
         note: Note
         name: Name
         roles: Role(s)
+        forbidden_acces:
+            label: Intrusion(s) prohibited
+            text: Intrusion le
     label:
         email: Email
         name: Name

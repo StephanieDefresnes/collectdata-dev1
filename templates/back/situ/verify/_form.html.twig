@@ -1,0 +1,167 @@
+{% trans_default_domain 'back_messages' %}
+
+{{ form_start(form) }}
+    <div class="card shadow">
+        
+        <div class="card-header">
+            <h6 class="m-0">
+                <span class="font-weight-bold text-primary">{{ 'contrib.situ.verify.form.title'|trans() }}</span>
+            </h6>
+        </div>
+
+        <div class="card-body card-verify p-4">
+            
+            <div id="lang" class="formData d-none">
+               {{ form_row(form.lang) }}
+            </div>
+            
+            <div class="accordion" id="accordion">
+                <div id="form-loading"></div>
+
+                <div id="event" class="formData card border-0 mb-3"
+                     data-valid="" data-load="" data-validate="" data-modified="">
+                    <div id="headingOne" class="row">
+                        <div class="col-12 py-0 text-left check collapsed"
+                             data-toggle="collapse" data-target="#collapseOne"
+                             aria-expanded="false" aria-controls="collapseOne">
+                            {{ 'contrib.situ.verify.form.event.title'|trans() }}
+                            <span class="done"></span>
+                            <span class="todo"></span>
+                            <span class="more"></span>
+                        </div>
+                    </div>
+                    <div id="collapseOne" class="collapse"
+                         aria-labelledby="headingOne" data-parent="#accordion">
+                        <div class="card-body row py-2 px-0">
+                            <div id="form-event" class="col-md-8 col-12 colDataLang">
+                                {{ form_widget(form.event) }}
+                                {{ form_errors(form.event) }}
+                            </div>
+                            <div class="actions col-auto">
+                                <div class="btn btn-primary validate d-none">
+                                    {{ 'contrib.situ.verify.form.action.validate'|trans() }}
+                                </div>
+                                <div class="pt-1 validated d-none">
+                                    {{ 'contrib.situ.verify.form.action.validated'|trans() }}
+                                    <i class="fas fa-check text-success mx-2"></i>
+                                </div>
+                                <div class="btn modified d-none">
+                                    <span class="msg">
+                                        {{ 'contrib.situ.verify.form.action.modified'|trans() }}
+                                    </span>
+                                    <span class="mx-2 text-dark">
+                                        <i class="fas fa-times-circle"></i>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="categoryLevel1" class="formData card border-0 mb-3"
+                     data-valid="" data-load=""  data-validate="" data-modified="">
+                    <div id="headingTwo" class="row">
+                        <div class="col-12 py-0 text-left check collapsed"
+                             data-toggle="collapse" data-target="#collapseTwo"
+                             aria-expanded="false" aria-controls="collapseTwo">
+                            {{ 'contrib.situ.verify.form.category_level1.title'|trans() }}
+                            <span class="done"></span>
+                            <span class="todo"></span>
+                            <span class="more"></span>
+                        </div>
+                    </div>
+                    <div id="collapseTwo" class="collapse"
+                         aria-labelledby="headingTwo" data-parent="#accordion">
+                        <div class="card-body row py-2 px-0">
+                            <div id="form-categoryLevel1" class="col-md-8 col-12 colDataLang colData">
+                                {{ form_widget(form.categoryLevel1) }}
+                                {{ form_errors(form.categoryLevel1) }}
+                            </div>
+                            <div class="actions col-auto">
+                                <div class="btn btn-primary validate d-none">
+                                    {{ 'contrib.situ.verify.form.action.validate'|trans() }}
+                                </div>
+                                <div class="pt-1 validated d-none">
+                                    {{ 'contrib.situ.verify.form.action.validated'|trans() }}
+                                    <i class="fas fa-check text-success mx-2"></i>
+                                </div>
+                                <div class="btn modified d-none">
+                                    <span class="msg">
+                                        {{ 'contrib.situ.verify.form.action.modified'|trans() }}
+                                    </span>
+                                    <span class="mx-2 text-dark">
+                                        <i class="fas fa-times-circle"></i>
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="col-12 mt-2 pt-1 small ct-descr">
+                                <div class="d-block font-weight-bold">
+                                    {{ 'contrib.situ.verify.data.situ.description'|trans() }}
+                                </div>
+                                <div class="description mt-1 px-3 line-11 first-letter"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="categoryLevel2" class="formData card border-0 mb-4 pb-2"
+                     data-valid="" data-load="" data-validate="" data-modified="">
+                    <div id="headingThree" class="row"> 
+                        <div class="col-12 py-0 text-left check collapsed"
+                             data-toggle="collapse" data-target="#collapseThree"
+                             aria-expanded="false" aria-controls="collapseThree">
+                            {{ 'contrib.situ.verify.form.category_level2.title'|trans() }}
+                            <span class="done"></span>
+                            <span class="todo"></span>
+                            <span class="more"></span>
+                        </div>
+                    </div>
+                    <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordion">
+                        <div class="card-body row py-2 px-0">
+                            <div id="form-categoryLevel2" class="col-md-8 col-12 colDataLang colData">
+                                {{ form_widget(form.categoryLevel2) }}
+                                {{ form_errors(form.categoryLevel2) }}
+                            </div>
+                            <div class="actions col-auto">
+                                <div class="btn btn-primary validate d-none">
+                                    {{ 'contrib.situ.verify.form.action.validate'|trans() }}
+                                </div>
+                                <div class="pt-1 validated d-none">
+                                    {{ 'contrib.situ.verify.form.action.validated'|trans() }}
+                                    <i class="fas fa-check text-success mx-2"></i>
+                                </div>
+                                <div class="btn modified d-none">
+                                    <span class="msg">
+                                        {{ 'contrib.situ.verify.form.action.modified'|trans() }}
+                                    </span>
+                                    <span class="mx-2 text-dark">
+                                        <i class="fas fa-times-circle"></i>
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="col-12 mt-2 pt-1 small ct-descr">
+                                <div class="d-block font-weight-bold">
+                                    {{ 'contrib.situ.verify.data.situ.description'|trans() }}
+                                </div>
+                                <div class="description mt-1 px-3 line-11 first-letter"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            
+            </div>
+
+        </div>
+
+        <div class="card-footer bg-light text-right">
+            <div class="d-flex justify-content-between">
+                <div id="save-btn" class="btn btn-outline-primary px-3">
+                    {{ 'contrib.form.save.btn'|trans() }}
+                </div>
+                <div id="submit-btn" class="btn btn-primary px-4">
+                    {{ 'contrib.form.submit.btn'|trans() }}
+                </div>
+            </div>
+        </div>
+    </div>
+{{ form_end(form) }}

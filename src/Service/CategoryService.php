@@ -76,12 +76,12 @@ class CategoryService {
         $qb = $this->em->createQueryBuilder();
         
         $categoriesByCategoryId = $qb->expr()->andX(
-            $qb->expr()->eq('c.parentId', '?1'),
+            $qb->expr()->eq('c.parent', '?1'),
             $qb->expr()->eq('c.validated', '?2')
         );
         
         $categoriesByUser = $qb->expr()->andX(
-            $qb->expr()->eq('c.parentId', '?1'),
+            $qb->expr()->eq('c.parent', '?1'),
             $qb->expr()->eq('c.validated', '?3'),
             $qb->expr()->eq('c.userId', '?4'),
             $qb->expr()->eq('c.lang', '?5')
@@ -99,5 +99,18 @@ class CategoryService {
                 ]);
         return $qb->getQuery()->getResult();
     }
-    
+        
+    /**
+     * @return []   Returns Category data description & validated
+     */
+    public function getDataById($category_id)
+    {
+        return $this->em->createQueryBuilder()
+                ->from(Category::class,'c')
+                ->select('c.description, c.validated')
+                ->where('c.id = ?1')
+                ->setParameter(1, $category_id)
+                ->getQuery()
+                ->getOneOrNullResult();
+    }
 }

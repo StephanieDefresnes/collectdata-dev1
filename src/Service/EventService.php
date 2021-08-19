@@ -63,5 +63,19 @@ class EventService {
             ]);
         return $qb->getQuery()->getResult();
     }
+        
+    /**
+     * @return []   Returns Category data validated
+     */
+    public function getDataById($event_id)
+    {
+        return $this->em->createQueryBuilder()
+                ->from(Event::class,'e')
+                ->select('e.validated')
+                ->where('e.id = ?1')
+                ->setParameter(1, $event_id)
+                ->getQuery()
+                ->getOneOrNullResult();
+    }
     
 }

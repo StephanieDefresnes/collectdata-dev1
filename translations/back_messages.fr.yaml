@@ -93,7 +93,43 @@ contrib:
                 valid: Valider
         validation:
             title: Validation des contributions
-            verify: Valider une contribution
+        verify:
+            title: Valider une contribution
+            data:
+                title: Contribution à valider
+                event: 'Événement :'
+                category_level1: 'Catégorie :'
+                category_level2: 'Sous-catégorie :'
+                lang: Langue
+                to_validate: '- À valider !'
+                situ:
+                    label: La situation à risque
+                    title: 'Titre :'
+                    description: 'Description :'
+                item:
+                    label: 'La meilleure attitude à adopter :'
+                    label_item: 'Autre réponse possible :'
+                    label_items: 'Autres réponses possibles :'
+                    score:
+                        title: 'Score :'
+                        info: Peut mieux faire
+                        warning: Attention
+                        danger: Danger
+            form:
+                title: Champs à vérifer
+                event:
+                    title: Vérifier l'événement
+                category_level1:
+                    title: Vérifier la catégorie
+                category_level2:
+                    title: Vérifier la sous-catégorie
+                action:
+                    placeholder: Action
+                    modified: Modifié
+                    modify: Modifier
+                    validate: Valider
+                    validated: Validé
+                select: Selectionner
         read:
             title: Lire une contribution
 delete:
@@ -221,6 +257,8 @@ search:
     action: Action
     action_th: Action(s)
     no_data_found: Aucune donnée n'a été trouvée
+select2:
+    no_result: Aucun résultat
 user:
     role:
         super_admin: Super-administrateur
@@ -263,6 +301,9 @@ user:
         note: Note
         name: Nom
         roles: Rôle(s)
+        forbidden_acces:
+            label: Intrusion(s) interdite(s)
+            text: Intrusion le
     label:
         email: Email
         name: Nom

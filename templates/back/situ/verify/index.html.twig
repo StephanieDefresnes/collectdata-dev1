@@ -1,24 +1,113 @@
 {% trans_default_domain 'back_messages' %}
 {% extends "back/layout.html.twig" %}
+{% set locale = app.request.locale %}
 
-{% block title %}{{ 'contrib.situ.validation.verify'|trans() }}{% endblock %}
+{% block title %}{{ 'contrib.situ.verify.title'|trans() }}{% endblock %}
 
 {% block stylesheets %}
     {{ parent() }}
+    {{ encore_entry_link_tags('flp_theme') }}
     {{ encore_entry_link_tags('situ_validation_app', null, 'backApp') }}
+    <style>
+        
+    </style>
  {% endblock %}
 
 {% block content %}
+    <div id="loader"></div>
+    
     <div class="container-fluid pt-4">
         
         <div class="d-sm-flex align-items-center justify-content-between mb-4">
-            <h1 class="h3 mb-0 text-gray-800">{{ 'contrib.situ.validation.verify'|trans() }}</h1>
+            <h1 class="h3 mb-0 text-gray-800">{{ 'contrib.situ.verify.title'|trans() }}</h1>
+            <a href="{{ path('back_situs_validation') }}" class="btn btn-secondary mx-2 pt-1">
+                <i class="fas fa-reply"></i> {{ 'button.back'|trans() }}
+            </a>
+        </div>
+        
+        <div class="row">
+        
+            <div class="col-lg-6">
+                {% include "back/situ/verify/_data.html.twig" %}
+            </div>
+            
+            <div id="situ" data-id="{{ situ.id }}" class="col-lg-6">
+                {% include "back/situ/verify/_form.html.twig" %}
+            </div>
+            
         </div>
 
+      
+{#    <div id="google_translate_element"></div> 
+      
+    <script type="text/javascript"> 
+    function googleTranslateElementInit() { 
+      new google.translate.TranslateElement({pageLanguage: 'en'},
+ 'google_translate_element'); 
+    } 
+    </script> 
+      
+    <script type="text/javascript"
+ src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementIni
+t"></script>#}
+            
+            
     </div>
 {% endblock %}
 
 {% block javascripts %}
     {{ parent() }}
     {{ encore_entry_script_tags('situ_validation_app', null, 'backApp') }}
+    <script>
+        var path = {
+            "locale" : "{{ locale }}",
+        }
+        var translations = {
+            "toValidate" : "{{ 'contrib.situ.verify.data.to_validate' | trans }}",
+            "doModify" : "{{ 'contrib.situ.verify.form.action.modify' | trans }}",
+            "modified" : "{{ 'contrib.situ.verify.form.action.modified' | trans }}",
+            "doValidate" : "{{ 'contrib.situ.verify.form.action.validate' | trans }}",
+            "validated" : "{{ 'contrib.situ.verify.form.action.validated' | trans }}",
+            "noResult" : "{{ 'select2.no_result' | trans }}",
+        }
+
+        jQuery(function($) {
+            
+            {#function ajaxGetDescription(dataForm) {
+                $.ajax({
+                    url: "/"+ path['locale'] +"/ajaxGetDescription",
+                    method: 'POST',
+                    data: {dataForm},
+                    success: function(data) {
+                        console.log(data)
+                    }
+                })
+            }#}
+            
+{#            function selectAction(name) {
+                let categoryLevel1, categoryLevel2 
+                
+                $('#verify_situ_form_'+ name).change(function() {
+                    let value = $(this).val()
+                    alert(value)
+                    if (name == 'categoryLevel1') categoryLevel1 = value
+                    else categoryLevel2 = value
+
+                    dataForm = {
+                        'categoryLevel1': categoryLevel1,
+                        'categoryLevel2': categoryLevel2,
+                    }
+                    ajaxGetDescription(dataForm)
+                })
+            }
+            
+            selectAction('categoryLevel1')
+            selectAction('categoryLevel2')
+            #}
+        })
+        
+        
+    </script>
+    
+    
 {% endblock %}

@@ -63,15 +63,75 @@ status:
 badge:
     new: Nouveau
 contrib:
+    action: Acción
     category:
         title: Lista de categorías
     event:
         title: Lista de eventos
-    list:
+    situ:
         title: Lista de situaciones
-    validation:
-        title: Validación de contribuciones
-        verify: Validar una contribución  
+        details:
+            title: Título
+            description: Descripción
+            date:
+                creation: Creación
+                update: Modificación
+                submit: Sumisión
+                validation: Validación
+            user: Contribuyente
+            lang: Lengua
+            event: Eventos
+            category:
+                level1: Categoría
+                level2: Sub-category
+            initial: Inicial
+            translated: Traducción
+        table:
+            empty: Sin contribución
+            btn:
+                read: Leer
+                valid: Validar
+        validation:
+            title: Validación de contribuciones
+        verify:
+            title: Validar una contribución  
+            data:
+                title: Contribución a validar
+                event: 'Evento:'
+                category_level1: 'Categoría:'
+                category_level2: 'Subcategoría:'
+                lang: Lengua
+                to_validate: '- A validar !'
+                situ:
+                    label: La situación de riesgo
+                    title: 'Título :'
+                    description: 'Descripción :'
+                item:
+                    label: 'La mejor actitud para adoptar:'
+                    label_item: 'Otra posible respuesta:'
+                    label_items: 'Otras posibles respuestas:'
+                    score:
+                        title: 'Puntaje:'
+                        info: Puedes hacerlo mejor
+                        warning: Advertencia
+                        danger: Peligro
+            form:
+                title: Campos a verificar
+                event:
+                    title: Verificar el evento
+                category_level1:
+                    title: Verificar la categoría
+                category_level2:
+                    title: Verificar la subcategoría
+                action:
+                    placeholder: Acción
+                    modified: Editado
+                    modify: Editar
+                    validate: Validar
+                    validated: Válido
+                select: Seleccionar
+        read:
+            title: Leer una contribución
 delete:
     confirm: 'Confirmación de eliminación'
     warning: 'La eliminación será definitiva.'
@@ -197,6 +257,8 @@ search:
     action: Acción
     action_th: Acción(es)
     no_data_found: 'No se encontraron datos'
+select2:
+    no_result: Ningún resultado
 user:
     role:
         super_admin: Superadministrador
@@ -239,6 +301,9 @@ user:
         note: Nota
         name: Apellido
         roles: Rol(s)
+        forbidden_acces:
+            label: Intrusión(es) prohibida
+            text: Intrusión en
     label:
         email: Email
         name: Apellido

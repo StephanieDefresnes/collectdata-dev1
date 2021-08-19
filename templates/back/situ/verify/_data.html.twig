@@ -1,0 +1,147 @@
+{% trans_default_domain 'back_messages' %}
+
+<div class="card shadow">
+
+    <div class="card-header">
+        <h6 class="m-0">
+            <span class="font-weight-bold text-primary">{{ 'contrib.situ.verify.data.title'|trans() }}</span>
+            - {{ situ.lang.englishName }}
+            <img src="{{ asset('img/flag/'~ situ.lang.lang ~'.jpg') }}"
+                 alt="" class="align-middle mx-1">
+        </h6>
+    </div>
+                 
+    <div class="card-body p-4">
+        <div id="data-lang" class="checkData" data-id="{{ situ.lang.id }}"></div>
+        <div id="data-event" class="checkData row mb-3"
+             data-id="{{ situ.event.id }}" data-valid="{{ situ.event.validated == 0 ? 0 : 1 }}">
+            <div class="col-md-4">
+                {{ 'contrib.situ.verify.data.event'|trans() }}
+            </div>
+            <div class="col-md-8 first-letter">
+                {{ situ.event.title }}
+                {% if situ.event.validated == 0 %}
+                    <span class="pl-0 pr-3">
+                        {{ 'contrib.situ.verify.data.to_validate' | trans }}
+                    </span>
+                {% endif %}
+            </div>
+        </div>
+            
+        <div id="data-categoryLevel1" class="checkData row mb-3"
+             data-id="{{ situ.categoryLevel1.id }}" data-valid="{{ situ.categoryLevel1.validated == 0 ? 0 : 1 }}">
+            <div class="col-md-4">
+                {{ 'contrib.situ.verify.data.category_level1'|trans() }}
+            </div>
+            <div class="col-md-8 first-letter">
+                <span id="headingCatLv1">
+                    <span class="pl-0 pr-3 more collapsed" data-toggle="collapse"
+                          data-target="#collapseCatLv1" aria-expanded="false" aria-controls="collapseCatLv1">
+                        {{ situ.categoryLevel1.title }}
+                        {% if situ.categoryLevel1.validated == 0 %}
+                            {{ 'contrib.situ.verify.data.to_validate' | trans }}
+                        {% endif %}
+                    </span>
+                </span>
+                <div id="collapseCatLv1" class="mt-1 small collapse" aria-labelledby="headingCatLv1">
+                    <div class="d-block font-weight-bold">{{ 'contrib.situ.verify.data.situ.description'|trans() }}</div>
+                    <div class="mt-1 px-3 line-11 first-letter">{{ situ.categoryLevel1.description }}</div>
+                </div>
+            </div>
+        </div>
+                
+        <div id="data-categoryLevel2" class="checkData row mb-4 pb-2"
+             data-id="{{ situ.categoryLevel2.id }}" data-valid="{{ situ.categoryLevel2.validated == 0 ? 0 : 1 }}">
+            <div class="col-md-4">
+                {{ 'contrib.situ.verify.data.category_level2'|trans() }}
+            </div>
+            <div class="col-md-8 first-letter">
+                <span id="headingCatLv2">
+                    <span class="pl-0 pr-3 more collapsed" data-toggle="collapse"
+                          data-target="#collapseCatLv2" aria-expanded="false" aria-controls="collapseCatLv2">
+                        {{ situ.categoryLevel2.title }}
+                        {% if situ.categoryLevel2.validated == 0 %}
+                            {{ 'contrib.situ.verify.data.to_validate' | trans }}
+                        {% endif %}
+                    </span>
+                </span>
+                <div id="collapseCatLv2" class="mt-1 small collapse" aria-labelledby="headingCatLv2">
+                    <div class="d-block font-weight-bold">{{ 'contrib.situ.verify.data.situ.description'|trans() }}</div>
+                    <div class="mt-1 px-3 line-11 first-letter">{{ situ.categoryLevel2.description }}</div>
+                </div>
+            </div>
+        </div>
+                
+        <h2 class="h5 font-weight-normal mb-3">{{ 'contrib.situ.verify.data.situ.label'|trans() }}</h2>
+
+        <div class="row">
+            <div class="col-12 mb-1">
+                {{ 'contrib.situ.verify.data.situ.title'|trans() }}
+            </div>
+            <div class="col-12 mb-3 px-4">
+                <div class="line-11">{{ situ.title }}</div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-12 mb-1">
+                {{ 'contrib.situ.verify.data.situ.description'|trans() }}
+            </div>
+            <div class="col-12 mb-4 px-4">
+                <div class="line-11">{{ situ.description }}</div>
+            </div>
+        </div>
+
+        <div class="row">
+            {% for item in situ.situItems %}
+                <div class="col-12">
+                    {% if item.score == 0 %}
+                        <h2 class="h5 font-weight-normal">
+                            {{ 'contrib.situ.verify.data.item.label'|trans() }}
+                        </h2>
+                    {% else %}
+                        {% if loop.index == 2 %}
+                            <h2 class="h5 font-weight-normal">
+                                {% if situ.situItems|length > 2 %}
+                                {{ 'contrib.situ.verify.data.item.label_items'|trans() }}
+                                {% else %}
+                                {{ 'contrib.situ.verify.data.item.label_item'|trans() }}
+                                {% endif %}
+                            </h2>
+                        {% endif %}
+                        <div class="mb-3">
+                            {{ 'contrib.situ.verify.data.item.score.title'|trans() }}
+                            {% if item.score == 1 %}
+                                <span class="text-info">
+                                    {{ 'contrib.situ.verify.data.item.score.info'|trans() }}
+                                </span>
+                            {% elseif item.score == 2 %}
+                                <span class="text-warning">
+                                    {{ 'contrib.situ.verify.data.item.score.warning'|trans() }}
+                                </span>
+                            {% else %}
+                                <span class="text-danger">
+                                    {{ 'contrib.situ.verify.data.item.score.danger'|trans() }}
+                                </span>
+                            {% endif %}
+                        </div>
+                    {% endif %}
+                </div>
+                <div class="col-12 mb-1">
+                    {{ 'contrib.situ.verify.data.situ.title'|trans() }}
+                </div>
+                <div class="col-12 mb-3 px-4 line-11">
+                    {{ item.title }}
+                </div>
+                <div class="col-12 mb-1">
+                    {{ 'contrib.situ.verify.data.situ.description'|trans() }}
+                </div>
+                <div class="col-12 mb-3 pb-4 px-4 line-11{% if loop.index != 1
+                     and loop.last == false %} border-bottom{% endif %}">
+                    {{ item.description }}
+                </div>
+            {% endfor %}
+        </div>
+
+    </div>
+</div>

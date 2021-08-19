@@ -105,7 +105,7 @@
              aria-labelledby="headingContrib" data-parent="#accordionSidebar">
             
             <div class="bg-white mb-1 py-2 collapse-inner rounded">
-                <a class="collapse-item{{ route == 'back_situs_validation' ? ' active' }}"
+                <a class="collapse-item{{ route in ['back_situs_validation', 'back_situ_verify'] ? ' active' }}"
                    href="{{ path('back_situs_validation') }}">
                     {{ 'sidebar.contrib.validation'|trans() }}
                 </a>
