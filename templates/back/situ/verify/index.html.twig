@@ -27,7 +27,7 @@
         
         <div class="row">
         
-            <div class="col-lg-6">
+            <div class="col-lg-6" translate="no">
                 {% include "back/situ/verify/_data.html.twig" %}
             </div>
             
@@ -36,21 +36,6 @@
             </div>
             
         </div>
-
-      
-{#    <div id="google_translate_element"></div> 
-      
-    <script type="text/javascript"> 
-    function googleTranslateElementInit() { 
-      new google.translate.TranslateElement({pageLanguage: 'en'},
- 'google_translate_element'); 
-    } 
-    </script> 
-      
-    <script type="text/javascript"
- src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementIni
-t"></script>#}
-            
             
     </div>
 {% endblock %}
@@ -70,44 +55,11 @@ t"></script>#}
             "validated" : "{{ 'contrib.situ.verify.form.action.validated' | trans }}",
             "noResult" : "{{ 'select2.no_result' | trans }}",
         }
+        function googleTranslateElementInit() { 
+            new google.translate.TranslateElement({pageLanguage: 'en'},'google_translate_element')
+        } 
+    </script> 
+    <script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 
-        jQuery(function($) {
-            
-            {#function ajaxGetDescription(dataForm) {
-                $.ajax({
-                    url: "/"+ path['locale'] +"/ajaxGetDescription",
-                    method: 'POST',
-                    data: {dataForm},
-                    success: function(data) {
-                        console.log(data)
-                    }
-                })
-            }#}
-            
-{#            function selectAction(name) {
-                let categoryLevel1, categoryLevel2 
-                
-                $('#verify_situ_form_'+ name).change(function() {
-                    let value = $(this).val()
-                    alert(value)
-                    if (name == 'categoryLevel1') categoryLevel1 = value
-                    else categoryLevel2 = value
-
-                    dataForm = {
-                        'categoryLevel1': categoryLevel1,
-                        'categoryLevel2': categoryLevel2,
-                    }
-                    ajaxGetDescription(dataForm)
-                })
-            }
-            
-            selectAction('categoryLevel1')
-            selectAction('categoryLevel2')
-            #}
-        })
-        
-        
-    </script>
-    
     
 {% endblock %}

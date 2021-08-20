@@ -53,3 +53,58 @@
     background: $white-70 url('../img/loading.gif') 50% no-repeat;
     z-index: 99;
 }
+// GG Translate
+#page-top {
+    top: 0 !important;
+}
+.skiptranslate {
+    color: #fff !important;
+    font-size: 0 !important;
+    & iframe,
+    & span {
+        display: none !important;
+    }
+    & select {
+        background: #fff !important;
+        color: #858796 !important;
+        font-size: 14px !important;
+        border: 1px solid #bbb;
+        border-radius: 3px;
+        padding: 4px;
+    }
+}
+#translator {
+    position: relative !important;
+}
+#fields-translated {
+    position: initial !important;
+}
+#collapseGT {
+    position: absolute !important;
+    top: 30px;
+    left: 0;
+    right: 0;
+    background: #fff;
+    z-index: 10;
+}
+@media (max-width: 1283px) {
+    #collapseGT {top: 58px}
+}
+@media (max-width: 991px) {
+    #collapseGT {top: 30px}
+}
+@media (max-width: 789px) {
+    #collapseGT {top: 58px}
+}
+@media (max-width: 767px) {
+    #collapseGT {top: 30px}
+}
+@media (max-width: 669px) {
+    #collapseGT {top: 58px}
+}
+@media (max-width: 575px) {
+    #collapseGT {top: 58px}
+}
+@media (max-width: 407px) {
+    #collapseGT {top: 86px}
+}

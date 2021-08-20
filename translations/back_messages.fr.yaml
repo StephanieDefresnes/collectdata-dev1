@@ -259,6 +259,7 @@ search:
     no_data_found: Aucune donnée n'a été trouvée
 select2:
     no_result: Aucun résultat
+GGtranslate: Traduction
 user:
     role:
         super_admin: Super-administrateur

@@ -259,6 +259,7 @@ search:
     no_data_found: No data found
 select2:
     no_result: No result
+GGtranslate: Translation
 user:
     role:
         super_admin: Super administrator
