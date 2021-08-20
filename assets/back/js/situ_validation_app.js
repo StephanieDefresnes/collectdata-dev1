@@ -17,7 +17,7 @@ function initSelect2(select) {
     });
 }
 
-// Add comment to unvalidated user option
+// Add comment to unvalidated user options
 function unvalidatedOption(element) {
         $(element).find('option').each(function() {
             if ($(this).hasClass('to-validate')) {
@@ -27,52 +27,19 @@ function unvalidatedOption(element) {
 }
 
 /**
- * Load data once (on loading page)
+ * Loading selection
  */
-// Get & load Event & Categories choices
-function selectSitu(id) {
-    $.ajax({
-        url: "/"+ path['locale'] +"/ajaxEdit",
-        method: 'GET',
-        data: { id: id },
-        success: function(data) {
-            loadDataSitu('lang', data.situ.langId)
-            loadDataSitu('event', data.situ.eventId)
-            loadDataSitu('categoryLevel1', data.situ.categoryLevel1Id)
-            loadDataSitu('categoryLevel2', data.situ.categoryLevel2Id)
-        },
-        error: function() {
-            $('body').find('#flash_message').remove()
-            let flashMessage =
-                    '<div id="flash_message" class="container">'
-                        +'<div class="alert alert-secondary alert-dismissible px-3 fade show" role="alert">'
-                                +'<span class="sr-only">'+ translations['srOnly-error'] +'</span>'
-                                +'<span class="icon text-danger"><i class="fas fa-exclamation-circle"></i</span>'
-                                +'<span class="msg">'+ translations['flashError'] +'</span>'
-                        +'</div>'
-                    +'</div>'
-            $('body > .container-fluid').before(flashMessage)
-            window.scrollTo({top: 0, behavior: 'smooth'});
-            $('#flash_message').delay(3000).fadeOut(); 
-        }
-    })
-}
-
 // Load Event & Categories choices
 function loadDataSitu(name, value) {
     let dataExist = setInterval(function() {
         if ($('#verify_situ_form_'+ name +' option').length > 1) {
             $('#verify_situ_form_'+ name).val(value).trigger('change')
             clearInterval(dataExist)
-           if (name == 'categoryLevel2') $('#loader').hide()
         }
     }, 50);
 }
 
-/**
- * Each time select is change (included on loading page)
- */
-// Send select choice on action change
+// Modify next form depending on action change
 function changeAction(selectId) {
     let nextSelectId = selectId.parents('.formData').next().find('select').attr('id'),
         $form = selectId.closest('form'),
@@ -102,6 +69,7 @@ function loadSelectData($form, data, selectId, nextSelectId) {
     })
 }
 
+// Get Event & Categorie data depending on action change
 function getData(name, value) {
     let event, categoryLevel1, categoryLevel2, dataForm
     
@@ -132,10 +100,10 @@ function ajaxGetData(dataForm) {
         }
     })
 }
-
 function loadNewData(name, data) {
     let valid = data.validated === true ? 1 : 0
     $('#'+ name).attr('data-valid', valid)
+    $('#'+ name).find('.title').text(data.title)
     if (name != 'event') $('#'+ name).find('.description').text(data.description)
     checkValue(name, valid)
 }
@@ -172,15 +140,24 @@ function addActionBtn(name, action1, action2) {
         $('#'+ name).find('.modified > .msg').addClass('d-none')
     }
 }
+function toggleDetails(name, action) {
+    $('#'+ name).find('.details').each(function() {
+        if (action == 'show') {
+            $(this).show()
+        } else {
+            $(this).hide()
+        }
+    })
+}
 function recoverNextValue(name) {
     if (name == 'event') {
         loadDataSitu('categoryLevel1', $('#data-categoryLevel1').attr('data-id'))
+        toggleDetails('categoryLevel1', 'show')
         loadDataSitu('categoryLevel2', $('#data-categoryLevel2').attr('data-id'))
-        $('#categoryLevel1').find('.ct-descr').show()
-        $('#categoryLevel2').find('.ct-descr').show()
+        toggleDetails('categoryLevel2', 'show')
     } else if (name == 'categoryLevel1') {
         loadDataSitu('categoryLevel2', $('#data-categoryLevel2').attr('data-id'))
-        $('#categoryLevel2').find('.ct-descr').show()
+        toggleDetails('categoryLevel2', 'show')
     }
 }
 function emptyNextSelect(indexFormData) {
@@ -215,26 +192,28 @@ function checkValue(name, valid) {
             addInfo(name, 'done', 'modified')
             addActionBtn(name, 'modified', '')
         }
-        $('#'+ name).find('.ct-descr').show()
         $('#'+ name).attr('data-modified', 1)
+        toggleDetails(name, 'show')
 
 
         if (name == 'event') {
             emptyNextSelect(3)
             hideNextActions(2)
+            
             removeInfo('categoryLevel1', 'all')
             addInfo('categoryLevel1', 'todo', 'doModify')
-            $('#categoryLevel1').find('.ct-descr').hide()
+            toggleDetails('categoryLevel1', 'hide')
             $('#categoryLevel1').attr('data-validate', '').attr('data-modified', '')
+            
             removeInfo('categoryLevel2', 'all')
             addInfo('categoryLevel2', 'todo', 'doModify')
-            $('#categoryLevel2').find('.ct-descr').hide()
+            toggleDetails('categoryLevel2', 'hide')
             $('#categoryLevel2').attr('data-validate', '').attr('data-modified', '')
 
         } else if (name == 'categoryLevel1') {
             removeInfo('categoryLevel2', 'all')
             addInfo('categoryLevel2', 'todo', 'doModify')
-            $('#categoryLevel2').find('.ct-descr').hide()
+            toggleDetails('categoryLevel2', 'hide')
             $('#categoryLevel2').attr('data-validate', '').attr('data-modified', '')
         }
     }
@@ -251,6 +230,7 @@ function checkValue(name, valid) {
         }
         recoverNextValue(name)                
     }
+    $('#form-loading').hide()
 }
 
 /**
@@ -276,7 +256,7 @@ function resetModification(name, indexFormData) {
         removeInfo(name, 'all')
         addInfo(name, 'todo', 'doModify')
         hideCurrentActions(name)
-        $('#'+ name +' .ct-descr').hide()
+        toggleDetails(name, 'hide')
         
         // Reset empty child value - normalement inutile
         if (name == 'event') {
@@ -301,16 +281,23 @@ function resetModification(name, indexFormData) {
     }
 }
 
+function sequentialLoaderFormSitu() {
+    $.when(loadDataSitu('lang', $('#data-lang').attr('data-id'))).then(function() {
+        $.when(loadDataSitu('event', $('#data-event').attr('data-id'))).then(function() {
+            $.when(loadDataSitu('categoryLevel1', $('#data-categoryLevel1').attr('data-id'))).then(function() {
+                loadDataSitu('categoryLevel2', $('#data-categoryLevel2').attr('data-id'))
+            })
+        })
+    })
+}
+
 $(function() {
     
     initSelect2('.card-verify select')
     
-    $(document).ajaxComplete(function () {
-        $('#form-loading').hide()
-    })
+    $(document).ajaxComplete(function () { $('#loader').hide() })
     
-    // Load data
-    selectSitu($('#situ').attr('data-id'))
+    sequentialLoaderFormSitu()
     
     $('form').on('change',  '#verify_situ_form_lang, '
                             +'#verify_situ_form_event, '
@@ -328,18 +315,18 @@ $(function() {
             removeInfo(name, 'all')
             addInfo(name, 'todo', 'doModify')
             hideCurrentActions(name)
-            $('#'+ name).find('.ct-descr').hide()
+            toggleDetails(name, 'hide')
 
             if (name == 'event') {
                 emptyNextSelect(2)
                 hideNextActions(1)
                 removeInfo('categoryLevel1', 'all')
                 addInfo('categoryLevel1', 'todo', 'doModify')
-                $('#categoryLevel1').find('.ct-descr').hide()
+                toggleDetails('categoryLevel1', 'hide')
                 $('#categoryLevel1').attr('data-validate', '').attr('data-modified', '')
                 removeInfo('categoryLevel2', 'all')
                 addInfo('categoryLevel2', 'todo', 'doModify')
-                $('#categoryLevel2').find('.ct-descr').hide()
+                toggleDetails('categoryLevel2', 'hide')
                 $('#categoryLevel2').attr('data-validate', '').attr('data-modified', '')
 
             } else if (name == 'categoryLevel1') {
@@ -347,7 +334,7 @@ $(function() {
                 hideNextActions(2)
                 removeInfo('categoryLevel2', 'all')
                 addInfo('categoryLevel2', 'todo', 'doModify')
-                $('#categoryLevel2').find('.ct-descr').hide()
+                toggleDetails('categoryLevel2', 'hide')
                 $('#categoryLevel2').attr('data-validate', '').attr('data-modified', '')
             }
             $('#form-loading').hide()
