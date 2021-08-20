@@ -71,7 +71,7 @@ class EventService {
     {
         return $this->em->createQueryBuilder()
                 ->from(Event::class,'e')
-                ->select('e.validated')
+                ->select('e.title, e.validated')
                 ->where('e.id = ?1')
                 ->setParameter(1, $event_id)
                 ->getQuery()

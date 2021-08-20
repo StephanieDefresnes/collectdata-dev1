@@ -3,12 +3,18 @@
 {{ form_start(form) }}
     <div class="card shadow">
         
-        <div class="card-header">
-            <h6 class="m-0">
-                <span class="font-weight-bold text-primary" translate="no">
+        <div id="translator" class="card-header d-flex justify-content-between py-1">
+            <h6 class="m-0 mt-2" translate="no">
+                <span class="font-weight-bold text-primary">
                     {{ 'contrib.situ.verify.form.title'|trans() }}
                 </span>
             </h6>
+            <div class="row">
+                <div class="col-auto mt-1" translate="no">{{ 'GGtranslate'|trans() }}</div>
+                <div class="col-auto px-0">
+                    <div id="google_translate_element"></div>
+                </div>
+            </div>
         </div>
 
         <div class="card-body card-verify p-4">
@@ -17,12 +23,12 @@
                {{ form_row(form.lang) }}
             </div>
             
-            <div class="accordion" id="accordion" translate="no">
+            <div class="accordion" id="accordion">
                 <div id="form-loading"></div>
 
                 <div id="event" class="formData card border-0 mb-3"
                      data-valid="" data-load="" data-validate="" data-modified="">
-                    <div id="headingOne" class="row">
+                    <div id="headingOne" class="row" translate="no">
                         <div class="col-12 py-0 text-left check collapsed"
                              data-toggle="collapse" data-target="#collapseOne"
                              aria-expanded="false" aria-controls="collapseOne">
@@ -35,11 +41,12 @@
                     <div id="collapseOne" class="collapse"
                          aria-labelledby="headingOne" data-parent="#accordion">
                         <div class="card-body row py-2 px-0">
-                            <div id="form-event" class="col-md-8 col-12 colDataLang">
+                            <div id="form-event" translate="no"
+                                 class="col-md-8 col-12 colDataLang">
                                 {{ form_widget(form.event) }}
                                 {{ form_errors(form.event) }}
                             </div>
-                            <div class="actions col-auto">
+                            <div class="actions col-auto" translate="no">
                                 <div class="btn btn-primary validate d-none">
                                     {{ 'contrib.situ.verify.form.action.validate'|trans() }}
                                 </div>
@@ -56,13 +63,21 @@
                                     </span>
                                 </div>
                             </div>
+                            <div class="col-12 my-2 pt-1 small details">
+                                <div class="row">
+                                    <div class="col-auto font-weight-bold" translate="no">
+                                        {{ 'contrib.situ.verify.data.situ.title'|trans() }}
+                                    </div>
+                                    <div class="col-auto title mt-1 px-3 line-11 first-letter"></div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
 
                 <div id="categoryLevel1" class="formData card border-0 mb-3"
                      data-valid="" data-load=""  data-validate="" data-modified="">
-                    <div id="headingTwo" class="row">
+                    <div id="headingTwo" class="row" translate="no">
                         <div class="col-12 py-0 text-left check collapsed"
                              data-toggle="collapse" data-target="#collapseTwo"
                              aria-expanded="false" aria-controls="collapseTwo">
@@ -75,11 +90,12 @@
                     <div id="collapseTwo" class="collapse"
                          aria-labelledby="headingTwo" data-parent="#accordion">
                         <div class="card-body row py-2 px-0">
-                            <div id="form-categoryLevel1" class="col-md-8 col-12 colDataLang colData">
+                            <div id="form-categoryLevel1" translate="no"
+                                 class="col-md-8 col-12 colDataLang colData">
                                 {{ form_widget(form.categoryLevel1) }}
                                 {{ form_errors(form.categoryLevel1) }}
                             </div>
-                            <div class="actions col-auto">
+                            <div class="actions col-auto" translate="no">
                                 <div class="btn btn-primary validate d-none">
                                     {{ 'contrib.situ.verify.form.action.validate'|trans() }}
                                 </div>
@@ -96,8 +112,16 @@
                                     </span>
                                 </div>
                             </div>
-                            <div class="col-12 mt-2 pt-1 small ct-descr">
-                                <div class="d-block font-weight-bold">
+                            <div class="col-12 mt-2 pt-1 small details">
+                                <div class="row">
+                                    <div class="col-auto font-weight-bold" translate="no">
+                                        {{ 'contrib.situ.verify.data.situ.title'|trans() }}
+                                    </div>
+                                    <div class="col-auto title mt-1 px-3 line-11 first-letter"></div>
+                                </div>
+                            </div>
+                            <div class="col-12 mt-1 mb-2 small details">
+                                <div class="d-block font-weight-bold" translate="no">
                                     {{ 'contrib.situ.verify.data.situ.description'|trans() }}
                                 </div>
                                 <div class="description mt-1 px-3 line-11 first-letter"></div>
@@ -108,7 +132,7 @@
 
                 <div id="categoryLevel2" class="formData card border-0 mb-2 pb-2"
                      data-valid="" data-load="" data-validate="" data-modified="">
-                    <div id="headingThree" class="row"> 
+                    <div id="headingThree" class="row" translate="no"> 
                         <div class="col-12 py-0 text-left check collapsed"
                              data-toggle="collapse" data-target="#collapseThree"
                              aria-expanded="false" aria-controls="collapseThree">
@@ -120,11 +144,12 @@
                     </div>
                     <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordion">
                         <div class="card-body row py-2 px-0">
-                            <div id="form-categoryLevel2" class="col-md-8 col-12 colDataLang colData">
+                            <div id="form-categoryLevel2" translate="no"
+                                 class="col-md-8 col-12 colDataLang colData">
                                 {{ form_widget(form.categoryLevel2) }}
                                 {{ form_errors(form.categoryLevel2) }}
                             </div>
-                            <div class="actions col-auto">
+                            <div class="actions col-auto" translate="no">
                                 <div class="btn btn-primary validate d-none">
                                     {{ 'contrib.situ.verify.form.action.validate'|trans() }}
                                 </div>
@@ -141,8 +166,16 @@
                                     </span>
                                 </div>
                             </div>
-                            <div class="col-12 mt-2 pt-1 small ct-descr">
-                                <div class="d-block font-weight-bold">
+                            <div class="col-12 mt-2 pt-1 small details">
+                                <div class="row">
+                                    <div class="col-auto font-weight-bold" translate="no">
+                                        {{ 'contrib.situ.verify.data.situ.title'|trans() }}
+                                    </div>
+                                    <div class="col-auto title mt-1 px-3 line-11 first-letter"></div>
+                                </div>
+                            </div>
+                            <div class="col-12 mt-1 mb-2 small details">
+                                <div class="d-block font-weight-bold" translate="no">
                                     {{ 'contrib.situ.verify.data.situ.description'|trans() }}
                                 </div>
                                 <div class="description mt-1 px-3 line-11 first-letter"></div>
@@ -152,87 +185,13 @@
                 </div>
             
             </div>
-                                 
-            <div id="translator" class="d-flex justify-content-between position-relative
-                 row py-1 bg-light border-top border-bottom">
-                                
-                <div class="col-xl-auto col-lg-12 col-sm-auto col-12">
-                    <div class="row">
-                        <div class="col-auto mt-1" translate="no">{{ 'GGtranslate'|trans() }}</div>
-                        <div class="col-auto px-0">
-                            <div id="google_translate_element"></div>
-                        </div>
-                    </div>
-                </div>
-                
-                <div id="fields-translated" class="col-xl-auto col-lg-12 col-sm-auto col-12 mt-1">
-                    <span id="translation">
-                        <span class="pl-0 pr-3 more collapsed" translate="no"
-                              data-toggle="collapse" data-target="#collapseGT"
-                              aria-expanded="false" aria-controls="collapseGT">
-                            {{ 'contrib.situ.verify.form.title'|trans() }}
-                        </span>
-                    </span>
-                    <div id="collapseGT" class="border mt-3 mx-1 pt-2 pb-2 px-2 collapse" aria-labelledby="translation">
-                        <div class="row mb-2">
-                            <div class="col-md-4" translate="no">
-                                {{ 'contrib.situ.verify.data.event'|trans() }}
-                            </div>
-                            <div class="col-md-8 first-letter">
-                                {{ situ.event.title }}
-                                {% if situ.event.validated == 0 %}
-                                    <span class="pl-0 pr-3">
-                                        {{ 'contrib.situ.verify.data.to_validate' | trans }}
-                                    </span>
-                                {% endif %}
-                            </div>
-                        </div>
-                        <div class="row mb-2">
-                            <div class="col-md-4" translate="no">
-                                {{ 'contrib.situ.verify.data.category_level1'|trans() }}
-                            </div>
-                            <div class="col-md-8 first-letter">
-                                <span class="pl-0 pr-3">
-                                    {{ situ.categoryLevel1.title }}
-                                    {% if situ.categoryLevel1.validated == 0 %}
-                                        {{ 'contrib.situ.verify.data.to_validate' | trans }}
-                                    {% endif %}
-                                </span>
-                                <div class="d-block font-weight-bold small" translate="no">
-                                    {{ 'contrib.situ.verify.data.situ.description'|trans() }}
-                                </div>
-                                <div class="mt-1 px-3 line-11 first-letter cust-descr">{{ situ.categoryLevel1.description }}</div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-4" translate="no">
-                                {{ 'contrib.situ.verify.data.category_level2'|trans() }}
-                            </div>
-                            <div class="col-md-8 first-letter">
-                                <span class="pl-0 pr-3">
-                                    {{ situ.categoryLevel2.title }}
-                                    {% if situ.categoryLevel2.validated == 0 %}
-                                        {{ 'contrib.situ.verify.data.to_validate' | trans }}
-                                    {% endif %}
-                                </span>
-                                <div class="d-block font-weight-bold small" translate="no">
-                                    {{ 'contrib.situ.verify.data.situ.description'|trans() }}
-                                </div>
-                                <div class="mt-1 px-3 line-11 first-letter cust-descr">
-                                    {{ situ.categoryLevel2.description }}
-                                </div>
-                            </div>
-                        </div>
-                   </div>
-                </div>
-            
-            </div> 
                             
-            <h2 class="h5 font-weight-normal my-3" translate="no">
+            <h2 class="h5 font-weight-normal mt-4 mb-3 pt-3" translate="no">
                 {{ 'contrib.situ.verify.data.situ.label'|trans() }}
             </h2>
+            
             <div class="row">
-                <div class="col-12 mb-1" translate="no">
+                <div class="col-12 mb-1 font-weight-bold" translate="no">
                     {{ 'contrib.situ.verify.data.situ.title'|trans() }}
                 </div>
                 <div class="col-12 mb-3 px-4 cust-title">
@@ -241,10 +200,10 @@
             </div>
 
             <div class="row">
-                <div class="col-12 mb-1" translate="no">
+                <div class="col-12 mb-1 font-weight-bold" translate="no">
                     {{ 'contrib.situ.verify.data.situ.description'|trans() }}
                 </div>
-                <div class="col-12 mb-4 px-4 cust-descr">
+                <div class="col-12 mb-5 px-4 cust-descr">
                     <div class="line-11">{{ situ.description }}</div>
                 </div>
             </div>
@@ -253,7 +212,7 @@
                 {% for item in situ.situItems %}
                     <div class="col-12">
                         {% if item.score == 0 %}
-                            <h2 class="h5 font-weight-normal" translate="no">
+                            <h2 class="h5 mb-3 font-weight-normal" translate="no">
                                 {{ 'contrib.situ.verify.data.item.label'|trans() }}
                             </h2>
                         {% else %}
@@ -266,7 +225,7 @@
                                     {% endif %}
                                 </h2>
                             {% endif %}
-                            <div class="mb-3" translate="no">
+                            <div class="mb-3 font-weight-bold" translate="no">
                                 {{ 'contrib.situ.verify.data.item.score.title'|trans() }}
                                 {% if item.score == 1 %}
                                     <span class="text-info">
@@ -284,17 +243,18 @@
                             </div>
                         {% endif %}
                     </div>
-                    <div class="col-12 mb-1" translate="no">
+                    <div class="col-12 mb-1 font-weight-bold" translate="no">
                         {{ 'contrib.situ.verify.data.situ.title'|trans() }}
                     </div>
                     <div class="col-12 mb-3 px-4 line-11 cust-title">
                         {{ item.title }}
                     </div>
-                    <div class="col-12 mb-1" translate="no">
+                    <div class="col-12 mb-1 font-weight-bold" translate="no">
                         {{ 'contrib.situ.verify.data.situ.description'|trans() }}
                     </div>
-                    <div class="col-12 mb-3 pb-4 px-4 line-11 cust-descr{% if loop.index != 1
-                         and loop.last == false %} border-bottom{% endif %}">
+                    <div class="col-12 px-5 line-11 cust-descr{% if loop.index != 1
+                         and loop.last == false %} border-bottom{% endif %}
+                         {% if loop.first == true %} mb-5{% elseif loop.last == false %} mb-4{% endif %}">
                         {{ item.description }}
                     </div>
                 {% endfor %}

@@ -107,7 +107,7 @@ class CategoryService {
     {
         return $this->em->createQueryBuilder()
                 ->from(Category::class,'c')
-                ->select('c.description, c.validated')
+                ->select('c.title, c.description, c.validated')
                 ->where('c.id = ?1')
                 ->setParameter(1, $category_id)
                 ->getQuery()
