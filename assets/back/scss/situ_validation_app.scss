@@ -53,6 +53,17 @@
     background: $white-70 url('../img/loading.gif') 50% no-repeat;
     z-index: 99;
 }
+
+.cust-title {
+    height: 45px;
+    overflow-y: auto;
+}
+.cust-descr {
+    height: 65px;
+    overflow-y: auto;
+}
+
+
 // GG Translate
 #page-top {
     top: 0 !important;

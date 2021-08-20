@@ -201,7 +201,7 @@
                                 <div class="d-block font-weight-bold small" translate="no">
                                     {{ 'contrib.situ.verify.data.situ.description'|trans() }}
                                 </div>
-                                <div class="mt-1 px-3 line-11 first-letter">{{ situ.categoryLevel1.description }}</div>
+                                <div class="mt-1 px-3 line-11 first-letter cust-descr">{{ situ.categoryLevel1.description }}</div>
                             </div>
                         </div>
                         <div class="row">
@@ -218,7 +218,7 @@
                                 <div class="d-block font-weight-bold small" translate="no">
                                     {{ 'contrib.situ.verify.data.situ.description'|trans() }}
                                 </div>
-                                <div class="mt-1 px-3 line-11 first-letter">
+                                <div class="mt-1 px-3 line-11 first-letter cust-descr">
                                     {{ situ.categoryLevel2.description }}
                                 </div>
                             </div>
@@ -235,7 +235,7 @@
                 <div class="col-12 mb-1" translate="no">
                     {{ 'contrib.situ.verify.data.situ.title'|trans() }}
                 </div>
-                <div class="col-12 mb-3 px-4">
+                <div class="col-12 mb-3 px-4 cust-title">
                     <div class="line-11">{{ situ.title }}</div>
                 </div>
             </div>
@@ -244,7 +244,7 @@
                 <div class="col-12 mb-1" translate="no">
                     {{ 'contrib.situ.verify.data.situ.description'|trans() }}
                 </div>
-                <div class="col-12 mb-4 px-4">
+                <div class="col-12 mb-4 px-4 cust-descr">
                     <div class="line-11">{{ situ.description }}</div>
                 </div>
             </div>
@@ -287,13 +287,13 @@
                     <div class="col-12 mb-1" translate="no">
                         {{ 'contrib.situ.verify.data.situ.title'|trans() }}
                     </div>
-                    <div class="col-12 mb-3 px-4 line-11">
+                    <div class="col-12 mb-3 px-4 line-11 cust-title">
                         {{ item.title }}
                     </div>
                     <div class="col-12 mb-1" translate="no">
                         {{ 'contrib.situ.verify.data.situ.description'|trans() }}
                     </div>
-                    <div class="col-12 mb-3 pb-4 px-4 line-11{% if loop.index != 1
+                    <div class="col-12 mb-3 pb-4 px-4 line-11 cust-descr{% if loop.index != 1
                          and loop.last == false %} border-bottom{% endif %}">
                         {{ item.description }}
                     </div>
