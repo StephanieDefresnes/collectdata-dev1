@@ -16,7 +16,7 @@ class CreateSituItemType extends AbstractType {
     {
         $builder
             ->add('score', ChoiceType::class, [
-                'label' => 'contrib.form.item.label_item',
+                'label' => false,
                 'label_attr' => ['class' => 'label-score'],
                 'row_attr' => ['class' => 'col-lg-6 col-md-5 col-9 score-group'],
                 'attr' => ['class' => 'custom-select d-block score-item'],
@@ -61,10 +61,28 @@ class CreateSituItemType extends AbstractType {
         ;
     }
 
+    /**
+     * @return string
+     */
+    public function getTitle()
+    {
+        return 'app_situ_items_type';
+    }
+
+    /**
+     * @return null|string
+     */
+    public function getBlockPrefix()
+    {
+        return 'app_situ_items';
+    }
+
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
             'data_class' => SituItem::class,
+            'csrf_protection'       => true,
+            'validation'            => true,
             'translation_domain' => 'user_messages',
         ]);
     }

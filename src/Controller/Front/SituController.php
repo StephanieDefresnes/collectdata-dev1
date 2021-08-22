@@ -100,6 +100,7 @@ class SituController extends AbstractController
         $langs = $user->getLangs()->getValues();
         
         $situData = '';
+        $situItems = '';
         if ($id) {
             $situData = $this->em->getRepository(Situ::class)
                     ->findOneBy(['id' => $id]);
@@ -123,7 +124,7 @@ class SituController extends AbstractController
         $formSitu = $this->createForm(CreateSituFormType::class, $situ);
         $formSitu->handleRequest($request);
         
-        return $this->render('front/situ/create.html.twig', [
+        return $this->render('front/situ/create/index.html.twig', [
             'form' => $formSitu->createView(),
             'langs' => $langs,
             'situ' => $situData,
@@ -307,8 +308,8 @@ class SituController extends AbstractController
         } else {
             $situ = $this->em->getRepository(Situ::class)->find($data['id']);
             
-            // Only situ author or moderator can update situ
-            if (!$user->hasRole('ROLE_MODERATOR') && $userId != $situ->getUserId()) {
+            // Only situ author can update situ
+            if ($userId != $situ->getUserId()) {
 
                 $msg = $this->translator->trans(
                     'access_deny', [],
@@ -452,5 +453,28 @@ class SituController extends AbstractController
             }
         }
         return $data;
+    }
+    
+    /**
+     * @Route("/ajaxEdit", methods="GET")
+     * Done in ajax because of select initialisation (switch choose/create data)
+     */
+    public function ajaxEdit(Request $request, SituService $situService): JsonResponse
+    {
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+        
+        // Get Situ
+        $id = $request->query->get('id');
+        $situ = $situService->getSituById($id);
+        
+        if (!$situ) { return new NotFoundHttpException(); }
+        
+        $situItems = $situService->getSituItemsBySituId($id);
+        
+        return $this->json([
+            'success' => true,
+            'situ' => $situ,
+            'situItems' => $situItems,
+        ]);
     }
 }

@@ -4,6 +4,8 @@ namespace App\Controller;
 
 use App\Entity\Situ;
 use App\Entity\Lang;
+use App\Service\CategoryService;
+use App\Service\EventService;
 use App\Service\SituService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -27,23 +29,30 @@ class SituController extends AbstractController
     }
     
     /**
-     * @Route("/ajaxEdit", methods="GET")
+     * @Route("/ajaxGetData", methods="GET|POST")
      */
-    public function ajaxEdit(Request $request): JsonResponse
+    public function ajaxGetData(CategoryService $categoryService,
+                                EventService $eventService): JsonResponse
     {
-        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+        $this->denyAccessUnlessGranted('ROLE_MODERATOR');
+    
+        // Get request data
+        $request = $this->get('request_stack')->getCurrentRequest();
+        $dataForm = $request->request->all();
+        $data = $dataForm['dataForm'];
         
-        // Get Situ
-        $id = $request->query->get('id');
-        $situ = $this->situService->getSituById($id);
+        $event = isset($data['event'])
+                ? $eventService->getDataById($data['event']) : '';
+        $categoryLevel1 = isset($data['categoryLevel1'])
+                ? $categoryService->getDataById($data['categoryLevel1']) : '';
+        $categoryLevel2 = isset($data['categoryLevel2'])
+                ? $categoryService->getDataById($data['categoryLevel2']) : '';
         
-        if (!$situ) { return new NotFoundHttpException(); }
-        
-        $situItems = $this->situService->getSituItemsBySituId($id);
         return $this->json([
             'success' => true,
-            'situ' => $situ,
-            'situItems' => $situItems,
+            'event' => $event,
+            'categoryLevel1' => $categoryLevel1,
+            'categoryLevel2' => $categoryLevel2,
         ]);
     }
     

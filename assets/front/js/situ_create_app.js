@@ -111,7 +111,7 @@ function loadOrCreateData($form, data, selectId, nextSelectId) {
                 .children('div').each(function() {
                     $(this).css({ opacity: 0}); 
                 })
-        if (nextSelectParent.hasClass('d-none')) nextSelectParent.removeClass('d-none')    
+        if (nextSelectParent.hasClass('d-none')) nextSelectParent.removeClass('d-none')
         
     }
     else nextSelectParent.addClass('d-none on-load')
@@ -146,6 +146,7 @@ function loadOrCreateData($form, data, selectId, nextSelectId) {
                     toggleAddingButton('.colDataLang', 'show')
                 else if ($(selectId).attr('id') == 'create_situ_form_event')
                     toggleAddingButton('.colData', 'show')
+                else toggleCollapse(nextSelectParent, 'hide')
                 
                 // Reset adding/remove buttons
                 $('.formData').each(function(){
@@ -169,6 +170,43 @@ function loadOrCreateData($form, data, selectId, nextSelectId) {
                             $(this).css({ opacity: 0}); 
                         })
             }
+        }
+    })
+}
+
+// Get Event & Categorie data depending on action change
+function getData(name, value) {
+    let categoryLevel1, categoryLevel2, dataForm
+    
+    if (name == 'categoryLevel1') categoryLevel1 = value
+    if (name == 'categoryLevel2') categoryLevel2 = value
+
+    dataForm = {
+        'categoryLevel1': categoryLevel1,
+        'categoryLevel2': categoryLevel2,
+    }
+    ajaxGetData(name, dataForm)
+}
+
+// Toggle i & content collapse
+function toggleCollapse(selectParent, action) {
+    selectParent.find('.infoCollapse').each(function() {
+        if (action == 'show') {
+            if ($(this).hasClass('d-none')) $(this).removeClass('d-none')
+        } else $(this).addClass('d-none')
+    })
+}
+
+// Load Categories description on action change
+function ajaxGetData(name, dataForm) {
+    $.ajax({
+        url: "/"+ path['locale'] +"/ajaxGetData",
+        method: 'POST',
+        data: {dataForm},
+        success: function(data) {
+            if (data[name])
+                $('#'+ name).find('.description').text(data[name].description)
+                toggleCollapse($('#'+ name), 'show')
         }
     })
 }
@@ -267,23 +305,13 @@ function toggleOldFields(oldFields, dataEntity) {
 // Get the ul that holds the collection of tags
 let collectionHolder = $('#situItems')
 
-function addInfoTooltip(situItemLi) {
-    let info =
-            '<span class="p-2 score-info" data-toggle="tooltip" data-placement="right"'
-                +' title="'+ translations['scoreInfo'] +'">'
-                +'<i class="far fa-question-circle"></i></span>'
-        
-    situItemLi.find('.label-score').append(info)
-    situItemLi.find('.score-info').tooltip()
-}
-
 // Add Delete button for each situItem added
 function addSituItemLiDeleteButton(situItemLi) {
     let removeLiBtn = 
-            $('<button type="button" class="btn btn-outline-danger float-right mt-1 mx-3">'
+            $('<button type="button" class="btn btn-outline-danger">'
                 +'<i class="far fa-trash-alt"></i>'
             +'</button>')
-    situItemLi.prepend(removeLiBtn)
+    situItemLi.find('.col-remove').html(removeLiBtn)
     
     $(removeLiBtn).on('click', function() {
         // If Current value is defined
@@ -304,7 +332,7 @@ function addSituItemLiDeleteButton(situItemLi) {
         }
         situItemLi.remove()
         // Hide Adding button when all options are selected
-        if (collectionHolder.find('li').length < 4 ) {
+        if (collectionHolder.find('.situ-item').length < 4 ) {
             $('#add-situItem').show()
         }
     })
@@ -408,24 +436,27 @@ function checkScores(newValue, oldValue) {
 }
 
 // Check Items value to show footer
-function checkField(formKO, newElem, field) {
-    newElem.find(field).each(function() {
-        if($(this).val() == '') formKO += 1
-        else formKO += 0
-    })
-    return formKO
-}
-function showFooter(elem) {
-    elem.find('select, input, textarea').on('keyup paste change', function() {
-        let formKO = 0
-        formKO += checkField(formKO, elem, 'select:not(#create_situ_form_situItems_0_score)')
-        formKO += checkField(formKO, elem, 'input')
-        formKO += checkField(formKO, elem, 'textarea')
-        if (formKO == 0 && $('.card-footer').hasClass('d-none'))
-            $('.card-footer').removeClass('d-none').animate({ opacity: 1}, 250)
-    })
-}
+//function checkField(formKO, elem, field) {
+//    if (elem.find(field).val() == '') formKO += 1
+//    else formKO += 0
+//    
+//    return formKO
+//}
+//function showFooter(elem) {
+//    elem.find('.form-control:not(#create_situ_form_situItems_0_score').on('keyup paste change', function() {
+//        let formKO = 0
+//        formKO += checkField(formKO, elem, 'select')
+//        formKO += checkField(formKO, elem, 'input')
+//        formKO += checkField(formKO, elem, 'textarea')
+//        $(this)
+//        if (formKO == 0 && $('.card-footer').hasClass('d-none'))
+//            $('.card-footer').removeClass('d-none').animate({ opacity: 1}, 250)
+//    })
+//}
 
+/**
+ * Update situ
+ */
 // Add itemSitu from prototype
 function addSituItem(button) {
 
@@ -453,16 +484,16 @@ function addSituItem(button) {
         $(this).removeAttr('selected')
     })
     
-    addInfoTooltip(newElem)
     addSituItemLiDeleteButton(newElem)  
     addPlaceholderClass(newElem)
     toggleClassSelection(newElem)
+    newElem.find('.score-info').tooltip()
     newElem.appendTo(list)
     newScore()
-    showFooter(newElem)
+//    showFooter(newElem)
 
     // Hide Adding button when all options are selected
-    if (collectionHolder.find('li').length == 4 ) {
+    if (collectionHolder.find('.situ-item').length == 4 ) {
         $('#add-situItem').hide()
     }
 }
@@ -522,12 +553,12 @@ function selectSitu(id) {
         data: { id: id },
         success: function(data) {
             $('h1').html(translations['h1Update'])
+            // Done in ajax because of initSelectData()
             loadData('lang', data.situ.langId)
             loadData('event', data.situ.eventId)
             loadData('categoryLevel1', data.situ.categoryLevel1Id)
             loadData('categoryLevel2', data.situ.categoryLevel2Id)
-            $('#create_situ_form_title').val(data.situ.title)
-            $('#create_situ_form_description').val(data.situ.description)
+            
             loadSituItems(data.situItems, data.situItems.length)
             if(data.situItems.length == 4) $('#add-situItem').hide()
         },
@@ -542,8 +573,8 @@ function loadData(name, value) {
         if ($('#create_situ_form_'+ name +' option').length) {
            $('#create_situ_form_'+ name).val(value).trigger('change')
                 .parent().find('.select2-selection__rendered').addClass('selection-on')
-           if (name == 'categoryLevel2') $('#loader').hide()
-           clearInterval(dataExist)
+            if (name == 'categoryLevel2') $('#loader').hide()
+            clearInterval(dataExist)
         }
     }, 50);
 }
@@ -552,23 +583,19 @@ function loadData(name, value) {
 function loadSituItems(data, counter) {
     let list = $('#situItems')
     
-    // Reset persistent SituItem
-    list.find('li').remove()
-    
-    // Reload all SituItems
+    // Load situItems
     for (let i = 0; i < counter; i++) {
         let newWidget = list.attr('data-prototype')
         newWidget = newWidget.replace(/__name__/g, i)
         let newElem = $(list.attr('data-widget-situItems')).html(newWidget)
         
-        addInfoTooltip(newElem)
         addSituItemLiDeleteButton(newElem)
         addPlaceholderClass(newElem)
         loadItemsValue(data, newElem, i)
         toggleClassSelection(newElem)
         newElem.appendTo(list)
         newScore()
-        showFooter(newElem)
+//        showFooter(newElem)
     }
     list.attr('data-widget-counter', counter)
 }
@@ -624,13 +651,26 @@ $(function() {
                                 +'#create_situ_form_event, '
                                 +'#create_situ_form_categoryLevel1, '
                                 +'#create_situ_form_categoryLevel2', function() {
+            
+            let divId = $(this).parents('.formData').attr('id')
+            if (divId == 'categoryLevel1' || divId == 'categoryLevel2') {
+                toggleCollapse($(this).parents('.formData'), 'hide')
+            }
+            
             if ($(this).is('select')) {
                 
                 let rendered = $(this).parent().find('.select2-selection__rendered')
                 if ($(this).val() == '' && rendered.hasClass('selection-on'))
                     rendered.removeClass('selection-on')
                 else rendered.addClass('selection-on')
-                    
+                
+                // Load category description
+                if ($(this).val() != '') {
+                    if (divId == 'categoryLevel1' || divId == 'categoryLevel2') {
+                        getData(divId, $(this).val())
+                    }
+                }
+                
                 // Reset selects before loading data
                 if ($(this).attr('id') == 'create_situ_form_lang') {
                     if ($(this).val() == '') $('#event').addClass('d-none')
@@ -649,8 +689,10 @@ $(function() {
                     $(this).parents('.formData').next().find('.colData')
                         .html(initSelectData('categoryLevel2'))
                 } else {
-                    if ($('.card-body').hasClass('d-none'))
-                        $('.card-body').removeClass('d-none').animate({ opacity: 1}, 250)
+                    if ($('.card-body').hasClass('d-none') && $('.card-footer').hasClass('d-none')) {
+                        $('.card-body, .card-footer').removeClass('d-none')
+                            .animate({ opacity: 1}, 250)
+                    }
                 }
             }
             // Load data or create them on action change
@@ -665,8 +707,9 @@ $(function() {
     
     // Show card-body if create categoryLevel2
     $('form').on('keyup paste', '#create_situ_form_categoryLevel2_description', function() {
-        if ($('.card-body').hasClass('d-none'))
-            $('.card-body').removeClass('d-none').animate({ opacity: 1}, 250)
+        if ($('.card-body').hasClass('d-none') && $('.card-footer').hasClass('d-none')) {
+            $('.card-body, .card-footer').removeClass('d-none').animate({ opacity: 1}, 250)
+        }
     })
     
     // Toogle Add / Select data
@@ -675,7 +718,6 @@ $(function() {
         let objFields = toggleFields($(this).attr('data-id'))
         toggleNewFields(objFields['newFields'], $(this).attr('data-id'))
         toggleOldFields(objFields['oldFields'], $(this).attr('data-id'))
-        let entity = $(this).attr('data-id')
     })
     
 
@@ -684,11 +726,8 @@ $(function() {
      */
     // Show footer depending on SituItems lenght
     collectionHolder.find('li').each(function() {
-        showFooter($(this))
+//        showFooter($(this))
     })
-    
-    // Init once required
-    addSituItem($('#add-itemSitu-link'))
     
     // Than add until 4 itemSitu
     $('#add-itemSitu-link').click(function () {
@@ -753,7 +792,7 @@ $(function() {
             id = $('#situ').attr('data-id')
             initialId = $('#situ').attr('data-initial-id')
 
-            $('#situItems li').each(function() {
+            $('#situItems .situ-item').each(function() {
                 let score, titleItem, descItem
                 $(this).find('.form-control').each(function() {
                     if($(this).hasClass('score-item')) {
@@ -802,12 +841,15 @@ $(function() {
      */
     let situId = $('#situ').attr('data-id')
     if (situId != '') {
-        selectSitu(situId)
+        selectSitu(situId)        
+        $('#situItems').data('data-widget-counter')
         $('#event, #categoryLevel1, #categoryLevel2, .card-body, .card-footer')
-                .removeClass('d-none')
+                .removeClass('d-none').animate({ opacity: 1}, 250)
         addPlaceholderClass('')
     } else {
-        if ($('#situ').attr('data-lang') == '') $('#loader').hide()
+        $('#loader').hide()
+        // Init once required
+        addSituItem($('#add-itemSitu-link'))
     }
     
 })

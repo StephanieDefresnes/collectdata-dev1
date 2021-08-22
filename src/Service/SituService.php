@@ -24,13 +24,10 @@ class SituService {
         $query = $this->em->createQueryBuilder()
             ->from(Situ::class,'situ')
             ->select('  situ.id                 id,
-                        situ.title              title, 
-                        situ.description        description,
-                        situ.userId             userId, 
-                        evt.id                  eventId, 
-                        cat1.id                 categoryLevel1Id, 
-                        cat2.id                 categoryLevel2Id,
-                        lang.id                 langId')
+                        lang.id                 langId,
+                        evt.id                  eventId,
+                        cat1.id                 categoryLevel1Id,
+                        cat2.id                 categoryLevel2Id')
             ->leftJoin(Event::class, 'evt', 'WITH', 'situ.event=evt.id')
             ->leftJoin(Category::class, 'cat1', 'WITH', 'situ.categoryLevel1=cat1.id')
             ->leftJoin(Category::class, 'cat2', 'WITH', 'situ.categoryLevel2=cat2.id')
@@ -45,8 +42,7 @@ class SituService {
     {
         $query = $this->em->createQueryBuilder()
             ->from(SituItem::class,'item')
-            ->select('  item.id             id,
-                        item.title          title, 
+            ->select('  item.title          title, 
                         item.description    description,
                         item.score          score')
             ->andWhere('item.situ = ?1')
