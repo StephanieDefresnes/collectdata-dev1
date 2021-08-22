@@ -1,19 +1,6 @@
 // global
 @import "../../scss/_variables";
 
-.line-11 {
-    line-height: 1.1;
-}
-.more {
-    background-image: url('~@fortawesome/fontawesome-free/svgs/solid/caret-up.svg') !important;
-    background-position: right center !important;
-    background-repeat: no-repeat;
-    background-size: 10px;
-    cursor: pointer;
-    &.collapsed {
-        background-image: url('~@fortawesome/fontawesome-free/svgs/solid/caret-down.svg') !important;            
-    }
-}
 .check {
     cursor: pointer;
     & .more {
@@ -24,7 +11,6 @@
         background-position: right center !important;
         background-repeat: no-repeat;
         background-size: 10px;
-        /*line-height: 1;*/
     }
     &.collapsed {
         & .more {
@@ -40,6 +26,9 @@
         font-size: 11px;
         vertical-align: top;
     }
+}
+#translator {
+    height: 44px;
 }
 #accordion {
     position: relative;

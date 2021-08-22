@@ -34,6 +34,10 @@ function loadDataSitu(name, value) {
     let dataExist = setInterval(function() {
         if ($('#verify_situ_form_'+ name +' option').length > 1) {
             $('#verify_situ_form_'+ name).val(value).trigger('change')
+            if (name == 'categoryLevel2'){
+                $('#\\:1\\.container').contents().find('#\\:1\\.restore').click()
+                $('#translator .ggt-row').removeClass('d-none')
+            }
             clearInterval(dataExist)
         }
     }, 50);
@@ -88,7 +92,7 @@ function getData(name, value) {
 // Load Event or Categories data on action change
 function ajaxGetData(dataForm) {
     $.ajax({
-        url: "/"+ path['locale'] +"/back/situ/ajaxGetData",
+        url: "/"+ path['locale'] +"/ajaxGetData",
         method: 'POST',
         data: {dataForm},
         success: function(data) {  
@@ -295,7 +299,18 @@ $(function() {
     
     initSelect2('.card-verify select')
     
-    $(document).ajaxComplete(function () { $('#loader').hide() })
+    $(document).ajaxComplete(function () {
+        $('#loader').hide()        
+    })
+    
+    $('#translator').on('change', 'select', function() {
+        $('#resetGGT, #situGGT').removeClass('d-none')
+    })
+    $('#resetGGT').click(function() {
+        $('#\\:1\\.container').contents().find('#\\:1\\.restore').click()
+        $('#resetGGT, #situGGT').addClass('d-none')
+    })
+    
     
     sequentialLoaderFormSitu()
     
