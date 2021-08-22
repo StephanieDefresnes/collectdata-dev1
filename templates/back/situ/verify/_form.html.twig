@@ -265,7 +265,7 @@
                         </div>
                         <div class="col-12 px-5 line-11 first-letter cust-descr{% if loop.index != 1
                              and loop.last == false %} border-bottom{% endif %}
-                             {% if loop.first == true %} mb-5{% elseif loop.last == false %} mb-4{% endif %}">
+                             {% if loop.first == true %} mb-5{% elseif loop.last == false %} mb-4{% elseif loop.last == true %} mb-2{% endif %}">
                             {{ item.description }}
                         </div>
                     {% endfor %}
