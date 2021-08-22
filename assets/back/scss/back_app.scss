@@ -99,7 +99,12 @@ footer {
 label {
     line-height: 1;
 }
-
+.line-11 {
+    line-height: 1.1;
+}
+.pointer {
+    cursor: pointer !important;
+}
 .first-letter::first-letter {
     text-transform: capitalize !important;
 }
