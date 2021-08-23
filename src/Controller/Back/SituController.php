@@ -3,8 +3,6 @@
 namespace App\Controller\Back;
 
 use App\Entity\Situ;
-use App\Entity\Event;
-use App\Entity\Category;
 use App\Form\Back\Situ\VerifySituFormType;
 use App\Service\CategoryService;
 use App\Service\EventService;
@@ -90,10 +88,6 @@ class SituController extends AbstractController
         
         $situData = $this->em->getRepository(Situ::class)->findOneBy(['id' => $id]);
         
-        // Current user
-        $user = $this->security->getUser();
-        $langs = $user->getLangs()->getValues();
-        
         // Form
         $situ = new Situ();
         $formSitu = $this->createForm(VerifySituFormType::class, $situ);
@@ -102,7 +96,6 @@ class SituController extends AbstractController
         return $this->render('back/situ/verify/index.html.twig', [
             'form' => $formSitu->createView(),
             'situ' => $situData,
-            'langs' => $langs,
         ]);
     }
     
