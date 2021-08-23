@@ -37,6 +37,7 @@ button:
     back: Espalda
     cancel: Regreso
     create: Añadir
+    confirm: Confirmar
     delete: Eliminar
     delete_title: Eliminar
     disable: Desactivar
@@ -130,6 +131,32 @@ contrib:
                     validate: Validar
                     validated: Válido
                 select: Seleccionar
+                btn:
+                    refuse: Rechazar
+                    valid: Validar
+                modal:
+                    validation:
+                        contrib: "Contribución :"
+                        status:
+                            ok: OK
+                            modified: Cambio
+                            validated: Validación
+                    refuse:
+                        title: Razón de la denegación
+                        question: ¿Por qué motivo rechaza esta contribución?
+                        select:
+                            placeholder: Seleccione un patrón
+                            inappropriate: Inapropiado
+                            create: Crea uno nuevo
+                            other: Otro
+                        comment:
+                            title: Comentario obligatorio
+                            textarea: Comentario
+                        categoryLevel1: Categoría
+                        categoryLevel2: Subcategoría
+                        event: Evento
+                        situ: Situación de riesgo
+                        items: Respuesta(s) propuesta(s)
         read:
             title: Leer una contribución
 delete:

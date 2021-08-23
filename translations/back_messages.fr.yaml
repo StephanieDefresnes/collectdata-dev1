@@ -36,6 +36,7 @@ button:
     add: Ajout
     back: Retour
     cancel: Annuler
+    confirm: Confirmer
     create: Ajouter
     delete: Supprimer
     delete_title: Supprimer
@@ -130,6 +131,32 @@ contrib:
                     validate: Valider
                     validated: Validé
                 select: Selectionner
+                btn:
+                    refuse: Refuser
+                    valid: Valider
+                modal:
+                    validation:
+                        contrib: "Contribution :"
+                        status:
+                            ok: OK
+                            modified: Modification
+                            validated: Validé
+                    refuse:
+                        title: Motif du refus
+                        question: Pourquoi refusez-vous cette contribution ?
+                        select:
+                            placeholder: Sélectionner un motif
+                            inappropriate: Inapproprié(e)
+                            create: En créer un(e) nouveau(elle)
+                            other: Autre
+                        comment:
+                            title: Commentaire obligatoire
+                            textarea: Commentaire
+                        categoryLevel1: Catégorie
+                        categoryLevel2: Sous-catégorie
+                        event: Événement
+                        situ: Situation à risque
+                        items: Réponse(s) proposée(s)
         read:
             title: Lire une contribution
 delete:

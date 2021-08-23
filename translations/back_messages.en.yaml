@@ -36,6 +36,7 @@ button:
     add: Addition
     back: Back
     cancel: Cancel
+    confirm: Confirm
     create: Add
     delete: Delete
     delete_title: Delete
@@ -130,6 +131,32 @@ contrib:
                     validate: Validate
                     validated: Validated
                 select: Select
+                btn:
+                    refuse: Refuse
+                    valid: Validate
+                modal:
+                    validation:
+                        contrib: "Contribution :"
+                        status:
+                            ok: OK
+                            modified: Change
+                            validated: Validation
+                    refuse:
+                        title: Reason for refusal
+                        question: Why do you refuse this contribution?
+                        select:
+                            placeholder: Select a pattern
+                            inappropriate: Inappropriate
+                            create: Create a new one
+                            other: Other
+                        comment:
+                            title: Comment required
+                            textarea: Comment
+                        categoryLevel1: Category
+                        categoryLevel2: Subcategory
+                        event: Event
+                        situ: Risky situation
+                        items: Proposed answer(s)
         read:
             title: Read a contribution
 delete:

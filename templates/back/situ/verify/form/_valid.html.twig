@@ -1,0 +1,68 @@
+{% trans_default_domain 'back_messages' %}
+                    
+<div class="modal fade" id="validModal"
+     data-backdrop="static" data-keyboard="false" tabindex="-1"
+     aria-labelledby="validModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header bg-dark text-white">
+                <h5 class="modal-title" id="validModalLabel"  translate="no">
+                    {{ 'contrib.situ.verify.title'|trans() }}
+                </h5>
+            </div>
+            <div class="modal-body">
+                
+                <div class="row mb-2">
+                    <div class="col-5 font-weight-bold">
+                        {{ 'contrib.situ.verify.data.event'|trans() }}
+                    </div>
+                    <div class="col-7 line-11">
+                        <span class="ok">{{ 'contrib.situ.verify.form.modal.validation.status.ok'|trans() }}</span>
+                        <span class="ok">{{ 'contrib.situ.verify.form.modal.validation.status.modified'|trans() }}</span>
+                        <span class="ok">{{ 'contrib.situ.verify.form.modal.validation.status.validated'|trans() }}</span>
+                    </div>                        
+                </div>
+                    
+                <div class="row mb-2">
+                    <div class="col-5 font-weight-bold">
+                        {{ 'contrib.situ.verify.data.category_level1'|trans() }}
+                    </div>
+                    <div class="col-7 line-11">
+                        <span class="ok">{{ 'contrib.situ.verify.form.modal.validation.status.ok'|trans() }}</span>
+                        <span class="ok">{{ 'contrib.situ.verify.form.modal.validation.status.modified'|trans() }}</span>
+                        <span class="ok">{{ 'contrib.situ.verify.form.modal.validation.status.validated'|trans() }}</span>
+                    </div>                        
+                </div>
+                    
+                <div class="row mb-2">
+                    <div class="col-5 font-weight-bold line-11">
+                        {{ 'contrib.situ.verify.data.category_level2'|trans() }}
+                    </div>
+                    <div class="col-7 line-11">
+                        <span class="ok">{{ 'contrib.situ.verify.form.modal.validation.status.ok'|trans() }}</span>
+                        <span class="ok">{{ 'contrib.situ.verify.form.modal.validation.status.modified'|trans() }}</span>
+                        <span class="ok">{{ 'contrib.situ.verify.form.modal.validation.status.validated'|trans() }}</span>
+                    </div>                        
+                </div>
+                    
+                <div class="row mb-2">
+                    <div class="col-5 font-weight-bold">
+                        {{ 'contrib.situ.verify.form.modal.validation.contrib'|trans() }}
+                    </div>
+                    <div class="col-7">
+                        <span class="ok">{{ 'contrib.situ.verify.form.modal.validation.status.ok'|trans() }}</span>
+                    </div>                        
+                </div>
+                    
+            </div>
+            <div class="modal-footer" translate="no">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                    {{ 'button.cancel'|trans() }}
+                </button>
+                <button type="button" class="btn btn-primary">
+                    {{ 'button.confirm'|trans() }}
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

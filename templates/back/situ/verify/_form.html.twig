@@ -5,16 +5,16 @@
         
         <div id="translator" class="card-header py-1">
             <div class="row d-flex justify-content-between">
-                <div class="col-5">
+                <div class="col-4">
                     <h6 class="col-auto px-0 mt-2" translate="no">
                         <span class="font-weight-bold text-primary">
                             {{ 'contrib.situ.verify.form.title'|trans() }}
                         </span>
                     </h6>
                 </div>
-                <div class="col-7">
+                <div class="col-8">
                     <div class="row ggt-row float-right d-none">
-                        <div class="col-auto mt-1" translate="no">{{ 'GGtranslate'|trans() }}</div>
+                        <div class="col-auto px-1 mt-1"><i class="fas fa-globe-americas"></i></div>
                         <div class="col-auto px-0">
                             <div id="GGT"></div>
                         </div>
@@ -276,15 +276,21 @@
 
         </div>
 
-        <div class="card-footer bg-light text-right">
-            <div class="d-flex justify-content-between">
-                <div id="save-btn" class="btn btn-outline-primary px-3">
-                    {{ 'contrib.form.save.btn'|trans() }}
+        <div class="card-footer bg-light" translate="no">
+            <div class="d-flex justify-content-center">
+                <div id="refuse-btn" class="btn btn-warning mx-1 px-3"
+                     data-toggle="modal" data-target="#refuseModal">
+                    {{ 'contrib.situ.verify.form.btn.refuse'|trans() }}
                 </div>
-                <div id="submit-btn" class="btn btn-primary px-4">
-                    {{ 'contrib.form.submit.btn'|trans() }}
+                <div id="valid-btn" class="btn btn-primary mx-1 px-3"
+                     data-toggle="modal" data-target="#validModal">
+                    {{ 'contrib.situ.verify.form.btn.valid'|trans() }}
                 </div>
             </div>
         </div>
+                
     </div>
+                
+    {% include "back/situ/verify/form/_refuse.html.twig" %}
+    {% include "back/situ/verify/form/_valid.html.twig" %}
 {{ form_end(form) }}
