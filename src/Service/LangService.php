@@ -18,7 +18,11 @@ class LangService {
     public function getUserLang($user_lang_id)
     {
         $repository = $this->em->getRepository(Lang::class);
-        if ($user_lang_id == '') $user_lang_id = 47;
+        
+        $default = $repository->findOneBy(
+            ['englishName' => 'French']
+        );
+        if ($user_lang_id == '') $user_lang_id = $default->getId();
         
         $lang = $repository->findOneBy(
             ['id' => $user_lang_id]

@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Event;
+use App\Entity\Lang;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\Security\Core\Security;
@@ -29,7 +30,12 @@ class EventRepository extends ServiceEntityRepository
     public function findByLocaleLang()
     {        
         $user = $this->security->getUser();
-        $userLangId = $user->getLangId() != '' ? $user->getLangId() : 47;
+        
+        $default = $this->em->getRepository(Lang::class)->findOneBy(
+            ['englishName' => 'French']
+        );
+        
+        $userLangId = $user->getLangId() == '' ? $default->getId() : $user->getLangId();
         
         $qb =  $this->createQueryBuilder('c');
         

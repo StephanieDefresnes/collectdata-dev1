@@ -257,7 +257,12 @@ class SituController extends AbstractController
         // Get current user
         $user = $this->security->getUser();
         $userId = $user->getId();
-        $userLang = $user->getLangId() != '' ? $user->getLangId() : 47;
+        
+        $default = $this->em->getRepository(Lang::class)->findOneBy(
+            ['englishName' => 'French']
+        );
+        
+        $userLang = $user->getLangId() == '' ? $default->getId() : $user->getLangId();
             
         // Get request data
         $request = $this->get('request_stack')->getCurrentRequest();
