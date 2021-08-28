@@ -1,0 +1,20 @@
+{% trans_default_domain 'back_messages' %}
+
+{% block app_page_content_widget %}
+<div {{ block('widget_container_attributes') }} class="position-relative bg-light mb-3 p-3 border divContent" translate="no">
+    <div class="d-flex justify-content-between mb-3 row">
+        <div class="col-10">
+            {{ form_widget(form.title) }}
+        </div>
+        <div class="col-2 d-flex justify-content-end">
+            <div class="content-remove mr-4">
+                <span class="btn btn-outline-danger removeContent">
+                    <i class="far fa-trash-alt"></i>
+                </span>
+            </div>
+            <div class="handle pointer small position-absolute"><i class="fas fa-arrows-alt"></i></div>
+        </div>
+    </div>
+    {{ form_widget(form.content|raw) }}
+</div>
+{% endblock app_page_content_widget %}

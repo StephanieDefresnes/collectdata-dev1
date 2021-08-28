@@ -1,0 +1,45 @@
+@import '~jquery-ui/themes/base/all.css';
+
+// global
+@import "../../scss/_variables";
+
+.form-control::placeholder {
+    color: $gray-b;
+}
+.ui-icon {
+     display: none;
+}
+
+// GG Translate
+#page-top {
+    top: 0 !important;
+}
+.skiptranslate {
+    color: #fff !important;
+    font-size: 0 !important;
+    & iframe,
+    & span {
+        display: none !important;
+    }
+    & select {
+        background: #fff !important;
+        color: #858796 !important;
+        font-size: 15px !important;
+        border: 1px solid #bbb;
+        border-radius: 1px;
+        padding: 8px;
+    }
+}
+
+// FOSCKEditor
+ .cke_chrome {
+    border: 0 !important;
+    & > .cke_inner {
+        border: 1px solid $light-d1;
+        & > .cke_top,
+        & > .cke_bottom {
+            background: $light-f !important;
+            border: 0 !important;
+        }
+    }
+}

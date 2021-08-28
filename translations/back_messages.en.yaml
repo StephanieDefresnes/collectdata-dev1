@@ -16,6 +16,7 @@ sidebar:
         validation: Validation
     event: Events
     category: Categories
+    content: Content
 nav:
     account: Account
     account_logout: Logout
@@ -63,6 +64,50 @@ status:
     5: Trashed
 badge:
     new: Nouveau
+content:
+    list:
+        title: Management of public content
+        table:
+            empty: No content
+            action: Action
+            lang: Language
+            type: Type
+            title: Title
+            slug: Slug
+    form:
+        title: Create content
+        badge: Language choice / Generate slug
+        card: Create new content
+        update: Update content
+        page:
+            collection: 
+                btn: Add a section
+                title: Title (option)
+                label: Content
+                remove:
+                    title: Content removal
+                    confirm: Are you sure you want to delete this content?
+            lang:
+                label: "Language :"
+            type:
+                label: Type
+                choice:
+                    home: Home
+                    legal: Legal Notice
+                    cgu: GGU
+                    page: Page
+                placeholder: Select type
+            title: Title
+            title_lang: Enter en
+            slug: Slug
+        save:
+            flash:
+                success: The page has been saved
+                error: An error occurred while saving the page
+        submit:
+            flash:
+                success: The page has been activated
+                error: An error occurred while activating the page
 contrib:
     action: Action
     category:

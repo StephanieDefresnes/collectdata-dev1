@@ -16,6 +16,7 @@ sidebar:
         validation: Validación
     event: Eventos
     category: Categorías
+    content: Contenido
 nav:
     account: Cuenta
     account_logout: Desconexión
@@ -63,6 +64,50 @@ status:
     5: Destrozado
 badge:
     new: Nouveau
+content:
+    list:
+        title: Gestión de contenidos públicos
+        table:
+            empty: Sin contenido
+            action: Acción
+            lang: Idioma
+            type: Tipo
+            title: Título
+            slug: Slug
+    form:
+        title: Crear contenido
+        badge: Elección de lengua / Generar slug
+        card: Crear contenido nuevo
+        update: Update content
+        page:
+            collection: 
+                btn: Agregar una sección
+                title: Título (opción)
+                label: Contenido
+                remove:
+                    title: Eliminación de contenido
+                    confirm: ¿Está seguro de que desea eliminar este contenido?
+            lang:
+                label: "Lengua :"
+            type:
+                label: Tipo
+                choice:
+                    home: Bienvenida
+                    legal: Notas legales
+                    cgu: CGU
+                    page: Página
+                placeholder: Seleccione tipo
+            title: Título
+            title_lang: Entrar en
+            slug: Slug
+        save:
+            flash:
+                success: La página se ha guardado
+                error: Se produjo un error al guardar la página.
+        submit:
+            flash:
+                success: La página ha sido activada
+                error: Ocurrió un error al activar la página
 contrib:
     action: Acción
     category:

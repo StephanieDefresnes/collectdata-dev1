@@ -76,6 +76,7 @@ class Lang
 
     public function __toString()
     {
+        return $this->getLang();
         return $this->getUsers();
     }
 

@@ -16,6 +16,7 @@ sidebar:
         validation: Validation
     event: Événements
     category: Catégories
+    content: Contenu
 nav:
     account: Compte
     account_logout: Déconnexion
@@ -63,6 +64,50 @@ status:
     5: Corbeille
 badge:
     new: Nouveau
+content:
+    list:
+        title: Gestion des contenus publics
+        table:
+            empty: Aucun contenu
+            action: Action
+            lang: Langue
+            type: Type
+            title: Titre
+            slug: Slug
+    form:
+        title: Créer un contenu
+        badge: Choix langue / Générer slug
+        card: Créer un nouveau contenu
+        update: Mettre à jour un contenu
+        page:
+            collection: 
+                btn: Ajouter une section
+                title: Titre (option)
+                label: Contenu
+                remove:
+                    title: Suppression de contenu
+                    confirm: Êtes-vous certain(e) de vouloir supprimer ce contenu ?
+            lang:
+                label: "Langue :"
+            type:
+                label: Type
+                choice:
+                    home: Accueil
+                    legal: Mentions légales
+                    cgu: CGU
+                    page: Page
+                placeholder: Sélectionner un type
+            title: Titre
+            title_lang: Saisir en
+            slug: Slug
+        save:
+            flash:
+                success: La page a bien été enregistrée
+                error: Une erreur s'est produite lors de l'enregisterment de la page
+        submit:
+            flash:
+                success: La page a bien été activée
+                error: Une erreur s'est produite lors de l'activation de la page
 contrib:
     action: Action
     category:
@@ -253,7 +298,7 @@ lang:
                     error: Ajout obligatoire
                     remove:
                         title: Suppresion de champ
-                        content: Êtes-vous sur de vouloir supprimer ce champs ?
+                        content: Êtes-vous certain(e) de vouloir supprimer ce champs ?
                 label: Liste de champs
                 name: Nom de la chaîne
                 type: 

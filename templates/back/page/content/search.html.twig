@@ -1,0 +1,77 @@
+{% trans_default_domain 'back_messages' %}
+{% extends "back/layout.html.twig" %}
+{#{% set locale = app.request.locale %}#}
+
+{% block title %}{{ 'content.list.title'|trans() }}{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {{ encore_entry_link_tags('content_search_app', null, 'backApp') }}
+    <style>
+        
+    </style>
+{% endblock %}
+
+{% block content %}
+{#    <div id="loader"></div>#}
+    <div class="container-fluid pt-4">
+        
+        <div class="d-sm-flex align-items-center justify-content-between mb-4">
+            <h1 class="h3 mb-0 text-gray-800">{{ 'content.list.title'|trans() }}</h1>
+            <a href="{{ path('back_content_edit') }}" class="btn btn-primary mx-2 pt-1">
+                <i class="fas fa-plus-circle"></i>
+                {{ 'content.form.title'|trans() }}
+            </a>
+        </div>
+        
+        <div id="card-list" class="card shadow mb-4">
+
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary">{{ 'contrib.situ.title'|trans() }}</h6>
+            </div>
+
+            <div id="pages" class="card-body pb-3 back-dataTable">
+
+                {% if pages is empty %}
+                    {{ 'content.list.table.empty'|trans() }}
+                {% else %}
+
+                <table id="dataTable-pages" class="table table-sm nowrap">
+                    <thead class="bg-gray-600 text-white">
+                        <tr>
+                            <th>{{ 'content.list.table.action'|trans() }}</th>
+                            <th class="pl-2">{{ 'content.list.table.lang'|trans() }}</th>
+                            <th class="pl-2">{{ 'content.list.table.type'|trans() }}</th>
+                            <th class="pl-2">{{ 'content.list.table.title'|trans() }}</th>
+                            <th class="pl-2">{{ 'content.list.table.slug'|trans() }}</th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white">
+                        {% for page in pages %}
+                        <tr>
+                            <td class="px-2">
+                            </td>
+                            <td class="px-2">
+                            </td>
+                            <td class="px-2">
+                            </td>
+                            <td class="px-2">
+                            </td>
+                            <td class="px-2">
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>            
+                {% endif %}
+            </div>
+        </div>
+
+        
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {{ encore_entry_script_tags('content_search_app', null, 'backApp') }}
+{% endblock %}
