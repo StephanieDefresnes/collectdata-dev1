@@ -1,5 +1,5 @@
 // css
-import '../scss/content_search_app.scss';
+import '../scss/page_search_app.scss';
 
 // js
 require('datatables.net/js/jquery.dataTables.min.js');

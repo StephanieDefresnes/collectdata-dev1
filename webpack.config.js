@@ -78,11 +78,11 @@ Encore
         pattern: /\.(png|jpg|jpeg)$/
     })
     .addEntry('back_app', './assets/back/js/back_app.js')
-    .addEntry('content_edit_app', './assets/back/js/content_edit_app.js')
-    .addEntry('content_search_app', './assets/back/js/content_search_app.js')
     .addEntry('index_app', './assets/back/js/index_app.js')
     .addEntry('lang_search_app', './assets/back/js/lang_search_app.js')
     .addEntry('lang_translation_form_app', './assets/back/js/lang_translation_form_app.js')
+    .addEntry('page_edit_app', './assets/back/js/page_edit_app.js')
+    .addEntry('page_search_app', './assets/back/js/page_search_app.js')
     .addEntry('situ_search_app', './assets/back/js/situ_search_app.js')
     .addEntry('situ_validation_app', './assets/back/js/situ_validation_app.js')
     .addEntry('user_read_app', './assets/back/js/user_read_app.js')

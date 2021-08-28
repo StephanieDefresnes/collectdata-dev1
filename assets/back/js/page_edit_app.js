@@ -1,5 +1,5 @@
 // css
-import '../scss/content_edit_app.scss';
+import '../scss/page_edit_app.scss';
 
 // js
 require('jquery-ui');
