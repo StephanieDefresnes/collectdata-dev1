@@ -124,7 +124,7 @@ class Situ
         return $this->title;
     }
 
-    public function setTitle(string $title): self
+    public function setTitle(?string $title): self
     {
         $this->title = $title;
 
@@ -136,7 +136,7 @@ class Situ
         return $this->description;
     }
 
-    public function setDescription(string $description): self
+    public function setDescription(?string $description): self
     {
         $this->description = $description;
 
@@ -220,7 +220,7 @@ class Situ
         return $this->statusId;
     }
 
-    public function setStatusId(int $statusId): self
+    public function setStatusId(?int $statusId): self
     {
         $this->statusId = $statusId;
 
