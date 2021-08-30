@@ -13,7 +13,6 @@ $(function() {
 
         if (lastHeight != newHeight) {
             lastHeight = newHeight;
-            lastWidth = newWidth;
         }
         if (windowHeight > contentHeight) {
             $('#footerEnd').height(windowHeight - contentHeight)
