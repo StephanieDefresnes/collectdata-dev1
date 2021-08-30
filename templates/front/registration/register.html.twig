@@ -4,30 +4,30 @@
 {% block title %}{{ 'registration.title'|trans() }}{% endblock %}
 
 {% block content %}
-<section class="mt-5 py-5">
-    <div class="container">
-        <div class="col-lg-6 mx-auto">
-            <div class="card mt-4 mb-4 px-3 pt-2 bg-light-80">
-                <div class="card-body">
-                    {{ form_start(form) }}
-                        <h1 class="h3 mb-3 font-weight-normal">{{ 'registration.h1'|trans() }}</h1>
-                        {{ form_row(form.email) }}
-                        {{ form_row(form.name) }}
-                        {{ form_row(form.plainPassword) }}
-                        <div class="form-group">
-                            {{ form_widget(form.agreeTerms, {'attr': {'class': 'form-check-input'} }) }}
-                            {{ form_label(form.agreeTerms) }}
-                            <small class="form-check-label required" for="registration_form_agreeTerms">{{ 'registration.terms_link'|trans({'%link_start%' : '<a href="'~path('front_home')~'">', '%link_end%' : '</a>'}) | raw }}</small>
-                        </div>      
-                        <div class="form-group text-center">
-                            <button class="btn btn-secondary px-5" type="submit">
-                                {{ 'registration.btn.submit'|trans() }}
-                            </button>
-                        </div>
-                    {{ form_end(form) }}
-                </div>
+    <div class="col-lg-6 mx-auto pt-5">
+        
+        <div class="card mt-4 mb-4 px-3 pt-2 bg-light-80">
+            
+            <div class="card-body">
+                {{ form_start(form) }}
+                    <h1 class="h3 mb-3 font-weight-normal">{{ 'registration.h1'|trans() }}</h1>
+                    {{ form_row(form.email) }}
+                    {{ form_row(form.name) }}
+                    {{ form_row(form.plainPassword) }}
+                    <div class="form-group">
+                        {{ form_widget(form.agreeTerms, {'attr': {'class': 'form-check-input'} }) }}
+                        {{ form_label(form.agreeTerms) }}
+                        <small class="form-check-label required" for="registration_form_agreeTerms">{{ 'registration.terms_link'|trans({'%link_start%' : '<a href="'~path('front_home')~'">', '%link_end%' : '</a>'}) | raw }}</small>
+                    </div>      
+                    <div class="form-group text-center">
+                        <button class="btn btn-secondary px-5" type="submit">
+                            {{ 'registration.btn.submit'|trans() }}
+                        </button>
+                    </div>
+                {{ form_end(form) }}
             </div>
+            
         </div>
+            
     </div>
-</section>
 {% endblock %}

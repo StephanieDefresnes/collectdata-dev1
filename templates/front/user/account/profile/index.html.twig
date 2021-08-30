@@ -10,123 +10,120 @@
 {% endblock %}
 
 {% block content %}
-    
-    <div class="container mt-5 py-5">
         
-        {% block banner%}
-        <div class="mt-3 mb-5 pt-5">
-            <h1 class="h3 text-white">
-                {{ 'nav.account_profile'|trans() }}
-            </h1>
-        </div>
-        {% endblock %}
-                        
-        <div class="row">
-        
-            <div class="col-md-8 mx-auto p-0">
-                <div class="card mb-4 bg-light-50 border-0">
-                    
-                    <div class="card-header bg-dark-50">
-                        <div class="row{% if user.imageFilename %} mx-0{% endif %}">
-                            {% if user.imageFilename %}
-                            <div class="img-circle col-auto">
-                                <img src="{{ asset('/uploads/img/'~ user.imageFilename) }}" 
-                                    data-toggle="tooltip" data-placement="right"
-                                    id="defaultImg" alt="">
-                            </div>
-                            {% endif %}
-                            <div class="col-auto">
-                                <h5 class="text-white text-uppercase mb-0{% if user.imageFilename %} mt-4 pt-1{% endif %}">
-                                    {{ user.name }}
-                                </h5>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="card-body bg-white-70">
-                        
-                        <div class="row mb-lg-2 mb-3">
-                            <span class="col-lg-5 text-secondary">{{ 'account.email.label'|trans() }}</span>
-                            <span class="col-lg-7">{{ user.email }}</span>                                
-                        </div>
-                        
-                        <div class="row mb-lg-2 mb-3">
-                            <span class="col-lg-5 text-secondary">{{ 'account.date_create'|trans() }}</span>
-                            <span class="col-lg-7 first-letter">
-                                {{ user.dateCreate|format_datetime('full', 'short', locale=locale) }}
-                            </span>                                
-                         </div>
-                        
-                        {% if user.langs %}
-                        <div class="row mb-lg-2 mb-3">
-                            <span class="col-lg-5 text-secondary">
-                                {% if user.langs|length > 1 %}
-                                    {{ 'account.lang.all'|trans() }}
-                                {% else %}
-                                    {{ 'account.lang.current'|trans() }}
-                                {% endif %}
-                            </span>
-                            <span class="col-md-7 first-letter list-inline">
-                                {% for lang in user.langs %}
-                                <span class="text-capitalize decode">{{ lang.name }}</span>
-                                {% endfor %}
-                            </span>                                
-                        </div>
-                        {% endif %}
-                        
-                        <div class="row mb-lg-2 mb-3">
-                            <span class="col-lg-5 text-secondary">
-                                {% if user.roles|length == 1 %}
-                                    {{ 'account.roles.title'|trans() }}
-                                {% else %}
-                                    {{ 'account.roles.title_s'|trans() }}
-                                {% endif %}
-                            </span>
-                            <span class="col-lg-7">
-                                {% set roles =  user.roles %}
-                                {% set newRoles = [] %}
-                                {% for role in user.roles %}
-                                    {% if role != 'ROLE_USER' %}
-                                        {% if role == 'ROLE_CONTRIBUTOR' %}{% set newRoles = newRoles|merge(['account.roles.contributor'|trans()]) %}
-                                        {% elseif role == 'ROLE_MODERATOR' %}{% set newRoles = newRoles|merge(['account.roles.moderator'|trans()]) %}
-                                        {% elseif role == 'ROLE_ADMIN' %}{% set newRoles = newRoles|merge(['account.roles.admin'|trans()]) %}
-                                        {% elseif role == 'ROLE_SUPER_ADMIN' %}{% set newRoles = newRoles|merge(['account.roles.super_admin'|trans()]) %}{% endif %}
-                                    {% endif %}
-                                {% endfor %}
-                                {{ newRoles|join(' - ') }}
-                                {% if user.langContributor %}
-                                    - {{ 'account.translator.status'|trans() }}
-                                {% endif %}
-                            </span>                                
-                        </div>
-                        
-                        {{ include('front/user/account/profile/_contribs.html.twig') }}
-                        
-                        {% if user.contributorLangs|length > 0 %}
-                            {{ include('front/user/account/profile/_langContributor.html.twig') }}
-                        {% endif %}
-                        
-                    </div>
-                        
-                    <div class="card-footer bg-secondary-40 text-right">
-                        <div class="d-flex justify-content-between">
-                            <a href="{{ path('user_update') }}"
-                               class="mr-2 px-3 pb border btn btn-light bg-light-80">
-                                {{ 'account.update.title'|trans() }}
-                            </a>
-                            <a href="{{ path('app_reset_password', { 'id': app.user.id }) }}"
-                               class="ml-2 px-3 border btn btn-light bg-light-80">
-                                {{ 'account.reset_password'|trans() }}
-                            </a>
-                        </div>
-                    </div>
-                            
-                </div>
-                        
-            </div>
-        </div>
-                    
+    {% block banner%}
+    <div class="mt-3 mb-5 pt-5">
+        <h1 class="h3 text-white">
+            {{ 'nav.account_profile'|trans() }}
+        </h1>
     </div>
+    {% endblock %}
+
+    <div class="row">
+
+        <div class="col-md-8 mx-auto p-0">
+            <div class="card mb-4 bg-light-50">
+
+                <div class="card-header bg-dark-50 border">
+                    <div class="row{% if user.imageFilename %} mx-0{% endif %}">
+                        {% if user.imageFilename %}
+                        <div class="img-circle col-auto">
+                            <img src="{{ asset('/uploads/img/'~ user.imageFilename) }}" 
+                                data-toggle="tooltip" data-placement="right"
+                                id="defaultImg" alt="">
+                        </div>
+                        {% endif %}
+                        <div class="col-auto">
+                            <h5 class="text-white text-uppercase mb-0{% if user.imageFilename %} mt-4 pt-1{% endif %}">
+                                {{ user.name }}
+                            </h5>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card-body bg-white-70">
+
+                    <div class="row mb-lg-2 mb-3">
+                        <span class="col-lg-5 text-secondary">{{ 'account.email.label'|trans() }}</span>
+                        <span class="col-lg-7">{{ user.email }}</span>                                
+                    </div>
+
+                    <div class="row mb-lg-2 mb-3">
+                        <span class="col-lg-5 text-secondary">{{ 'account.date_create'|trans() }}</span>
+                        <span class="col-lg-7 first-letter">
+                            {{ user.dateCreate|format_datetime('full', 'short', locale=locale) }}
+                        </span>                                
+                     </div>
+
+                    {% if user.langs %}
+                    <div class="row mb-lg-2 mb-3">
+                        <span class="col-lg-5 text-secondary">
+                            {% if user.langs|length > 1 %}
+                                {{ 'account.lang.all'|trans() }}
+                            {% else %}
+                                {{ 'account.lang.current'|trans() }}
+                            {% endif %}
+                        </span>
+                        <span class="col-md-7 first-letter list-inline">
+                            {% for lang in user.langs %}
+                            <span class="text-capitalize decode">{{ lang.name }}</span>
+                            {% endfor %}
+                        </span>                                
+                    </div>
+                    {% endif %}
+
+                    <div class="row mb-lg-2 mb-3">
+                        <span class="col-lg-5 text-secondary">
+                            {% if user.roles|length == 1 %}
+                                {{ 'account.roles.title'|trans() }}
+                            {% else %}
+                                {{ 'account.roles.title_s'|trans() }}
+                            {% endif %}
+                        </span>
+                        <span class="col-lg-7">
+                            {% set roles =  user.roles %}
+                            {% set newRoles = [] %}
+                            {% for role in user.roles %}
+                                {% if role != 'ROLE_USER' %}
+                                    {% if role == 'ROLE_CONTRIBUTOR' %}{% set newRoles = newRoles|merge(['account.roles.contributor'|trans()]) %}
+                                    {% elseif role == 'ROLE_MODERATOR' %}{% set newRoles = newRoles|merge(['account.roles.moderator'|trans()]) %}
+                                    {% elseif role == 'ROLE_ADMIN' %}{% set newRoles = newRoles|merge(['account.roles.admin'|trans()]) %}
+                                    {% elseif role == 'ROLE_SUPER_ADMIN' %}{% set newRoles = newRoles|merge(['account.roles.super_admin'|trans()]) %}{% endif %}
+                                {% endif %}
+                            {% endfor %}
+                            {{ newRoles|join(' - ') }}
+                            {% if user.langContributor %}
+                                - {{ 'account.translator.status'|trans() }}
+                            {% endif %}
+                        </span>                                
+                    </div>
+
+                    {{ include('front/user/account/profile/_contribs.html.twig') }}
+
+                    {% if user.contributorLangs|length > 0 %}
+                        {{ include('front/user/account/profile/_langContributor.html.twig') }}
+                    {% endif %}
+
+                </div>
+
+                <div class="card-footer bg-secondary-40 text-right">
+                    <div class="d-flex justify-content-between">
+                        <a href="{{ path('user_update') }}"
+                           class="mr-2 px-3 pb border btn btn-light bg-light-80">
+                            {{ 'account.update.title'|trans() }}
+                        </a>
+                        <a href="{{ path('app_reset_password', { 'id': app.user.id }) }}"
+                           class="ml-2 px-3 border btn btn-light bg-light-80">
+                            {{ 'account.reset_password'|trans() }}
+                        </a>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+            
 {% endblock %}
 
 {% block javascripts %}

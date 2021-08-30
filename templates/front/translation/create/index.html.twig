@@ -9,27 +9,24 @@
 {% endblock %}
 
 {% block content %}
-    
-    <div class="container mt-5 py-5">
         
-        {% block banner%}
-            <h1 class="h3 my-3 mb-5 text-white">{{ 'translation.form.create'|trans() }}</h1>
-        {% endblock %}
-                        
-        <div class="row">
-        
-            <div class="col-lg-7 mx-auto p-0">
+    {% block banner%}
+        <h1 class="h3 my-3 mb-5 text-white">{{ 'translation.form.create'|trans() }}</h1>
+    {% endblock %}
 
-                {{ include('front/translation/create/_list.html.twig') }}
+    <div class="row">
 
-                {{ include('front/translation/create/_create.html.twig') }}
+        <div class="col-lg-7 mx-auto p-0">
 
-                <div id="response"></div>
-                
-            </div>
+            {{ include('front/translation/create/_list.html.twig') }}
+
+            {{ include('front/translation/create/_create.html.twig') }}
+
+            <div id="response"></div>
+
         </div>
-                    
     </div>
+             
 {% endblock %}
 
 {% block javascripts %}

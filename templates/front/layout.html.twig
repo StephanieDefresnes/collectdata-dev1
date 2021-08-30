@@ -24,18 +24,24 @@
         {% block navbar %}
             {% include "front/block/_navbar.html.twig" %}
         {% endblock %}
-
-        {% block content %}
-            {% block banner%}{% endblock %}
-        {% endblock %}
-
+    
+        <div class="container my-5 py-5">
+            
+            {% block content %}
+                {% block banner%}{% endblock %}
+            {% endblock %}
+            
+        </div>
+            
         {% block footer %}
-            {% include "block/_footer.html.twig" %}
+            {% include "front/block/_footer.html.twig" %}
+            <div id="footerEnd" class="bg-dark"></div>
         {% endblock %}
 
         {% block javascripts %}
             {{ encore_entry_script_tags('front_app', null, 'frontApp') }}
             <script src="{{ asset('fullscreenslide/js/modernizr.custom.86080.js') }}"></script>
+            <script src="{{ asset('fullscreenslide/js/script.js') }}"></script>
         {% endblock %}
     </body>
 {% endblock %}

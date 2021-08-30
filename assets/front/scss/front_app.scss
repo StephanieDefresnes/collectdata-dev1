@@ -44,6 +44,18 @@
   border: 3px solid $scrollbar-light !important;
 }
 
+body {
+    position: absolute;
+    width: 100%;
+}
+
+footer {
+    /*position: relative;*/
+    background: -moz-linear-gradient(top,  rgba(52,58,64,0.7) 0%, rgba(52,58,64,0.9) 20%, rgba(52,58,64,1) 60%, rgba(52,58,64,1) 100%); /* FF3.6-15 */
+    background: -webkit-linear-gradient(top,  rgba(52,58,64,0.7) 0%,rgba(52,58,64,0.9) 20%,rgba(52,58,64,1) 60%,rgba(52,58,64,1) 100%); /* Chrome10-25,Safari5.1-6 */
+    background: linear-gradient(to bottom,  rgba(52,58,64,0.7) 0%,rgba(52,58,64,0.9) 20%,rgba(52,58,64,1) 60%,rgba(52,58,64,1) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#b3343a40', endColorstr='#343a40',GradientType=0 ); /* IE6-9 */
+}
 
 a:focus,
 .btn:focus {
@@ -55,7 +67,8 @@ a:focus,
     position: fixed;
     top: 0;
     bottom: 0;
-    width: 100%;
+    left: 0;
+    right: 0;
     background: $dark url('../img/page-loader.gif') center / 120px no-repeat;
     z-index: 10000;
 }
@@ -494,9 +507,6 @@ th.cust-nowrap {
 }
 .bg-light-80 {
     background: $light-70 !important;
-}
-.bg-light-80:hover {
-    background: $light-70-hover !important;
 }
 .bg-black-40 {
     background: $black-40 !important;

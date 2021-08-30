@@ -14,31 +14,27 @@
 
 {% block content %}
     <div id="loader" class="d-block"></div>
-    
-    <div class="container mt-5 py-5">
         
-        {% block banner%}
-        <div class="mt-3 mb-3 pt-5">
-            <h1 class="h3 text-white">
-                {{ 'contrib.translation.title'|trans() }}
-            </h1>
-        </div>
-        {% endblock %}
-        
-        <div class="row translation-situ">
-            
-            <div id="initialSitu" class="col-md-5">
-                {{ include('front/situ/translation/_initial.html.twig') }}
-            </div>
-        
-            <div id="situ" class="col-md-7 p-0" data-id=""
-                 data-lang="{{ lang.id }}" data-default="{{ defaultLang }}">
-                {{ include('front/situ/translation/_form.html.twig') }}
-            </div>
-            
-        </div>
-            
+    {% block banner%}
+    <div class="mt-3 mb-3 pt-5">
+        <h1 class="h3 text-white">
+            {{ 'contrib.translation.title'|trans() }}
+        </h1>
     </div>
+    {% endblock %}
+
+    <div class="row translation-situ">
+
+        <div id="initialSitu" class="col-md-5">
+            {{ include('front/situ/translation/_initial.html.twig') }}
+        </div>
+
+        <div id="situ" class="col-md-7 p-0" data-id=""
+             data-lang="{{ lang.id }}" data-default="{{ defaultLang }}">
+            {{ include('front/situ/translation/_form.html.twig') }}
+        </div>
+
+    </div>                
 {% endblock %}
 
 {% block javascripts %}

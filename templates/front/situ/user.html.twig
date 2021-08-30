@@ -12,158 +12,154 @@
 
 {% block content %}
     <div id="loader"></div>
-    
-    <div class="container mt-5 py-5">
         
-        {% block banner%}
-        <div class="d-flex justify-content-between mt-3 mb-5 pt-5">
-            <h1 class="h3 text-white">{{ 'contrib.title'|trans() }}</h1>
-            <a href="{{ path('create_situ') }}" class="btn btn-outline-light bg-dark-50-0 px-3">
-                <i class="fas fa-plus ltr pr-2"></i>
-                {{ 'nav.contribs.add'|trans() }}
-                <i class="fas fa-plus rtl pl-2"></i>
-            </a>
-        </div>
-        {% endblock %}
-        
-        <div class="card card bg-secondary-50">
-            <div id="situs" class="card-body text-white front-dataTable">
-                
-                {% if situs is empty %}
-                <div class="mb-5 p-3 bg-white-70">
-                    {{ 'account.contribs.empty'|trans() }}
-                </div>
-                {% else %}
-                <table id="dataTable-situs" class="shadow table table-borderless table-hover text-nowrap">
-                    <thead class="bg-black-40 text-white">
-                        <tr>
-                            <th class="d-none"></th>
-                            <th class="py-2">{{ 'contrib.table.title'|trans() }}</th>
-                            <th class="py-2">{{ 'contrib.table.description'|trans() }}</th>
-                            <th class="py-2">{{ 'contrib.table.date_creation'|trans() }}</th>
-                            <th class="py-2">{{ 'contrib.table.event'|trans() }}</th>
-                            <th class="py-2">{{ 'contrib.table.category_level1'|trans() }}</th>
-                            <th class="py-2">{{ 'contrib.table.category_level2'|trans() }}</th>
-                            <th class="py-2">{{ 'contrib.table.lang'|trans() }}</th>
-                            <th class="py-2">{{ 'contrib.table.status.title'|trans() }}</th>
-                            <th class="cust-nowrap p-2 no-sort">{{ 'contrib.table.actions.title'|trans() }}</th>
-                            <th class="no-sort"></th>
-                            <th class="no-sort"></th>
-                            {% if userLangs|length > 1 %}<th class="no-sort"></th>{% endif %}
-                        </tr>
-                    </thead>
-                    <tbody class="small bg-white-80">
-                    {% for situ in situs %}
-                        {% if situ.statusId != 5 %}
-                        <tr data-id="{{ situ.id }}">
-                            <td class="d-none">{{ situ.id }}</td>
-                            <th class="first-letter pt-3 situ-title"
-                                scope="row" data-toggle="tooltip" data-placement="right" title="{{ situ.title }}">
-                                {{ situ.title|u.truncate(20, '...') }}
-                            </th>
-                            <td class="first-letter pt-3"
-                                data-toggle="tooltip" data-placement="right" title="{{ situ.description }}">
-                                {{ situ.description|u.truncate(20, '...') }}
-                            </td>
-                            <td class="pt-3"
-                                data-toggle="tooltip" data-placement="right" title="{{ situ.dateCreation is empty ? '' : situ.dateCreation|format_datetime('short', 'short', locale=locale) }}">
-                                {{ situ.dateCreation|format_datetime('short', 'none', locale=locale) }}
-                            </td>
-                            <td class="first-letter pt-3"
-                                data-toggle="tooltip" data-placement="right" title="{{ situ.event.title }}">
-                                {{ situ.event.title|u.truncate(20, '...') }}
-                            </td>
-                            <td class="first-letter pt-3"
-                                data-toggle="tooltip" data-placement="right" title="{{ situ.categoryLevel1.title }}">
-                                {{ situ.categoryLevel1.title|u.truncate(20, '...') }}
-                            </td>
-                            <td class="first-letter pt-3"
-                                data-toggle="tooltip" data-placement="right" title="{{ situ.categoryLevel2.title }}">
-                                {{ situ.categoryLevel2.title|u.truncate(20, '...') }}
-                            </td>
-                            <td class="decode pt-3 first-letter">
-                                {{ situ.lang.name }}
-                                {% if situ.initialSitu == 0 %}
-                                    <i class="fas fa-globe mx-1"></i>
-                                {% endif %}
-                            </td>
-                            <td class="pt-3 situStatus">
-                                {% if situ.statusId == 1 %}
-                                    {{ 'contrib.table.status.writing'|trans() }}
-                                {% elseif situ.statusId == 2 %}
-                                    {{ 'contrib.table.status.validation'|trans() }}
-                                {% elseif situ.statusId == 3 %}
-                                    {{ 'contrib.table.status.validated'|trans() }}
-                                {% elseif situ.statusId == 4 %}
-                                    {{ 'contrib.table.status.refused'|trans() }}
-                                {% endif %}
-                            </td>
-                            <td class="px-0 first-action">
-                                <a href="{{ path('create_situ', { 'id': situ.id }) }}"
-                                   class="btn btn-outline-secondary btn-sm px-1"
-                                   data-toggle="tooltip" data-placement="left"
-                                   title="{{ 'contrib.table.actions.edit'|trans() }}"
-                                   aria-label="{{ 'contrib.table.actions.edit'|trans() }}">
-                                    <i class="fas fa-pen"></i>
-                                </a>
-                            </td>
-                            {% if userLangs|length > 1 %}
-                            <td class="width-max-26 pl-0 pr-2">
-                                {% if situ.initialSitu == 1 %}
-                                <span class="situTranslate btn btn-outline-primary btn-sm px-1"
-                                    data-lang="{{ situ.lang.id }}" data-toggle="tooltip" data-placement="left"
-                                    title="{{ 'contrib.table.actions.translate'|trans() }}"
-                                    aria-label="{{ 'contrib.table.actions.translate'|trans() }}">
-                                    <i class="fas fa-globe"></i>
-                                </span>
-                                {% else %}
-                                <span class="btn btn-outline-secondary btn-sm px-1 situ-translation"
-                                    data-toggle="tooltip" data-placement="left"
-                                    title="{{ 'contrib.table.actions.translated'|trans() }}"
-                                    aria-label="{{ 'contrib.table.actions.translated'|trans() }}">
-                                    <i class="fas fa-globe"></i>
-                                </span>
-                                {% endif %}
-                            </td>
-                            {% endif %}
-                            {% if situ.statusId == 1 %}
-                            <td class="width-max-26 px-0">
-                                <span class="situValidation btn btn-outline-success btn-sm pcx-2"
-                                    data-toggle="tooltip" data-placement="left"
-                                    title="{{ 'contrib.table.actions.validation'|trans() }}">
-                                    <i class="far fa-paper-plane"></i>
-                                </span>
-                            </td>
-                            {% elseif situ.statusId == 2 or situ.statusId == 3 %}
-                            <td class="width-max-26 px-0">
-                                <a href="{{ path('read_situ', { 'id': situ.id }) }}"
-                                   class="btn btn-outline-success btn-sm px-1"
-                                   data-id="{{ situ.id }}"
-                                   data-toggle="tooltip" data-placement="left"
-                                   title="{{ 'contrib.table.actions.read'|trans() }}">
-                                    <i class="fas fa-eye"></i>
-                                </a>
-                            </td>
-                            {% else %}
-                            <td class="width-max-26 px-0"></td>
-                            {% endif %}
-                            <td class="width-max-45 px-2">
-                                <span class="situDelete btn btn-outline-danger btn-sm"
-                                   data-toggle="tooltip" data-placement="left"
-                                   title="{{ 'contrib.table.actions.delete'|trans() }}">
-                                    <i class="far fa-trash-alt"></i>
-                                </span>
-                            </td>
-                        </tr>
-                        {% endif %}
-                    {% endfor %}
-                    </tbody>
-                </table>
-                {% endif %}                                
-                                
+    {% block banner%}
+    <div class="d-flex justify-content-between mt-3 mb-5 pt-5">
+        <h1 class="h3 text-white">{{ 'contrib.title'|trans() }}</h1>
+        <a href="{{ path('create_situ') }}" class="btn btn-outline-light bg-dark-50-0 px-3">
+            <i class="fas fa-plus ltr pr-2"></i>
+            {{ 'nav.contribs.add'|trans() }}
+            <i class="fas fa-plus rtl pl-2"></i>
+        </a>
+    </div>
+    {% endblock %}
+
+    <div class="card card bg-secondary-50">
+        <div id="situs" class="card-body text-white front-dataTable">
+
+            {% if situs is empty %}
+            <div class="mb-5 p-3 bg-white-70">
+                {{ 'account.contribs.empty'|trans() }}
             </div>
+            {% else %}
+            <table id="dataTable-situs" class="shadow table table-borderless table-hover text-nowrap">
+                <thead class="bg-black-40 text-white">
+                    <tr>
+                        <th class="d-none"></th>
+                        <th class="py-2">{{ 'contrib.table.title'|trans() }}</th>
+                        <th class="py-2">{{ 'contrib.table.description'|trans() }}</th>
+                        <th class="py-2">{{ 'contrib.table.date_creation'|trans() }}</th>
+                        <th class="py-2">{{ 'contrib.table.event'|trans() }}</th>
+                        <th class="py-2">{{ 'contrib.table.category_level1'|trans() }}</th>
+                        <th class="py-2">{{ 'contrib.table.category_level2'|trans() }}</th>
+                        <th class="py-2">{{ 'contrib.table.lang'|trans() }}</th>
+                        <th class="py-2">{{ 'contrib.table.status.title'|trans() }}</th>
+                        <th class="cust-nowrap p-2 no-sort">{{ 'contrib.table.actions.title'|trans() }}</th>
+                        <th class="no-sort"></th>
+                        <th class="no-sort"></th>
+                        {% if userLangs|length > 1 %}<th class="no-sort"></th>{% endif %}
+                    </tr>
+                </thead>
+                <tbody class="small bg-white-80">
+                {% for situ in situs %}
+                    {% if situ.statusId != 5 %}
+                    <tr data-id="{{ situ.id }}">
+                        <td class="d-none">{{ situ.id }}</td>
+                        <th class="first-letter pt-3 situ-title"
+                            scope="row" data-toggle="tooltip" data-placement="right" title="{{ situ.title }}">
+                            {{ situ.title|u.truncate(20, '...') }}
+                        </th>
+                        <td class="first-letter pt-3"
+                            data-toggle="tooltip" data-placement="right" title="{{ situ.description }}">
+                            {{ situ.description|u.truncate(20, '...') }}
+                        </td>
+                        <td class="pt-3"
+                            data-toggle="tooltip" data-placement="right" title="{{ situ.dateCreation is empty ? '' : situ.dateCreation|format_datetime('short', 'short', locale=locale) }}">
+                            {{ situ.dateCreation|format_datetime('short', 'none', locale=locale) }}
+                        </td>
+                        <td class="first-letter pt-3"
+                            data-toggle="tooltip" data-placement="right" title="{{ situ.event.title }}">
+                            {{ situ.event.title|u.truncate(20, '...') }}
+                        </td>
+                        <td class="first-letter pt-3"
+                            data-toggle="tooltip" data-placement="right" title="{{ situ.categoryLevel1.title }}">
+                            {{ situ.categoryLevel1.title|u.truncate(20, '...') }}
+                        </td>
+                        <td class="first-letter pt-3"
+                            data-toggle="tooltip" data-placement="right" title="{{ situ.categoryLevel2.title }}">
+                            {{ situ.categoryLevel2.title|u.truncate(20, '...') }}
+                        </td>
+                        <td class="decode pt-3 first-letter">
+                            {{ situ.lang.name }}
+                            {% if situ.initialSitu == 0 %}
+                                <i class="fas fa-globe mx-1"></i>
+                            {% endif %}
+                        </td>
+                        <td class="pt-3 situStatus">
+                            {% if situ.statusId == 1 %}
+                                {{ 'contrib.table.status.writing'|trans() }}
+                            {% elseif situ.statusId == 2 %}
+                                {{ 'contrib.table.status.validation'|trans() }}
+                            {% elseif situ.statusId == 3 %}
+                                {{ 'contrib.table.status.validated'|trans() }}
+                            {% elseif situ.statusId == 4 %}
+                                {{ 'contrib.table.status.refused'|trans() }}
+                            {% endif %}
+                        </td>
+                        <td class="px-0 first-action">
+                            <a href="{{ path('create_situ', { 'id': situ.id }) }}"
+                               class="btn btn-outline-secondary btn-sm px-1"
+                               data-toggle="tooltip" data-placement="left"
+                               title="{{ 'contrib.table.actions.edit'|trans() }}"
+                               aria-label="{{ 'contrib.table.actions.edit'|trans() }}">
+                                <i class="fas fa-pen"></i>
+                            </a>
+                        </td>
+                        {% if userLangs|length > 1 %}
+                        <td class="width-max-26 pl-0 pr-2">
+                            {% if situ.initialSitu == 1 %}
+                            <span class="situTranslate btn btn-outline-primary btn-sm px-1"
+                                data-lang="{{ situ.lang.id }}" data-toggle="tooltip" data-placement="left"
+                                title="{{ 'contrib.table.actions.translate'|trans() }}"
+                                aria-label="{{ 'contrib.table.actions.translate'|trans() }}">
+                                <i class="fas fa-globe"></i>
+                            </span>
+                            {% else %}
+                            <span class="btn btn-outline-secondary btn-sm px-1 situ-translation"
+                                data-toggle="tooltip" data-placement="left"
+                                title="{{ 'contrib.table.actions.translated'|trans() }}"
+                                aria-label="{{ 'contrib.table.actions.translated'|trans() }}">
+                                <i class="fas fa-globe"></i>
+                            </span>
+                            {% endif %}
+                        </td>
+                        {% endif %}
+                        {% if situ.statusId == 1 %}
+                        <td class="width-max-26 px-0">
+                            <span class="situValidation btn btn-outline-success btn-sm pcx-2"
+                                data-toggle="tooltip" data-placement="left"
+                                title="{{ 'contrib.table.actions.validation'|trans() }}">
+                                <i class="far fa-paper-plane"></i>
+                            </span>
+                        </td>
+                        {% elseif situ.statusId == 2 or situ.statusId == 3 %}
+                        <td class="width-max-26 px-0">
+                            <a href="{{ path('read_situ', { 'id': situ.id }) }}"
+                               class="btn btn-outline-success btn-sm px-1"
+                               data-id="{{ situ.id }}"
+                               data-toggle="tooltip" data-placement="left"
+                               title="{{ 'contrib.table.actions.read'|trans() }}">
+                                <i class="fas fa-eye"></i>
+                            </a>
+                        </td>
+                        {% else %}
+                        <td class="width-max-26 px-0"></td>
+                        {% endif %}
+                        <td class="width-max-45 px-2">
+                            <span class="situDelete btn btn-outline-danger btn-sm"
+                               data-toggle="tooltip" data-placement="left"
+                               title="{{ 'contrib.table.actions.delete'|trans() }}">
+                                <i class="far fa-trash-alt"></i>
+                            </span>
+                        </td>
+                    </tr>
+                    {% endif %}
+                {% endfor %}
+                </tbody>
+            </table>
+            {% endif %}                                
+
         </div>
-        
     </div>
 
 
@@ -212,6 +208,7 @@
                 </div>
             </div>
         </div>
+
     </div>
 
     <!-- deleteModal -->
@@ -239,6 +236,7 @@
             </div>
         </div>
     </div>
+                        
 {% endblock %}
 
 {% block javascripts %}

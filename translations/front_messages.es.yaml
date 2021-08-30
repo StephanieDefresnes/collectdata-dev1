@@ -15,3 +15,5 @@ content:
     banner:
         hello: ¡Hola, %user%!
         welcome: ¡Bienvenida !
+footer:
+    copyright: Todos los derechos reservados
