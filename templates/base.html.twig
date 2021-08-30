@@ -20,7 +20,7 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0,shrink-to-fit=no">
         <meta name="author" content="Seds - TwXDesign">
-        <title translate="no">{% block title %}For LIFE Project{% endblock %} - FLP</title>
+        <title translate="no">{% block title %}{{ name_site }}{% endblock %}{% block subtitle %} - FLP{% endblock %}</title>
         <meta name="description" content="{% block description %}{{ '' }}{% endblock %}" />
         <link rel="icon" type="image/png" href="{{ asset('img/forlifeproject.png')}}" />
         {% block stylesheets %}{% endblock %}
