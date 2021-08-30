@@ -74,7 +74,7 @@ reset_password:
     h1: Restablecer la contraseña
     btn:
         submit: Reiniciar
-        back: Regreso
+        back: Canclera
     flash:
         success: La contraseña ha sido cambiada.
     label:
