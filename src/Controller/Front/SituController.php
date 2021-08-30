@@ -8,7 +8,7 @@ use App\Entity\Category;
 use App\Entity\Event;
 use App\Entity\Lang;
 use App\Entity\User;
-use App\Form\Situ\CreateSituFormType;
+use App\Form\Front\Situ\CreateSituFormType;
 use App\Service\SituService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -86,48 +86,52 @@ class SituController extends AbstractController
             'user' => $user,
         ]);
     }
-
     /**
      * @Route("/contrib/{id}", defaults={"id" = null}, name="create_situ", methods="GET|POST")
      */
-    public function createSitu(Request $request, $id): Response
+    public function situEdit(Request $request, $id): Response
     {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
         $this->denyAccessUnlessGranted('ROLE_CONTRIBUTOR');
         
+        $defaultLang = $this->em->getRepository(Lang::class)
+                ->findOneBy(['englishName' => 'French'])
+                ->getId();
+        
         // Current user
         $user = $this->security->getUser();
         $langs = $user->getLangs()->getValues();
-        
-        $situData = '';
-        $situItems = '';
+                
+        // Update or Create new Situ
         if ($id) {
-            $situData = $this->em->getRepository(Situ::class)
-                    ->findOneBy(['id' => $id]);
-            if (!$situData) {dd('redirect page error');}
-        }
-        
-        // Only situ author can update situ
-        if (!empty($situData) && $user->getId() != $situData->getUserId()) {
             
-            $msg = $this->translator->trans(
-                    'access_deny', [],
-                    'user_messages', $locale = locale_get_default()
-                );
-            $this->addFlash('error', $msg);
+            $situ = $this->getDoctrine()->getRepository(Situ::class)
+                    ->findOneBy(['id' => $id]);
+        
+            // Only situ author can update situ
+            if (!empty($situ) && $user->getId() != $situ->getUserId()) {
 
-            return $this->redirectToRoute('user_situs', ['_locale' => locale_get_default()]);
+                $msg = $this->translator->trans(
+                        'access_deny', [],
+                        'user_messages', $locale = locale_get_default()
+                    );
+                $this->addFlash('error', $msg);
+
+                return $this->redirectToRoute('user_situs', ['_locale' => locale_get_default()]);
+            }
+        } else {
+            $situ = new Situ();
         }
         
         // Form
-        $situ = new Situ();
-        $formSitu = $this->createForm(CreateSituFormType::class, $situ);
-        $formSitu->handleRequest($request);
+        $form = $this->createForm(CreateSituFormType::class, $situ);
+        $form ->handleRequest($request);
         
-        return $this->render('front/situ/create/index.html.twig', [
-            'form' => $formSitu->createView(),
+        return $this->render('front/situ/create.html.twig', [
+            'form' => $form->createView(),
             'langs' => $langs,
-            'situ' => $situData,
+            'situ' => $situ,
+            'defaultLang' => $defaultLang,
         ]);
     }
 
@@ -138,6 +142,10 @@ class SituController extends AbstractController
     {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
         $this->denyAccessUnlessGranted('ROLE_CONTRIBUTOR');
+        
+        $defaultLang = $this->em->getRepository(Lang::class)
+                ->findOneBy(['englishName' => 'French'])
+                ->getId();
         
         // Current user langs
         $langs = $this->security->getUser()->getLangs()->getValues();
@@ -155,11 +163,12 @@ class SituController extends AbstractController
         $formSitu = $this->createForm(CreateSituFormType::class, $situ);
         $formSitu->handleRequest($request);
         
-        return $this->render('front/situ/translation.html.twig', [
+        return $this->render('front/situ/translation/index.html.twig', [
             'form' => $formSitu->createView(),
             'langs' => $langs,
             'situ' => $situData,
             'lang' => $langData,
+            'defaultLang' => $defaultLang,
         ]);
     }
     
@@ -248,7 +257,7 @@ class SituController extends AbstractController
     }
     
     /**
-     * @Route("/ajaxCreate", methods="GET|POST")
+     * @Route("/situ/ajaxCreate", methods="GET|POST")
      */
     public function ajaxCreate(): JsonResponse
     {
@@ -258,15 +267,15 @@ class SituController extends AbstractController
         $user = $this->security->getUser();
         $userId = $user->getId();
         
-        $default = $this->em->getRepository(Lang::class)->findOneBy(
+        $defaultLang = $this->em->getRepository(Lang::class)->findOneBy(
             ['englishName' => 'French']
         );
         
-        $userLang = $user->getLangId() == '' ? $default->getId() : $user->getLangId();
+        $userLang = $user->getLangId() == '' ? $defaultLang->getId() : $user->getLangId();
             
         // Get request data
         $request = $this->get('request_stack')->getCurrentRequest();
-        $dataForm = $request->request->all();
+        $dataForm = $request->request->all();        
         $data = $dataForm['dataForm'];
         
         $landId = isset($data['lang']) ? $data['lang'] : $userLang;
@@ -339,10 +348,9 @@ class SituController extends AbstractController
             }
         }
         
-        if (!empty($data['initialId']) || $situ->getTranslatedSituId() != '') {
+        if (!empty($data['translatedSituId'])) {
             $situ->setInitialSitu(false);
-            if (!empty($data['initialId']))
-                $situ->setTranslatedSituId($data['initialId']);
+            $situ->setTranslatedSituId($data['translatedSituId']);
         } else {
             $situ->setInitialSitu(true);
         }
@@ -351,8 +359,13 @@ class SituController extends AbstractController
         $situ->setDescription($data['description']);
 
         // Depending on the button save (val = 1) or submit (val = 2) clicked
-        if ($statusId == 2) $situ->setDateSubmission($dateNow);
-        else $situ->setDateSubmission(null);
+        if ($statusId == 2) {
+            $situ->setDateSubmission($dateNow);
+            $msgAction = 'submit';
+        } else {
+            $situ->setDateSubmission(null);
+            $msgAction = 'save';
+        }
         
         $situ->setDateValidation(null); 
         $situ->setLang($langData);
@@ -372,41 +385,28 @@ class SituController extends AbstractController
             $this->em->persist($situItem);
             $situItem->setSitu($situ);
         }
+            
+        try {
+            $this->em->flush();
 
-        $this->em->flush();
+            $msgType = empty($data['id']) ? 'success_update' : 'success';
 
-        $msgSaveCreate = $this->translator->trans(
-                    'contrib.form.save.flash.success', [],
-                    'user_messages', $locale = locale_get_default()
-                    );
+            $msg = $this->translator->trans(
+                        'contrib.form.'. $msgAction .'.flash.'. $msgType, [],
+                        'user_messages', $locale = locale_get_default()
+                        );
 
-        $msgSaveUpdate = $this->translator->trans(
-                    'contrib.form.save.flash.success_update', [],
-                    'user_messages', $locale = locale_get_default()
-                    );
+            $request->getSession()->getFlashBag()->add('success', $msg);
 
-        $msgSubmitCreate = $this->translator->trans(
-                    'contrib.form.submit.flash.success', [],
-                    'user_messages', $locale = locale_get_default()
-                    );
+            return $this->json([
+                'success' => true,
+                'redirection' => $this->redirectToRoute('user_situs',
+                        ['_locale' => locale_get_default()]),
+            ]);
 
-        $msgSubmitUpdate = $this->translator->trans(
-                    'contrib.form.submit.flash.success_update', [],
-                    'user_messages', $locale = locale_get_default()
-                    );
-        
-        if ($statusId == 1)
-            $msg = empty($data['id']) ? $msgSaveCreate : $msgSaveUpdate;
-        else
-            $msg = empty($data['id']) ? $msgSubmitCreate : $msgSubmitUpdate;
-        
-        $request->getSession()->getFlashBag()->add('success', $msg);
-
-        return $this->json([
-            'success' => true,
-            'redirection' => $this->redirectToRoute('user_situs',
-                    ['_locale' => locale_get_default()]),
-        ]);
+        } catch (Exception $e) {
+            throw new \Exception('An exception appeared while updating the situ');
+        }
     }    
     
     /**

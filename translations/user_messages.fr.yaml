@@ -192,6 +192,9 @@ contrib:
                 placeholder: Attribuer un score
                 placeholder_alt: Libérer le score
                 tooltip: Si besoin, libérez un score pour le sélectionner ici
+            remove:
+                title: Suppression de réponse
+                confirm: Êtes-vous certain(e) de vouloir supprimer cette réponse ?
         save:
             btn: Enregistrer
             flash:
@@ -211,6 +214,8 @@ contrib:
         sr_only:
             error: "Alerte erreur :"
             success: "Alerte succès :"
+        from: De
+        to: À
     situ:
         title: Situation à risque
         status:
@@ -230,3 +235,5 @@ translation:
         name: Nom
         date_status: Création
         langs: Langue(s)
+'no': Non
+'yes': Oui

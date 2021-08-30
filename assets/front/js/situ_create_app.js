@@ -106,7 +106,7 @@ function loadOrCreateData($form, data, selectId, nextSelectId) {
     let nextSelectParent = $(nextSelectId).parents('.formData')
     
     if ($(selectId).val() != '') {
-        // Show loader
+        // Show card-header loader
         nextSelectParent.addClass('on-load')
                 .children('div').each(function() {
                     $(this).css({ opacity: 0}); 
@@ -200,7 +200,7 @@ function toggleCollapse(selectParent, action) {
 // Load Categories description on action change
 function ajaxGetData(name, dataForm) {
     $.ajax({
-        url: "/"+ path['locale'] +"/ajaxGetData",
+        url: "/"+ path['locale'] +"/situ/ajaxGetData",
         method: 'POST',
         data: {dataForm},
         success: function(data) {
@@ -303,49 +303,16 @@ function toggleOldFields(oldFields, dataEntity) {
  * Add SituItem collection functions
  */
 // Get the ul that holds the collection of tags
-let collectionHolder = $('#situItems')
+const collectionHolder = $('#situItems')
 
-// Add Delete button for each situItem added
-function addSituItemLiDeleteButton(situItemLi) {
-    let removeLiBtn = 
-            $('<button type="button" class="btn btn-outline-danger">'
-                +'<i class="far fa-trash-alt"></i>'
-            +'</button>')
-    situItemLi.find('.col-remove').html(removeLiBtn)
-    
-    $(removeLiBtn).on('click', function() {
-        // If Current value is defined
-        if (situItemLi.find('select').val() != '') {
-            // Get current value
-            let scoreSelected = situItemLi.find('select').val()
-            // For each SituItemLi select score
-            collectionHolder.find('select').each(function() {
-                // Check options
-                $(this).find('option').each(function() {
-                    // If current value = current option from loop
-                    if (scoreSelected == $(this).attr('data-id')) {
-                        $(this).show()
-                    }
-                    $(this).removeAttr('disabled')
-                })
-            })
-        }
-        situItemLi.remove()
-        // Hide Adding button when all options are selected
-        if (collectionHolder.find('.situ-item').length < 4 ) {
-            $('#add-situItem').show()
-        }
-    })
-}
-
-// Add Score selection info tooltip
-function addInfo(scoreSelect) {
-    let info = '<span class="p-2 score-info" data-toggle="tooltip" data-placement="right"'
-                +' title="'+ translations['scoreInfo'] +'">'
-                +'<i class="far fa-question-circle"></i>'
-    $('.score-info').tooltip()
-    scoreSelect.after(info)
-}
+//// Add Score selection info tooltip
+//function addInfo(scoreSelect) {
+//    let info = '<span class="p-2 score-info" data-toggle="tooltip" data-placement="right"'
+//                +' title="'+ translations['scoreInfo'] +'">'
+//                +'<i class="far fa-question-circle"></i>'
+//    $('.score-info').tooltip()
+//    scoreSelect.after(info)
+//}
 
 // Add a placeholder class to empty option score selection
 function addPlaceholderClass(newElem) {
@@ -435,40 +402,66 @@ function checkScores(newValue, oldValue) {
     })
 }
 
-// Check Items value to show footer
-//function checkField(formKO, elem, field) {
-//    if (elem.find(field).val() == '') formKO += 1
-//    else formKO += 0
-//    
-//    return formKO
-//}
-//function showFooter(elem) {
-//    elem.find('.form-control:not(#create_situ_form_situItems_0_score').on('keyup paste change', function() {
-//        let formKO = 0
-//        formKO += checkField(formKO, elem, 'select')
-//        formKO += checkField(formKO, elem, 'input')
-//        formKO += checkField(formKO, elem, 'textarea')
-//        $(this)
-//        if (formKO == 0 && $('.card-footer').hasClass('d-none'))
-//            $('.card-footer').removeClass('d-none').animate({ opacity: 1}, 250)
-//    })
-//}
+// Delete situItem with confirm alert
+function removeSituItem(button) {
+    let divItem = button.parents('.situItem')
+    
+    button.on('click', function() {
+        divItem.addClass('to-confirm')
+        $.confirm({
+            animation: 'scale',
+            closeAnimation: 'scale',
+            animateFromElement: false,
+            columnClass: 'col-lg-4 col-lg-offset-4 col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2',
+            type: 'red',
+            typeAnimated: true,
+            title: translations['deleteItem-title'],
+            content: translations['deleteItem-content'],
+            buttons: {
+                cancel: {
+                    text: translations['no'],
+                    action: function () {
+                        divItem.removeClass('to-confirm')
+                    }
+                },
+                formSubmit: {
+                    text: translations['yes'],
+                    btnClass: 'btn-red',
+                    action: function () {
+                        // If Current value is defined
+                        if (divItem.find('select').val() != '') {
+                            // Get current value
+                            let scoreSelected = divItem.find('select').val()
+                            // For each SituItemLi select score
+                            collectionHolder.find('select').each(function() {
+                                $(this).find('option').each(function() {
+                                    if ($(this).val() == scoreSelected)
+                                        $(this).removeClass('bg-readonly').removeAttr('disabled')
+                                })
+                            })
+                        }
+                        divItem.remove()
+                        // Hide Adding button when all options are selected
+                        if (collectionHolder.find('.situItem').length < 4 ) {
+                            $('#add-situItem').show()
+                        }
+                    }
+                }
+            },
+        })
+    })
+}
 
-/**
- * Update situ
- */
 // Add itemSitu from prototype
-function addSituItem(button) {
-
-    let list = $(button.attr('data-list-selector'))
-    let counter = list.attr('data-widget-counter') || list.children().length
-    let newWidget = list.attr('data-prototype')
+function addSituItem() {
+    let counter = collectionHolder.attr('data-widget-counter') || collectionHolder.children().length
+    let newWidget = collectionHolder.attr('data-prototype')
 
     newWidget = newWidget.replace(/__name__/g, counter)
     counter++
-    list.attr('data-widget-counter', counter)
+    collectionHolder.attr('data-widget-counter', counter)
 
-    let newElem = $(list.attr('data-widget-situItems')).html(newWidget)
+    let newElem = $(collectionHolder.attr('data-widget-situItems')).html(newWidget)
 
     // Update newElem depending on scores already selected
     let selected = []
@@ -484,16 +477,15 @@ function addSituItem(button) {
         $(this).removeAttr('selected')
     })
     
-    addSituItemLiDeleteButton(newElem)  
+    removeSituItem(newElem.find('.removeSituItem'))
     addPlaceholderClass(newElem)
     toggleClassSelection(newElem)
     newElem.find('.score-info').tooltip()
-    newElem.appendTo(list)
+    newElem.appendTo(collectionHolder)
     newScore()
-//    showFooter(newElem)
 
     // Hide Adding button when all options are selected
-    if (collectionHolder.find('.situ-item').length == 4 ) {
+    if (collectionHolder.find('.situItem').length == 4 ) {
         $('#add-situItem').hide()
     }
 }
@@ -530,7 +522,7 @@ function setData(entity) {
 // Send data Situ
 function createOrUpdateSitu(dataForm) {
     $.ajax({
-        url: "/"+ path['locale'] +"/ajaxCreate",
+        url: "/"+ path['locale'] +"/situ/ajaxCreate",
         method: 'POST',
         data: {dataForm},
         success: function(data) {
@@ -542,87 +534,50 @@ function createOrUpdateSitu(dataForm) {
     })
 }
 
-/*
- * Update Situ
- */
-// Get data Translation
-function selectSitu(id) {
-    $.ajax({
-        url: "/"+ path['locale'] +"/ajaxEdit",
-        method: 'GET',
-        data: { id: id },
-        success: function(data) {
-            $('h1').html(translations['h1Update'])
-            // Done in ajax because of initSelectData()
-            loadData('lang', data.situ.langId)
-            loadData('event', data.situ.eventId)
-            loadData('categoryLevel1', data.situ.categoryLevel1Id)
-            loadData('categoryLevel2', data.situ.categoryLevel2Id)
-            
-            loadSituItems(data.situItems, data.situItems.length)
-            if(data.situItems.length == 4) $('#add-situItem').hide()
-        },
-        error: function() {
-            flashError()
-        }
-    })
-}
-// Load Event & categories
-function loadData(name, value) {
-    let dataExist = setInterval(function() {
-        if ($('#create_situ_form_'+ name +' option').length) {
-           $('#create_situ_form_'+ name).val(value).trigger('change')
-                .parent().find('.select2-selection__rendered').addClass('selection-on')
-            if (name == 'categoryLevel2') $('#loader').hide()
-            clearInterval(dataExist)
-        }
-    }, 50);
-}
-
-// Load SituItems from prototype
-function loadSituItems(data, counter) {
-    let list = $('#situItems')
-    
-    // Load situItems
-    for (let i = 0; i < counter; i++) {
-        let newWidget = list.attr('data-prototype')
-        newWidget = newWidget.replace(/__name__/g, i)
-        let newElem = $(list.attr('data-widget-situItems')).html(newWidget)
-        
-        addSituItemLiDeleteButton(newElem)
-        addPlaceholderClass(newElem)
-        loadItemsValue(data, newElem, i)
-        toggleClassSelection(newElem)
-        newElem.appendTo(list)
-        newScore()
-//        showFooter(newElem)
-    }
-    list.attr('data-widget-counter', counter)
-}
-
-// Load Values fields
-function loadItemsValue(data, newElem, i) {
-    $(newElem).find('input').val(data[i].title)
-    $(newElem).find('textarea').val(data[i].description)
-    $(newElem).find('select option').each(function() {
-        if ($(this).val() == '') {
-            $(this).text(translations['scoreLabelAlt'])
-        }
-        else if ($(this).val() == data[i].score) {
-            $(this).prop('selected', true).addClass('selected')
-            $(this).parent().addClass('selection-on')
-        } else {
-            $(this).addClass('bg-readonly').prop('disabled', true)
-        }
-    })
-}
-
 $(function() {
+    
+    $('#loader').hide()
+    
+    // Hide header loader (when update Situ)
+    $('.formData').each(function() {
+        if ($(this).hasClass('on-load') && $(this).find('select').val() != '')
+            $(this).removeClass('on-load')
+    })
+    
+    // Show collapsed (when update Situ)
+    $('.infoCollapse').each(function() {
+        if ($(this).hasClass('d-none')) $(this).removeClass('d-none')
+    })
     
     // User lang or optional user lang empty case
     if ($('#create_situ_form_lang option').length <= 2) $('#lang').remove()
     
-    initSelect2('.card-header select')
+    $('.card-header').find('select').each(function() {
+        initSelect2($(this))
+        // When update situ
+        $(this).parent().find('.select2-selection__rendered')
+                .addClass('selection-on')
+    })
+    
+    // When update situ
+    collectionHolder.find('select').each(function() {
+        $(this).addClass('selection-on')
+        let value = $(this).val()
+        $(this).find('option').each(function() {
+            if ($(this).val() != value && $(this).val() != '')
+                $(this).addClass('bg-readonly').prop('disabled', true)
+            else if ($(this).val() == '')
+                $(this).text(translations['scoreLabelAlt'])
+            else if ($(this).val() == value)
+                $(this).addClass('selected')
+        })
+    })
+    if (collectionHolder.find('.situItem').length == 4) $('#add-situItem').hide()
+    
+    // Remove SituItem from existing collection (when update Situ)
+    $('.removeSituItem').each(function() {
+        removeSituItem($(this))
+    })
 
     // Load translation if need
     $('body').find('select').each(function() {
@@ -720,18 +675,9 @@ $(function() {
         toggleOldFields(objFields['oldFields'], $(this).attr('data-id'))
     })
     
-
-    /**
-     * Add SituItem collection
-     */
-    // Show footer depending on SituItems lenght
-    collectionHolder.find('li').each(function() {
-//        showFooter($(this))
-    })
-    
-    // Than add until 4 itemSitu
+    // Add SituItem until 4
     $('#add-itemSitu-link').click(function () {
-        addSituItem($(this))
+        addSituItem()
     })
     
     
@@ -776,12 +722,13 @@ $(function() {
             $('#loader').show()
 
             let lang, event, categoryLevel1, categoryLevel2,
-                title, description, statusId, id, initialId, dataForm,
-                situItems = []
+                title, description, statusId, id, translatedSituId,
+                dataForm, situItems = []
 
             submissionStatus($(this).attr('id'))
 
-            lang = $('#create_situ_form_lang').val() == '' ? 47
+            lang = $('#create_situ_form_lang').val() == ''
+                    ? $('#situ').attr('data-default')
                     : $('#create_situ_form_lang').val()
             event = setData('event')
             categoryLevel1 = setData('categoryLevel1')
@@ -790,13 +737,13 @@ $(function() {
             description = $('#create_situ_form_description').val()
             statusId = $('#create_situ_form_statusId').val()
             id = $('#situ').attr('data-id')
-            initialId = $('#situ').attr('data-initial-id')
+            translatedSituId = $('#create_situ_form_translatedSituId').val()
 
-            $('#situItems .situ-item').each(function() {
-                let score, titleItem, descItem
+            $('#situItems').find('.situItem').each(function() {
+                let scoreItem, titleItem, descItem
                 $(this).find('.form-control').each(function() {
                     if($(this).hasClass('score-item')) {
-                        score =     $(this).val()
+                        scoreItem =     $(this).val()
                     } else if($(this).hasClass('score-title')) {
                         titleItem = $(this).val()
                     } else {
@@ -804,7 +751,7 @@ $(function() {
                     }
                 })
                 situItems.push({
-                    'score':        score,
+                    'score':        scoreItem,
                     'title':        titleItem,
                     'description':  descItem
                 })
@@ -812,7 +759,7 @@ $(function() {
 
             dataForm = {
                 'id': id,
-                'initialId': initialId,
+                'translatedSituId': translatedSituId,
                 'lang': lang,
                 'event': event,
                 'categoryLevel1': categoryLevel1,
@@ -839,17 +786,13 @@ $(function() {
     /**
      * Update situ
      */
-    let situId = $('#situ').attr('data-id')
-    if (situId != '') {
-        selectSitu(situId)        
-        $('#situItems').data('data-widget-counter')
+    if ($('#situ').attr('data-id') != '') {
         $('#event, #categoryLevel1, #categoryLevel2, .card-body, .card-footer')
                 .removeClass('d-none').animate({ opacity: 1}, 250)
         addPlaceholderClass('')
     } else {
-        $('#loader').hide()
         // Init once required
-        addSituItem($('#add-itemSitu-link'))
+        addSituItem()
     }
     
 })

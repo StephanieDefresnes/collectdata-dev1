@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Form\Situ;
+namespace App\Form\Front\Situ;
 
 use App\Entity\Situ;
-use App\Form\Situ\CreateSituItemType;
+use App\Form\Front\Situ\CreateSituItemType;
 use App\Service\EventService;
 use App\Service\CategoryService;
 use App\Service\LangService;
@@ -372,6 +372,7 @@ class CreateSituFormType extends AbstractType
                 ])
             )
             ->add('statusId', HiddenType::class)
+            ->add('translatedSituId', HiddenType::class)
         ;
     }
 

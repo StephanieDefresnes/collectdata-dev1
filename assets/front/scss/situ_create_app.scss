@@ -1,25 +1,24 @@
 // global
 @import "../../scss/_variables";
 
+.select2.select2-container {
+    width: 100% !important;
+}
 .opacity-1 {
     opacity: 1 !important;
 }
 #page {
-    & > .container {
-        & .card-header {
-            padding-bottom: 6px !important;
-            & > div {
-                position: relative;
-            }
-            & > .on-load {
-                &::before {
-                    content: '';
-                    position: absolute;
-                    background: transparent url('../img/select-loader.gif') 50% 50% no-repeat;
-                    width: 100%;
-                    height: 100%;
-                }
-            }
+    & .card-header {
+        padding-bottom: 6px !important;
+    }
+    & .on-load {
+        position: relative;
+        &::before {
+            content: '';
+            position: absolute;
+            background: transparent url('../img/select-loader.gif') 50% 50% no-repeat;
+            width: 100%;
+            height: 100%;
         }
     }
 }

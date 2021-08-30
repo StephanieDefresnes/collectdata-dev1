@@ -192,6 +192,9 @@ contrib:
                 placeholder: Asignar una puntuación
                 placeholder_alt: Lanzar una puntuación
                 tooltip: Si es necesario, libera una puntuación para seleccionarla aquí
+            remove:
+                title: Eliminación de respuesta
+                confirm: ¿Estás seguro de que deseas eliminar esta respuesta?
         record:
             btn: Salvar
             flash:
@@ -211,6 +214,8 @@ contrib:
         sr_only:
             error: "Alerta de error :"
             success: "Alerta de éxito :"
+        from: De
+        to: A
     situ:
         title: Situación de riesgo
         status:

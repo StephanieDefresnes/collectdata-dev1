@@ -29,7 +29,7 @@ class SituController extends AbstractController
     }
     
     /**
-     * @Route("/ajaxGetData", methods="GET|POST")
+     * @Route("/situ/ajaxGetData", methods="GET|POST")
      */
     public function ajaxGetData(CategoryService $categoryService,
                                 EventService $eventService): JsonResponse
@@ -57,7 +57,7 @@ class SituController extends AbstractController
     }
     
     /**
-     * @Route("/ajaxFindTranslation", methods="GET")
+     * @Route("/situ/ajaxFindTranslation", methods="GET")
      */
     public function ajaxFindTranslation(Request $request): JsonResponse
     {
@@ -89,7 +89,6 @@ class SituController extends AbstractController
             $situTranslated = $this->situService->searchTranslation($situId, $langId);
             $erroMsg = '';
         }
-        
         
         return $this->json([
             'situTranslated' => $situTranslated,

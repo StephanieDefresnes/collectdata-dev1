@@ -192,6 +192,11 @@ contrib:
                 placeholder: Assign a score
                 placeholder_alt: Release the score
                 tooltip: If necessary, release a score to select it here
+            remove:
+                title: Response deletion
+                confirm: Are you sure you want to delete this answer?
+        from: From
+        to: To
         record:
             btn: Save
             flash:

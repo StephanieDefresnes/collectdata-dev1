@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Form\Situ;
+namespace App\Form\Front\Situ;
 
 use App\Entity\SituItem;
 use Symfony\Component\Form\AbstractType;
@@ -59,14 +59,6 @@ class CreateSituItemType extends AbstractType {
                 ],
             ])
         ;
-    }
-
-    /**
-     * @return string
-     */
-    public function getTitle()
-    {
-        return 'app_situ_items_type';
     }
 
     /**
