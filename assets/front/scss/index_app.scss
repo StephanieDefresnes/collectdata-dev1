@@ -1,0 +1,23 @@
+body {
+    height: 100%;
+    & > .container {
+        padding-top: 13vh !important;
+    }
+}
+h2 {
+    font-size: 2.7rem;
+    text-shadow: rgda(0,0,0,0.3) 1px 0 10px;
+}
+#home-logo {
+    width: 100px;
+    box-shadow: rgda(0,0,0,0.3) 1px 0 10px;
+}
+#earth {
+    width: 60px;
+    filter: invert(1)
+}
+.select-lang img {
+    width: 16px;
+    height: 12px;
+    vertical-align: initial;
+}

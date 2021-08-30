@@ -42,6 +42,8 @@ Encore
         pattern: /\.(png|jpg|jpeg)$/
     })
     .addEntry('front_app', './assets/front/js/front_app.js')
+    .addEntry('index_app', './assets/front/js/index_app.js')
+    .addEntry('home_app', './assets/front/js/home_app.js')
     .addEntry('situ_create_app', './assets/front/js/situ_create_app.js')
     .addEntry('situ_translation_app', './assets/front/js/situ_translation_app.js')
     .addEntry('situ_user_app', './assets/front/js/situ_user_app.js')
