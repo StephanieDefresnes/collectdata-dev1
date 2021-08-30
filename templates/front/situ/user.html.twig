@@ -79,10 +79,10 @@
                             data-toggle="tooltip" data-placement="right" title="{{ situ.categoryLevel2.title }}">
                             {{ situ.categoryLevel2.title|u.truncate(20, '...') }}
                         </td>
-                        <td class="decode pt-3 first-letter">
-                            {{ situ.lang.name }}
+                        <td class="pt-3">
+                            <span class="decode first-letter">{{ situ.lang.name }}</span>
                             {% if situ.initialSitu == 0 %}
-                                <i class="fas fa-globe mx-1"></i>
+                                <span class="small"><i class="fas fa-globe "></i></span>
                             {% endif %}
                         </td>
                         <td class="pt-3 situStatus">
