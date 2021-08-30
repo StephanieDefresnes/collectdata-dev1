@@ -85,7 +85,7 @@ class SecurityController extends AbstractController
     }
     
     /**
-     * @Route("/{_locale<%app_locales%>}/forget_password", name="app_forget_password")
+     * @Route("/{_locale<%app_locales%>}/forget-password", name="app_forget_password")
      */
     public function forgetPassword( Request $request,
                                     UserRepository $userRepository,
@@ -110,7 +110,7 @@ class SecurityController extends AbstractController
     }
     
     /**
-     * @Route("/{_locale<%app_locales%>}/reset_password/{id}", defaults={"id"=null}, name="app_reset_password")
+     * @Route("/{_locale<%app_locales%>}/reset-password/{id}", defaults={"id"=null}, name="app_reset_password")
      */
     public function resetPassword(  Request $request,
                                     UserRepository $userRepository,
