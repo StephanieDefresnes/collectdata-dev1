@@ -60,11 +60,11 @@ a:focus,
     z-index: 10000;
 }
 #flash_message {
-    width: auto;
-    background-color: transparent;
-    position: absolute;
+    position: fixed;
     right: 0;
     top: 110px;
+    width: auto;
+    background-color: transparent;
     z-index: 999;
 }
 

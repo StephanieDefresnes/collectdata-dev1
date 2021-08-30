@@ -86,21 +86,17 @@ function getData(name, value) {
         'categoryLevel1': categoryLevel1,
         'categoryLevel2': categoryLevel2,
     }
-    ajaxGetData(dataForm)
+    ajaxGetData(name, dataForm)
 }
 
 // Load Event or Categories data on action change
-function ajaxGetData(dataForm) {
+function ajaxGetData(name, dataForm) {
     $.ajax({
-        url: "/"+ path['locale'] +"/ajaxGetData",
+        url: "/"+ path['locale'] +"/situ/ajaxGetData",
         method: 'POST',
         data: {dataForm},
-        success: function(data) {  
-            if (data['event']) loadNewData('event', data['event'])
-            else if (data['categoryLevel1'])
-                loadNewData('categoryLevel1', data['categoryLevel1']) 
-            else if (data['categoryLevel2'])
-                loadNewData('categoryLevel2', data['categoryLevel2'])
+        success: function(data) {
+            if (data[name]) loadNewData(name, data[name])
         }
     })
 }

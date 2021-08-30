@@ -8,21 +8,20 @@ require('jquery-ui/ui/widgets/sortable');
 /**
  * Add pageContent collection
  */
-var collectionHolder = $('#pageContents')
+let collectionHolder = $('#pageContents')
 
 // Add pageContent from prototype
 function addContent() {
-    var list = $('#pageContents')
-    var counter = list.attr('data-widget-counter') || list.children().length
-    var newWidget = list.attr('data-prototype')
+    let counter = collectionHolder.attr('data-widget-counter') || collectionHolder.children().length
+    let newWidget = collectionHolder.attr('data-prototype')
 
     newWidget = newWidget.replace(/__name__/g, counter)
     counter++
-    list.attr('data-widget-counter', counter)
+    collectionHolder.attr('data-widget-counter', counter)
 
-    var newElem = $(list.attr('data-widget-pageContents')).html(newWidget)
+    let newElem = $(collectionHolder.attr('data-widget-pageContents')).html(newWidget)
     removeContent(newElem.find('.removeContent'))
-    newElem.appendTo(list)
+    newElem.appendTo(collectionHolder)
 }
 
 // Delete pageContent with confirm alert
