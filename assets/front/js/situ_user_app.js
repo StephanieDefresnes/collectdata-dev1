@@ -9,7 +9,7 @@ const lang = require('../../datatables.json')
 // Search if translations exist
 function translationRequest(id, langId) {
     $.ajax({
-        url: "/"+ path['locale'] +"/ajaxFindTranslation",
+        url: "/"+ path['locale'] +"/situ/ajaxFindTranslation",
         method: 'GET',
         data: { id: id, langId: langId},
         success: function(data) {

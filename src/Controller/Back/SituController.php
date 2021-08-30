@@ -99,32 +99,4 @@ class SituController extends AbstractController
         ]);
     }
     
-    /**
-     * @Route("/ajaxGetData", methods="GET|POST")
-     */
-    public function ajaxGetData(CategoryService $categoryService,
-                                EventService $eventService): JsonResponse
-    {
-        $this->denyAccessUnlessGranted('ROLE_MODERATOR');
-    
-        // Get request data
-        $request = $this->get('request_stack')->getCurrentRequest();
-        $dataForm = $request->request->all();
-        $data = $dataForm['dataForm'];
-        
-        $event = isset($data['event'])
-                ? $eventService->getDataById($data['event']) : '';
-        $categoryLevel1 = isset($data['categoryLevel1'])
-                ? $categoryService->getDataById($data['categoryLevel1']) : '';
-        $categoryLevel2 = isset($data['categoryLevel2'])
-                ? $categoryService->getDataById($data['categoryLevel2']) : '';
-        
-        return $this->json([
-            'success' => true,
-            'event' => $event,
-            'categoryLevel1' => $categoryLevel1,
-            'categoryLevel2' => $categoryLevel2,
-        ]);
-    }
-    
 }
