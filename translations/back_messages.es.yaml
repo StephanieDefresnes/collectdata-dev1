@@ -36,7 +36,7 @@ action:
 button:
     add: Añadiendo
     back: Espalda
-    cancel: Canclera
+    cancel: Cancelar
     create: Añadir
     confirm: Confirmar
     delete: Eliminar
