@@ -7,12 +7,12 @@
             {{ form_widget(form.title) }}
         </div>
         <div class="col-2 d-flex justify-content-end">
-            <div class="content-remove mr-4">
+            <div class="content-remove">
                 <span class="btn btn-outline-danger removeContent">
                     <i class="far fa-trash-alt"></i>
                 </span>
             </div>
-            <div class="handle pointer small position-absolute"><i class="fas fa-arrows-alt"></i></div>
+{#            <div class="handle pointer small position-absolute"><i class="fas fa-arrows-alt"></i></div>#}
         </div>
     </div>
     {{ form_widget(form.content|raw) }}

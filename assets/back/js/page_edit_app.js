@@ -1,10 +1,6 @@
 // css
 import '../scss/page_edit_app.scss';
 
-// js
-require('jquery-ui');
-require('jquery-ui/ui/widgets/sortable');
-
 /**
  * Add pageContent collection
  */
@@ -110,9 +106,6 @@ function slugify(title) {
 }
 
 $(function() {
-    
-    // Init jQuery ui sortable on fields list item
-    $('#pageContents').sortable({ handle: '.handle' })
     
     // Add new Content to collection
     $('#add-content-link').click(function() {
