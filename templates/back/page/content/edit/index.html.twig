@@ -2,7 +2,9 @@
 {% extends "back/layout.html.twig" %}
 {% set locale = app.request.locale %}
 
-{% block title %}{{ 'content.form.title'|trans() }}{% endblock %}
+{% block title %}
+    {{ langPage ? 'content.form.update' |trans() : 'content.form.card' |trans() }}
+{% endblock %}
 
 {% block stylesheets %}
     {{ parent() }}
