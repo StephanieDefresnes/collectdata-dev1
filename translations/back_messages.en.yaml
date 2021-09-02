@@ -37,6 +37,7 @@ button:
     add: Addition
     back: Back
     cancel: Cancel
+    close: Close
     confirm: Confirm
     create: Add
     delete: Delete
@@ -45,8 +46,10 @@ button:
     down: Down
     enable: Enable
     filter: Filter
+    modify: Update
     next: Next
     previous: Previous
+    read: Read
     read_title: Details
     remove: Remove
     save: Save
@@ -68,8 +71,10 @@ content:
     list:
         title: Management of public content
         table:
+            h6: List of contents
             empty: No content
             action: Action
+            enabled: Active
             lang: Language
             type: Type
             title: Title
@@ -140,9 +145,10 @@ contrib:
         validation:
             title: Validation of contributions
         verify:
-            verify: Validate a contribution  
+            verify: Validate a contribution
             data:
                 title: Contribution to be validated
+                translated: "Traduction de :"
                 event: 'Event :'
                 category_level1: 'Category:'
                 category_level2: 'Sub-category :'
@@ -173,19 +179,28 @@ contrib:
                     placeholder: Action
                     modified: Changed
                     modify: Change
+                    valid: Ok
                     validate: Validate
                     validated: Validated
                 select: Select
                 btn:
                     refuse: Refuse
                     valid: Validate
+                translated:
+                    title: "Translation :"
+                    conflict: Conflict
+                    validate: "Validate :"
+                    modal:
+                        title: Verification of translations
+                        initial: Initial contribution
+                        situs:
+                            title: Translations
+                            author: "Author :"
+                            current: "Current :"
+                            status: "Status :"
                 modal:
                     validation:
                         contrib: "Contribution :"
-                        status:
-                            ok: OK
-                            modified: Change
-                            validated: Validation
                     refuse:
                         title: Reason for refusal
                         question: Why do you refuse this contribution?
@@ -199,6 +214,7 @@ contrib:
                             textarea: Comment
                         categoryLevel1: Category
                         categoryLevel2: Subcategory
+                        translation: Translation conflict
                         event: Event
                         situ: Risky situation
                         items: Proposed answer(s)

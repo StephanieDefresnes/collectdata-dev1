@@ -37,6 +37,7 @@ button:
     add: Añadiendo
     back: Espalda
     cancel: Cancelar
+    close: Cerrar
     create: Añadir
     confirm: Confirmar
     delete: Eliminar
@@ -45,8 +46,10 @@ button:
     down: Bajar
     enable: Activar
     filter: Filtrado
+    modify: Actualizar
     next: Próximo
     previous: Anterior
+    read: Leer
     read_title: Detalles
     remove: Eliminar
     save: Grabar
@@ -68,8 +71,10 @@ content:
     list:
         title: Gestión de contenidos públicos
         table:
+            h6: Lista de contenidos
             empty: Sin contenido
             action: Acción
+            enabled: Activo
             lang: Idioma
             type: Tipo
             title: Título
@@ -143,6 +148,7 @@ contrib:
             title: Validar una contribución  
             data:
                 title: Contribución a validar
+                translated: "Traduction de :"
                 event: 'Evento:'
                 category_level1: 'Categoría:'
                 category_level2: 'Subcategoría:'
@@ -173,19 +179,28 @@ contrib:
                     placeholder: Acción
                     modified: Editado
                     modify: Editar
+                    valid: Ok
                     validate: Validar
                     validated: Válido
                 select: Seleccionar
                 btn:
                     refuse: Rechazar
                     valid: Validar
+                translated:
+                    title: "Traduccion :"
+                    conflict: Conflicto
+                    validate: "Validar :"
+                    modal:
+                        title: Verificación de traducciones
+                        initial: Contribución inicial
+                        situs:
+                            title: Traducciones
+                            author: "Autor :"
+                            current: "Actual :"
+                            status: "Estado :"
                 modal:
                     validation:
                         contrib: "Contribución :"
-                        status:
-                            ok: OK
-                            modified: Cambio
-                            validated: Validación
                     refuse:
                         title: Razón de la denegación
                         question: ¿Por qué motivo rechaza esta contribución?
@@ -199,6 +214,7 @@ contrib:
                             textarea: Comentario
                         categoryLevel1: Categoría
                         categoryLevel2: Subcategoría
+                        translation: Conflicto de traducción
                         event: Evento
                         situ: Situación de riesgo
                         items: Respuesta(s) propuesta(s)

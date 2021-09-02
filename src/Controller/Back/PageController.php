@@ -40,7 +40,7 @@ class PageController extends AbstractController
     }
     
     /**
-     * @Route("/contents", name="back_content_search")
+     * @Route("/contents", name="back_content_search", methods="GET")
      */
     public function contentList(): Response
     {
@@ -54,8 +54,9 @@ class PageController extends AbstractController
             'pages' => $pages,
         ]);
     }
+    
     /**
-     * @Route("/content/{id}", defaults={"id" = null}, name="back_content_edit")
+     * @Route("/content/{id}", defaults={"id" = null}, name="back_content_edit", methods="GET|POST")
      */
     public function contentEdit(Request $request,
                                 LangService $langService, $id): Response
@@ -104,9 +105,15 @@ class PageController extends AbstractController
                 $this->addFlash('error', $msg);
             }
             
-            return $this->redirectToRoute('back_content_edit', [
-                'id' => $page->getId(), '_locale' => locale_get_default()
-            ]);
+            if ($msgType == 'save') {
+                return $this->redirectToRoute('back_content_edit', [
+                    'id' => $page->getId(), '_locale' => locale_get_default()
+                ]);
+            } else {
+                return $this->redirectToRoute('back_content_search', [
+                    '_locale' => locale_get_default()
+                ]);
+            }
         }
         
         return $this->render('back/page/content/edit/index.html.twig', [
@@ -114,6 +121,31 @@ class PageController extends AbstractController
             'lang' => html_entity_decode($lang->getName(), ENT_QUOTES, 'UTF-8'),
             'page' => $page,
             'langPage' => $langPage,
+        ]);
+    }
+    
+    /**
+     * @Route("/content/{id}/validate", name="back_content_validate", methods="GET|POST")
+     */
+    public function contentValidate(Request $request, $id): Response
+    {
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+        $this->denyAccessUnlessGranted('ROLE_SUPER_ADMIN');        
+        
+        $page = $this->getDoctrine()->getRepository(Page::class)
+                ->findOneBy(['id' => $id]);
+        
+        $page->setEnabled(1);
+        $this->em->persist($page);
+        $this->em->flush();
+
+        $msg = $this->translator
+                ->trans('content.form.submit.flash.success', [],
+                        'back_messages', $locale = locale_get_default());
+        $this->addFlash('success', $msg);
+
+        return $this->redirectToRoute('back_content_search', [
+            '_locale' => locale_get_default()
         ]);
     }
 }
