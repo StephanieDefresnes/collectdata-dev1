@@ -1,3 +1,6 @@
+// global
+@import "../../scss/_variables";
+
 h2 {
     text-shadow: rgda(0,0,0,0.3) 1px 0 10px;
 }
@@ -5,4 +8,18 @@ h2 {
     border-radius: 8px !important;
     font-size: 19px;
     line-height: 1.2;
+}
+#carouselContent {
+    & .bg-dark-50 {
+        transition: 250ms;
+    }
+    &:hover {
+        & .bg-dark-50 {
+            background: $dark-70 !important;
+        }
+    }
+}
+.carousel-control-prev,
+.carousel-control-next {
+    opacity: 1;
 }

@@ -2,6 +2,7 @@
 
 namespace App\Controller\Front;
 
+use App\Entity\Page;
 use App\Service\LangService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -26,11 +27,13 @@ class PageController extends AbstractController
     /**
      * @Route("/{_locale<%app_locales%>}",name="front_home")
      */
-    public function home(Request $request): Response
+    public function home()
     {
-        $locale = $request->getLocale();
+        $page = $this->getDoctrine()->getRepository(Page::class)
+                    ->findOneBy(['type' => 'home', 'lang' => locale_get_default()]);
+        
         return $this->render('front/page/home.html.twig', [
-            
+            'page' => $page
         ]);
     }
 }

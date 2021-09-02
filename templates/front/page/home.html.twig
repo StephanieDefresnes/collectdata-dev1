@@ -11,33 +11,41 @@
 {% endblock %}
 
         
-{% block content %}
+{% block content %}{#
+    {{dump(page)}}
+    {% for content in page.pageContents %}
+    {{dump(content)}}
+    {% endfor %}#}
+    <div class="row mt-5 pt-5">
             
-    <div class="row">
-        <div class="col-md-8 col-12 mx-auto mt-5 pt-5">
-
-            <div class="card bg-dark-50 border-0 text-white">
-                <div class="card-body bg-none">
-                    <h2 class="text-center">
-                        Bienvenue !
-                    </h2>
-                    <p>
-                    At vero eos et accusamus et iusto odio dignissimos ducimus,
-                    qui blanditiis praesentium voluptatum deleniti atque corrupti,
-                    quos dolores et quas molestias excepturi sint,
-                    obcaecati cupiditate non provident, similique sunt in culpa,
-                    qui officia deserunt mollitia animi, id est laborum et dolorum fuga.
-                    Et harum quidem rerum facilis est et expedita distinctio.</p>
-                    <p>Nam libero tempore,
-                    cum soluta nobis est eligendi optio, cumque nihil impedit, quo minus id,
-                    quod maxime placeat, facere possimus, omnis voluptas assumenda est,
-                    omnis dolor repellendus. Temporibus autem quibusdam et aut officiis
-                    debitis aut rerum necessitatibus saepe eveniet, ut et voluptates
-                    repudiandae sint et molestiae non recusandae.
-                    </p>
+        <div id="carouselContent" class="carousel slide" data-ride="carousel">
+            <div class="col-md-8 col-12 mx-auto">
+                <div class="carousel-inner">
+                    {% for content in page.pageContents %}
+                        <div class="carousel-item{{ loop.first ? ' active'}}">
+                            <div class="card bg-dark-50 border-0 text-white">
+                                <div class="card-body bg-none">
+                                    <h2 class="text-center">
+                                        {{ content.title }}
+                                    </h2>
+                                    {{ content.content|raw }}
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
                 </div>
             </div>
-
+            <a class="carousel-control-prev" href="#carouselContent" role="button" data-slide="prev">
+              <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+              <span class="sr-only">Previous</span>
+            </a>
+            <a class="carousel-control-next" href="#carouselContent" role="button" data-slide="next">
+              <span class="carousel-control-next-icon" aria-hidden="true"></span>
+              <span class="sr-only">Next</span>
+            </a>
+        </div>
+        
+        <div class="col-md-8 col-12 mx-auto">
             {% if app.user %}
                 <div class="d-flex justify-content-center mt-5 menu-log">
                     <a href="{{ path('create_situ') }}"
@@ -57,7 +65,6 @@
                     </a>
                 </div>
             {% endif %}
-
         </div>
     </div>
 {% endblock %}
