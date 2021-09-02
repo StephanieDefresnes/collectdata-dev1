@@ -21,8 +21,8 @@ $(function() {
             orderable: false,
             targets: 0
         }],
-        "order": [[ 1, 'asc' ]],
-        "fnDrawCallback": function(oSettings) {
+        "order": [[ 1, 'desc' ], [ 3, 'asc']],
+        "fnDrawCallback": function() {
             // Add class to load reset button search
             $('#dataTable-pages_filter input').addClass('search')
             
