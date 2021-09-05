@@ -1,6 +1,10 @@
 // global
 @import "../../scss/_variables";
 
+h6 img {
+    width: 20px;
+    height: 13px;
+}
 .check {
     cursor: pointer;
     & .more {
@@ -21,37 +25,37 @@
 .select2.select2-container {
     width: 100% !important;
 }
-.modified {
-    & > .small i {
-        font-size: 11px;
-        vertical-align: top;
-    }
-}
 #translator {
     min-height: 44px;
 }
 #accordion {
     position: relative;
 }
-#form-loading {
-    display: none;
+#conflict.ban {
     position: absolute;
-    top: 0;
-    bottom: 0;
+    height: 100%;
     width: 100%;
-    background: $white-70 url('../img/loading.gif') 50% no-repeat;
-    z-index: 99;
+    background: $white url('~@fortawesome/fontawesome-free/svgs/solid/ban.svg') center / 30px no-repeat;
+    opacity: 0.7;
+    z-index: 10;
 }
-
-.cust-title {
-    height: 45px;
-    overflow-y: auto;
+.h-description {
+    padding-bottom: 35px;
 }
-.cust-descr {
-    height: 100px;
-    overflow-y: auto;
+.h-adjust {
+    & .h-title {
+        height: 45px;
+        overflow-y: auto;
+    }
+    & .h-description {
+        height: 100px;
+        padding-bottom: 20px;
+        overflow-y: auto;
+    }
 }
-
+.refuseRequired {
+    display: none;
+}
 
 // GG Translate
 #page-top {
@@ -71,5 +75,35 @@
         border: 1px solid #bbb;
         border-radius: 3px;
         padding: 4px;
+    }
+}
+
+#translateModal {
+    padding: 0;
+    & > .modal-dialog {
+        max-width: 100%;
+        max-height: 100vh;
+        margin: 0;
+        & > .modal-content {
+            max-height: 100vh;
+            border-radius: 0;
+            & > .modal-header {
+                border-radius: 0;
+            }
+        }
+    }
+}
+#contrib,
+#no-contrib {
+    display: inherit;
+}
+@media (max-width: 991px) {
+    #refuseModal .modal-dialog {
+        max-width: 90%;
+    }
+}
+@media (max-width: 575px) {
+    #refuseModal .modal-dialog {
+        max-width: 100%;
     }
 }

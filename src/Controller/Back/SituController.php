@@ -3,9 +3,11 @@
 namespace App\Controller\Back;
 
 use App\Entity\Situ;
+use App\Entity\User;
+use App\Entity\Event;
+use App\Entity\Category;
 use App\Form\Back\Situ\VerifySituFormType;
-use App\Service\CategoryService;
-use App\Service\EventService;
+use App\Service\LangService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -81,22 +83,155 @@ class SituController extends AbstractController
     /**
      * @Route("/verify/{id}", name="back_situ_verify", methods="GET|POST")
      */
-    public function verifySitu(Request $request, $id): Response
+    public function verifySitu( Request $request,
+                                LangService $langService,
+                                $id): Response
     {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
         $this->denyAccessUnlessGranted('ROLE_MODERATOR');
         
-        $situData = $this->em->getRepository(Situ::class)->findOneBy(['id' => $id]);
+        $situ = $this->em->getRepository(Situ::class)->findOneBy(['id' => $id]);
+        
+        $author = $this->em->getRepository(User::class)->findOneBy(['id' => $situ->getUserId()]);
+        $authorLang = $langService->getUserLang($author->getLangId());
+        
+        if (!$situ || $situ->getStatusId() != 2) {
+            
+            $msg = $this->translator->trans(
+                    'contrib.situ.verify.error',[], 'back_messages'
+                );
+            $this->addFlash('success', $msg);
+            
+            return $this->redirectToRoute('back_situs_validation', [
+                '_locale' => locale_get_default()
+            ]);
+            
+        } else {        
+            $events = '';
+            $categoriesLevel1 = '';
+            $categoriesLevel2 = '';
+            $situInitial = '';
+            $situsTranslated = '';
+            
+            if ($situ->getInitialSitu() == 0) {
+                $situInitial = $this->em->getRepository(Situ::class)
+                        ->findOneBy(['id' => $situ->getTranslatedSituId()]);
+                $situsTranslated = $this->em->getRepository(Situ::class)
+                        ->findBy([
+                            'translatedSituId' => $situ->getTranslatedSituId(),
+                            'lang' => $situ->getLang()
+                        ]);
+            }
+            $events = $this->em->getRepository(Event::class)
+                        ->findBy(['lang' => $situ->getLang()->getId()]);
+            
+            $categoriesLevel1 = $this->em->getRepository(Category::class)
+                        ->findBy(['event' => $situ->getEvent()->getId()]);
+            
+            $categoriesLevel2 = $this->em->getRepository(Category::class)
+                        ->findBy(['parent' => $situ->getCategoryLevel1()->getId()]);
+        }
         
         // Form
-        $situ = new Situ();
-        $formSitu = $this->createForm(VerifySituFormType::class, $situ);
-        $formSitu->handleRequest($request);
+        $form = $this->createForm(VerifySituFormType::class, $situ, [
+            'events' => $events,
+            'categoriesLevel1' => $categoriesLevel1,
+            'categoriesLevel2' => $categoriesLevel2,
+        ]);
         
         return $this->render('back/situ/verify/index.html.twig', [
-            'form' => $formSitu->createView(),
-            'situ' => $situData,
+            'form' => $form->createView(),
+            'situ' => $situ,
+            'situInitial' => $situInitial,
+            'situsTranslated' => $situsTranslated,
+            'authorLang' => $authorLang->getLang(),
         ]);
     }
     
+    /**
+     * @Route("/ajaxValidation", methods="GET|POST")
+     */
+    public function ajaxValidation(): JsonResponse
+    {
+        $this->denyAccessUnlessGranted('ROLE_MODERATOR');
+            
+        // Get request data
+        $request = $this->get('request_stack')->getCurrentRequest();
+        $dataForm = $request->request->all();        
+        $data = $dataForm['dataForm'];
+        
+        $situ = $this->em->getRepository(Situ::class)->findOneBy(['id' => $data['id']]);
+        
+        $situ->setStatusId($data['statusId']);
+        
+        if ($data['action'] == 'validation') {
+            
+            $situ->setDateValidation(new \DateTime('now'));
+            
+            if ($this->checkValidation('event', $data['eventId'], $data['eventValidated']) == 'validated') {
+                // todo notification (alert)
+            }
+            if ($this->checkValidation('categoryLevel1', $data['categoryLevel1Id'], $data['categoryLevel1Validated']) == 'validated') {
+                // todo notification (alert)
+            }
+            if ($this->checkValidation('categoryLevel2', $data['categoryLevel2Id'], $data['categoryLevel2Validated']) == 'validated') {
+                // todo notification (alert)
+            }
+            
+            // notification validation (message)
+            
+        } else {
+            
+            $comment = $data['comment'];
+            
+            // notification refuse (message)
+        }
+     
+//        dd($data);
+            
+        try {
+            $this->em->flush();
+            
+            // processing notification (mail)
+
+            $msg = $this->translator->trans(
+                        'contrib.situ.verify.form.modal.'. $data['action'] .'.flash.success', [],
+                        'back_messages', $locale = locale_get_default()
+                        );
+
+            $request->getSession()->getFlashBag()->add('success', $msg);
+
+            return $this->json([
+                'success' => true,
+                'redirection' => $this->redirectToRoute('back_situs_validation',
+                        ['_locale' => locale_get_default()]),
+            ]);
+
+        } catch (Exception $e) {
+            throw new \Exception('An exception appeared while updating the situ');
+        }
+    }    
+    
+    public function checkValidation($entity, $id, $validated) {
+        $request = $this->get('request_stack')->getCurrentRequest();
+        
+        if ($entity == 'event') $class = Event::class;
+        else $class = Category::class;
+        
+        $classId = $this->em->getRepository($class)
+                ->findOneBy(['id' => $id]);
+        
+        if ($classId->getValidated() == 0 && $validated == 1) {
+            $classId->setValidated(1);
+            $this->em->flush();
+
+            $msg = $this->translator->trans(
+                        'contrib.'. $entity .'.validation.flash.success', [],
+                        'back_messages', $locale = locale_get_default()
+                        );
+            $request->getSession()->getFlashBag()->add('success', $msg);
+            
+            return 'validated';
+        }
+    }
 }

@@ -13,78 +13,102 @@
             </div>
 
             <div class="modal-body">
-                <p class="text-center mb-4">{{ 'contrib.situ.verify.form.modal.refuse.question'|trans() }}</p>
-
-                <div class="row mb-4">
-                    <div class="col-md-auto">
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" value="" id="eventRefuse">
-                            <label class="form-check-label" for="eventRefuse">
-                                {{ 'contrib.situ.verify.form.modal.refuse.event'|trans() }}
-                            </label>
+                <h5 class="text-center mb-4">{{ 'contrib.situ.verify.form.modal.refuse.question'|trans() }}</h5>
+                <ul class="small pb-2 mb-4">
+                    <li>{{ 'contrib.situ.verify.form.modal.refuse.detail.line-1'|trans() }}</li>
+                    <li>{{ 'contrib.situ.verify.form.modal.refuse.detail.line-2'|trans() }}</li>
+                    <li>{{ 'contrib.situ.verify.form.modal.refuse.detail.line-3'|trans() }}</li>
+                </ul>
+                
+                <h6 class="font-bold">{{ 'contrib.situ.verify.form.modal.refuse.entities'|trans() }}</h6>
+                
+                {% if situ.initialSitu == 0 and situsTranslated|length > 1 %}
+                    <div id="conflict-refuse" class="row mb-2">
+                        <div class="col-md-auto">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="" id="translationRefuse">
+                                <label class="form-check-label" for="translationRefuse">
+                                    {{ 'contrib.situ.verify.form.modal.refuse.translation'|trans() }}
+                                </label>
+                            </div>
                         </div>
                     </div>
-                    <div class="col-md-auto">
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" value="" id="categoryLevel1Refuse">
-                            <label class="form-check-label" for="categoryLevel1Refuse">
-                                {{ 'contrib.situ.verify.form.modal.refuse.categoryLevel1'|trans() }}
-                            </label>
+                {% endif %}
+                
+                <div id="no-conflict" class="row mb-4">
+                    <div id="no-contrib">
+                        <div class="col-md-auto">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="" id="EventRefuse">
+                                <label class="form-check-label" for="EventRefuse">
+                                    {{ 'contrib.situ.verify.form.modal.refuse.event'|trans() }}
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-md-auto">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="" id="CategoryLevel1Refuse">
+                                <label class="form-check-label" for="CategoryLevel1Refuse">
+                                    {{ 'contrib.situ.verify.form.modal.refuse.categoryLevel1'|trans() }}
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-md-auto">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="" id="CategoryLevel2Refuse">
+                                <label class="form-check-label" for="CategoryLevel2Refuse">
+                                    {{ 'contrib.situ.verify.form.modal.refuse.categoryLevel2'|trans() }}
+                                </label>
+                            </div>
                         </div>
                     </div>
-                    <div class="col-md-auto">
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" value="" id="categoryLevel2Refuse">
-                            <label class="form-check-label" for="categoryLevel2Refuse">
-                                {{ 'contrib.situ.verify.form.modal.refuse.categoryLevel2'|trans() }}
-                            </label>
+                    <div id="contrib">
+                        <div class="col-md-auto">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="" id="SituRefuse">
+                                <label class="form-check-label" for="SituRefuse">
+                                    {{ 'contrib.situ.verify.form.modal.refuse.situ'|trans() }}
+                                </label>
+                            </div>
                         </div>
-                    </div>
-                    <div class="col-md-auto">
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" value="" id="situRefuse">
-                            <label class="form-check-label" for="situRefuse">
-                                {{ 'contrib.situ.verify.form.modal.refuse.situ'|trans() }}
-                            </label>
-                        </div>
-                    </div>
-                    <div class="col-md-auto">
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" value="" id="itemsRefuse">
-                            <label class="form-check-label" for="itemsRefuse">
-                                {{ 'contrib.situ.verify.form.modal.refuse.items'|trans() }}
-                            </label>
+                        <div class="col-md-auto">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="" id="ItemsRefuse">
+                                <label class="form-check-label" for="ItemsRefuse">
+                                    {{ 'contrib.situ.verify.form.modal.refuse.items'|trans() }}
+                                </label>
+                            </div>
                         </div>
                     </div>
                 </div>
                        
                 <div class="row mb-4">         
-                    <div class="col-md-5">
-                        <select id="event-reason" class="form-control">
+                    <div class="col-md-5 mb-2">
+                        <select id="refuseReason" class="form-control" required="required">
                             <option value="">{{ 'contrib.situ.verify.form.modal.refuse.select.placeholder'|trans() }}</option>
-                            <option value="">{{ 'contrib.situ.verify.form.modal.refuse.select.inappropriate'|trans() }}</option>
-                            <option value="">{{ 'contrib.situ.verify.form.modal.refuse.select.create'|trans() }}</option>
-                            <option value="">{{ 'contrib.situ.verify.form.modal.refuse.select.other'|trans() }}</option>
+                            <option value="inappropriate">{{ 'contrib.situ.verify.form.modal.refuse.select.inappropriate'|trans() }}</option>
+                            <option value="create">{{ 'contrib.situ.verify.form.modal.refuse.select.create'|trans() }}</option>
+                            <option value="other">{{ 'contrib.situ.verify.form.modal.refuse.select.other'|trans() }}</option>
                         </select>
-                        <small class="px-1">{{ 'contrib.situ.verify.form.modal.refuse.comment.title'|trans() }}</small>
                     </div>
                     <div class="col-md-7">
-                        <textarea id="otherRefuse" class="form-control"  rows="5"
+                        <textarea id="refuseComment" name="refuseComment" class="form-control" rows="7"
                                   placeholder="{{ 'contrib.situ.verify.form.modal.refuse.comment.textarea'|trans() }}"></textarea>
                     </div>
                 </div>
+                    
+                <div id="refuseError"></div>
 
             </div>
-
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                    
+            <div class="modal-footer" translate="no">
+                <span id="refuse-cancel" class="btn btn-secondary">
                     {{ 'button.cancel'|trans() }}
-                </button>
-                <button type="button" class="btn btn-primary">
+                </span>
+                <span class="btn btn-primary submit" data-action="refuse">
                     {{ 'button.confirm'|trans() }}
-                </button>
+                </span>
             </div>
-
         </div>
     </div>
 </div>

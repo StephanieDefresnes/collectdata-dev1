@@ -11,370 +11,349 @@ function initSelect2(select) {
 		return translations['noResult']
 	},
     })
-    $(select+':not(.no-select2)').select2({
+    $(select).select2({
         language: "fr",
         width: 'resolve'
     });
 }
 
 // Add comment to unvalidated user options
-function unvalidatedOption(element) {
-        $(element).find('option').each(function() {
-            if ($(this).hasClass('to-validate')) {
-                $(this).append(' '+ translations['toValidate'])
-            }
-        })
+function unvalidatedOptionData(select) {
+    let name = select.parents('formData').attr('id')
+    select.find('option').each(function() {
+        if ($(this).hasClass('to-validate')) {
+            $(this).append(' '+ translations['toValidate'])
+        }
+        if ($(this).val() == $('#'+ name).attr('data-id'))
+            $(this).append(' ✓')
+    })
 }
 
-/**
- * Loading selection
- */
-// Load Event & Categories choices
-function loadDataSitu(name, value) {
+function toggleInfo(name, msg) {
+    $('#'+ name).find('.check > span').each(function() { $(this).empty() })
+    if (msg != 'remove') {        
+        let textClass = msg == 'todoValidate' ? 'danger' : 'success'
+        let action = msg == 'todoValidate' ? 'todo' : 'done'
+        $('#'+ name).find('.'+ action)
+                .append('<span class="px-1 text-'+ textClass +'">- '+translations[msg]+'</span>')
+    }
+}
+//function addActionBtn(name, action1, action2) {
+function toggleActionBtn(name, action) {
+    $('#'+ name).find('.action').each(function() {
+        if ($(this).hasClass(action)) {
+            if ($(this).hasClass('d-none')) $(this).removeClass('d-none')
+        } else $(this).addClass('d-none')
+    })
+}
+
+function checkValue(name, valid) {
+    if (valid == 0) {
+        toggleInfo(name, 'todoValidate')
+        toggleActionBtn(name, 'validate')
+    } else {           
+        toggleInfo(name, 'remove')
+        $('#'+ name).find('.actions').hide()
+    }
+}
+
+function checkValidation() {
+    let invalid = 0
+    $('.validationForm').each(function() {
+        if ($(this).val() != 1) invalid += 1
+    })
+    return invalid
+}
+
+function situValidation(dataForm) {
+    $.ajax({
+        url: "/"+ path['locale'] +"/back/situ/ajaxValidation",
+        method: 'POST',
+        data: {dataForm},
+        success: function(data) {
+            location.href = data['redirection']['targetUrl'];
+        },
+//        error: function() {
+//            location.href = data['redirection']['targetUrl'];
+//        }
+    })
+}
+
+function resetGGT() {
     let dataExist = setInterval(function() {
-        if ($('#verify_situ_form_'+ name +' option').length > 1) {
-            $('#verify_situ_form_'+ name).val(value).trigger('change')
-            if (name == 'categoryLevel2'){
-                $('#\\:1\\.container').contents().find('#\\:1\\.restore').click()
-                $('#translator .ggt-row').removeClass('d-none')
-            }
-            clearInterval(dataExist)
+        if ($('iframe').length) {
+           $('#\\:1\\.container').contents().find('#\\:1\\.restore').click()
+           clearInterval(dataExist)
         }
     }, 50);
 }
 
-// Modify next form depending on action change
-function changeAction(selectId) {
-    let nextSelectId = selectId.parents('.formData').next().find('select').attr('id'),
-        $form = selectId.closest('form'),
-        data = {}
-    data[selectId.attr('name')] = selectId.val()
-    loadSelectData($form, data, selectId, '#'+ nextSelectId)
-}
-
-// Load options select if exist or create new (eventListener)
-function loadSelectData($form, data, selectId, nextSelectId) {
-    let divId = selectId.parents('.formData').attr('id')
-    
-    // Load data from eventListener
-    $.ajax({
-        url: $form.attr('action'),
-        type: $form.attr('method'),
-        data: data,
-        success: function (html) {
-            $(nextSelectId).replaceWith(
-                $(html).find(nextSelectId)
-            )
-            unvalidatedOption(nextSelectId)
-            initSelect2(nextSelectId)
-            if (divId != 'lang')
-                getData(divId, selectId.val())
-        }
-    })
-}
-
-// Get Event & Categorie data depending on action change
-function getData(name, value) {
-    let event, categoryLevel1, categoryLevel2, dataForm
-    
-    if (name == 'event') event = value
-    else if (name == 'categoryLevel1') categoryLevel1 = value
-    else if (name == 'categoryLevel2') categoryLevel2 = value
-
-    dataForm = {
-        'event': event,
-        'categoryLevel1': categoryLevel1,
-        'categoryLevel2': categoryLevel2,
-    }
-    ajaxGetData(name, dataForm)
-}
-
-// Load Event or Categories data on action change
-function ajaxGetData(name, dataForm) {
-    $.ajax({
-        url: "/"+ path['locale'] +"/situ/ajaxGetData",
-        method: 'POST',
-        data: {dataForm},
-        success: function(data) {
-            if (data[name]) loadNewData(name, data[name])
-        }
-    })
-}
-function loadNewData(name, data) {
-    let valid = data.validated === true ? 1 : 0
-    $('#'+ name).attr('data-valid', valid)
-    $('#'+ name).find('.title').text(data.title)
-    if (name != 'event') $('#'+ name).find('.description').text(data.description)
-    checkValue(name, valid)
-}
-
-/**
- * When selection is done
- */
-function removeInfo(name, selector) {
-    if (selector == 'all')
-        $('#'+ name).find('.check > span').each(function() { $(this).empty() })
-    else $('#'+ name).find('.'+ selector).empty()
-}
-function addInfo(name, action, msg) {
-    let textClass = action == 'todo' ? 'danger' : 'success'
-    $('#'+ name).find('.'+ action)
-            .append('<span class="px-1 text-'+ textClass +'">- '+translations[msg]+'</span>')
-}
-function addActionBtn(name, action1, action2) {
-    if ($('#'+ name).find('.modified > .msg').hasClass('d-none'))
-        $('#'+ name).find('.modified > .msg').removeClass('d-none')
-    
-    if (action2 == '') {
-        $('#'+ name).find('.actions > div').each(function() {
-            if ($(this).hasClass(action1)) {
-                if ($(this).hasClass('d-none')) $(this).removeClass('d-none')
-            } else $(this).addClass('d-none')
-        })
-    } else {
-        $('#'+ name).find('.actions > div').each(function() {
-            if ($(this).hasClass(action1) || $(this).hasClass(action2)) {
-                if ($(this).hasClass('d-none')) $(this).removeClass('d-none')
-            } else $(this).addClass('d-none')
-        })
-        $('#'+ name).find('.modified > .msg').addClass('d-none')
-    }
-}
-function toggleDetails(name, action) {
-    $('#'+ name).find('.details').each(function() {
-        if (action == 'show') {
-            $(this).show()
-        } else {
-            $(this).hide()
-        }
-    })
-}
-function recoverNextValue(name) {
-    if (name == 'event') {
-        loadDataSitu('categoryLevel1', $('#data-categoryLevel1').attr('data-id'))
-        toggleDetails('categoryLevel1', 'show')
-        loadDataSitu('categoryLevel2', $('#data-categoryLevel2').attr('data-id'))
-        toggleDetails('categoryLevel2', 'show')
-    } else if (name == 'categoryLevel1') {
-        loadDataSitu('categoryLevel2', $('#data-categoryLevel2').attr('data-id'))
-        toggleDetails('categoryLevel2', 'show')
-    }
-}
-function emptyNextSelect(indexFormData) {
-    $(':nth-child('+ indexFormData +')').nextAll('.formData').find('select').empty()
-}
-function hideCurrentActions(name) {
-    $('#'+ name).find('.actions > div').each(function() {
-        $(this).addClass('d-none')
-    })
-}
-function hideNextActions(indexFormData) {
-    $(':nth-child('+ indexFormData +')').nextAll('.formData')
-            .find('.actions > div').each(function() {
-                $(this).addClass('d-none')
-            })
-}
-
-function checkValue(name, valid) {
-    
-    $('#'+ name).attr('data-validate', '').attr('data-modified', '')
-
-    // If value is changed
-    if ($('#'+ name).find('select').val() != $('#data-'+ name).attr('data-id')) {
-
-        if (valid == 0) {
-            removeInfo(name, 'all')
-            addInfo(name, 'done', 'modified')
-            addInfo(name, 'todo', 'doValidate')
-            addActionBtn(name, 'modified', 'validate')                    
-        } else {           
-            removeInfo(name, 'all')
-            addInfo(name, 'done', 'modified')
-            addActionBtn(name, 'modified', '')
-        }
-        $('#'+ name).attr('data-modified', 1)
-        toggleDetails(name, 'show')
-
-
-        if (name == 'event') {
-            emptyNextSelect(3)
-            hideNextActions(2)
-            
-            removeInfo('categoryLevel1', 'all')
-            addInfo('categoryLevel1', 'todo', 'doModify')
-            toggleDetails('categoryLevel1', 'hide')
-            $('#categoryLevel1').attr('data-validate', '').attr('data-modified', '')
-            
-            removeInfo('categoryLevel2', 'all')
-            addInfo('categoryLevel2', 'todo', 'doModify')
-            toggleDetails('categoryLevel2', 'hide')
-            $('#categoryLevel2').attr('data-validate', '').attr('data-modified', '')
-
-        } else if (name == 'categoryLevel1') {
-            removeInfo('categoryLevel2', 'all')
-            addInfo('categoryLevel2', 'todo', 'doModify')
-            toggleDetails('categoryLevel2', 'hide')
-            $('#categoryLevel2').attr('data-validate', '').attr('data-modified', '')
-        }
-    }
-    // If value is unchanged
-    else {
-
-        if (valid == 0) {
-            removeInfo(name, 'all')
-            addInfo(name, 'todo', 'doValidate')
-            addActionBtn(name, 'validate', '')        
-        } else {           
-            removeInfo(name, 'all')
-            hideCurrentActions(name)
-        }
-        recoverNextValue(name)                
-    }
-    $('#form-loading').hide()
-}
-
-/**
- * 
- */
-//function resetModification(name) {
-function resetModification(name, indexFormData) {
-    
-    let currentInitialValue = $('.checkData').eq(indexFormData).attr('data-id'),
-        parentInitialValue = $('.checkData').eq(indexFormData-1).attr('data-id'),
-        parentFormValue = $('.formData').eq(indexFormData-1).find('select').val()
-    
-    // Parent value unchanged
-    if (parentInitialValue == parentFormValue) {        
-        $('#verify_situ_form_'+ name).val(currentInitialValue).trigger('change')
-        recoverNextValue(name)
-    }
-    // Parent value changed
-    else {
-        // Reset current value
-        // /!\ trigger normally here but empty select categoryLevel1 instead of null
-        // $('#'+ name +' select').val(null).trigger('change')
-        removeInfo(name, 'all')
-        addInfo(name, 'todo', 'doModify')
-        hideCurrentActions(name)
-        toggleDetails(name, 'hide')
-        
-        // Reset empty child value - normalement inutile
-        if (name == 'event') {
-            console.log('forbiden event')
-            location.href = "/"+ path['locale'] + '/back/user/forbiden';
-        }
-        if (name == 'categoryLevel1')  {
-            // /!\ because of bizarre bug - reload to pour reset categoryLevel1 choice
-            var eventId = $('#event select').val()
-            $('#event select').val(eventId).trigger('change')
-            
-            emptyNextSelect(2)
-            hideNextActions(2)
-            removeInfo('categoryLevel2', 'all')
-            addInfo('categoryLevel2', 'todo', 'doModify')
-            $('#categoryLevel2 .ct-descr').hide()
-        }
-        else if (name == 'categoryLevel1')  {
-            // /!\ because of bizarre bug on categoryLevel1
-            $('#'+ name +' select').val(null).trigger('change')
-        }
-    }
-}
-
-function sequentialLoaderFormSitu() {
-    $.when(loadDataSitu('lang', $('#data-lang').attr('data-id'))).then(function() {
-        $.when(loadDataSitu('event', $('#data-event').attr('data-id'))).then(function() {
-            $.when(loadDataSitu('categoryLevel1', $('#data-categoryLevel1').attr('data-id'))).then(function() {
-                loadDataSitu('categoryLevel2', $('#data-categoryLevel2').attr('data-id'))
-            })
-        })
-    })
-}
-
 $(function() {
     
-    initSelect2('.card-verify select')
+    $('#loader').hide()
     
-    $(document).ajaxComplete(function () {
-        $('#loader').hide()        
-    })
+    // Show validation button if no Event neither Category needs to be validated
+    if (checkValidation() == 0 && $('#valid-btn').hasClass('d-none'))
+        $('#valid-btn').removeClass('d-none')
     
-    $('#translator').on('change', 'select', function() {
-        $('#resetGGT, #situGGT').removeClass('d-none')
-    })
+    /** GGTranslate **/
+    // Reset GGT
+    // -- on load
+    setTimeout(resetGGT, 2000)
+    
+    // -- on click button
     $('#resetGGT').click(function() {
         $('#\\:1\\.container').contents().find('#\\:1\\.restore').click()
         $('#resetGGT, #situGGT').addClass('d-none')
+        $('.details').each(function() { $(this).addClass('d-none') })
+        $('#situ-data').removeClass('h-adjust')
     })
     
+    // Lang selected
+    $('#translator').on('change', 'select', function() {
+        $('#resetGGT, #situGGT').removeClass('d-none')
+        $('.details').each(function() { $(this).removeClass('d-none') })
+        $('#situ-data').addClass('h-adjust')
+    })
     
-    sequentialLoaderFormSitu()
-    
-    $('form').on('change',  '#verify_situ_form_lang, '
-                            +'#verify_situ_form_event, '
-                            +'#verify_situ_form_categoryLevel1, '
-                            +'#verify_situ_form_categoryLevel2', function() {
-        
-        $('#form-loading').show()
-        
-        if ($(this).val() != '') changeAction($(this))
-
-        else {
-            let name = $(this).parents('.formData').attr('id')
-            
-            $('#'+ name).attr('data-validate', '').attr('data-modified', '')
-            removeInfo(name, 'all')
-            addInfo(name, 'todo', 'doModify')
-            hideCurrentActions(name)
-            toggleDetails(name, 'hide')
-
-            if (name == 'event') {
-                emptyNextSelect(2)
-                hideNextActions(1)
-                removeInfo('categoryLevel1', 'all')
-                addInfo('categoryLevel1', 'todo', 'doModify')
-                toggleDetails('categoryLevel1', 'hide')
-                $('#categoryLevel1').attr('data-validate', '').attr('data-modified', '')
-                removeInfo('categoryLevel2', 'all')
-                addInfo('categoryLevel2', 'todo', 'doModify')
-                toggleDetails('categoryLevel2', 'hide')
-                $('#categoryLevel2').attr('data-validate', '').attr('data-modified', '')
-
-            } else if (name == 'categoryLevel1') {
-                emptyNextSelect(2)
-                hideNextActions(2)
-                removeInfo('categoryLevel2', 'all')
-                addInfo('categoryLevel2', 'todo', 'doModify')
-                toggleDetails('categoryLevel2', 'hide')
-                $('#categoryLevel2').attr('data-validate', '').attr('data-modified', '')
+    /** Add toValidate info on Event & Category options **/
+    $('#situ .card-body').find('select').each(function() {
+        let name = $(this).parents('.formData').attr('id')
+        $(this).find('option').each(function() {
+            if ($(this).hasClass('to-validate')) {
+                $(this).append(' '+ translations['toValidate'])
             }
-            $('#form-loading').hide()
+            if ($(this).val() == $('#'+ name).attr('data-id'))
+                $(this).prepend('✓ ')
+        })
+        initSelect2($(this))
+        checkValue(name, $('#validated-'+ name).val())
+    })
+    
+    /** Event & Category validation **/
+    $('form').find('.validate').click(function() {
+        let name = $(this).parents('.formData').attr('id')
+        $('#validated-'+ name).val(1)
+        $('#valid-'+ name).attr('data-result', 'validated')
+        toggleActionBtn(name, 'validated')
+        toggleInfo(name, 'doneValidated')
+        if (checkValidation() == 0 && $('#valid-btn').hasClass('d-none'))
+            $('#valid-btn').removeClass('d-none')
+    })
+    
+    $('form').find('.undo').click(function() {
+        let name = $(this).parents('.formData').attr('id')
+        $('#validated-'+ name).val(0)
+        $('#valid-'+ name).attr('data-result', '')
+        checkValue(name, 0)
+        $('#valid-btn').addClass('d-none')
+    })
+    
+    /** Translation case, conflict validation **/
+    $('form').find('.switch-radio[type="radio"]').click(function() {
+        if ($(this).val() == 0) {
+            $('#valid-translation').attr('data-result', '')
+            $('#validated-situConflict').val(0)
+            $('#conflict').addClass('ban')
+            $('#valid-btn, #no-conflict').hide()
+            $('#conflict-refuse').show()
+            $('#refuseComment').prop('required', true)
         }
+        else {
+            $('#valid-translation').attr('data-result', 'validated')
+            $('#validated-situConflict').val(1)
+            $('#conflict').removeClass('ban')
+            $('#valid-btn, #no-conflict').show()
+            $('#conflict-refuse').hide()
+            if (checkValidation() == 0) {
+                if ($('#valid-btn').hasClass('d-none'))
+                    $('#valid-btn').removeClass('d-none')
+            } else $('#valid-btn').addClass('d-none')
+            $('#refuseComment').prop('required', true)
+        }
+    })
+    if ($('form').find('#situConflict').attr('data-conflict') == 'ko') {
+        $('#situ_conflict_0').click()
+        $('#situ_conflict_1').prop('disabled', true)
+        $('#refuseComment').val(translations['translationRefuse'] +'\n'
+                +'<a href="'+ translations['translationPath'] +'">'
+                + translations['translationRead'] +'</a>')
+    }
         
+    /**
+     * Confirmation modal
+     */
+    /** Validated situ **/
+    $('#valid-btn').click(function(){
+        $('#verify_situ_form_statusId').val(3)
+        $('#validModal').find('.validation').each(function() {
+            let result = $(this).attr('data-result')
+            $(this).find('.result').each(function() {
+                if (!$(this).hasClass(result)) $(this).hide()
+            })
+        })
+        $('#validModal').modal('show')
     })
     
-    $('.validate').click(function() {
-        let name = $(this).addClass('d-none').parents('.formData').attr('id')
-        
-        $('#'+ name).attr('data-validate', 1)
-        $('#'+ name +' .modified').addClass('d-none')
-        if ($('#'+ name +' .validated').hasClass('d-none'))
-            $('#'+ name +' .validated').removeClass('d-none')
-        removeInfo(name, 'todo')
-        addInfo(name, 'done', 'validated')
+    $('#valid-cancel').click(function() {
+        $('#verify_situ_form_statusId').val('')
+        $('#validModal').modal('hide')
+                .find('.result').each(function() { $(this).show() })
     })
     
-    $('.modified').click(function() {
-        let name = $(this).parents('.formData').attr('id'),
-            index = $(this).parents('.formData').index()
-        resetModification(name, index)
+    /** Refused situ **/
+    $('#refuse-btn').click(function(){
+        if ($('#situ_conflict_0').is(':checked')) {
+            $('#refuseModal ul').hide()
+            $('#translationRefuse').prop('checked', true)
+            $('#refuseReason').val('other')
+            $('#refuseComment').prop('required', true)
+        }
+        $('#verify_situ_form_statusId').val(4)
+        $('#refuseModal').modal('show')
+    })
+    
+    // Add default comment
+    // -- on change reason if entities are ckecked
+    $('#refuseReason').change(function() {
+        $('#refuseComment').val('')
+        let reason = $(this).val()
+        if (reason == 'other') {
+            $('#refuseComment').prop('required', true)
+        } else {
+            $('#no-conflict').find('input').each(function() {
+                if ($(this).is(':checked')) {
+                    $('#refuseComment').val(
+                        $('#refuseComment').val()
+                        + (translations[reason + $(this).attr('id')]).replace("&#039;", "'")
+                        + '\n'
+                    )
+                }
+            })
+        }
+    })
+    // -- on check entities if reason is selected
+    $('#no-conflict').find('input[type="checkbox"]').click(function() {
+        let reason = $('#refuseReason').val()
+        if ($(this).is(":checked")) {
+            $(this).val(1)
+            if ($(this).attr('id') == 'EventRefuse'
+             || $(this).attr('id') == 'CategoryLevel2Refuse'
+             || $(this).attr('id') == 'CategoryLevel1Refuse') {
+                $('#contrib').hide()
+                $('#no-contrib').show()
+            } else {
+                $('#contrib').show()
+                $('#no-contrib').hide()
+                $('#refuseReason option[value="create"]').addClass('d-none')
+            }
+                
+            if (reason != '') {
+                $('#refuseComment').val(
+                    $('#refuseComment').val()
+                    + (translations[reason + $(this).attr('id')]).replace("&#039;", "'")
+                    + '\n'
+                )
+            }
+        } else {
+            // Reset refuseModal fields
+            $('#refuseModal input').each(function() {
+                $(this).prop('checked', false)
+                $(this).val('')
+            })
+            $('#refuseReason, #refuseComment').val('')
+            $('#contrib, #no-contrib').show()
+            if ($('#refuseReason option[value="create"]').hasClass('d-none'))
+                $('#refuseReason option[value="create"]').removeClass('d-none')
+        }
+    })
+    
+    $('#refuse-cancel').click(function() {
+        $('#refuseModal').modal('hide')
+        if ($('form').find('#situConflict').attr('data-conflict') != 'ko') {
+            $('#verify_situ_form_statusId').val('')
+                    .find('input').each(function() { $(this).prop('checked', false) })
+                    .parents('.modal-body').find('select').val('')
+                    .parents('.modal-body').find('textarea').val('').prop('required', false)
+            $('#refuseModal ul, #contrib, #no-contrib').show()
+            if ($('#refuseReason option[value="create"]').hasClass('d-none'))
+                $('#refuseReason option[value="create"]').removeClass('d-none')
+        }
     })
     
     /**
-     * Submission
+     * Submit
      */
-    $('#save-btn, #submit-btn').click(function(){
+    $('.submit').click(function() {
         
-        
+        let dataForm, action, id, statusId,
+            eventId, eventValidated,
+            categoryLevel1Id, categoryLevel1Validated,
+            categoryLevel2Id, categoryLevel2Validated,
+            reason, comment,
+            entities = []
+                        
+        if (    $(this).attr('data-action') == 'validation'
+            ||  (   $(this).attr('data-action') == 'refuse'
+                &&  $('#refuseReason').val() != ''
+                &&  $('#refuseComment').val() != ''
+                && (    $('#translationRefuse').is(':checked')
+                    ||  $('#EventRefuse').is(':checked')
+                    ||  $('#CategoryLevel1Refuse').is(':checked')
+                    ||  $('#CategoryLevel2Refuse').is(':checked')
+                    ||  $('#SituRefuse').is(':checked')
+                    ||  $('#ItemsRefuse').is(':checked')
+                )
+            )
+        ) {            
+            $(this).attr('data-action') == 'validation'
+                ? $('#validModal').modal('hide')
+                : $('#refuseModal').modal('hide')
+            
+            $('#loader').show()
+            
+            action = $(this).attr('data-action')
+            id = $('#situ').attr('data-id')
+            statusId = $('#verify_situ_form_statusId').val()
+            eventId = $('#event').attr('data-id')
+            eventValidated = $('#validated-event').val()
+            categoryLevel1Id = $('#categoryLevel1').attr('data-id')
+            categoryLevel1Validated = $('#validated-categoryLevel1').val()
+            categoryLevel2Id = $('#categoryLevel2').attr('data-id')
+            categoryLevel2Validated = $('#validated-categoryLevel2').val()
+            reason = $('#refuseReason').val()
+            comment = $('#refuseComment').val()
+
+            entities.push({
+                'translation': $('#translationRefuse').val(),
+                'event': $('#EventRefuse').val(),
+                'categoryLevel1': $('#CategoryLevel1Refuse').val(),
+                'categoryLevel2': $('#CategoryLevel2Refuse').val(),
+                'situ': $('#SituRefuse').val(),
+                'items': $('#ItemsRefuse').val(),
+            })
+
+            dataForm = {
+                'action': action,
+                'id': id,
+                'statusId': statusId,
+                'eventId': eventId,
+                'eventValidated': eventValidated,
+                'categoryLevel1Id': categoryLevel1Id,
+                'categoryLevel1Validated': categoryLevel1Validated,
+                'categoryLevel2Id': categoryLevel2Id,
+                'categoryLevel2Validated': categoryLevel2Validated,
+                'reason': reason,
+                'comment': comment,
+                'entities': entities,
+            }
+            situValidation(dataForm)
+        } else {
+            $('#refuseError').html('<div class="alert alert-danger" role="alert">'
+                    +'<i class="fas fa-exclamation-circle"></i> '
+                    +'<span>'+translations['unvalidRefuse'] +'</span>'
+               +'</div>')
+        }        
     })
+    
 })

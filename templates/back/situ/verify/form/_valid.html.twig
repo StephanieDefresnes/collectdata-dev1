@@ -14,12 +14,21 @@
                 
                 <div class="row mb-2">
                     <div class="col-5 font-weight-bold">
+                        {{ 'contrib.situ.verify.form.translated.title'|trans() }}
+                    </div>
+                    <div id="valid-translation" class="col-7 line-11 validation" data-result="valid">
+                        <span class="result valid">{{ 'contrib.situ.verify.form.action.valid'|trans() }}</span>
+                        <span class="result validated">{{ 'status.3'|trans() }}</span>
+                    </div>                        
+                </div>
+                
+                <div class="row mb-2">
+                    <div class="col-5 font-weight-bold">
                         {{ 'contrib.situ.verify.data.event'|trans() }}
                     </div>
-                    <div class="col-7 line-11">
-                        <span class="ok">{{ 'contrib.situ.verify.form.modal.validation.status.ok'|trans() }}</span>
-                        <span class="ok">{{ 'contrib.situ.verify.form.modal.validation.status.modified'|trans() }}</span>
-                        <span class="ok">{{ 'contrib.situ.verify.form.modal.validation.status.validated'|trans() }}</span>
+                    <div id="valid-event" class="col-7 line-11 validation" data-result="valid">
+                        <span class="result valid">{{ 'contrib.situ.verify.form.action.valid'|trans() }}</span>
+                        <span class="result validated">{{ 'status.3'|trans() }}</span>
                     </div>                        
                 </div>
                     
@@ -27,10 +36,9 @@
                     <div class="col-5 font-weight-bold">
                         {{ 'contrib.situ.verify.data.category_level1'|trans() }}
                     </div>
-                    <div class="col-7 line-11">
-                        <span class="ok">{{ 'contrib.situ.verify.form.modal.validation.status.ok'|trans() }}</span>
-                        <span class="ok">{{ 'contrib.situ.verify.form.modal.validation.status.modified'|trans() }}</span>
-                        <span class="ok">{{ 'contrib.situ.verify.form.modal.validation.status.validated'|trans() }}</span>
+                    <div id="valid-categoryLevel1" class="col-7 line-11 validation" data-result="valid">
+                        <span class="result valid">{{ 'contrib.situ.verify.form.action.valid'|trans() }}</span>
+                        <span class="result validated">{{ 'status.3'|trans() }}</span>
                     </div>                        
                 </div>
                     
@@ -38,10 +46,9 @@
                     <div class="col-5 font-weight-bold line-11">
                         {{ 'contrib.situ.verify.data.category_level2'|trans() }}
                     </div>
-                    <div class="col-7 line-11">
-                        <span class="ok">{{ 'contrib.situ.verify.form.modal.validation.status.ok'|trans() }}</span>
-                        <span class="ok">{{ 'contrib.situ.verify.form.modal.validation.status.modified'|trans() }}</span>
-                        <span class="ok">{{ 'contrib.situ.verify.form.modal.validation.status.validated'|trans() }}</span>
+                    <div id="valid-categoryLevel2" class="col-7 line-11 validation" data-result="valid">
+                        <span class="result valid">{{ 'contrib.situ.verify.form.action.valid'|trans() }}</span>
+                        <span class="result validated">{{ 'status.3'|trans() }}</span>
                     </div>                        
                 </div>
                     
@@ -49,19 +56,19 @@
                     <div class="col-5 font-weight-bold">
                         {{ 'contrib.situ.verify.form.modal.validation.contrib'|trans() }}
                     </div>
-                    <div class="col-7">
-                        <span class="ok">{{ 'contrib.situ.verify.form.modal.validation.status.ok'|trans() }}</span>
+                    <div class="col-7 line-11">
+                        <span class="result valid">{{ 'contrib.situ.verify.form.action.valid'|trans() }}</span>
                     </div>                        
                 </div>
                     
             </div>
             <div class="modal-footer" translate="no">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                <span id="valid-cancel" class="btn btn-secondary">
                     {{ 'button.cancel'|trans() }}
-                </button>
-                <button type="button" class="btn btn-primary">
+                </span>
+                <span class="btn btn-primary submit" data-action="validation">
                     {{ 'button.confirm'|trans() }}
-                </button>
+                </span>
             </div>
         </div>
     </div>

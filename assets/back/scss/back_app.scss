@@ -112,6 +112,12 @@ label {
     padding-left: 0.5rem;
     padding-right: 10px;
 }
+.id {
+    &::before {
+        content: '#';
+        display: inline-block;
+    }
+}
 
 /*
  * sb admin 2

@@ -58,6 +58,7 @@ button:
     up: Subir
     update_title: Editar
     validate: Validar
+    validated: Válido
 status:
     title: Status
     1: Escrito
@@ -117,8 +118,19 @@ contrib:
     action: Acción
     category:
         title: Lista de categorías
+    categoryLevel1:
+        validation:
+            flash:
+                success: La categoría ha sido activada
+    categoryLevel2:
+        validation:
+            flash:
+                success: La subcategoría ha sido activada
     event:
         title: Lista de eventos
+        validation:
+            flash:
+                success: El evento ha sido activado
     situ:
         title: Lista de situaciones
         details:
@@ -145,6 +157,7 @@ contrib:
         validation:
             title: Validación de contribuciones
         verify:
+            error: Sin contribución para validar
             title: Validar una contribución  
             data:
                 title: Contribución a validar
@@ -177,11 +190,7 @@ contrib:
                     title: Verificar la subcategoría
                 action:
                     placeholder: Acción
-                    modified: Editado
-                    modify: Editar
                     valid: Ok
-                    validate: Validar
-                    validated: Válido
                 select: Seleccionar
                 btn:
                     refuse: Rechazar
@@ -192,6 +201,8 @@ contrib:
                     validate: "Validar :"
                     modal:
                         title: Verificación de traducciones
+                        comment:    Si una traducción ya ha sido validada, rechace esta traducción.
+                                    De lo contrario, depende de usted juzgar la relevancia de la validación en comparación con las otras traducciones en curso.
                         initial: Contribución inicial
                         situs:
                             title: Traducciones
@@ -201,9 +212,15 @@ contrib:
                 modal:
                     validation:
                         contrib: "Contribución :"
+                        flash:
+                            success: The contribution has been validated
                     refuse:
                         title: Razón de la denegación
                         question: ¿Por qué motivo rechaza esta contribución?
+                        detail:
+                            line-1: Un evento, una categoría o una subcategoría pueden resultar inapropiados o, más bien, solicitar la creación de uno nuevo.
+                            line-2: La situación o las respuestas pueden ser inapropiadas.
+                            line-3: '"Otro" es un motivo diferente de los anteriores, o puede proporcionar más explicación para el motivo de la denegación.'
                         select:
                             placeholder: Seleccione un patrón
                             inappropriate: Inapropiado
@@ -212,12 +229,29 @@ contrib:
                         comment:
                             title: Comentario obligatorio
                             textarea: Comentario
+                            inappropriate:
+                                eventRefuse: La contribución no corresponde a este evento. Seleccione uno diferente.
+                                categoryLevel1Refuse: La contribución no corresponde a esta categoría. Seleccione uno diferente.
+                                categoryLevel2Refuse: La contribución no corresponde a esta subcategoría. Seleccione uno diferente.
+                                situRefuse: La situación no se corresponde con las condiciones generales de uso.
+                                itemsRefuse: Las respuestas propuestas no se corresponden con las condiciones generales de uso.
+                            create:
+                                eventRefuse: La contribución no corresponde a este evento. Crea otro.
+                                categoryLevel1Refuse: La contribución no corresponde a esta categoría. Crea otro.
+                                categoryLevel2Refuse: La contribución no corresponde a esta subcategoría. Crea otro.
+                            conflict:
+                                validated: Ya se ha validado una traducción para esta contribución.
+                                read: Leer la traducción
+                        entities: "Entidades :"
                         categoryLevel1: Categoría
                         categoryLevel2: Subcategoría
                         translation: Conflicto de traducción
                         event: Evento
                         situ: Situación de riesgo
                         items: Respuesta(s) propuesta(s)
+                        unvalid: Debes completar al menos una entidad, un motivo y un comentario
+                        flash:
+                            success: La contribución ha sido rechazada
         read:
             title: Leer una contribución
 delete:

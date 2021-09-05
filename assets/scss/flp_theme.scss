@@ -327,3 +327,89 @@ table.dataTable { margin: 0 !important; }
         }
     }
 }
+
+
+/*
+ * toggle-switch
+ */
+.switch-toggle {
+    max-width: unset;
+    width: 82px;
+    z-index: 0;
+    white-space: nowrap;
+    & > * {
+        white-space: nowrap;
+    }
+    &.switch-candy {
+        background: #858796;
+        -webkit-box-shadow: none;
+        -moz-box-shadow: none;
+        box-shadow: none;
+        border: 2px solid #858796;
+        border-radius: 0.35rem;
+        & input + label,
+        & label {
+            color: #828282;
+            text-shadow: 0 0 0;
+        }
+        & label:not(.disabled),
+        & input:checked + label:not(.disabled) {
+            padding: 2px 5px 3px;
+            /*margin-left: 1px;*/
+            background: #fff;
+            color: #858796;
+            text-shadow: 0 0 0;
+            outline: none;
+            transition: 250ms;
+        }
+        & input:checked + label:not(.disabled) {
+            border-top-right-radius: 0;
+            border-bottom-right-radius: 0;
+        }
+        & input:checked + label:not(.disabled):last-child {
+            border-top-left-radius: 0;
+            border-bottom-left-radius: 0;
+        }
+        & input:not(checked) + label:not(.disabled) {
+            width: 35px;
+            background: #858796;
+            color: #fff;
+            text-shadow: 0 0 0;
+            outline: none;
+            transition: 250ms;
+            &:last-child {
+                border-top-right-radius: 0.25rem;
+                border-bottom-right-radius: 0.25rem;
+                border-top-left-radius: 0;
+                border-bottom-left-radius: 0;
+            }
+        }
+    }
+    & label {
+        line-height: 1;
+        &:not(.disabled) {
+            border: 0;
+            border-top-left-radius: 0.25rem;
+            border-bottom-left-radius: 0.25rem;
+            font-size: 75%;
+            font-weight: 700;
+            cursor: pointer;
+            &:last-child {
+                border: 0;
+                border-top-right-radius: unset;
+                border-bottom-right-radius: unset;
+                border-top-left-radius:  0.25rem;
+                border-bottom-left-radius:  0.25rem;
+            }
+        }
+    }
+    & .neutral:checked + label.disabled {
+        background: #fff;
+        padding: 1px 1px 0;
+        border: 0;
+        transition: 250ms;
+    }
+    & .neutral:not(checked) + label.disabled {
+        background: #858796;
+    }
+}

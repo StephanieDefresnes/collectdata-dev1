@@ -2,7 +2,7 @@
 
 {{ form_start(form) }}
     <div class="card shadow">
-        
+
         <div id="translator" class="card-header py-1">
             <div class="row d-flex justify-content-between">
                 <div class="col-4">
@@ -13,7 +13,7 @@
                     </h6>
                 </div>
                 <div class="col-8">
-                    <div class="row ggt-row float-right d-none">
+                    <div class="row ggt-row float-right">
                         <div class="col-auto px-1 mt-1"><i class="fas fa-globe-americas"></i></div>
                         <div class="col-auto px-0">
                             <div id="GGT"></div>
@@ -27,23 +27,67 @@
         </div>
 
         <div class="card-body card-verify border-top px-4 pt-4 pb-3">
-            
-            <div id="lang" class="formData d-none" translate="no">
-               {{ form_row(form.lang) }}
-            </div>
+
+            {% if situ.initialSitu == 0 %}
+                <div class="row mb-3" translate="no">
+                    <div class="col-auto">
+                        {{ 'contrib.situ.verify.form.translated.title'|trans() }}
+                    </div>
+                    <div id="initialResult" class="col-auto">
+                        {% if situsTranslated|length > 1%}
+                            <span class="badge badge-danger py-1 px-2 pointer"
+                                  data-toggle="modal" data-target="#translateModal">
+                                {{ 'contrib.situ.verify.form.translated.conflict' | trans }}
+                            </span>
+                        {% else %}
+                            {{ 'contrib.situ.verify.form.action.valid' | trans }}
+                        {% endif %}
+                    </div>
+                    {% if situsTranslated|length > 1 %}
+                        <div id="situConflict" class="col-auto"
+                             data-conflict="{% for translation in situsTranslated %}{% if translation.statusId == 3 %}ko{% endif %}{% endfor %}">
+                            <input id="validated-situConflict" class="validationForm" type="hidden"
+                                   value="0">
+                            <div class="row">
+                                <div class="col-auto">
+                                    {{ 'contrib.situ.verify.form.translated.validate' | trans }}
+                                </div>
+                                <div class="col-auto mt-1 px-0">
+                                    <div class="switch-toggle switch-3 switch-candy">
+                                        <input type="radio" class="switch-radio" id="situ_conflict_0"
+                                               name="situ_conflict" value="0">
+                                        <label for="situ_conflict_0" class="required">{{ 'no' | trans }}</label>
+                                        <input type="radio" class="switch-radio neutral"
+                                               disabled="" checked="checked">
+                                        <label for="neutral" class="disabled">&nbsp;</label>
+                                        <input type="radio" class="switch-radio" id="situ_conflict_1"
+                                               name="situ_conflict" value="1">
+                                        <label for="situ_conflict_1" class="required">{{ 'yes' | trans }}</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endif %}
+                </div>
+            {% endif %}
             
             <div class="accordion" id="accordion">
-                <div id="form-loading"></div>
+                
+                {% if situ.initialSitu == 0 and situsTranslated|length > 1 %}
+                    <div id="conflict"></div>
+                {% endif %}
 
                 <div id="event" class="formData card border-0 mb-3"
-                     data-valid="" data-load="" data-validate="" data-modified="">
+                     data-id="{{ situ.event.id }}">
+                    <input id="validated-event" class="validationForm" type="hidden"
+                           value="{{ situ.event.validated == 0 ? 0 : 1 }}">
                     <div id="headingOne" class="row" translate="no">
                         <div class="col-12 py-0 text-left check collapsed"
                              data-toggle="collapse" data-target="#collapseOne"
                              aria-expanded="false" aria-controls="collapseOne">
                             {{ 'contrib.situ.verify.form.event.title'|trans() }}
-                            <span class="done"></span>
                             <span class="todo"></span>
+                            <span class="done"></span>
                             <span class="more"></span>
                         </div>
                     </div>
@@ -51,33 +95,27 @@
                          aria-labelledby="headingOne" data-parent="#accordion">
                         <div class="card-body row py-2 px-0">
                             <div id="form-event" translate="no"
-                                 class="col-md-8 col-12 colDataLang">
+                                 class="col-8 colDataLang">
                                 {{ form_widget(form.event) }}
                                 {{ form_errors(form.event) }}
                             </div>
                             <div class="actions col-auto" translate="no">
-                                <div class="btn btn-primary validate d-none">
-                                    {{ 'contrib.situ.verify.form.action.validate'|trans() }}
+                                <div class="action btn btn-primary validate d-none">
+                                    {{ 'button.validate'|trans() }}
                                 </div>
-                                <div class="pt-1 validated d-none">
-                                    {{ 'contrib.situ.verify.form.action.validated'|trans() }}
-                                    <i class="fas fa-check text-success mx-2"></i>
-                                </div>
-                                <div class="btn modified d-none">
-                                    <span class="msg">
-                                        {{ 'contrib.situ.verify.form.action.modified'|trans() }}
-                                    </span>
-                                    <span class="mx-2 text-dark">
+                                <div class="action pt-1 validated d-none">
+                                    {{ 'button.validated'|trans() }}
+                                    <span class="mx-2 text-dark pointer undo">
                                         <i class="fas fa-times-circle"></i>
                                     </span>
                                 </div>
                             </div>
-                            <div class="col-12 my-2 pt-1 small details">
-                                <div class="row">
-                                    <div class="col-auto font-weight-bold" translate="no">
-                                        {{ 'contrib.situ.verify.data.situ.title'|trans() }}
-                                    </div>
-                                    <div class="col-auto title mt-1 px-3 line-11 first-letter"></div>
+                            <div class="col-12 mt-1 mb-2 small details d-none">
+                                <div class="d-block font-weight-bold" title="no">
+                                    {{ 'contrib.situ.verify.data.situ.title'|trans() }}
+                                </div>
+                                <div class="mt-1 px-3 line-11 first-letter">
+                                    {{ situ.event.title }}
                                 </div>
                             </div>
                         </div>
@@ -85,14 +123,16 @@
                 </div>
 
                 <div id="categoryLevel1" class="formData card border-0 mb-3"
-                     data-valid="" data-load=""  data-validate="" data-modified="">
+                     data-id="{{ situ.categoryLevel1.id }}">
+                    <input id="validated-categoryLevel1" class="validationForm" type="hidden"
+                           value="{{ situ.categoryLevel1.validated == 0 ? 0 : 1 }}">
                     <div id="headingTwo" class="row" translate="no">
                         <div class="col-12 py-0 text-left check collapsed"
                              data-toggle="collapse" data-target="#collapseTwo"
                              aria-expanded="false" aria-controls="collapseTwo">
                             {{ 'contrib.situ.verify.form.category_level1.title'|trans() }}
-                            <span class="done"></span>
                             <span class="todo"></span>
+                            <span class="done"></span>
                             <span class="more"></span>
                         </div>
                     </div>
@@ -100,94 +140,85 @@
                          aria-labelledby="headingTwo" data-parent="#accordion">
                         <div class="card-body row py-2 px-0">
                             <div id="form-categoryLevel1" translate="no"
-                                 class="col-md-8 col-12 colDataLang colData">
+                                 class="col-8 colDataLang colData">
                                 {{ form_widget(form.categoryLevel1) }}
                                 {{ form_errors(form.categoryLevel1) }}
                             </div>
                             <div class="actions col-auto" translate="no">
-                                <div class="btn btn-primary validate d-none">
-                                    {{ 'contrib.situ.verify.form.action.validate'|trans() }}
+                                <div class="action btn btn-primary validate d-none">
+                                    {{ 'button.validate'|trans() }}
                                 </div>
-                                <div class="pt-1 validated d-none">
-                                    {{ 'contrib.situ.verify.form.action.validated'|trans() }}
-                                    <i class="fas fa-check text-success mx-2"></i>
-                                </div>
-                                <div class="btn modified d-none">
-                                    <span class="msg">
-                                        {{ 'contrib.situ.verify.form.action.modified'|trans() }}
-                                    </span>
-                                    <span class="mx-2 text-dark">
+                                <div class="action pt-1 validated d-none">
+                                    {{ 'button.validated'|trans() }}
+                                    <span class="mx-2 text-dark undo">
                                         <i class="fas fa-times-circle"></i>
                                     </span>
                                 </div>
                             </div>
-                            <div class="col-12 mt-2 pt-1 small details">
-                                <div class="row">
-                                    <div class="col-auto font-weight-bold" translate="no">
-                                        {{ 'contrib.situ.verify.data.situ.title'|trans() }}
-                                    </div>
-                                    <div class="col-auto title mt-1 px-3 line-11 first-letter"></div>
+                            <div class="col-12 mt-1 mb-2 small details d-none">
+                                <div class="d-block font-weight-bold" title="no">
+                                    {{ 'contrib.situ.verify.data.situ.title'|trans() }}
                                 </div>
-                            </div>
-                            <div class="col-12 mt-1 mb-2 small details">
+                                <div class="mt-1 px-3 line-11 first-letter">
+                                    {{ situ.categoryLevel1.title }}
+                                </div>
                                 <div class="d-block font-weight-bold" translate="no">
                                     {{ 'contrib.situ.verify.data.situ.description'|trans() }}
                                 </div>
-                                <div class="description mt-1 px-3 line-11 first-letter"></div>
+                                <div class="mt-1 px-3 line-11 first-letter">
+                                    {{ situ.categoryLevel1.description }}
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
 
                 <div id="categoryLevel2" class="formData card border-0 mb-2 pb-2"
-                     data-valid="" data-load="" data-validate="" data-modified="">
+                     data-id="{{ situ.categoryLevel2.id }}">
+                    <input id="validated-categoryLevel2" class="validationForm" type="hidden"
+                           value="{{ situ.categoryLevel2.validated == 0 ? 0 : 1 }}">
                     <div id="headingThree" class="row" translate="no"> 
                         <div class="col-12 py-0 text-left check collapsed"
                              data-toggle="collapse" data-target="#collapseThree"
                              aria-expanded="false" aria-controls="collapseThree">
                             {{ 'contrib.situ.verify.form.category_level2.title'|trans() }}
-                            <span class="done"></span>
                             <span class="todo"></span>
+                            <span class="done"></span>
                             <span class="more"></span>
                         </div>
                     </div>
-                    <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordion">
+                    <div id="collapseThree" class="collapse"
+                         aria-labelledby="headingThree" data-parent="#accordion">
                         <div class="card-body row py-2 px-0">
                             <div id="form-categoryLevel2" translate="no"
-                                 class="col-md-8 col-12 colDataLang colData">
+                                 class="col-8 colDataLang colData">
                                 {{ form_widget(form.categoryLevel2) }}
                                 {{ form_errors(form.categoryLevel2) }}
                             </div>
                             <div class="actions col-auto" translate="no">
-                                <div class="btn btn-primary validate d-none">
-                                    {{ 'contrib.situ.verify.form.action.validate'|trans() }}
+                                <div class="action btn btn-primary validate d-none">
+                                    {{ 'button.validate'|trans() }}
                                 </div>
-                                <div class="pt-1 validated d-none">
-                                    {{ 'contrib.situ.verify.form.action.validated'|trans() }}
-                                    <i class="fas fa-check text-success mx-2"></i>
-                                </div>
-                                <div class="btn modified d-none">
-                                    <span class="msg">
-                                        {{ 'contrib.situ.verify.form.action.modified'|trans() }}
-                                    </span>
-                                    <span class="mx-2 text-dark">
+                                <div class="action pt-1 validated d-none">
+                                    {{ 'button.validated'|trans() }}
+                                    <span class="mx-2 text-dark undo">
                                         <i class="fas fa-times-circle"></i>
                                     </span>
                                 </div>
                             </div>
-                            <div class="col-12 mt-2 pt-1 small details">
-                                <div class="row">
-                                    <div class="col-auto font-weight-bold" translate="no">
-                                        {{ 'contrib.situ.verify.data.situ.title'|trans() }}
-                                    </div>
-                                    <div class="col-auto title mt-1 px-3 line-11 first-letter"></div>
+                            <div class="col-12 mt-1 mb-2 small details d-none">
+                                <div class="d-block font-weight-bold" title="no">
+                                    {{ 'contrib.situ.verify.data.situ.title'|trans() }}
                                 </div>
-                            </div>
-                            <div class="col-12 mt-1 mb-2 small details">
+                                <div class="mt-1 px-3 line-11 first-letter">
+                                    {{ situ.categoryLevel2.title }}
+                                </div>
                                 <div class="d-block font-weight-bold" translate="no">
                                     {{ 'contrib.situ.verify.data.situ.description'|trans() }}
                                 </div>
-                                <div class="description mt-1 px-3 line-11 first-letter"></div>
+                                <div class="mt-1 px-3 line-11 first-letter">
+                                    {{ situ.categoryLevel2.description }}
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -197,7 +228,7 @@
             
             <div id="situGGT" class="d-none">
 
-                <h2 class="h5 font-weight-normal mt-4 mb-3 pt-3" translate="no">
+                <h2 class="h5 font-weight-normal mt-4 pt-3" translate="no">
                     {{ 'contrib.situ.verify.data.situ.label'|trans() }}
                 </h2>
 
@@ -205,7 +236,7 @@
                     <div class="col-12 mb-1 font-weight-bold" translate="no">
                         {{ 'contrib.situ.verify.data.situ.title'|trans() }}
                     </div>
-                    <div class="col-12 mb-3 px-4 cust-title">
+                    <div class="col-12 mb-3 px-4 h-title">
                         <div class="line-11 first-letter">{{ situ.title }}</div>
                     </div>
                 </div>
@@ -214,7 +245,7 @@
                     <div class="col-12 mb-1 font-weight-bold" translate="no">
                         {{ 'contrib.situ.verify.data.situ.description'|trans() }}
                     </div>
-                    <div class="col-12 mb-5 px-4 cust-descr">
+                    <div class="col-12 mb-3 px-4 h-description">
                         <div class="line-11 first-letter">{{ situ.description }}</div>
                     </div>
                 </div>
@@ -257,15 +288,15 @@
                         <div class="col-12 mb-1 font-weight-bold" translate="no">
                             {{ 'contrib.situ.verify.data.situ.title'|trans() }}
                         </div>
-                        <div class="col-12 mb-3 px-4 line-11 first-letter cust-title">
+                        <div class="col-12 mb-3 px-4 line-11 first-letter h-title">
                             {{ item.title }}
                         </div>
                         <div class="col-12 mb-1 font-weight-bold" translate="no">
                             {{ 'contrib.situ.verify.data.situ.description'|trans() }}
                         </div>
-                        <div class="col-12 px-5 line-11 first-letter cust-descr{% if loop.index != 1
+                        <div class="col-12 px-5 line-11 first-letter h-description{% if loop.index != 1
                              and loop.last == false %} border-bottom{% endif %} {%
-                             if loop.first == true %} mb-5{% elseif loop.last == false %} mb-4{%
+                             if loop.first == true %} mb-3{% elseif loop.last == false %} mb-4{%
                              elseif loop.last == true %} mb-2{% endif %}">
                             {{ item.description }}
                         </div>
@@ -278,12 +309,10 @@
 
         <div class="card-footer bg-light" translate="no">
             <div class="d-flex justify-content-center">
-                <div id="refuse-btn" class="btn btn-warning mx-1 px-3"
-                     data-toggle="modal" data-target="#refuseModal">
+                <div id="refuse-btn" class="btn btn-warning mx-1 px-3">
                     {{ 'contrib.situ.verify.form.btn.refuse'|trans() }}
                 </div>
-                <div id="valid-btn" class="btn btn-primary mx-1 px-3"
-                     data-toggle="modal" data-target="#validModal">
+                <div id="valid-btn" class="btn btn-primary mx-1 px-3 d-none">
                     {{ 'contrib.situ.verify.form.btn.valid'|trans() }}
                 </div>
             </div>
@@ -293,4 +322,8 @@
                 
     {% include "back/situ/verify/form/_refuse.html.twig" %}
     {% include "back/situ/verify/form/_valid.html.twig" %}
+    {% if situ.initialSitu == 0 and situsTranslated|length > 1 %}
+        {% include "back/situ/verify/form/_translation.html.twig" %}
+    {% endif %}
+    
 {{ form_end(form) }}
