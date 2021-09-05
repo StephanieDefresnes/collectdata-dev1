@@ -9,6 +9,8 @@ use App\Entity\Event;
 use App\Entity\Lang;
 use App\Entity\User;
 use App\Form\Front\Situ\CreateSituFormType;
+use App\Service\CategoryService;
+use App\Service\EventService;
 use App\Service\SituService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -84,91 +86,6 @@ class SituController extends AbstractController
         return $this->render('front/situ/read.html.twig', [
             'situ' => $situ,
             'user' => $user,
-        ]);
-    }
-    /**
-     * @Route("/contrib/{id}", defaults={"id" = null}, name="create_situ", methods="GET|POST")
-     */
-    public function situEdit(Request $request, $id): Response
-    {
-        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
-        $this->denyAccessUnlessGranted('ROLE_CONTRIBUTOR');
-        
-        $defaultLang = $this->em->getRepository(Lang::class)
-                ->findOneBy(['englishName' => 'French'])
-                ->getId();
-        
-        // Current user
-        $user = $this->security->getUser();
-        $langs = $user->getLangs()->getValues();
-                
-        // Update or Create new Situ
-        if ($id) {
-            
-            $situ = $this->getDoctrine()->getRepository(Situ::class)
-                    ->findOneBy(['id' => $id]);
-        
-            // Only situ author can update situ
-            if (!empty($situ) && $user->getId() != $situ->getUserId()) {
-
-                $msg = $this->translator->trans(
-                        'access_deny', [],
-                        'user_messages', $locale = locale_get_default()
-                    );
-                $this->addFlash('error', $msg);
-
-                return $this->redirectToRoute('user_situs', ['_locale' => locale_get_default()]);
-            }
-        } else {
-            $situ = new Situ();
-        }
-        
-        // Form
-        $form = $this->createForm(CreateSituFormType::class, $situ);
-        $form ->handleRequest($request);
-        
-        return $this->render('front/situ/create.html.twig', [
-            'form' => $form->createView(),
-            'langs' => $langs,
-            'situ' => $situ,
-            'defaultLang' => $defaultLang,
-        ]);
-    }
-
-    /**
-     * @Route("/translate/{id}/{langId}", name="translate_situ", methods="GET|POST")
-     */
-    public function translateSitu(Request $request, $id, $langId): Response
-    {
-        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
-        $this->denyAccessUnlessGranted('ROLE_CONTRIBUTOR');
-        
-        $defaultLang = $this->em->getRepository(Lang::class)
-                ->findOneBy(['englishName' => 'French'])
-                ->getId();
-        
-        // Current user langs
-        $langs = $this->security->getUser()->getLangs()->getValues();
-        
-        // Situ to translate
-        $situData = $this->em->getRepository(Situ::class)
-                ->findOneBy(['id' => $id]);
-        
-        // Translation lang
-        $langData = $this->em->getRepository(Lang::class)
-                ->findOneBy(['id' => $langId]);
-        
-        // Form
-        $situ = new Situ();
-        $formSitu = $this->createForm(CreateSituFormType::class, $situ);
-        $formSitu->handleRequest($request);
-        
-        return $this->render('front/situ/translation/index.html.twig', [
-            'form' => $formSitu->createView(),
-            'langs' => $langs,
-            'situ' => $situData,
-            'lang' => $langData,
-            'defaultLang' => $defaultLang,
         ]);
     }
     
@@ -254,6 +171,90 @@ class SituController extends AbstractController
         } catch (Exception $e) {
             throw new \Exception('An exception appeared while deleting the translation');
         }
+    }
+    
+    /**
+     * @Route("/contrib/{id}", defaults={"id" = null}, name="create_situ", methods="GET|POST")
+     */
+    public function situEdit(Request $request, $id): Response
+    {
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+        $this->denyAccessUnlessGranted('ROLE_CONTRIBUTOR');
+        
+        $defaultLang = $this->em->getRepository(Lang::class)
+                ->findOneBy(['englishName' => 'French'])
+                ->getId();
+        
+        // Current user
+        $user = $this->security->getUser();
+        $langs = $user->getLangs()->getValues();
+                
+        // Update or Create new Situ
+        if ($id) {
+            
+            $situ = $this->getDoctrine()->getRepository(Situ::class)
+                    ->findOneBy(['id' => $id]);
+        
+            // Only situ author can update situ
+            if (!empty($situ) && $user->getId() != $situ->getUserId()) {
+
+                $msg = $this->translator->trans(
+                        'access_deny', [],
+                        'user_messages', $locale = locale_get_default()
+                    );
+                $this->addFlash('error', $msg);
+
+                return $this->redirectToRoute('user_situs', ['_locale' => locale_get_default()]);
+            }
+        } else {
+            $situ = new Situ();
+        }
+        
+        $form = $this->createForm(CreateSituFormType::class, $situ);
+                
+        return $this->render('front/situ/create.html.twig', [
+            'form' => $form->createView(),
+            'langs' => $langs,
+            'situ' => $situ,
+            'defaultLang' => $defaultLang,
+        ]);
+    }
+
+    /**
+     * @Route("/translate/{id}/{langId}", name="translate_situ", methods="GET|POST")
+     */
+    public function translateSitu(Request $request, $id, $langId): Response
+    {
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+        $this->denyAccessUnlessGranted('ROLE_CONTRIBUTOR');
+        
+        $defaultLang = $this->em->getRepository(Lang::class)
+                ->findOneBy(['englishName' => 'French'])
+                ->getId();
+        
+        // Current user langs
+        $langs = $this->security->getUser()->getLangs()->getValues();
+        
+        // Situ to translate
+        $situData = $this->em->getRepository(Situ::class)
+                ->findOneBy(['id' => $id]);
+        
+        // Translation lang
+        $langData = $this->em->getRepository(Lang::class)
+                ->findOneBy(['id' => $langId]);
+        
+        // Form
+        $situ = new Situ();
+        $formSitu = $this->createForm(CreateSituFormType::class, $situ);
+        $formSitu->handleRequest($request);
+        
+        return $this->render('front/situ/translation/index.html.twig', [
+            'form' => $formSitu->createView(),
+            'langs' => $langs,
+            'situ' => $situData,
+            'lang' => $langData,
+            'defaultLang' => $defaultLang,
+        ]);
     }
     
     /**
@@ -407,7 +408,7 @@ class SituController extends AbstractController
         } catch (Exception $e) {
             throw new \Exception('An exception appeared while updating the situ');
         }
-    }    
+    }
     
     /**
      * Load data depending on selection or creation
@@ -461,25 +462,71 @@ class SituController extends AbstractController
     }
     
     /**
-     * @Route("/ajaxEdit", methods="GET")
-     * Done in ajax because of select initialisation (switch choose/create data)
+     * @Route("/situ/ajaxGetData", methods="GET|POST")
      */
-    public function ajaxEdit(Request $request, SituService $situService): JsonResponse
+    public function ajaxGetData(CategoryService $categoryService,
+                                EventService $eventService): JsonResponse
     {
-        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+        $this->denyAccessUnlessGranted('ROLE_MODERATOR');
+    
+        // Get request data
+        $request = $this->get('request_stack')->getCurrentRequest();
+        $dataForm = $request->request->all();
+        $data = $dataForm['dataForm'];
         
-        // Get Situ
-        $id = $request->query->get('id');
-        $situ = $situService->getSituById($id);
-        
-        if (!$situ) { return new NotFoundHttpException(); }
-        
-        $situItems = $situService->getSituItemsBySituId($id);
+        $event = isset($data['event'])
+                ? $eventService->getDataById($data['event']) : '';
+        $categoryLevel1 = isset($data['categoryLevel1'])
+                ? $categoryService->getDataById($data['categoryLevel1']) : '';
+        $categoryLevel2 = isset($data['categoryLevel2'])
+                ? $categoryService->getDataById($data['categoryLevel2']) : '';
         
         return $this->json([
             'success' => true,
-            'situ' => $situ,
-            'situItems' => $situItems,
+            'event' => $event,
+            'categoryLevel1' => $categoryLevel1,
+            'categoryLevel2' => $categoryLevel2,
         ]);
     }
+    
+    /**
+     * @Route("/situ/ajaxFindTranslation", methods="GET")
+     */
+    public function ajaxFindTranslation(SituService $situService,Request $request): JsonResponse
+    {
+        $this->denyAccessUnlessGranted('ROLE_CONTRIBUTOR');
+        
+        // Situ to translate
+        $situId = $request->query->get('id');
+        
+        // Lang wanted
+        $langId = $request->query->get('langId');
+        
+        // Check if lang denied
+        $langDeny = $this->translator->trans(
+            'lang_deny', [],
+            'user_messages', $locale = locale_get_default()
+            );
+        $situData = $this->getDoctrine()
+                ->getRepository(Situ::class)
+                ->findOneBy([ 'id' => $situId ]);
+        $langData = $this->getDoctrine()
+                ->getRepository(Lang::class)
+                ->findOneBy([ 'id' => $langId ]);
+        
+        // If wanted lang is Lang situ ti translate or wanted lang is not enabled
+        if ($langId == $situData->getLang()->getId() || !$langData->getEnabled()) {
+            $situTranslated = '';
+            $erroMsg = $langDeny;
+        } else {
+            $situTranslated = $situService->searchTranslation($situId, $langId);
+            $erroMsg = '';
+        }
+        
+        return $this->json([
+            'situTranslated' => $situTranslated,
+            'error' => $erroMsg,
+        ]);
+    }
+    
 }
