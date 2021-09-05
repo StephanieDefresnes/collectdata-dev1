@@ -12,22 +12,6 @@ function initSelect2(select) {
     });
 }
 
-function flashError() {
-    $('body').find('#flash_message').remove()
-    let flashMessage =
-            '<div id="flash_message" class="container">'
-                +'<div class="alert alert-secondary alert-dismissible px-3 fade show" role="alert">'
-                        +'<span class="sr-only">'+ translations['srOnly-error'] +'</span>'
-                        +'<span class="icon text-danger"><i class="fas fa-exclamation-circle"></i</span>'
-                        +'<span class="msg">'+ translations['flashError'] +'</span>'
-                +'</div>'
-            +'</div>'
-    $('body > .container-fluid').before(flashMessage)
-    window.scrollTo({top: 0, behavior: 'smooth'});
-    $('#flash_message').delay(3000).fadeOut(); 
-}
-
-
 /**
  * Load datas or create them depending on User action
  */
@@ -304,15 +288,6 @@ function toggleOldFields(oldFields, dataEntity) {
  */
 // Get the ul that holds the collection of tags
 const collectionHolder = $('#situItems')
-
-//// Add Score selection info tooltip
-//function addInfo(scoreSelect) {
-//    let info = '<span class="p-2 score-info" data-toggle="tooltip" data-placement="right"'
-//                +' title="'+ translations['scoreInfo'] +'">'
-//                +'<i class="far fa-question-circle"></i>'
-//    $('.score-info').tooltip()
-//    scoreSelect.after(info)
-//}
 
 // Add a placeholder class to empty option score selection
 function addPlaceholderClass(newElem) {

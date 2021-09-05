@@ -211,6 +211,7 @@ class SituController extends AbstractController
         }
         
         $form = $this->createForm(CreateSituFormType::class, $situ);
+        $form->handleRequest($request);
                 
         return $this->render('front/situ/create.html.twig', [
             'form' => $form->createView(),
