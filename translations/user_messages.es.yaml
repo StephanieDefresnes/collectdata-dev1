@@ -106,6 +106,7 @@ contrib:
             validation: Validación solicitada
             validated: Validado
             refused: Rechazado
+            translation_refused: Traducción rechazada
         event: Evento
         category_level1: Categoría
         category_level2: Subcategoría

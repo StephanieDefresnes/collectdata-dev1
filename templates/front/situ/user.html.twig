@@ -93,9 +93,17 @@
                             {% elseif situ.statusId == 3 %}
                                 {{ 'contrib.table.status.validated'|trans() }}
                             {% elseif situ.statusId == 4 %}
-                                {{ 'contrib.table.status.refused'|trans() }}
+                                {% if situ.initialSitu ==  0 %}
+                                    {{ 'contrib.table.status.translation_refused'|trans() }}
+                                {% else %}
+                                    {{ 'contrib.table.status.refused'|trans() }}
+                                {% endif %}
                             {% endif %}
                         </td>
+                        {% if situ.statusId == 4 and situ.initialSitu ==  0 %}
+                        <td class="px-0 first-action">
+                        </td>
+                        {% else %}
                         <td class="px-0 first-action">
                             <a href="{{ path('create_situ', { 'id': situ.id }) }}"
                                class="btn btn-outline-secondary btn-sm px-1"
@@ -105,6 +113,7 @@
                                 <i class="fas fa-pen"></i>
                             </a>
                         </td>
+                        {% endif %}
                         {% if userLangs|length > 1 %}
                         <td class="width-max-26 pl-0 pr-2">
                             {% if situ.initialSitu == 1 %}

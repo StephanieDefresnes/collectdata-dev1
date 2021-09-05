@@ -12,7 +12,7 @@ nav:
     translation:
         title: Traduction
         dashboard: Mes traductions
-        create: Traduire le site        
+        create: Traduire le site   
 account:
     reset_password: Modifier mon mot de passe
     image:
@@ -106,6 +106,7 @@ contrib:
             validation: Validation demandée
             validated: Validé
             refused: Refusé
+            translation_refused: Traduction refusée
         event: Événement
         category_level1: Catégorie
         category_level2: Sous-catégorie
