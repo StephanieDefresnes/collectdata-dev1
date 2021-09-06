@@ -448,6 +448,9 @@ body {
 .line-11 {
     line-height: 1.1;
 }
+.line-12 {
+    line-height: 1.2;
+}
 .pointer {
     cursor: pointer !important;
 }
@@ -559,7 +562,7 @@ th.cust-nowrap {
         padding: 0;
         clip-path: ellipse(10px 10px);
         & > img {
-            width: 21px;
+            width: 20px;
             height: auto;
             margin: 0 0 0 4px;
             padding: 0;
