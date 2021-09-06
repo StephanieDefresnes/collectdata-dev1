@@ -10,7 +10,6 @@ use App\Form\Front\User\UserFilesRemoveFormType;
 use App\Form\Front\User\UserUpdateFormType;
 use App\Service\LangService;
 use App\Service\SituService;
-use App\Service\UserFileService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
@@ -30,19 +29,16 @@ class UserController extends AbstractController
     private $langService;
     private $security;
     private $situService;
-    private $userFileService;
     private $translator;
     
     public function __construct(LangService $langService,
                                 Security $security,
                                 SituService $situService,
-                                UserFileService $userFileService,
                                 TranslatorInterface $translator)
     {
         $this->langService = $langService;
         $this->security = $security;
         $this->situService = $situService;
-        $this->userFileService = $userFileService;
         $this->translator = $translator;
     }
 
@@ -96,8 +92,7 @@ class UserController extends AbstractController
      */
     public function update( Request $request,
                             SluggerInterface $slugger,
-                            EntityManagerInterface $em,
-                            LangService $langService): Response
+                            EntityManagerInterface $em): Response
     {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
         
@@ -106,9 +101,7 @@ class UserController extends AbstractController
         
         $entityManager = $this->getDoctrine()->getManager();
         
-        $form = $this->createForm(UserUpdateFormType::class, $user, array(
-            'entity_manager' => $entityManager,
-        ));
+        $form = $this->createForm(UserUpdateFormType::class, $user);
         $form->handleRequest($request);
         
         // User image
@@ -123,7 +116,7 @@ class UserController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             
             $langid = $form['langId']->getData();
-            $user->addLang($langService->getUserLang($langid));
+            $user->addLang($this->langService->getUserLang($langid));
             
             // Avatar
             $imageFilename = $form['imageFilename']->getData();
@@ -154,6 +147,20 @@ class UserController extends AbstractController
                     $this->addFlash('error', $msg);
                 }
                 
+            } else {
+                if ($userImageFilename) {
+                    try {
+                        unlink($this->getParameter('user_img').'/'
+                                .$userImageFilename);
+                        $user->setImageFilename(null);
+                    } catch (FileException $e) {
+                        $msg = $this->translator->trans(
+                                'account.image.flash.delete.error', [],
+                                'user_messages', $locale = locale_get_default()
+                            );
+                        $this->addFlash('error', $msg);
+                    }
+                }
             }
             
             // Switch locale
@@ -186,6 +193,7 @@ class UserController extends AbstractController
             return $this->redirectToRoute('user_account', [
                 'id' => $user->getId(), '_locale' => $user_lang
             ]);
+            
         } elseif ($form->isSubmitted() && !$form->isValid()) {
             
             $msg = $this->translator->trans(
