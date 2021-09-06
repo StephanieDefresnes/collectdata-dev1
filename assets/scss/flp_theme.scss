@@ -413,3 +413,43 @@ table.dataTable { margin: 0 !important; }
         background: #858796;
     }
 }
+
+
+/*
+ * custom checkbox
+ */
+input[type="checkbox"] {
+    -webkit-appearance: none !important;
+    -moz-appearance: none !important;
+    -ms-appearance: none !important;
+    position: absolute;
+    cursor: pointer;
+    top: 0px;
+    left: -5px;
+    width: 34px;
+    height: 20px;
+    background-color: #ccc;
+    border-radius: 34px;
+    -webkit-transition: .4s;
+    transition: .4s;
+    &::before {
+        position: absolute;
+        content: "";
+        height: 12px;
+        width: 12px;
+        left: 4px;
+        bottom: 4px;
+        background-color: white;
+        border-radius: 50%;
+        -webkit-transition: .4s;
+        transition: .4s;
+    }
+    &:checked {
+        background-color:#343a40;
+        &::before {
+            -webkit-transform: translateX(14px);
+            -ms-transform: translateX(14px);
+            transform: translateX(14px);
+        }
+    }
+}

@@ -18,7 +18,8 @@ account:
     image:
         label: 'Avatar :'
         mimeTypesMessage: Sube una imagen válida .png/.jpeg/.jpg/.gif de 1024 kb como máximo
-        title: Editar imagen
+        add: Añadir imagen
+        update: Editar imagen
         flash:
             add:
                 success: La imagen ha sido enviada

@@ -27,3 +27,24 @@
         }
     }
 }
+
+#pseudo-switch {
+    position: absolute;
+    background: transparent;
+    width: 28px;
+    height: 16px;
+    top: 4px;
+    left: -21px;
+    z-index: 2;
+}
+
+@media (max-width: 576px) {
+    #contributorLangs {
+        & > .text-right {
+            text-align: left !important;
+        }
+        & .select2-container {
+            width: 100% !important;
+        }
+    }
+}

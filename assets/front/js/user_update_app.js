@@ -111,13 +111,13 @@ $(function() {
         $('#contributorLangs').addClass('d-none').css('opacity', 0)
     }
     
-    $('#user_update_form_langContributor').click(function() {
-        if ($(this).is(':checked')) {
-            $('#contributorLangs').removeClass('d-none').animate({opacity: 1},750)
+    $('#user_update_form_langContributor').bind('click', function() {
+        if ($(this).is(':checked') && $('#contributorLangs').hasClass('d-none')) {
+            $('#contributorLangs').removeClass('d-none').animate({opacity: 1},250)
         } else {
-            $('#contributorLangs').animate({opacity: 0},500).addClass('d-none')
+            $('#contributorLangs').addClass('d-none').animate({opacity: 0})
         }  
-    });
+    })
     
     // Add avatar
     $('.img-circle').click(function() {

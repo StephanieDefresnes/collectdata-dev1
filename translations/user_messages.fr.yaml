@@ -18,7 +18,8 @@ account:
     image:
         label: 'Avatar :'
         mimeTypesMessage: Veuillez téléverser une image valide .png/.jpeg/.jpg/.gif maximum 1024ko
-        title: Modifier l'image
+        add: Ajouter une image
+        update: Modifier l'image
         flash:
             add:
                 success: L'image a bien été envoyée
@@ -61,7 +62,7 @@ account:
         flash:
             success: Votre profil a bien été modifié
     translator:
-        checkbox: Je souhaite que de nouvelles langues soient ajoutées, et je veux contribuer à la traduction du site
+        checkbox: Je souhaite que de nouvelles langues soient ajoutées, et je veux contribuer à la traduction du site.
         translate: 'Sélectionner la ou les langue(s) proposée(s) à la traduction :'
         status: Traducteur du site
         choice: 'Vous proposez de traduire le site en langue :'

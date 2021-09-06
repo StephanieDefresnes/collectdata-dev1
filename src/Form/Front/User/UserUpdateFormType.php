@@ -5,7 +5,6 @@ namespace App\Form\Front\User;
 use App\Entity\User;
 use App\Entity\Lang;
 use App\Service\LangService;
-use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
@@ -20,13 +19,10 @@ use Symfony\Component\Validator\Constraints\NotBlank;
 
 class UserUpdateFormType extends AbstractType
 {
-    private $entityManager;
     private $langService;
 
-    public function __construct(EntityManagerInterface $entityManager,
-                                LangService $langService)
+    public function __construct(LangService $langService)
     {
-        $this->entityManager = $entityManager;
         $this->langService = $langService;
     }
     
@@ -88,7 +84,7 @@ class UserUpdateFormType extends AbstractType
             ->add('langContributor', CheckboxType::class, [
                 'required' => false,
                 'label' => 'account.translator.checkbox',
-                'label_attr' => ['class' => 'switch-custom'],
+                'label_attr' => ['class' => 'pointer'],
             ])
             ->add('contributorLangs', EntityType::class, [
                 'required' => false,
@@ -113,6 +109,5 @@ class UserUpdateFormType extends AbstractType
             'data_class' => User::class,
             'translation_domain' => 'user_messages',
         ]);
-        $resolver->setRequired('entity_manager');
     }
 }
