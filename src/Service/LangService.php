@@ -15,7 +15,7 @@ class LangService {
         $this->em = $em;
     }
 
-    public function getUserLang($user_lang_id)
+    public function getLangById($user_lang_id)
     {
         $repository = $this->em->getRepository(Lang::class);
         
@@ -30,7 +30,7 @@ class LangService {
         return $lang;
     }
 
-    public function getLangByUserLang($lang)
+    public function getLangByLang($lang)
     {
         $repository = $this->em->getRepository(Lang::class);
         
