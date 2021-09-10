@@ -25,10 +25,10 @@
     {% endblock %}
 
     <div class="card card bg-secondary-50">
-        <div id="situs" class="card-body text-white front-dataTable">
+        <div id="situs" class="card-body text-white front-dataTable" data-empty="{{ situs is empty ? 'yes' }}">
 
             {% if situs is empty %}
-            <div class="mb-5 p-3 bg-white-70">
+            <div class="mb-5 p-3 bg-white-70 text-secondary">
                 {{ 'account.contribs.empty'|trans() }}
             </div>
             {% else %}

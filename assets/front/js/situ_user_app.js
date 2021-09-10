@@ -60,6 +60,8 @@ function verifyTranslatedSitu(data) {
 
 $(document).ready(function() {
     
+    if ($('#situs').attr('data-empty') == 'yes') $('#loader').hide()
+    
     // Init datatables
     $('#dataTable-situs').dataTable({
         language: {
