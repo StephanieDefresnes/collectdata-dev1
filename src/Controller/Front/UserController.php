@@ -116,7 +116,7 @@ class UserController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             
             $langid = $form['langId']->getData();
-            $user->addLang($this->langService->getLangById($langid));
+            $user->addLang($this->langService->getUserLang($langid));
             
             // Avatar
             $imageFilename = $form['imageFilename']->getData();
@@ -168,7 +168,7 @@ class UserController extends AbstractController
             if ($request_lang_id == null) {
                 $user_lang = 'fr';
             } else {
-                $lang = $this->langService->getLangById($request_lang_id);
+                $lang = $this->langService->getUserLang($request_lang_id);
                 $user_lang = $lang->getLang();
             }
             

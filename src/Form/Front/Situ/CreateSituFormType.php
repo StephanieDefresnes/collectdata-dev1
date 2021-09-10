@@ -48,7 +48,7 @@ class CreateSituFormType extends AbstractType
         $user = $this->security->getUser();
         
         // Get User current lang
-        $usertLang = $this->langService->getLangById($user->getLangId());
+        $usertLang = $this->langService->getLang($user->getLangId());
         $GLOBALS['usertLangId'] = $user->getLangId();
         
         // Get Events by locale and by user events

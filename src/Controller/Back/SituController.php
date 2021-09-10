@@ -93,7 +93,7 @@ class SituController extends AbstractController
         $situ = $this->em->getRepository(Situ::class)->findOneBy(['id' => $id]);
         
         $author = $this->em->getRepository(User::class)->findOneBy(['id' => $situ->getUserId()]);
-        $authorLang = $langService->getLangById($author->getLangId());
+        $authorLang = $langService->getUserLang($author->getLangId());
         
         if (!$situ || $situ->getStatusId() != 2) {
             
