@@ -9,6 +9,7 @@ use App\Entity\Event;
 use App\Entity\Lang;
 use App\Entity\User;
 use App\Form\Front\Situ\CreateSituFormType;
+use App\Mailer\Mailer;
 use App\Service\CategoryService;
 use App\Service\EventService;
 use App\Service\SituService;
@@ -27,14 +28,17 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 class SituController extends AbstractController
 {
     private $em;
+    private $mailer;
     private $security;
     private $translator;
     
     public function __construct(EntityManagerInterface $em,
+                                Mailer $mailer,
                                 Security $security,
                                 TranslatorInterface $translator)
     {
         $this->em = $em;
+        $this->mailer = $mailer;
         $this->security = $security;
         $this->translator = $translator;
     }
@@ -118,12 +122,14 @@ class SituController extends AbstractController
             $this->em->persist($situ);
             $this->em->flush();
 
+            $this->mailer->sendModeratorSituValidate($situ);
+            
             $msg = $this->translator->trans(
                     'contrib.form.submit.flash.success', [],
                     'user_messages', $locale = locale_get_default()
                 );
             $this->addFlash('success', $msg);
-
+        
             return $this->redirectToRoute('user_situs', ['_locale' => locale_get_default()]);
 
         } catch (Exception $e) {
@@ -400,10 +406,11 @@ class SituController extends AbstractController
 
             $request->getSession()->getFlashBag()->add('success', $msg);
 
+            if ($statusId == 2)
+                $this->mailer->sendModeratorSituValidate($situ);
+            
             return $this->json([
                 'success' => true,
-                'redirection' => $this->redirectToRoute('user_situs',
-                        ['_locale' => locale_get_default()]),
             ]);
 
         } catch (Exception $e) {

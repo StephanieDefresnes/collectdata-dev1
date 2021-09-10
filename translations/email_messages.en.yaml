@@ -1,0 +1,37 @@
+situ:
+    no_moderator: No moderator.
+    validate:
+        email:
+            subject: New contribution #%id%
+            message: |
+                Hello %user%,
+
+                A new contribution has been submitted.
+
+                You can check and validate this contribution by logging in
+                on your space <a href="%moderate_url%">Moderator</a>.
+
+                Regards,
+                <a href="%website_url%">%website_name%</a>
+    validation:
+        email:
+            subject: '%website_name% - Validation of your contribution'
+            message: |
+                Hello %user%,
+
+                Your contribution has been validated.
+
+                You can read contribution at the address...
+
+                Regards,
+                <a href="%website_url%">%website_name%</a>
+    refuse:
+        email:
+            subject: '%website_name% - Nouveau message'
+            message: |
+                Hello %user%,
+
+                You have a new message. Please log in to read your message.
+
+                Regards,
+                <a href="%website_url%">%website_name%</a>

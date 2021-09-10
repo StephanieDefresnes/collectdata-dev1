@@ -199,7 +199,7 @@ contrib:
                 confirm: Are you sure you want to delete this answer?
         from: From
         to: To
-        record:
+        save:
             btn: Save
             flash:
                 success: The situation has been saved
@@ -214,6 +214,8 @@ contrib:
         edit:
             flash:
                 error: An error occurred while recovering from the situation
+        flash:
+            error: An error occurred while handling the situation
         error: Please complete all fields.
         sr_only:
             error: "Error alert :"
@@ -237,3 +239,5 @@ translation:
         name: Nom
         date_status: Création
         langs: Language(s)
+'no': No
+'yes': Yes

@@ -197,7 +197,7 @@ contrib:
             remove:
                 title: Eliminación de respuesta
                 confirm: ¿Estás seguro de que deseas eliminar esta respuesta?
-        record:
+        save:
             btn: Salvar
             flash:
                 success: La situación se ha salvado
@@ -212,6 +212,8 @@ contrib:
         edit:
             flash:
                 error: Ocurrió un error mientras se recuperaba de la situación
+        flash:
+            error: Ocurrió un error al manejar la situación
         error: Porfavor complete todos los campos.
         sr_only:
             error: "Alerta de error :"
@@ -237,3 +239,5 @@ translation:
         name: Nombre
         date_status: Creación
         langs: Idioma(s)
+'no': No
+'yes': Sí

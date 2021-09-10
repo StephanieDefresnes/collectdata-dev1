@@ -61,7 +61,24 @@ class UserService {
         
         $qb->from(User::class,'u')
             ->select('u')
-            ->andWhere($qb->expr()->like('u.roles', "'%".$role."%'"));
+            ->andWhere($qb->expr()->like('u.roles', '?1'))
+            ->setParameter(1, '%'.$role.'%');
+        
+        $users = $qb->getQuery()->getResult();
+        
+        return $users;
+    }
+    
+    public function getRoleByLang($role, $lang)
+    {
+        $qb = $this->em->createQueryBuilder();
+        
+        $qb->from(User::class,'u')
+            ->select('u')
+            ->andWhere($qb->expr()->like('u.roles', '?1'))
+            ->andWhere('?2 MEMBER OF u.langs')
+            ->setParameter(1, '%'.$role.'%')
+            ->setParameter(2, $lang);
         
         $users = $qb->getQuery()->getResult();
         

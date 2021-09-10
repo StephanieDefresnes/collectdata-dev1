@@ -212,6 +212,8 @@ contrib:
         edit:
             flash:
                 error: Une erreur s'est produite lors de la récupération de la situation
+        flash:
+            error: Une erreur s'est produite lors du traitement de la situation
         error: Veuillez renseigner tous les champs.
         sr_only:
             error: "Alerte erreur :"
