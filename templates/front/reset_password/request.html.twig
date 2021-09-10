@@ -1,0 +1,39 @@
+{% trans_default_domain 'security' %}
+{% extends 'front/layout.html.twig' %}
+
+{% block title %}{{ 'reset_password.request'|trans() }}{% endblock %}
+
+{% block content %}
+    
+    {% for flashError in app.flashes('reset_password_error') %}
+        <div class="alert alert-danger" role="alert">{{ flashError }}</div>
+    {% endfor %}
+    
+    <div class="col-lg-6 mx-auto pt-5">        
+        <div class="card mt-5 mb-4 px-3 py-2 bg-white-80">            
+            <div class="card-body">
+                
+                <h1 class="h3 mb-3 font-weight-normal">{{ 'reset_password.request'|trans() }}</h1>
+                
+                <p class="small">{{ 'reset_password.descritpion'|trans() }}</p>
+
+                {{ form_start(requestForm) }}
+                
+                    {{ form_row(requestForm.email) }}
+
+                    <div class="text-center mt-4 pt-2">
+                        <a href="{{ path('front_home') }}"
+                           class="btn btn-light px-4 mx-2">
+                            {{ 'button.cancel'|trans() }}
+                        </a>
+                        <button class="btn btn-secondary px-4 mx-2">
+                            {{ 'forget_password.btn.submit'|trans() }}
+                        </button>
+                    </div>
+                    
+                {{ form_end(requestForm) }}
+    
+            </div>
+        </div>
+    </div>
+{% endblock %}

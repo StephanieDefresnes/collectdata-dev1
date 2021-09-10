@@ -1,0 +1,29 @@
+{% trans_default_domain 'security' %}
+{% extends 'front/layout.html.twig' %}
+
+{% block title %}{{ 'reset_password.sent.title'|trans() }}{% endblock %}
+
+{% block content %}
+    
+    <div class="col-lg-6 mx-auto pt-5">        
+        <div class="card mt-5 mb-4 px-3 py-2 bg-white-80">            
+            <div class="card-body">
+                
+                <h1 class="h3 mb-3 font-weight-normal">{{ 'reset_password.sent.title'|trans() }}</h1>
+                
+                {{ 'reset_password.sent.text'|trans({
+                    '%reset_password_url%': reset_password_url,
+                    }, 'security')|raw|nl2br
+                }}
+
+                <div class="text-center mt-4 pt-2">
+                    <a href="{{ path('front_home') }}"
+                       class="btn btn-secondary px-4">
+                        {{ 'button.back'|trans() }}
+                    </a>
+                </div>
+    
+            </div>
+        </div>
+    </div>
+{% endblock %}

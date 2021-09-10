@@ -1,3 +1,7 @@
+button:
+    back: Retour
+    cancel: Annuler
+    validate: Valider
 forget_password:
     title: Mot de passe oublié
     h1: Mot de passe oublié
@@ -20,7 +24,7 @@ forget_password:
             Si vous n'êtes pas à l'origine de cette demande, veuillez ne pas tenir compte de ce message.
             
             Cordialement,
-            <a href="%host%">%website_name%</a>
+            <a href="%website_url%">%website_name%</a>
     label:
         email: Email
 login:
@@ -47,7 +51,7 @@ registration:
     btn:
         submit: Inscription
     email:
-        subject: Bienvenue %user%
+        subject: Validation de votre compte
         message: |
             Bonjour %user%,
 
@@ -56,7 +60,7 @@ registration:
             Ce lien ne peut être utilisé qu'une seule fois pour valider votre compte.
 
             Cordialement,
-            <a href="%host%">%website_name%</a>
+            <a href="%website_url%">%website_name%</a>
     flash:
         check_email: Un e-mail a été envoyé à l'adresse %email%. Il contient un lien d'activation sur lequel il vous faudra cliquer afin d'activer votre compte.
         confirmed: Félicitations %user%, votre compte est maintenant activé.
@@ -70,14 +74,39 @@ registration:
         unique_email: Cet email existe déjà. Veuillez entrer une autre adresse email.
     terms_link: Lire nos %link_start%conditions d'utilisation%link_end%
 reset_password:
+    request: Mot de passe oublié
     title: Réinitialiser le mot de passe
-    h1: Réinitialiser le mot de passe
-    btn:
-        submit: Réinitialiser
-        back: Annuler
+    descritpion: Pour réinitialiser votre mot de passe, veuillez renseigner votre adresse mail
+                    et un lien sera envoyé pour réinitialiser votre mot de passe.
     flash:
-        success: Le mot de passe a été modifié.
+        error: Un problème est survenu lors de la rénitialisation de votre mot de passe - %s
+        success: Le mot de passe a été modifié
     label:
-        current_password: Ancien mot de passe
+        email: Email
         new_password: Nouveau mot de passe
         repeat_new_password: Répéter le nouveau mot de passe
+    email:
+        subject: 'Réinitialisation de votre mot de passe'
+        message: |
+            Bonjour %user%,
+
+            Pour réinitialiser votre mot de passe, merci de cliquer sur le lien suivant:
+
+            <a href="%reset_password_url%">%reset_password_url%</a>.
+
+            Ce lien expire dans 1 heure et ne peut être utilisé qu'une seule fois.
+
+            Si vous n'êtes pas à l'origine de cette demande, veuillez ne pas tenir compte de ce message.
+
+            Cordialement,
+            <a href="%website_url%">%website_name%</a>
+    sent:
+        title: E-mail envoyé
+        text: |
+            S'il existe un compte correspondant à votre email,
+            un mail vient d'être envoyé contenant un lien pour réinitialiser votre mot de passe.
+        
+            Ce lien expirera dans 1 heure.
+            
+            Si vous ne recevez pas d'e-mail, veuillez vérifier votre dossier spam
+            ou <a href="%reset_password_url%">réessayer</a>.

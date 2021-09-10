@@ -1,3 +1,7 @@
+button:
+    back: Back
+    cancel: Cancel
+    validate: Validate
 forget_password:
     title: Forget password
     h1: Forget password
@@ -20,7 +24,7 @@ forget_password:
             If you are not the initiator of this request, please disregard this message.
 
             Regards,
-            <a href="%host%">%website_name%</a>
+            <a href="%website_url%">%website_name%</a>
     label:
         email: Email
 login:
@@ -28,7 +32,7 @@ login:
     h1: Please sign in
     link:
         logout: Logout
-        forget_password: Mot de passe oublié ?
+        forget_password: Forgot your password ?
         registration: Inscription
     message:
         welcome: Welcome %user%
@@ -56,7 +60,7 @@ registration:
             This link can only be used once to validate your account.
 
             Regards,
-            <a href="%host%">%website_name%</a>
+            <a href="%website_url%">%website_name%</a>
     flash:
         check_email: An email has been sent to %email%. It contains an activation link you must click to activate your account.
         confirmed: 'Congrats %user%, your account is now activated.'
@@ -70,14 +74,39 @@ registration:
         unique_email: This email already exists. Please enter a new address.
     terms_link: Read our %link_start%terms of use%link_end%
 reset_password:
+    request: Forgot password
     title: Reset password
-    h1: Reset password
-    btn:
-        submit: Reset
-        back: Cancel
+    descritpion: To reset your password, please enter your email address
+                      and we'll send you a link to reset your password.
     flash:
+        error: There was a problem resetting your password - %s
         success: The password has been changed.
     label:
-        current_password: Old password
+        email: Email
         new_password: New password
         repeat_new_password: Repeat new password
+    email:
+        subject: 'Reset Password'
+        message: |
+            Hello %user%,
+
+            To reset your password, please click on the following link:
+
+            <a href="%reset_password_url%">%reset_password_url%</a>.
+
+            This link expires in 1 hour and can only be used once.
+
+            If you are not the initiator of this request, please disregard this message.
+
+            Regards,
+            <a href="%website_url%">%website_name%</a>
+    sent:
+        title: Email sent
+        text: |
+            If there is an account corresponding to your email,
+            an email has just been sent containing a link to reset your password.
+        
+            This link will expire in 1 hour.
+            
+            If you do not receive an email, please check your spam folder
+            or <a href="%reset_password_url%">try again</a>.

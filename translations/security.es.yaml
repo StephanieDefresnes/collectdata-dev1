@@ -1,3 +1,7 @@
+button:
+    back: Espalda
+    cancel: Cancelar
+    validate: Validar
 forget_password:
     title: Contraseña olvidada
     h1: Contraseña olvidada
@@ -20,7 +24,7 @@ forget_password:
             Si no eres el iniciador de esta solicitud, ignora este mensaje.
             
             Atentamente,
-            <a href="%host%">%website_name%</a>
+            <a href="%website_url%">%website_name%</a>
     label:
         email: Email
 login:
@@ -56,7 +60,7 @@ registration:
             Este enlace solo se puede utilizar una vez para validar su cuenta.
 
             Atentamente,
-            <a href="%host%">%website_name% </a>
+            <a href="%website_url%">%website_name% </a>
     flash:
         check_email: Se ha enviado un correo electrónico a %email%. Contiene un enlace de activación en el que deberá hacer clic para activar su cuenta.
         confirmed: Felicitaciones %user%, su cuenta ahora está activada.
@@ -70,14 +74,39 @@ registration:
         unique_email: Ya existe este email. Ingrese un nuevo email.
     terms_link: Lea nuestras %link_start%condiciones de uso%link_end%
 reset_password:
+    request: Contraseña olvidada
     title: Restablecer la contraseña
-    h1: Restablecer la contraseña
-    btn:
-        submit: Reiniciar
-        back: Cancelar
+    descritpion: Para restablecer su contraseña, ingrese su dirección de correo electrónico
+                      y le enviaremos un enlace para restablecer su contraseña.
     flash:
+        error: Hubo un problema al restablecer tu contraseña - %s
         success: La contraseña ha sido cambiada.
     label:
-        current_password: Antigua contraseña
+        email: Email
         new_password: Nueva contraseña
         repeat_new_password: Repita la nueva contraseña
+    email:
+        subject: 'Restablecer la contraseña'
+        message: |
+            Hola %user%,
+
+            Para restablecer su contraseña, haga clic en el siguiente enlace:
+
+            <a href="%reset_password_url%">%reset_password_url%</a>.
+
+            Este enlace caduca en 1 hora y solo se puede usar una vez.
+
+            Si no es el iniciador de esta solicitud, ignore este mensaje.
+
+            Atentamente,
+            <a href="%website_url%">%website_name%</a>
+    sent:
+        title: Email enviado
+        text: |
+            Si hay una cuenta correspondiente a su correo electrónico,
+            se acaba de enviar un correo electrónico que contiene un enlace para restablecer su contraseña.
+        
+            Este enlace caducará en 1 hora.
+            
+            Si no recibe un correo electrónico, verifique su carpeta de correo no deseado
+            o <a href="%reset_password_url%">volver a intentar</a>.

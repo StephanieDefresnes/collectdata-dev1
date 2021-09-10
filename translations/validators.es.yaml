@@ -5,7 +5,9 @@ registration:
         password_length_min: Tu contraseña debe tener al menos 6 caracteres
         repeated_password_invalid: Los campos de contraseña deben coincidir
         agree_terms_is_true: Debes aceptar nuestros términos
-reset_password:
+password:
     message:
-        current_password_wrong: Tu contraseña actual no es válida
-        repeated_new_password_invalid: Los campos de la nueva contraseña deben coincidir
+        email_not_blank: Por favor introduzca su correo electrónico
+        password_length_min: Tu contraseña debe tener al menos 6 caracteres
+        password_not_blank: Porfavor ingrese una contraseña
+        repeated_password_invalid: Los campos de la nueva contraseña deben coincidir

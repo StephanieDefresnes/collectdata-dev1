@@ -2,24 +2,20 @@
 
 namespace App\Controller;
 
-use App\Entity\User;
-use App\Form\ForgetPasswordFormType;
-use App\Form\ResetPasswordFormType;
 use App\Mailer\Mailer;
 use App\Repository\UserRepository;
 use App\Security\LoginFormAuthenticator;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Security\Core\Authentication\Provider\UserAuthenticationProvider;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
-use Symfony\Component\Security\Core\Exception\LogicException;
-use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Security\Guard\GuardAuthenticatorHandler;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
+/**
+ * @Route("/{_locale<%app_locales%>}")
+ */
 class SecurityController extends AbstractController
 {
     /**
@@ -34,7 +30,7 @@ class SecurityController extends AbstractController
     
     
     /**
-     * @Route("/{_locale<%app_locales%>}/login",name="app_login")
+     * @Route("/login",name="app_login")
      */
     public function login(  Request $request,
                             AuthenticationUtils $authenticationUtils): Response
@@ -48,7 +44,7 @@ class SecurityController extends AbstractController
     }
 
     /**
-     * @Route("/{_locale<%app_locales%>}/logout", name="app_logout")
+     * @Route("/logout", name="app_logout")
      */
     public function logout()
     {
@@ -84,62 +80,4 @@ class SecurityController extends AbstractController
         );
     }
     
-    /**
-     * @Route("/{_locale<%app_locales%>}/forget-password", name="app_forget_password")
-     */
-    public function forgetPassword( Request $request,
-                                    UserRepository $userRepository,
-                                    Mailer $mailer): Response
-    {
-        $form = $this->createForm(ForgetPasswordFormType::class);
-        $form->handleRequest($request);
-        if ($form->isSubmitted() && $form->isValid()) {
-            $user = $userRepository->findOneByEmail($form->get('email')->getData());
-            if ($user) {
-                $user->setConfirmationToken(random_bytes(24));
-                $this->getDoctrine()->getManager()->flush();
-                $mailer->sendForgetPassword($user);
-                $msg = $this->translator->trans('forget_password.flash.check_email', [ '%user%' => $user, ], 'security');
-                $this->addFlash('success', $msg);
-            }
-            return $this->redirectToRoute('front_home');
-        }
-        return $this->render('security/forget_password.html.twig', [
-            'form' => $form->createView(),
-        ]);
-    }
-    
-    /**
-     * @Route("/{_locale<%app_locales%>}/reset-password/{id}", defaults={"id"=null}, name="app_reset_password")
-     */
-    public function resetPassword(  Request $request,
-                                    UserRepository $userRepository,
-                                    UserPasswordEncoderInterface $passwordEncoder,
-                                    GuardAuthenticatorHandler $guardHandler,
-                                    LoginFormAuthenticator $authenticator,
-                                    User $user = null): Response
-    {
-        if ($token = $request->query->get('token')) {
-            $user = $userRepository->findOneByConfirmationToken($token);
-            if (!$user) { throw $this->createNotFoundException(sprintf('The user with confirmation token "%s" does not exist', $token)); }
-        } elseif (!$user) { throw new LogicException("No user selected."); }
-        $form = $this->createForm(ResetPasswordFormType::class, null, [
-            'with_token' => null !== $token,
-        ]);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $user->setPassword($passwordEncoder->encodePassword($user, $form->get('plainPassword')->getData()));
-            if ($token) {
-                $user->setConfirmationToken(null);
-            }
-            $this->getDoctrine()->getManager()->flush();
-            $msg = $this->translator->trans('reset_password.flash.success', [], 'security');
-            $this->addFlash('info', $msg);
-            return $guardHandler->authenticateUserAndHandleSuccess($user, $request, $authenticator, 'main');
-        }
-        return $this->render('security/reset_password.html.twig', [
-            'form' => $form->createView(),
-        ]);
-    }
 }
