@@ -13,7 +13,7 @@
     
     {% block banner%}
     <div class="d-flex justify-content-between mt-3 mb-5 pt-5">
-        <h1 class="d-flex justify-content-start h3 text-white">
+        <div class="d-flex justify-content-start h3 text-white">
             <span>{{ 'contrib.situ.title'|trans() }}</span>
             {% if app.user and situ.statusId != 3 %}
                 <span class="small px-1">-</span>
@@ -33,7 +33,7 @@
                     {% endif %}
                 </span>
             {% endif %}
-        </h1>
+        </div>
         <div>
             {% if app.user %}
                 <a href="{{ path('user_situs') }}" class="btn btn-outline-light bg-dark-50-0 px-3">
@@ -80,9 +80,9 @@
                 </div>
 
                 <div class="card-body bg-white-80 p-4">
-                    <div class="d-flex justify-content-start h4 mb-0 font-weight-bold">
+                    <h1 class="d-flex justify-content-start h4 mb-0 font-weight-bold">
                         {{ situ.title|capitalize }}
-                    </div>
+                    </h1>
                     <div class="d-flex justify-content-start mb-4 small">
                         <span>{{ 'contrib.situ.by_author'|trans() }}</span>
                         <a href="" class="px-1 text-secondary font-weight-bold">{{ user.name|capitalize }}</a>
