@@ -40,29 +40,7 @@ security:
         ROLE_ADMIN:             ROLE_MODERATOR
         ROLE_SUPER_ADMIN:       [ ROLE_ADMIN, ROLE_ALLOWED_TO_SWITCH ]
     access_control:
-        - { path: ^/%app_locales%/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/%app_locales%/forget_password, roles: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/%app_locales%/register, roles: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/%app_locales%, roles: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/%app_locales%/back/lang/*, roles: ROLE_SUPER_ADMIN }
-        - { path: ^/%app_locales%/back/lang/*, roles: ROLE_ADMIN }
-        - { path: ^/%app_locales%/back/translation/create, roles: ROLE_SUPER_ADMIN }
-        - { path: ^/%app_locales%/back/translation/site, roles: ROLE_SUPER_ADMIN }
-        - { path: ^/%app_locales%/back/translation/site, roles: ROLE_ADMIN }
-        - { path: ^/%app_locales%/back/user/create/*, roles: ROLE_SUPER_ADMIN }
-        - { path: ^/%app_locales%/back/user/create/*, roles: ROLE_ADMIN }
-        - { path: ^/%app_locales%/back/user/create/*, roles: ROLE_MODERATOR }
-        - { path: ^/%app_locales%/back/user/search/*, roles: ROLE_SUPER_ADMIN }
-        - { path: ^/%app_locales%/back/user/search/*, roles: ROLE_ADMIN }
-        - { path: ^/%app_locales%/back/user/search, roles: ROLE_MODERATOR }
-        - { path: ^/%app_locales%/back/user/update/*, roles: ROLE_SUPER_ADMIN }
-        - { path: ^/%app_locales%/back/user/update/*, roles: ROLE_ADMIN }
-        - { path: ^/%app_locales%/back/user/update/*, roles: ROLE_MODERATOR }
-        - { path: ^/%app_locales%/front/*, roles: ROLE_SUPER_ADMIN }
-        - { path: ^/%app_locales%/front/*, roles: ROLE_ADMIN }
-        - { path: ^/%app_locales%/front/*, roles: ROLE_MODERATOR }
-        - { path: ^/%app_locales%/front/*, roles: ROLE_USER }
-        - { path: ^/%app_locales%/*, roles: ROLE_SUPER_ADMIN }
-        - { path: ^/%app_locales%/*, roles: ROLE_ADMIN }
-        - { path: ^/%app_locales%/*, roles: ROLE_MODERATOR }
-        - { path: ^/%app_locales%/*, roles: ROLE_USER }
+        - { path: ^/%app_locales%, roles: PUBLIC_ACCESS }
+        - { path: ^/%app_locales%/back, roles: ROLE_SUPER_ADMIN }
+        - { path: ^/%app_locales%/back, roles: ROLE_ADMIN }
+        - { path: ^/%app_locales%/back, roles: ROLE_MODERATOR }

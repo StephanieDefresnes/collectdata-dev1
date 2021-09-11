@@ -48,8 +48,6 @@ class SituController extends AbstractController
      */
     public function index(): Response
     {
-        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
-        
         return $this->render('front/situ/index.html.twig', [
             'controller_name' => 'SituController',
         ]);
