@@ -2,7 +2,8 @@
 {% trans_default_domain 'user_messages' %}
 {% set locale = app.request.locale %}
 
-{% block title %}{{ 'contrib.situ.title'|trans() }}{% endblock %}
+{% block title %}{{ situ.title|length > 61 ? situ.title|capitalize|slice(0, 61) ~ '...' : situ.title|capitalize }}{% endblock %}
+
 {% block stylesheets %}
     {{ parent() }}
     {{ encore_entry_link_tags('situ_read_app', null, 'frontApp') }}
@@ -63,13 +64,13 @@
                                 <img src="{{ asset('img/flag/'~ situ.lang.lang ~'.jpg') }}" alt="{{ situ.lang.lang }}" class="scale-12 text-uppercase">
                             </div>
                             <div class="h5 mb-0">
-                                <div class="text-center first-letter">{{ situ.event.title }}</div>
+                                <div class="text-center">{{ situ.event.title|capitalize }}</div>
                                 <div class="row">
                                     <div class="col-auto mx-auto">
                                         <div class="d-flex justify-content-start">
-                                            <span class="first-letter">{{ situ.categoryLevel1.title }}</span>
+                                            {{ situ.categoryLevel1.title|capitalize }}
                                             <span class="px-2">/</span>
-                                            <span class="first-letter">{{ situ.categoryLevel2.title }}</span>
+                                            {{ situ.categoryLevel2.title|capitalize }}
                                         </div>
                                     </div>
                                 </div>
@@ -80,23 +81,23 @@
 
                 <div class="card-body bg-white-80 p-4">
                     <div class="d-flex justify-content-start h4 mb-0 font-weight-bold">
-                        <span class="first-letter">{{ situ.title }}</span>
+                        {{ situ.title|capitalize }}
                     </div>
                     <div class="d-flex justify-content-start mb-4 small">
                         <span>{{ 'contrib.situ.by_author'|trans() }}</span>
-                        <a href="" class="px-1 text-secondary font-weight-bold">{{ user.name }}</a>
+                        <a href="" class="px-1 text-secondary font-weight-bold">{{ user.name|capitalize }}</a>
                     </div>
                     <div class="d-flex justify-content-start mb-5">
-                        <span class="first-letter">{{ situ.description }}</span>
+                        {{ situ.description|capitalize }}
                     </div>
                     <div class="d-flex justify-content-start h5 mt-4 mb-2 font-weight-bold">{{ 'contrib.form.item.label'|trans() }}</div>
                     {% for situItem in situ.situItems %}
                         {% if situItem.score == 0 %}
                         <div class="d-flex justify-content-start mb-2 font-weight-bold">
-                            <span class="first-letter">{{ situItem.title }}</span>
+                            {{ situItem.title|capitalize }}
                         </div>
                         <div class="d-flex justify-content-start mb-5">
-                            <span class="first-letter">{{ situItem.description }}</span>
+                            {{ situItem.description|capitalize }}
                         </div>
                         {% endif %}
                         {% if (app.user.id == situ.userId or is_granted('ROLE_MODERATOR')) and situItem.score != 0 %}
@@ -110,17 +111,25 @@
                             {% endif %}
                             </div>
                             <div class="d-flex justify-content-start mb-2 font-weight-bold">
-                                <span class="first-letter">{{ situItem.title }}</span>
+                                {{ situItem.title|capitalize }}
                             </div>
                             <div class="d-flex justify-content-start pb-3">
-                                <span class="first-letter">{{ situItem.description }}</span>
+                                {{ situItem.description|capitalize }}
                             </div>
                         {% endif %}
                     {% endfor %}
                 </div>
 
             </div>
-
+                
+            {% if app.user.id == situ.userId %}
+                <div class="d-flex justify-content-end">
+                    <a href="{{ path('create_situ', { 'id': situ.id }) }}" class="btn btn-secondary px-4 py-2">
+                        {{ 'button.update_title'|trans() }}
+                    </a>
+                </div>
+            {% endif %}
+            
         </div>
     </div>
                         
