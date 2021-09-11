@@ -80,6 +80,8 @@ class SituController extends AbstractController
         // Only user can read not validated situ
         if ($situ->getStatusId() != 3) {
             $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+            if ($situ->getStatusId() == 5)
+                $this->denyAccessUnlessGranted('ROLE_SUPERADMIN');
         }
         
         $user = $this->em->getRepository(User::class)

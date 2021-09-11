@@ -225,7 +225,10 @@ contrib:
         status:
             writing: On going redaction
             validation: Validation requested
-        by_author: "- proposed by"
+            validated: Validated
+            refused: Rejected
+            translation_refused: Translation rejected
+        by_author: "Proposed by"
 translation:
     title: My translations
     form:

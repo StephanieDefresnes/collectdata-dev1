@@ -225,7 +225,10 @@ contrib:
         status:
             writing: En cours de rédaction
             validation: Validation demandée
-        by_author: "- proposée par"
+            refused: Refusée
+            deleted: Supprimée
+            translation_refused: Traduction refusée
+        by_author: "Proposée par"
 translation:
     title: Mes traductions
     form:

@@ -3,21 +3,34 @@
 {% set locale = app.request.locale %}
 
 {% block title %}{{ 'contrib.situ.title'|trans() }}{% endblock %}
+{% block stylesheets %}
+    {{ parent() }}
+    {{ encore_entry_link_tags('situ_read_app', null, 'frontApp') }}
+{% endblock %}
 
 {% block content %}
-        
+    
     {% block banner%}
     <div class="d-flex justify-content-between mt-3 mb-5 pt-5">
-        <h1 class="h3 text-white">
-            {{ 'contrib.situ.title'|trans() }}
-            {% if app.user %}
-                <small>
+        <h1 class="d-flex justify-content-start h3 text-white">
+            <span>{{ 'contrib.situ.title'|trans() }}</span>
+            {% if app.user and situ.statusId != 3 %}
+                <span class="small px-1">-</span>
+                <span class="small">
                     {% if situ.statusId == 1 %}
-                        - {{ 'contrib.situ.status.writing'|trans() }}
+                        {{ 'contrib.situ.status.writing'|trans() }}
                     {% elseif situ.statusId == 2 %}
-                        - {{ 'contrib.situ.status.validation'|trans() }}
+                        {{ 'contrib.situ.status.validation'|trans() }}
+                    {% elseif situ.statusId == 4 and situ.initialSitu == 1
+                            and app.user.id == situ.userId %}
+                        {{ 'contrib.situ.status.refused'|trans() }}
+                    {% elseif situ.statusId == 4 and situ.initialSitu == 0
+                            and app.user.id == situ.userId %}
+                        {{ 'contrib.situ.status.translation_refused'|trans() }}
+                    {% elseif situ.statusId == 5 %}
+                        {{ 'contrib.situ.status.deleted'|trans() }}
                     {% endif %}
-                </small>
+                </span>
             {% endif %}
         </h1>
         <div>
@@ -44,43 +57,64 @@
             <div class="card mb-4 bg-light-50 border-0 rounded-lg shadow">
 
                 <div class="card-header bg-dark-50 p-4 text-white">
-                    <div class="position-absolute">
-                        <img src="{{ asset('img/flag/'~ situ.lang.lang ~'.jpg') }}" alt="{{ situ.lang.lang }}" class="scale-12 text-uppercase">
-                    </div>
-                    <div class="h5 pb-2">
-                        <div class="text-center first-letter">{{ situ.event.title }}</div>
-                        <div class="text-center">
-                            <span class="first-letter">{{ situ.categoryLevel1.title }}</span>
-                            /
-                            <span class="first-letter">{{ situ.categoryLevel2.title }}</span></div>
-                    </div>
-                    <div class="h5 mb-1">
-                        <span class="first-letter">{{ situ.title }}</span>
-                        <span class="pt-1 px-1 small">{{ 'contrib.situ.by_author'|trans() }}</span>
-                        <span class="pt-1 small">
-                            <a href="" class="text-white font-weight-bold">{{ user.name }}</a>
-                        </span>
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="position-absolute">
+                                <img src="{{ asset('img/flag/'~ situ.lang.lang ~'.jpg') }}" alt="{{ situ.lang.lang }}" class="scale-12 text-uppercase">
+                            </div>
+                            <div class="h5 mb-0">
+                                <div class="text-center first-letter">{{ situ.event.title }}</div>
+                                <div class="row">
+                                    <div class="col-auto mx-auto">
+                                        <div class="d-flex justify-content-start">
+                                            <span class="first-letter">{{ situ.categoryLevel1.title }}</span>
+                                            <span class="px-2">/</span>
+                                            <span class="first-letter">{{ situ.categoryLevel2.title }}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
-                <div class="card-body bg-white-70 p-4">
-                    <div class="first-letter mb-3">{{ situ.description }}</div>
-                    <div class="h5 mt-4 mb-2">{{ 'contrib.form.item.label'|trans() }}</div>
+                <div class="card-body bg-white-80 p-4">
+                    <div class="d-flex justify-content-start h4 mb-0 font-weight-bold">
+                        <span class="first-letter">{{ situ.title }}</span>
+                    </div>
+                    <div class="d-flex justify-content-start mb-4 small">
+                        <span>{{ 'contrib.situ.by_author'|trans() }}</span>
+                        <a href="" class="px-1 text-secondary font-weight-bold">{{ user.name }}</a>
+                    </div>
+                    <div class="d-flex justify-content-start mb-5">
+                        <span class="first-letter">{{ situ.description }}</span>
+                    </div>
+                    <div class="d-flex justify-content-start h5 mt-4 mb-2 font-weight-bold">{{ 'contrib.form.item.label'|trans() }}</div>
                     {% for situItem in situ.situItems %}
                         {% if situItem.score == 0 %}
-                        <div class="first-letter mb-2 font-weight-bold">{{ situItem.title }}</div>
-                        <div class="first-letter mb-1">{{ situItem.description }}</div>
+                        <div class="d-flex justify-content-start mb-2 font-weight-bold">
+                            <span class="first-letter">{{ situItem.title }}</span>
+                        </div>
+                        <div class="d-flex justify-content-start mb-5">
+                            <span class="first-letter">{{ situItem.description }}</span>
+                        </div>
                         {% endif %}
-                        {% if app.user.id == situ.userId and situItem.score != 0 %}
+                        {% if (app.user.id == situ.userId or is_granted('ROLE_MODERATOR')) and situItem.score != 0 %}
+                            <div class="d-flex justify-content-start h5 mt-4 mb-2 text-info font-weight-bold">
                             {% if situItem.score == 1 %}
-                                <div class="h5 mt-4 mb-2 text-info">{{ 'contrib.form.item.score.info'|trans()~' :' }}</div>
+                                <span class="text-info">{{ 'contrib.form.item.score.info'|trans()~' :' }}</span>
                             {% elseif situItem.score == 2 %}
-                                <div class="h5 mt-4 mb-2 text-warning">{{ 'contrib.form.item.score.warning'|trans()~' :' }}</div>
+                                <span class="text-warning">{{ 'contrib.form.item.score.warning'|trans()~' :' }}</span>
                             {% elseif situItem.score == 3 %}
-                                <div class="h5 mt-4 mb-2 text-danger">{{ 'contrib.form.item.score.danger'|trans()~' :' }}</div>
+                                <span class="text-danger">{{ 'contrib.form.item.score.danger'|trans()~' :' }}</span>
                             {% endif %}
-                            <div class="first-letter mb-2 font-weight-bold">{{ situItem.title }}</div>
-                            <div class="first-letter mb-1">{{ situItem.description }}</div>
+                            </div>
+                            <div class="d-flex justify-content-start mb-2 font-weight-bold">
+                                <span class="first-letter">{{ situItem.title }}</span>
+                            </div>
+                            <div class="d-flex justify-content-start pb-3">
+                                <span class="first-letter">{{ situItem.description }}</span>
+                            </div>
                         {% endif %}
                     {% endfor %}
                 </div>
@@ -90,4 +124,9 @@
         </div>
     </div>
                         
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {{ encore_entry_script_tags('situ_read_app', null, 'frontApp') }}
 {% endblock %}

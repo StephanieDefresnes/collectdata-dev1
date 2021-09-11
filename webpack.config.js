@@ -45,6 +45,7 @@ Encore
     .addEntry('index_app', './assets/front/js/index_app.js')
     .addEntry('home_app', './assets/front/js/home_app.js')
     .addEntry('situ_create_app', './assets/front/js/situ_create_app.js')
+    .addEntry('situ_read_app', './assets/front/js/situ_read_app.js')
     .addEntry('situ_translation_app', './assets/front/js/situ_translation_app.js')
     .addEntry('situ_user_app', './assets/front/js/situ_user_app.js')
     .addEntry('user_account_app', './assets/front/js/user_account_app.js')
