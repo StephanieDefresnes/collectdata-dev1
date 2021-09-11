@@ -15,22 +15,22 @@ class LangService {
         $this->em = $em;
     }
 
-    public function getLang($user_lang_id)
+    public function getLangById($lang_id)
     {
         $repository = $this->em->getRepository(Lang::class);
         
         $default = $repository->findOneBy(
             ['englishName' => 'French']
         );
-        if ($user_lang_id == '') $user_lang_id = $default->getId();
+        if ($lang_id == '') $lang_id = $default->getId();
         
         $lang = $repository->findOneBy(
-            ['id' => $user_lang_id]
+            ['id' => $lang_id]
         );
         return $lang;
     }
 
-    public function getLangByUserLang($lang)
+    public function getLangByLang($lang)
     {
         $repository = $this->em->getRepository(Lang::class);
         
