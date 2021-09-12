@@ -125,7 +125,7 @@ $(function() {
     })
 
     // Avatar preview manager
-    $('.custom-file-input').on('change', function(event) {
+    $('.custom-file-input').on('change', function() {
         var file = $('input[type=file]').get(0).files[0]
         if(file){
             var reader = new FileReader()
