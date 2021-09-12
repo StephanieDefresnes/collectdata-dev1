@@ -1,21 +1,8 @@
-registration:
-    message:
-        unique_email: Ya existe este email. Ingrese un nuevo email.
-        password_not_blank: Porfavor ingrese una contraseña
-        password_length_min: Tu contraseña debe tener al menos 6 caracteres
-        repeated_password_invalid: Los campos de contraseña deben coincidir
-        agree_terms_is_true: Debes aceptar nuestros términos
-password:
-    message:
-        email_not_blank: Por favor introduzca su correo electrónico
-        password_length_min: Tu contraseña debe tener al menos 6 caracteres
-        password_not_blank: Porfavor ingrese una contraseña
-        repeated_password_invalid: Los campos de la nueva contraseña deben coincidir
-# todo delete previous
 email_not_blank: Por favor introduzca su correo electrónico
-unique_email: Ya existe este email. Ingrese un nuevo email.
+image_mimeTypesMessage: La imagen no puede exceder los 1024kb y debe ser de tipo "png", "jpeg", "jpg" o "gif".
 password_not_blank: Porfavor ingrese una contraseña
 password_length_min: Tu contraseña debe tener al menos 6 caracteres
 repeated_password_invalid: Los campos de la nueva contraseña deben coincidir
-agree_terms_is_true: Debes aceptar nuestros términos
-image_mimeTypesMessage: La imagen no puede exceder los 1024kb y debe ser de tipo "png", "jpeg", "jpg" o "gif".
+unique_email: Ya existe este email. Ingrese un nuevo email.
+registration:
+    agree_terms_is_true: Debes aceptar nuestros términos

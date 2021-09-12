@@ -4,15 +4,18 @@ namespace App\Service;
 
 use App\Entity\Lang;
 use App\Entity\User;
+use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Doctrine\ORM\EntityManagerInterface;
 
 class LangService {
 
     private $em;
     
-    public function __construct(EntityManagerInterface $em)
+    public function __construct(EntityManagerInterface $em,
+                                ParameterBagInterface $parameters)
     {
         $this->em = $em;
+        $this->parameters = $parameters;
     }
 
     public function getLangById($lang_id)
@@ -20,7 +23,7 @@ class LangService {
         $repository = $this->em->getRepository(Lang::class);
         
         $default = $repository->findOneBy(
-            ['englishName' => 'French']
+            ['lang' => $this->parameters->get('locale')]
         );
         if ($lang_id == '') $lang_id = $default->getId();
         

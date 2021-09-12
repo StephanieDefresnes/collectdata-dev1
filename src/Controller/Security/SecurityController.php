@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controller;
+namespace App\Controller\Security;
 
 use App\Mailer\Mailer;
 use App\Repository\UserRepository;

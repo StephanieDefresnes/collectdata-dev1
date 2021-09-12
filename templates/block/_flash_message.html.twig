@@ -10,6 +10,8 @@
                             <span class="icon text-success"><i class="fas fa-check-circle"></i></span>
                         {% elseif type == 'error' %}
                             <span class="icon text-danger"><i class="fas fa-exclamation-circle"></i></span>
+                        {% elseif type == 'info' %}
+                            <span class="icon text-info"><i class="fas fa-info-circle"></i></span>
                         {% endif %}
                         <span class="msg">{{ message|raw|nl2br }}</span>
                     </div>

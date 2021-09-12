@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Controller\Front;
+namespace App\Controller\Security;
 
 use App\Entity\User;
 use App\Service\LangService;
-use App\Form\ChangePasswordFormType;
-use App\Form\ResetPasswordRequestFormType;
+use App\Form\Security\ChangePasswordFormType;
+use App\Form\Security\ResetPasswordRequestFormType;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
@@ -65,7 +65,7 @@ class ResetPasswordController extends AbstractController
             );
         }
 
-        return $this->render('front/reset_password/request.html.twig', [
+        return $this->render('security/reset_password/request.html.twig', [
             'requestForm' => $form->createView(),
         ]);
     }
@@ -91,7 +91,7 @@ class ResetPasswordController extends AbstractController
             UrlGeneratorInterface::ABSOLUTE_URL
         );
 
-        return $this->render('front/reset_password/check_email.html.twig', [
+        return $this->render('security/reset_password/check_email.html.twig', [
             'resetToken' => $resetToken,
             'reset_password_url' => $url,
         ]);
@@ -162,7 +162,7 @@ class ResetPasswordController extends AbstractController
             return $this->redirectToRoute('app_login');
         }
 
-        return $this->render('front/reset_password/reset.html.twig', [
+        return $this->render('security/reset_password/reset.html.twig', [
             'resetForm' => $form->createView(),
         ]);
     }

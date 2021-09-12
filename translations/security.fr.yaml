@@ -1,35 +1,12 @@
 button:
     back: Retour
     cancel: Annuler
+    send: Envoyer
     validate: Valider
-forget_password:
-    title: Mot de passe oublié
-    h1: Mot de passe oublié
-    descritpion: Pour réinitialiser votre mot de passe, veuillez renseigner votre adresse mail
-    btn:
-        submit: Envoyer
-    flash:
-        check_email: |
-            Un e-mail a été envoyé. Il contient un lien sur lequel il vous faudra cliquer pour réinitialiser votre mot de passe.
-            Si vous ne recevez pas d'email, vérifiez votre dossier spam ou essayez à nouveau.
-    email:
-        subject: 'Réinitialisation de votre mot de passe'
-        message: |
-            Bonjour %user%,
-            
-            Pour réinitialiser votre mot de passe, merci de cliquer <a href="%confirmation_url%">ici</a>.
-            
-            Ce lien ne peut être utilisé qu'une seule fois.
-            
-            Si vous n'êtes pas à l'origine de cette demande, veuillez ne pas tenir compte de ce message.
-            
-            Cordialement,
-            <a href="%website_url%">%website_name%</a>
-    label:
-        email: Email
+label:
+    email: Email
 login:
-    title: S'identifier
-    h1: Veuillez vous connecter
+    title: Se connecter
     link:
         logout: Se déconnecter
         forget_password: Mot de passe oublié ?
@@ -47,9 +24,6 @@ login:
         submit: Connexion
 registration:
     title: Inscription
-    h1: Inscription
-    btn:
-        submit: Inscription
     email:
         subject: Validation de votre compte
         message: |
@@ -65,14 +39,12 @@ registration:
         check_email: Un e-mail a été envoyé à l'adresse %email%. Il contient un lien d'activation sur lequel il vous faudra cliquer afin d'activer votre compte.
         confirmed: Félicitations %user%, votre compte est maintenant activé.
     label:
-        email: Email
         name: Nom
         password: Mot de passe
         repeat_password: Répéter le mot de passe
-        agree_terms: J'ai lu et j'accepte les conditions d'utilisation
+        agree_terms: J'ai lu et j'accepte les <a href="%gcu_url%">conditions d'utilisation</a>.
     message:
         unique_email: Cet email existe déjà. Veuillez entrer une autre adresse email.
-    terms_link: Lire nos %link_start%conditions d'utilisation%link_end%
 reset_password:
     request: Mot de passe oublié
     title: Réinitialiser le mot de passe
@@ -82,11 +54,10 @@ reset_password:
         error: Un problème est survenu lors de la rénitialisation de votre mot de passe - %s
         success: Le mot de passe a été modifié
     label:
-        email: Email
         new_password: Nouveau mot de passe
         repeat_new_password: Répéter le nouveau mot de passe
     email:
-        subject: 'Réinitialisation de votre mot de passe'
+        subject: Réinitialisation de votre mot de passe
         message: |
             Bonjour %user%,
 
@@ -103,10 +74,8 @@ reset_password:
     sent:
         title: E-mail envoyé
         text: |
-            S'il existe un compte correspondant à votre email,
-            un mail vient d'être envoyé contenant un lien pour réinitialiser votre mot de passe.
+            S'il existe un compte correspondant à votre email, un mail vient d'être envoyé contenant un lien pour réinitialiser votre mot de passe.
         
             Ce lien expirera dans 1 heure.
             
-            Si vous ne recevez pas d'e-mail, veuillez vérifier votre dossier spam
-            ou <a href="%reset_password_url%">réessayer</a>.
+            Si vous ne recevez pas d'e-mail, veuillez vérifier votre dossier spam ou <a href="%reset_password_url%">réessayer</a>.

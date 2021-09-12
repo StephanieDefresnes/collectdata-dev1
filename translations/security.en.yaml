@@ -1,35 +1,12 @@
 button:
     back: Back
     cancel: Cancel
+    send: Send
     validate: Validate
-forget_password:
-    title: Forget password
-    h1: Forget password
-    descritpion: To reset your password, please enter your email address
-    btn:
-        submit: Send
-    flash:
-        check_email: |
-            An email has been sent. It contains a link you must click to reset your password.
-            If you don't get an email check your spam folder or try again.
-    email:
-        subject: 'Reset Password'
-        message: |
-            Hello %user%,
-
-            To reset your password - please click <a href="%confirmation_url%">here</a>.
-            
-            This link can only be used once.
-            
-            If you are not the initiator of this request, please disregard this message.
-
-            Regards,
-            <a href="%website_url%">%website_name%</a>
-    label:
-        email: Email
+label:
+    email: Email
 login:
     title: Log In
-    h1: Please sign in
     link:
         logout: Logout
         forget_password: Forgot your password ?
@@ -47,11 +24,8 @@ login:
         submit: Sign in
 registration:
     title: Register
-    h1: Register
-    btn:
-        submit: Register
     email:
-        subject: Welcome %user%
+        subject: Validation of your account
         message: |
             Hello %user%,
 
@@ -65,14 +39,12 @@ registration:
         check_email: An email has been sent to %email%. It contains an activation link you must click to activate your account.
         confirmed: 'Congrats %user%, your account is now activated.'
     label:
-        email: Email
         name: Name
         password: Password
         repeat_password: Repeat password
-        agree_terms: I have read and I accept terms of use
+        agree_terms: I have read and I accept <a href="%gcu_url%">terms of use</a>.
     message:
         unique_email: This email already exists. Please enter a new address.
-    terms_link: Read our %link_start%terms of use%link_end%
 reset_password:
     request: Forgot password
     title: Reset password
@@ -82,11 +54,10 @@ reset_password:
         error: There was a problem resetting your password - %s
         success: The password has been changed.
     label:
-        email: Email
         new_password: New password
         repeat_new_password: Repeat new password
     email:
-        subject: 'Reset Password'
+        subject: Reset Password
         message: |
             Hello %user%,
 
@@ -103,10 +74,8 @@ reset_password:
     sent:
         title: Email sent
         text: |
-            If there is an account corresponding to your email,
-            an email has just been sent containing a link to reset your password.
+            If there is an account corresponding to your email, an email has just been sent containing a link to reset your password.
         
             This link will expire in 1 hour.
             
-            If you do not receive an email, please check your spam folder
-            or <a href="%reset_password_url%">try again</a>.
+            If you do not receive an email, please check your spam folder or <a href="%reset_password_url%">try again</a>.

@@ -1,21 +1,8 @@
-registration:
-    message:
-        unique_email: Il existe déjà un compte avec cet email
-        password_not_blank: Veuillez entrer un mot de passe
-        password_length_min: Votre mot de passe doit comporter au moins 6 caractères
-        repeated_password_invalid: Les champs de mot de passe doivent correspondre
-        agree_terms_is_true: Vous devez accepter nos conditions
-password:
-    message:
-        email_not_blank: Veuillez entrer votre email
-        password_length_min: Votre mot de passe doit comporter au moins 6 caractères
-        password_not_blank: Veuillez entrer un mot de passe
-        repeated_password_invalid: Les champs de mot de passe doivent correspondre
-# todo delete previous
 email_not_blank: Veuillez entrer votre email
-unique_email: Il existe déjà un compte avec cet email
+image_mimeTypesMessage: L'image ne peut dépasser 1024ko et doit être de type "png", "jpeg", "jpg" ou "gif".
 password_not_blank: Veuillez entrer un mot de passe
 password_length_min: Votre mot de passe doit comporter au moins 6 caractères
 repeated_password_invalid: Les champs de mot de passe doivent correspondre
-agree_terms_is_true: Vous devez accepter nos conditions
-image_mimeTypesMessage: L'image ne peut dépasser 1024ko et doit être de type "png", "jpeg", "jpg" ou "gif".
+unique_email: Il existe déjà un compte avec cet email
+registration:
+    agree_terms_is_true: Vous devez accepter nos conditions

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Form\Front;
+namespace App\Form\Security;
 
 use App\Entity\User;
 use Symfony\Component\Form\AbstractType;
@@ -14,7 +14,6 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\IsTrue;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
-use Symfony\Contracts\Translation\TranslatorInterface;
 
 class RegistrationFormType extends AbstractType
 {
@@ -22,23 +21,30 @@ class RegistrationFormType extends AbstractType
     {
         $builder
             ->add('email', EmailType::class, [
-                'label' => 'registration.label.email',
+                'label' => 'label.email',
+                'constraints' => [
+                    new NotBlank([
+                        'message' => 'unique_email',
+                    ]),
+                ],
             ])
             ->add('name', TextType::class, [
                 'label' => 'registration.label.name',
             ])
             ->add('agreeTerms', CheckboxType::class, [
                 'label' => 'registration.label.agree_terms',
+                'label_translation_parameters' => ['%gcu_url%' => $options['gcu_url']],
+                'label_html' => true,
                 'mapped' => false,
                 'constraints' => [
                     new IsTrue([
-                        'message' => 'registration.message.agree_terms_is_true',
+                        'message' => 'registration.agree_terms_is_true',
                     ]),
                 ],
             ])
             ->add('plainPassword', RepeatedType::class, [
                 'type' => PasswordType::class,
-                'invalid_message' => 'registration.message.repeated_password_invalid',
+                'invalid_message' => 'repeated_password_invalid',
                 'options' => ['attr' => ['class' => 'password-field']],
                 'required' => true,
                 'first_options'  => ['label' => 'registration.label.password'],
@@ -46,11 +52,11 @@ class RegistrationFormType extends AbstractType
                 'mapped' => false,
                 'constraints' => [
                     new NotBlank([
-                        'message' => 'Please enter a password',
+                        'message' => 'password_not_blank',
                     ]),
                     new Length([
                         'min' => 6,
-                        'minMessage' => 'Your password should be at least {{ limit }} characters',
+                        'minMessage' => 'password_length_min',
                         // max length allowed by Symfony for security reasons
                         'max' => 4096,
                     ]),
@@ -63,6 +69,7 @@ class RegistrationFormType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => User::class,
+            'gcu_url' => null,
             'translation_domain' => 'security',
         ]);
     }
