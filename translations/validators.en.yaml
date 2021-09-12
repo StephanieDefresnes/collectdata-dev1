@@ -11,3 +11,11 @@ password:
         password_length_min: Your password should be at least 6 characters
         password_not_blank: Please enter a password
         repeated_password_invalid: The new password fields must match.
+# todo delete previous
+email_not_blank: Please enter your email
+unique_email: This email already exists. Please enter a new address.
+password_not_blank: Please enter a password
+password_length_min: Your password should be at least 6 characters
+repeated_password_invalid: The new password fields must match.
+agree_terms_is_true: You should agree to our terms.
+image_mimeTypesMessage: The image cannot exceed 1024kb and must be of type "png", "jpeg", "jpg" or "gif".

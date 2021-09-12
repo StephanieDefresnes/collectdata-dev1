@@ -34,7 +34,6 @@ class UserUpdateFormType extends AbstractType
                 'label_attr' => ['class' => 'pt-2'],
                 'mapped' => false,
                 'multiple' => false,
-                'invalid_message' => 'account.image.mimeTypesMessage',
                 'constraints' => [
                     new File([
                         'maxSize' => '1024k',
@@ -44,25 +43,25 @@ class UserUpdateFormType extends AbstractType
                             "image/jpg",
                             "image/gif",
                         ],
-                        'mimeTypesMessage' => 'account.image.mimeTypesMessage',
+                        'mimeTypesMessage' => 'image_mimeTypesMessage',
                     ])
                 ],
                 'required' => false,
             ])
             ->add('name', TextType::class, [
-                'label' => 'account.name.label',
+                'label' => 'label_dp.name',
             ])
             ->add('email', EmailType::class, [
-                'label' => 'account.email.label',
+                'label' => 'label_dp.email',
                 'constraints' => [
                     new NotBlank([
-                        'message' => 'account.email.unique_email',
+                        'message' => 'unique_email',
                     ]),
                 ],
             ])
             ->add('langId', HiddenType::class, [
                 'required' => false,
-                'label' => 'account.lang.current',
+                'label' => 'label_dp.lang',
             ])
             ->add('langs', EntityType::class, [
                 'required' => false,

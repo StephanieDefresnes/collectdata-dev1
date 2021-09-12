@@ -12,6 +12,7 @@ use App\Service\LangService;
 use App\Service\SituService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
@@ -90,9 +91,9 @@ class UserController extends AbstractController
     /**
      * @Route("/profile/edit", name="user_update", methods="GET|POST")
      */
-    public function update( Request $request,
-                            SluggerInterface $slugger,
-                            EntityManagerInterface $em): Response
+    public function update( EntityManagerInterface $em,
+                            Request $request,
+                            SluggerInterface $slugger): Response
     {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
         
@@ -116,91 +117,87 @@ class UserController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             
             $langid = $form['langId']->getData();
-            $user->addLang($this->langService->getUserLang($langid));
+            $user->addLang($this->langService->getLangById($langid));
             
             // Avatar
-            $imageFilename = $form['imageFilename']->getData();
-            if ($imageFilename) {
-                $originalFilename = pathinfo(
-                        $imageFilename->getClientOriginalName(),
-                        PATHINFO_FILENAME
-                    );
-                $safeFilename = $slugger->slug($originalFilename);
-                $newFilename = $safeFilename.'-'.uniqid().'.'
-                        .$imageFilename->guessExtension();
+            $imageFilename = $form->get('imageFilename')->getData();
+            
+            if ($imageFilename != null) {
+                
+                $imageName = $this->generateUniqueFileName() . '.' . $imageFilename->guessExtension();
                 
                 try {
-                    if ($userImageFilename) {
-                        unlink($this->getParameter('user_img').'/'
-                                .$userImageFilename);
-                    }
                     $imageFilename->move(
                         $this->getParameter('user_img'),
-                        $newFilename
+                        $imageName
                     );
-                    $user->setImageFilename($newFilename);
-                } catch (FileException $e) {
-                    $msg = $this->translator->trans(
-                            'account.image.flash.add.error', [],
-                            'user_messages', $locale = locale_get_default()
-                        );
-                    $this->addFlash('error', $msg);
-                }
-                
-            } else {
-                if ($userImageFilename) {
-                    try {
+                    if ($userImageFilename != null) {
+                        try {
                         unlink($this->getParameter('user_img').'/'
                                 .$userImageFilename);
-                        $user->setImageFilename(null);
-                    } catch (FileException $e) {
-                        $msg = $this->translator->trans(
-                                'account.image.flash.delete.error', [],
+                        } catch (FileException $e) {
+                            $error = $this->translator->trans(
+                                'account.image.flash.remove.error', [],
                                 'user_messages', $locale = locale_get_default()
                             );
-                        $this->addFlash('error', $msg);
+                            $msg = sprintf($error, $e->getReason());
+
+                            $this->addFlash('error', $msg);
+
+                            return $this->redirectToRoute('user_update');
+                        }
                     }
+                } catch (FileException $e) {
+                    $error = $this->translator->trans(
+                        'account.image.flash.add.error', [],
+                        'user_messages', $locale = locale_get_default()
+                    );
+                    $msg = sprintf($error, $e->getReason());
+
+                    $this->addFlash('error', $msg);
+
+                    return $this->redirectToRoute('user_update');
                 }
             }
             
             // Switch locale
             $request_lang_id = $request->request->get('user_update_form')['langId'];
             if ($request_lang_id == null) {
-                $user_lang = 'fr';
+                $user_lang = $this->getParameter('locale');
             } else {
-                $lang = $this->langService->getUserLang($request_lang_id);
+                $lang = $this->langService->getLangById($request_lang_id);
                 $user_lang = $lang->getLang();
             }
             
-            // Optional langs
-            $optionalLangs = $form->get('langs');
-            foreach ($optionalLangs as $optionLang) {
-                $lang = new Lang();
-                $lang->addUser($optionLang);
-                $em->persist($lang);
-            }
-            $em->flush();
-            
-            $user->setUpdated();
-        
-            $this->getDoctrine()->getManager()->flush();
-            $msg = $this->translator->trans(
+            try {
+                $em->flush();
+
+                $user->setUpdated();
+
+                $em->flush();
+
+                $msg = $this->translator->trans(
                     'account.update.flash.success', [],
                     'user_messages', $locale = $user_lang
-                );
-            $this->addFlash('success', $msg);
-            
-            return $this->redirectToRoute('user_account', [
-                'id' => $user->getId(), '_locale' => $user_lang
-            ]);
-            
-        } elseif ($form->isSubmitted() && !$form->isValid()) {
-            
-            $msg = $this->translator->trans(
+                    );
+                $this->addFlash('success', $msg);
+
+                return $this->redirectToRoute('user_account', [
+                    '_locale' => $user_lang
+                ]);
+                        
+            } catch (FileException $e) {
+
+                $error = $this->translator->trans(
                     'account.update.flash.error', [],
-                    'user_messages', $locale = $user_lang
+                    'user_messages', $locale = locale_get_default()
                 );
-            $this->addFlash('error', $msg);
+                $msg = sprintf($error, $e->getReason());
+
+                $this->addFlash('error', $msg);
+
+                return $this->redirectToRoute('user_update');
+            }
             
         }
         

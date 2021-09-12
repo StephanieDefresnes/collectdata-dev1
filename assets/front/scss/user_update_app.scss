@@ -4,8 +4,6 @@
 .img-circle {
     width: 86.662px;
     height: 86.662px;
-    margin: 0 15px;
-    padding: 0;
     clip-path:ellipse(50% 50%);
     cursor: pointer;
 }
@@ -28,14 +26,8 @@
     }
 }
 
-#pseudo-switch {
-    position: absolute;
-    background: transparent;
-    width: 28px;
-    height: 16px;
-    top: 4px;
-    left: -21px;
-    z-index: 2;
+label > .invalid-feedback {
+    display: none !important;
 }
 
 @media (max-width: 576px) {
