@@ -9,8 +9,19 @@ nav:
     account_profile: Mes informations
     account_reset_password: Modifier mon mot de passe
     lang_choice: Choisir la langue
+    contribs:
+        title: Contributions
+        all: Toutes les contributions
+        user: Mes contributions
+        add: Ajouter une contribution
+        translate: Traduire une contribution
+    translation:
+        title: Traduction
+        dashboard: Mes traductions
+        create: Traduire le site   
 btn:
     close: Fermer
+    contribute: Contribuer
 content:
     banner:
         hello: Bonjour %user% !
