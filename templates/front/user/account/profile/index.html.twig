@@ -44,7 +44,7 @@
                 <div class="card-body bg-white-70">
 
                     <div class="row mb-lg-2 mb-3">
-                        <span class="col-lg-5 text-secondary">{{ 'account.email.label'|trans() }}</span>
+                        <span class="col-lg-5 text-secondary">{{ 'label_dp.email'|trans() }}</span>
                         <span class="col-lg-7">{{ user.email }}</span>                                
                     </div>
 
@@ -59,9 +59,9 @@
                     <div class="row mb-lg-2 mb-3">
                         <span class="col-lg-5 text-secondary">
                             {% if user.langs|length > 1 %}
-                                {{ 'account.lang.all'|trans() }}
+                                {{ 'label_dp.lang_s'|trans() }}
                             {% else %}
-                                {{ 'account.lang.current'|trans() }}
+                                {{ 'label_dp.lang'|trans() }}
                             {% endif %}
                         </span>
                         <span class="col-md-7 first-letter list-inline">
@@ -74,13 +74,13 @@
 
                     <div class="row mb-lg-2 mb-3">
                         <span class="col-lg-5 text-secondary">
-                            {% if user.roles|length == 1 %}
-                                {{ 'account.roles.title'|trans() }}
+                            {% if user.roles|length > 2 %}
+                                {{ 'status.title_s'|trans() }}
                             {% else %}
-                                {{ 'account.roles.title_s'|trans() }}
+                                {{ 'status.title'|trans() }}
                             {% endif %}
                         </span>
-                        <span class="col-lg-7">
+                        <span class="col-lg-7 line-11">
                             {% set roles =  user.roles %}
                             {% set newRoles = [] %}
                             {% for role in user.roles %}
@@ -100,25 +100,19 @@
 
                     {{ include('front/user/account/profile/_contribs.html.twig') }}
 
-                    {% if user.contributorLangs|length > 0 %}
-                        {{ include('front/user/account/profile/_langContributor.html.twig') }}
-                    {% endif %}
-
                 </div>
 
-                <div class="card-footer bg-secondary-40 text-right">
-                    <div class="d-flex justify-content-between">
-                        <a href="{{ path('user_update') }}"
-                           class="mr-2 px-3 pb border btn btn-light bg-light-80">
-                            {{ 'account.update.title'|trans() }}
-                        </a>
-                        <a href="{{ path('app_reset_password', { 'id': app.user.id }) }}"
-                           class="ml-2 px-3 border btn btn-light bg-light-80">
-                            {{ 'account.reset_password'|trans() }}
-                        </a>
-                    </div>
-                </div>
-
+            </div>
+                        
+            <div class="d-flex justify-content-end row px-2">
+                {#<a href="{{ path('app_reset_password', { 'id': app.user.id }) }}"
+                   class="btn btn-secondary mx-2 px-4 py-2">
+                    {{ 'account.reset_password'|trans() }}
+                </a>#}
+                <a href="{{ path('user_update') }}"
+                   class="btn btn-secondary mx-2 px-4 py-2">
+                    {{ 'account.update.title'|trans() }}
+                </a>
             </div>
 
         </div>

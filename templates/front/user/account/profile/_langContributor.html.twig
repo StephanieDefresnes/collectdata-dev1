@@ -18,10 +18,10 @@
                 {% endif %}
                 </span>
             </p>
-            <ul id="contributorLangs" class="pl-0">
-            {% for lang in user.contributorLangs %}
-                <li data-id="{{ lang.id }}" class="d-inline text-capitalize decode">{{ lang.name }}{% if not loop.last %}, {% endif %}</li>
-            {% endfor %}
+            <ul id="contributorLangs" class="pl-0 line-11">
+                {% for lang in user.contributorLangs %}
+                    <li data-id="{{ lang.id }}" class="d-inline text-capitalize decode">{{ lang.name }}{% if not loop.last %}, {% endif %}</li>
+                {% endfor %}
             </ul>
         </div>
     </div>

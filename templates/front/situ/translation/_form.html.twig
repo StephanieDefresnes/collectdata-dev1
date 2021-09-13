@@ -3,7 +3,7 @@
 {{ form_start(form) }}
     <div class="card my-4 bg-none border-0 shadow">
 
-        <div class="card-header p-3 bg-dark border border-bottom-0 text-white">
+        <div class="card-header p-3 bg-dark text-white">
             <div class="d-flex justify-content-center">
                 <h5 class="mb-2 pb-1">
                     {{ 'contrib.form.to'|trans() }}
@@ -14,7 +14,7 @@
             </div>
         </div>
                 
-        <div class="card-header py-4 pl-4 bg-secondary-80 border text-white">
+        <div class="card-header py-4 pl-4 bg-secondary-80 text-white">
                         
             <div id="details" class="accordion">
             
@@ -109,7 +109,7 @@
                         
         </div>
 
-        <div class="card-body px-4 pt-4 pb-0 bg-white-70">
+        <div class="card-body px-4 pt-4 pb-0 bg-white-80">
             <h2 class="h5 font-weight-normal title-success">{{ 'contrib.form.situ.label'|trans() }}</h2>
             
             {{ form_row(form.title) }}
@@ -147,10 +147,10 @@
         <div class="card-footer bg-light text-right">
             <div class="d-flex justify-content-center">
                 <div id="save-btn" class="btn btn-outline-primary px-3 mx-2">
-                    {{ 'contrib.form.save.btn'|trans() }}
+                    {{ 'action.save'|trans() }}
                 </div>
                 <div id="submit-btn" class="btn btn-primary px-4 mx-2">
-                    {{ 'contrib.form.submit.btn'|trans() }}
+                    {{ 'action.submit'|trans() }}
                 </div>
             </div>
         </div>

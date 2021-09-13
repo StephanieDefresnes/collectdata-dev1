@@ -2,7 +2,7 @@
                 
 <div class="card my-4 bg-none border-0 shadow">
 
-    <div class="card-header p-3 bg-dark border border-bottom-0 text-white">
+    <div class="card-header p-3 bg-dark text-white">
         <div class="d-flex justify-content-center">
             <h5 class="mb-2 pb-1">
                 {{ 'contrib.form.from'|trans() }}
@@ -13,12 +13,12 @@
         </div>
     </div>
             
-    <div class="card-header py-4 pl-4 bg-secondary-80 border text-white">
+    <div class="card-header py-4 pl-4 bg-secondary-80 text-white">
         
         <div class="row mb-4 pb-1">
             <div class="col-md-12 mb-2 pt-1">
                 <span class="font-weight-bolder">
-                    {{ 'contrib.translation.label.event'|trans() }}</span>
+                    {{ 'label_dp.event'|trans() }}</span>
                 {{ situ.event.title }}
             </div>
         </div>
@@ -31,7 +31,7 @@
                         <div data-toggle="collapse" data-target="#initialCollapseOne"
                              aria-expanded="false" aria-controls="initialCollapseOne">
                             <span class="font-weight-bolder">
-                                {{ 'contrib.translation.label.catLevel1'|trans() }}</span>
+                                {{ 'label_dp.catLevel1'|trans() }}</span>
                             {{ situ.categoryLevel1.title }}
                             <span class="infoCollapse d-none small">
                                 <i class="fas fa-question-circle"></i>
@@ -41,7 +41,7 @@
                     <div id="initialCollapseOne" class="mx-4 pt-2 small infoCollapse d-none collapse"
                          aria-labelledby="initialHeadingOne" data-parent="#initialDetails">
                         <div class="d-block font-weight-bold">
-                            {{ 'contrib.form.situ.description'|trans() }}
+                            {{ 'label_dp..description'|trans() }}
                         </div>
                         <div class="mt-1 px-3 line-11 first-letter description">
                             {{ situ.categoryLevel1.description }}
@@ -56,7 +56,7 @@
                         <div data-toggle="collapse" data-target="#initialCollapseTwo"
                              aria-expanded="false" aria-controls="initialCollapseTwo">
                             <span class="font-weight-bolder">
-                                {{ 'contrib.translation.label.catLevel2'|trans() }}</span>
+                                {{ 'label_dp.catLevel2'|trans() }}</span>
                             {{ situ.categoryLevel2.title }}
                             <span class="infoCollapse d-none small">
                                 <i class="fas fa-question-circle"></i>
@@ -66,7 +66,7 @@
                     <div id="initialCollapseTwo" class="mx-4 pt-2 small infoCollapse d-none collapse"
                          aria-labelledby="initialHeadingTwo" data-parent="#initialDetails">
                         <div class="d-block font-weight-bold">
-                            {{ 'contrib.form.situ.description'|trans() }}
+                            {{ 'label_dp.description'|trans() }}
                         </div>
                         <div class="mt-1 px-3 line-11 first-letter description">
                             {{ situ.categoryLevel2.description }}
@@ -79,13 +79,13 @@
                     
     </div>
 
-    <div class="card-body pt-4 pb-0 px-4 bg-white-70">
+    <div class="card-body pt-4 pb-0 px-4 bg-white-80">
         <h2 class="h5 font-weight-normal">{{ 'contrib.form.situ.label'|trans() }}</h2>
         
-        <h6 class="h6 mb-2 pb-1 font-weight-bolder">{{ 'contrib.form.situ.title'|trans() }}</h6>
+        <h6 class="h6 mb-2 pb-1 font-weight-bolder">{{ 'label_dp.title'|trans() }}</h6>
         <div class="h-title mb-3 first-letter">{{ situ.title }}</div>
         
-        <h6 class="h6 font-weight-bolder">{{ 'contrib.form.situ.description'|trans() }}</h6>
+        <h6 class="h6 font-weight-bolder">{{ 'label_dp.description'|trans() }}</h6>
         <div class="h-description mb-3 pt-1 first-letter">{{ situ.description }}</div>
         
         <h2 class="h5 font-weight-normal mt-4 mb-3">{{ 'contrib.form.item.label'|trans() }}</h2>
