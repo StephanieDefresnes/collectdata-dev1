@@ -169,21 +169,38 @@ $(document).ready(function() {
     /**
      * Deletion situ
      */
-    // Show modal with data situ to delete
-    $('.situDelete').click(function() {
+    $('.situDelete').on('click', function() {
+        let situTr = $(this).parents('tr')
         let title = $(this).parents('tr').find('.situ-title').attr('data-original-title')
-        $('#deleteModal .situ-title')
-                .text(title)
-                .attr('data-id', $(this).parents('tr').attr('data-id'))
         
-        $('#deleteModal').modal('show')
-    })
-    
-    // Deletion situ
-    $('#delete').click(function() {
-        $('#loader').show()
-        let situId = $('#deleteModal .situ-title').attr('data-id')
-        location.href = '/'+ path['locale'] +'/delete/'+ situId        
+        situTr.addClass('to-confirm')
+        $.confirm({
+            animation: 'scale',
+            closeAnimation: 'scale',
+            animateFromElement: false,
+            columnClass: 'col-xl-6 col-xl-offset-3 col-lg-8 col-lg-offset-2',
+            type: 'red',
+            typeAnimated: true,
+            title: translations['deleteTitle'],
+            content: translations['deleteText']
+                    + '<p class="mt-3 text-center font-weight-bold">'+ title +'</p>',
+            buttons: {
+                cancel: {
+                    text: translations['no'],
+                    action: function () {
+                        situTr.removeClass('to-confirm')
+                    }
+                },
+                formSubmit: {
+                    text: translations['yes'],
+                    btnClass: 'btn-red',
+                    action: function () {
+                        $('#loader').show()
+                        location.href = '/'+ path['locale'] +'/delete/'+ situTr.attr('data-id') 
+                    }
+                }
+            },
+        })
     })
     
     
