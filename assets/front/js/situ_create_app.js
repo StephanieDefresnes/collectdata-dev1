@@ -12,6 +12,31 @@ function initSelect2(select) {
     });
 }
 
+function footerHeight() {
+   
+    let windowHeight = $(window).height()
+    let lastHeight = $('body').height()
+
+    if (windowHeight > lastHeight) {
+        $('#footerEnd').height(windowHeight - lastHeight)
+    }
+
+    let footerEnd = setInterval(function() {
+        let newHeight = $('body').height()
+        let contentHeight = newHeight - $('#footerEnd').height()
+
+        if (lastHeight != newHeight) {
+            lastHeight = newHeight;
+        }
+        if (windowHeight > contentHeight) {
+            $('#footerEnd').height(windowHeight - contentHeight)
+        } else {
+            $('#footerEnd').height(0)
+            clearInterval(footerEnd)
+        }
+    }, 100)
+}
+
 /**
  * Load datas or create them depending on User action
  */
@@ -154,6 +179,7 @@ function loadOrCreateData($form, data, selectId, nextSelectId) {
                             $(this).css({ opacity: 0}); 
                         })
             }
+            footerHeight()
         }
     })
 }
@@ -280,6 +306,7 @@ function toggleOldFields(oldFields, dataEntity) {
             if ($(this).val() != '')
                 $(this).parent().find('.select2-selection__rendered').addClass('selection-on')
         })
+        footerHeight()
     })
 } 
 
