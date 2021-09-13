@@ -26,10 +26,6 @@
     }
 }
 
-label > .invalid-feedback {
-    display: none !important;
-}
-
 @media (max-width: 576px) {
     #contributorLangs {
         & > .text-right {

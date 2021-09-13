@@ -578,6 +578,9 @@ th.cust-nowrap {
 form label {
     line-height: 18px !important;
     display: contents;
+    & > .invalid-feedback {
+        display: none !important;
+    }
 }
 .form-control {
     color: $dark !important;
