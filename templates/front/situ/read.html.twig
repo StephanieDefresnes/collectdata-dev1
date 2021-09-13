@@ -19,17 +19,17 @@
                 <span class="small px-1">-</span>
                 <span class="small">
                     {% if situ.statusId == 1 %}
-                        {{ 'contrib.situ.status.writing'|trans() }}
+                        {{ 'status.writing'|trans() }}
                     {% elseif situ.statusId == 2 %}
-                        {{ 'contrib.situ.status.validation'|trans() }}
+                        {{ 'status.validation'|trans() }}
                     {% elseif situ.statusId == 4 and situ.initialSitu == 1
                             and app.user.id == situ.userId %}
-                        {{ 'contrib.situ.status.refused'|trans() }}
+                        {{ 'status.refused'|trans() }}
                     {% elseif situ.statusId == 4 and situ.initialSitu == 0
                             and app.user.id == situ.userId %}
-                        {{ 'contrib.situ.status.translation_refused'|trans() }}
+                        {{ 'status.translation_refused'|trans() }}
                     {% elseif situ.statusId == 5 %}
-                        {{ 'contrib.situ.status.deleted'|trans() }}
+                        {{ 'status.deleted'|trans() }}
                     {% endif %}
                 </span>
             {% endif %}
@@ -38,13 +38,13 @@
             {% if app.user %}
                 <a href="{{ path('user_situs') }}" class="btn btn-outline-light bg-dark-50-0 px-3">
                     <i class="fas fa-chevron-left ltr pr-2"></i>
-                    {{ 'nav.contribs.user'|trans() }}
+                    {{ 'contrib.title'|trans() }}
                     <i class="fas fa-chevron-right rtl pl-2"></i>
                 </a>
             {% endif %}
             <a href="{{ path('all_situs') }}" class="btn btn-outline-light bg-dark-50-0 px-3">
                 <i class="fas fa-chevron-left ltr pr-2"></i>
-                {{ 'nav.contribs.all'|trans() }}
+                {{ 'action.situs_all'|trans() }}
                 <i class="fas fa-chevron-right rtl pl-2"></i>
             </a>
         </div>
@@ -125,7 +125,7 @@
             {% if app.user.id == situ.userId %}
                 <div class="d-flex justify-content-end">
                     <a href="{{ path('create_situ', { 'id': situ.id }) }}" class="btn btn-secondary px-4 py-2">
-                        {{ 'button.update_title'|trans() }}
+                        {{ 'action.edit'|trans() }}
                     </a>
                 </div>
             {% endif %}

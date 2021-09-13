@@ -2,19 +2,16 @@
 
 <div id="card-form" class="card bg-none mb-4" data-action="">
     
-    <div class="card-header p-3 bg-secondary-80 border text-white">
+    <div class="card-header p-3 bg-dark text-white">
         <h6 id="translationName" class="m-0 font-weight-bold">
             {{ 'translation.form.create'|trans() }}
         </h6>
     </div>
-        {#
-        {{ form_start(form) }}
-        {{ form_errors(form) }}#}
+        
     <div class="card-body p-4 bg-white-70">
         
         <div class="row mb-3">
             <div class="col-sm-7">
-{#            {{ form_row(form.name) }}#}
             </div>
             <div id="add-field" class="col-sm-5 my-md-0 my-sm-4 mt-0 mb-3 pt-md-0 pt-sm-2 pt-0 d-none">
                 <div class="d-flex justify-content-end row">
@@ -32,31 +29,21 @@
         <div id="form-fields" class="form-row">
             <div class="mx-4 d-none">
                 <label>{{ 'lang.translation.form.field.label'|trans() }}</label>
-            </div>{#
-            <ul id="fields" class="list-group list-group-flush col-12 ui-sortable"
-                data-prototype="{{ form_widget(form.fields.vars.prototype)|e }}"
-                data-widget-fields="{{ '<li class="list-group-item py-2 border col-sm-6 col-12 bg-white clearfix ui-state-default"></li>'|e }}"
-                data-widget-counter="{{ form.fields|length }}">
-                {% for fields in form.fields %}
-                    <li class="list-group-item py-2 border col-sm-6 col-12 bg-white clearfix ui-state-default">
-                        {{ form_widget(fields) }}
-                        {{ form_errors(fields) }}
-                    </li>
-                {% endfor %}
-            </ul>#}
+            </div>
+            
         </div>
 
     </div>
     <div class="card-footer bg-light text-right">
-        <div class="d-flex justify-content-between">
-            <button id="save-btn" class="btn btn-outline-primary px-3" type="submit">
-                {{ 'button.save'|trans() }}
+        <div class="d-flex justify-content-center">
+            <button id="save-btn" class="btn btn-outline-primary mx-2 px-3" type="submit">
+                {{ 'action.save'|trans() }}
             </button>
-            <button id="submit-btn" class="btn btn-primary px-4" type="submit">
-                {{ 'button.submit'|trans() }}
+            <button id="submit-btn" class="btn btn-primary mx-2 px-4" type="submit">
+                {{ 'action.submit'|trans() }}
             </button>
         </div>
     </div>
-{#        {{ form_end(form) }}#}
+            
         
 </div>

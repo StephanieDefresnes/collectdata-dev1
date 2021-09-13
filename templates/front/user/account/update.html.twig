@@ -24,43 +24,32 @@
                 <div class="card-body bg-white-70 p-4">
 
                         <div class="row mt-2 mb-3">
-                            <div class="col-sm-4 pt-2">
+                            <div class="col-sm-4 col-3">
                                 {{ form_label(form.imageFilename) }}
                             </div>
-                            <div class="col-sm-8">
+                            <div class="col-sm-8 col-9">
                                 <div class="row row-img">
-                                    {% if user.imageFilename == '' %}
-                                    <div class="col-auto img-circle">
-                                        <img src="{{ asset('/img/unknown.jpg') }}"
-                                            data-toggle="tooltip" data-placement="right"
-                                            title="{{ 'account.image.add'|trans() }}"
-                                            id="defaultImg" alt="">
-                                        <img src=""
-                                            data-toggle="tooltip" data-placement="right"
-                                            title="{{ 'account.image.update'|trans() }}"
-                                            id="previewImg" class="d-none" alt="">
+                                    <div class="col-xl-3 col-lg-4 col-md-3 col-sm-4 col-auto">
+                                        <div class="img-circle">
+                                            <img src="{{ user.imageFilename == '' ? asset('/img/unknown.jpg') : asset('/uploads/img/'~ user.imageFilename) }}"
+                                                data-toggle="tooltip" data-placement="right"
+                                                title="{{ user.imageFilename == '' ? 'account.image.add'|trans() : 'account.image.update'|trans() }}"
+                                                id="defaultImg" alt="">
+                                            <img src=""
+                                                data-toggle="tooltip" data-placement="right"
+                                                title="{{ 'account.image.update'|trans() }}"
+                                                id="previewImg" class="d-none" alt="">
+                                        </div>
                                     </div>
-                                    <div class="col-auto p-0">
-                                        <span class="text-secondary unupload-img no-img d-none"><i class="fas fa-times-circle"></i></span>
-                                        {{ form_errors(form.imageFilename) }}
-                                    </div>
-                                    {% else %}
-                                    <div class="col-auto img-circle">
-                                        <img src="{{ asset('/uploads/img/'~ user.imageFilename) }}" 
-                                            data-toggle="tooltip" data-placement="right"
-                                            title="{{ 'account.image.update'|trans() }}"
-                                            id="defaultImg" alt="">
-                                        <img src="{{ asset('/img/unknown.jpg') }}"
-                                            data-toggle="tooltip" data-placement="right"
-                                            title="{{ 'account.image.update'|trans() }}"
-                                            id="previewImg" class="d-none" alt="">
-                                    </div>
-                                    <div class="col-auto p-0">
+                                    <div class="col-1 p-0">
                                         <span class="text-secondary unupload-img d-none"><i class="fas fa-times-circle"></i></span>
-                                        <span class="text-secondary delete-img"><i class="fas fa-times-circle"></i></span>
+                                        {% if user.imageFilename != '' %}
+                                            <span class="text-secondary delete-img"><i class="fas fa-times-circle"></i></span>
+                                        {% endif %}
+                                    </div>
+                                    <div class="col-xl-8 col-lg-12 col-md-8">
                                         {{ form_errors(form.imageFilename) }}
                                     </div>
-                                    {% endif %}
                                     <div class="d-none">{{ form_widget(form.imageFilename) }}</div>
                                 </div>
                             </div>
@@ -137,10 +126,10 @@
                 <div class="card-footer bg-light text-right">
                     <div class="d-flex justify-content-between">
                         <a href="{{ path('user_account') }}" class="btn btn-light">
-                            {{ 'account.update.cancel'|trans() }}
+                            {{ 'action.cancel'|trans() }}
                         </a>
                         <button class="btn btn-secondary px-5" type="submit">
-                            {{ 'account.update.submit'|trans() }}
+                            {{ 'action.validate'|trans() }}
                         </button>
                     </div>
                 </div>
@@ -156,11 +145,12 @@
     {{ encore_entry_script_tags('user_update_app', null, 'frontApp') }}
     <script>
         var translations = {
-           "single-searchLang" : "{{ 'account.lang.default' | trans }}",
-           "multiple-search" : "{{ 'account.lang.search_multiple' | trans }}",
+            "single-searchLang" : "{{ 'account.lang.default' | trans }}",
+            "multiple-search" : "{{ 'multiple_search' | trans }}",
         }
         var img = {
             "default" : "{{ asset('/img/unknown.jpg') }}",
         }
+alert(translations['multiple-search'] +' '+translations['single-searchLang'])
     </script>
 {% endblock %}

@@ -15,7 +15,7 @@ class CreateCategoryType extends AbstractType
     {
         $builder
             ->add('title', TextType::class, [
-                'label' => 'contrib.form.category.add.title',
+                'label' => 'label_dp.title',
                 'attr' => ['placeholder' => 'contrib.form.category.level2.title_placeholder'],
             ])
             ->add('description', TextareaType::class, [
@@ -24,7 +24,7 @@ class CreateCategoryType extends AbstractType
                     'placeholder' => 'contrib.form.category.level2.description_placeholder',
                     ],
                 'row_attr' => ['class' => 'mb-0'],
-                'label' => 'contrib.form.category.add.description',
+                'label' => 'label_dp.description',
             ])
         ;
     }

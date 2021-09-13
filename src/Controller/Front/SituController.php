@@ -167,7 +167,7 @@ class SituController extends AbstractController
             $this->em->flush();
 
             $msg = $this->translator->trans(
-                    'contrib.table.deletion.success', [],
+                    'contrib.deletion.success', [],
                     'user_messages', $locale = locale_get_default()
                 );
             $this->addFlash('success', $msg);

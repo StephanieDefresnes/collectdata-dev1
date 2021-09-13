@@ -1,18 +1,4 @@
-nav:
-    account: Compte
-    account_logout: Déconnexion
-    account_profile: Mes informations
-    account_reset_password: Modifier mon mot de passe
-    contribs:
-        title: Contributions
-        all: Toutes les contributions
-        user: Mes contributions
-        add: Ajouter une contribution
-        translate: Traduire une contribution
-    translation:
-        title: Traduction
-        dashboard: Mes traductions
-        create: Traduire le site   
+access_deny: Accès refusé
 account:
     reset_password: Modifier mon mot de passe
     image:
@@ -27,21 +13,10 @@ account:
             delete:
                 success: L'image a bien été supprimée
                 error: Une erreur s'est produite lors de la suppression de l'image
-    name:
-        label: 'Nom :'
-    email:
-        label: 'Email :'
-        unique_email: Il y a déjà un compte avec cet email. Veuillez entrer un nouvel e-mail.
     lang:
-        current: 'Langue :'
-        all: 'Langues :'
         option: 'Langues optionnelles :'
-        placeholder: Choisir une langue
         default: Défaut (FR)
-        search_multiple: Rechercher
     roles: 
-        title: 'Statut :'
-        title_s: 'Statuts :'
         user: Utilisateur
         contributor: Contributeur
         moderator: Modérateur
@@ -57,113 +32,41 @@ account:
         translated_s: 'Contributions traduites :'
     update:
         title: Modifier mon compte
-        submit: Enregistrer
-        cancel: Annuler
         flash:
             success: Votre profil a bien été modifié
+            error: Une erreur s'est produite lors de la modofocation de votre profil
     translator:
         checkbox: Je souhaite que de nouvelles langues soient ajoutées, et je veux contribuer à la traduction du site.
         translate: 'Sélectionner la ou les langue(s) proposée(s) à la traduction :'
         status: Traducteur du site
         choice: 'Vous proposez de traduire le site en langue :'
         choice_s: 'Vous proposez de traduire le site en langues :'
-button:
-    add: Ajout
+action:
+    action: Action
+    actions: Actions
+    add: Ajouter
     back: Retour
     cancel: Annuler
-    create: Ajouter
     delete: Supprimer
-    delete_title: Supprimer
-    disable: Désactiver
-    down: Descendre
-    enable: Activer
-    filter: Filtre
-    next: Suivant
-    previous: Précédent
-    read_title: Détails
+    edit: Modifier
+    read: Lire
     remove: Supprimer
-    save: Enregistrer
+    save: Sauvegarder
+    situ_add: Ajouter une contribution
+    situs_all: Toutes les contributions
     submit: Soumettre
-    switch: Explorer
-    up: Monter
-    update_title: Modifier
+    translate: Traduire
+    translated: Traduction
     validate: Valider
-access_deny: Accès refusé
-lang_deny: Langue refusée
+    validation: Demander la validation
 contrib:
-    title: Mes contributions
-    table:
-        id: N°
-        title: Titre
-        description: Description
-        date_creation: Création
-        date_last_update: Dernière modification
-        date_submission: 
-            title: Date de validation
-            empty: Validation en cours
-        status:
-            title: Statut
-            writing: En cours de rédaction
-            validation: Validation demandée
-            validated: Validé
-            refused: Refusé
-            translation_refused: Traduction refusée
-        event: Événement
-        category_level1: Catégorie
-        category_level2: Sous-catégorie
-        lang: Langue
-        actions:
-            title: Actions
-            validation: Demander la validation
-            read: Lire
-            edit: Modifier
-            delete: Supprimer
-            translate: Traduire
-            translated: Traduction
-        deletion:
-            title: Suppression d'une contribution
-            text: Êtes-vous certain(e) de vouloir supprimer cette contribution ?
-            btn: Confirmer
-            error: Une erreur s'est produite lors de la suppression de la contribution.
-            success: La contribution a bien été contribution.
-    translation:
-        title: Traduire une situation
-        modal:
-            text: Dans quelle langue voulez-vous traduire cette situation ?
-            result:
-                error: Cette traduction existe déjà. Voulez-vous voir cette traduction ?
-                success: Cette traduction n'existe pas. Vous pouvez la traduire.
-            btn:
-                read: Voir
-                translate: Traduire
-        label:
-            event: "Événement :"
-            catLevel1: "Catégorie :"
-            catLevel2: "Sous-catégorie :"            
+    delete:
+        title: Suppression d'une contribution
+        text: Êtes-vous certain(e) de vouloir supprimer cette contribution ?
+        error: Une erreur s'est produite lors de la suppression de la contribution.
+        success: La contribution a bien été supprimée.
     form:
-        multiple_search: Rechercher
-        to_validate: ( validation en cours )
-        situ:
-            h1: Ajouter une situation à risque
-            h1_update: Modifier une situation à risque
-            label: La situation à risque
-            title: 'Titre :'
-            title_placeholder: Courte description de la situation
-            description: 'Description :'
-            description_placeholder: Description détaillée de la situation
-        lang:
-            label: Langue de la situation
-            placeholder: Choisir une langue
-        event:
-            label: Ajouter un événement
-            placeholder: Choisir un événement
-            add:
-                title: 'Titre :'
-                placeholder: Nom de l'événement
         category:
-            add:
-                title: 'Titre :'
-                description: 'Description :'
             level1:
                 label: Ajouter une catégorie
                 placeholder: Choisir une catégorie
@@ -174,15 +77,26 @@ contrib:
                 placeholder: Choisir une sous-catégorie
                 title_placeholder: Courte description de la sous-catégorie
                 description_placeholder: Description détaillée de la sous-catégorie
+        edit:
+            flash:
+                error: Une erreur s'est produite lors de la récupération de la situation
+        event:
+            label: Ajouter un événement
+            placeholder: Choisir un événement
+            placeholder_add: Nom de l'événement
+        error: Veuillez renseigner tous les champs.
+        flash:
+            error: Une erreur s'est produite lors du traitement de la situation
+        from: De
         item:
             label: 'La meilleure attitude à adopter :'
             label_item: 'Autre réponse possible :'
             add_item:
                 title: Voulez-vous que votre contribution participe au test Quotient Risque à venir ? Alors ajoutez quelques attitudes que vous n'auriez pas adopté !
-                comment-begin: 'Vous pouvez ajouter jusqu''à 3 attitudes : la moyenne mais acceptable ('
-                comment-1: ), la moyenne non recommandée (
-                comment-2: ) et la pire attitude à adopter (
-                comment-end: ).
+                comment: 'Vous pouvez ajouter jusqu''à 3 attitudes :
+                        la moyenne mais acceptable (<span class="text-info font-weight-bold"> Peut mieux faire </span>),
+                        la moyenne non recommandée (<span class="text-warning font-weight-bold"> Attention </span>),
+                        et la pire attitude à adopter (<span class="text-danger font-weight-bold"> Danger </span>).'
                 btn: Ajouter une attitude
             title_placeholder: Courte description de la réponse
             description_placeholder: Description détaillée de la réponse
@@ -197,38 +111,68 @@ contrib:
             remove:
                 title: Suppression de réponse
                 confirm: Êtes-vous certain(e) de vouloir supprimer cette réponse ?
+        lang:
+            label: Langue de la situation
         save:
-            btn: Enregistrer
             flash:
                 success: La situation a bien été enregistrée
                 success_update: Les modifications ont bien été enregistrées
                 error: Une erreur s'est produite lors de l'enregistrement de la situation
+        situ:
+            h1: Ajouter une situation à risque
+            h1_update: Modifier une situation à risque
+            label: La situation à risque
+            title_placeholder: Courte description de la situation
+            description_placeholder: Description détaillée de la situation
+        sr_only:
+            error: "Alerte erreur :"
+            success: "Alerte succès :"
         submit:
-            btn: Soumettre
             flash:
                 success: La situation a bien été soumise
                 success_update: Les modifications ont bien été soumises
                 error: Une erreur s'est produite lors de la soumission de la situation
-        edit:
-            flash:
-                error: Une erreur s'est produite lors de la récupération de la situation
-        flash:
-            error: Une erreur s'est produite lors du traitement de la situation
-        error: Veuillez renseigner tous les champs.
-        sr_only:
-            error: "Alerte erreur :"
-            success: "Alerte succès :"
-        from: De
         to: À
+        to_validate: ( validation en cours )
     situ:
         title: Situation à risque
-        status:
-            writing: En cours de rédaction
-            validation: Validation demandée
-            refused: Refusée
-            deleted: Supprimée
-            translation_refused: Traduction refusée
         by_author: "Proposée par"
+    title: Mes contributions
+    translation:
+        title: Traduire une situation
+        modal:
+            text: Dans quelle langue voulez-vous traduire cette situation ?
+            result:
+                error: Cette traduction existe déjà. Voulez-vous lire cette traduction ?
+                success: Cette traduction n'existe pas. Vous pouvez la traduire.
+label:
+    description: Description
+    email: Email
+    event: Événement
+    catLevel1: Catégorie
+    catLevel2: Sous-catégorie
+    lang: Langue
+    lang_s: Langues
+    lang_placeholder: Choisir une langue
+    name: Nom
+    situ: La situation à risque
+    title: Titre
+label_dp:
+    description: 'Description :'
+    email: 'Email :'
+    event: 'Événement :'
+    catLevel1: 'Catégorie :'
+    catLevel2: 'Sous-catégorie :'
+    lang: 'Langue :'
+    lang_s: 'Langues :'
+    name: 'Nom :'
+    situ: 'La situation à risque :'
+    title: 'Titre :'
+    translation: 'Traduction :'
+    translation_s: 'Traductions :'
+lang_deny: Langue refusée
+multiple_search: Rechercher
+no: Non
 translation:
     title: Mes traductions
     form:
@@ -239,8 +183,15 @@ translation:
             title: Tableau de données/texte à traduire
     table:
         empty: Aucune traduction de site
-        name: Nom
-        date_status: Création
-        langs: Langue(s)
-'no': Non
-'yes': Oui
+        environment: Environnement 
+status:
+    date_creation: Création
+    deleted: Supprimé
+    refused: Refusé
+    title: Statut
+    title_s: Statuts
+    translation_refused: Traduction refusée
+    validated: Validé
+    validation: Validation demandée
+    writing: En cours de rédaction
+yes: Oui

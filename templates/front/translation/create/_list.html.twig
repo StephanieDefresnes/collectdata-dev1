@@ -12,8 +12,8 @@
             <table class="shadow table table-sm table-borderless table-hover border border-secondary text-nowrap bg-white-80">
                 <thead class="bg-secondary-80 text-white">
                     <tr>
-                        <th class="px-3">{{ 'translation.table.name'|trans() }}</th>
-                        <th class="px-3">{{ 'translation.table.date_status'|trans() }}</th>
+                        <th class="px-3">{{ 'translation.table.environment'|trans() }}</th>
+                        <th class="px-3">{{ 'status.date_creation'|trans() }}</th>
                         {% for lang in app.user.contributorLangs %}
                             <th class="px-3 text-center">{{ lang.englishName }}</th>
                         {% endfor %}
@@ -46,8 +46,7 @@
                                     <span role="button" class="selectMessage btn text-success"
                                        data-id="{{ translation.id }}" data-user="{{ app.user.id }}" data-action=""
                                        data-toggle="tooltip" data-placement="left"
-                                       title="{{ 'lang.translation.table.btn.update'|trans() }}"
-                                       aria-label="{{ 'lang.translation.table.btn.update'|trans() }}">
+                                       title="{{ 'action.add'|trans() }}">
                                         <i class="fas fa-plus-circle"></i>
                                     </span>
                                 {% endif %}

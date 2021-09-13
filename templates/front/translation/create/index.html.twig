@@ -2,7 +2,7 @@
 {% trans_default_domain 'user_messages' %}
 {% set locale = app.request.locale %}
 
-{% block title %}{{ 'translation.form.create'|trans() }}{% endblock %}
+{% block title %}{{ 'translation.form.title'|trans() }}{% endblock %}
 
 {% block stylesheets %}
     {{ parent() }}
@@ -11,7 +11,7 @@
 {% block content %}
         
     {% block banner%}
-        <h1 class="h3 my-3 mb-5 text-white">{{ 'translation.form.create'|trans() }}</h1>
+        <h1 class="h3 my-3 mb-5 text-white">{{ 'translation.form.title'|trans() }}</h1>
     {% endblock %}
 
     <div class="row">
@@ -31,79 +31,4 @@
 
 {% block javascripts %}
     {{ parent() }}
-    <script>
-        var translations = {
-           "multiple-search" : "{{ 'lang.translation.form.multiple_search' | trans }}",
-           "createTranslation" : "{{ 'lang.translation.form.field.title.create' | trans }}",
-           "updateTranslation" : "{{ 'lang.translation.form.field.title.update' | trans }}",
-           "locale" : "{{ locale }}",
-           "deleteField-title" : "{{ 'lang.translation.form.field.btn.remove.title' | trans }}",
-           "deleteField-content" : "{{ 'lang.translation.form.field.btn.remove.content' | trans }}",
-           "yes" : "{{ 'yes' | trans }}",
-           "no" : "{{ 'no' | trans }}",
-           "alertSucces" : "{{ 'lang.translation.form.alert.success' | trans }}",
-           "alertError" : "{{ 'lang.translation.form.alert.error' | trans }}",
-        }
-        jQuery(function($){
-            
-
-/*
- * Update Transaltion
- */
-// Get data Transaltion
-function selectTranslation(id, action, userId) {
-    $.ajax({
-        url: "/"+ translations['locale'] +"/translation/edit",
-        method: 'GET',
-        data: { id: id },
-        success: function(data) {
-            console.log(data.message[0].name)
-            $('#translationName').append(' <span class="text-uppercase">'+ data.message[0].name +'</span>')
-            
-            {#
-            $('#message_form_name').addClass('disabled')
-                    .attr('data-message', data.message[0].id)
-                    .attr('data-status', data.message[0].statusId)
-                    .val(data.message[0].name)
-                    .find('option').each(function() {
-                if ($(this).val() == '')
-                    $(this).removeAttr('selected').prop('disabled', true)
-                else if ($(this).val() == data.message[0].name)
-                    $(this).attr('selected', 'selected')
-                else $(this).removeAttr('selected').prop('disabled', true)
-            })
-            loadFieldsToUpdate(data.fields, data.fields.length)
-            $('#card-form h6').text(translations['updateTranslation'])
-            $('#card-form, #cancel').show()
-            $('#card-list, #add-translation').hide()
-            $('#add-field').removeClass('d-none')
-            $('#form-submit').attr('data-action', action).removeClass('d-none')#}
-        }
-    })
-}
-
-// Set data Transaltion
-function updateTranslation(messageId, statusId, dataForm) {    
-    $.ajax({
-        url: "/"+ translations['locale'] +"/front/createTranslation",
-        method: 'POST',
-        data: { id: messageId, statusId: statusId, data: dataForm },
-        success: function() {
-            // To reload page to the top
-            var pathname = window.location.pathname;
-            window.location.replace(pathname)
-        }
-    })
-}
-            
-      
-    
-    // Load data Translation from table
-    $('.selectMessage').click(function (evt) {
-        evt.stopPropagation()
-        selectTranslation($(this).data('id'), $(this).data('action'), $(this).data('user'))
-    })      
-            
-        })
-    </script>
 {% endblock %}

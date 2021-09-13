@@ -1,18 +1,4 @@
-nav:
-    account: Cuenta
-    account_logout: Desconexión
-    account_profile: Mi informacion
-    account_reset_password: Cambiar la contraseña
-    contribs:
-        title: Contribuciones
-        all: Todas las contribuciones
-        user: Mis contribuciones
-        add: Agregar una contribución
-        translate: Traducir contribución
-    translation:
-        title: Traducciones
-        dashboard: Mis traducciones
-        create: Traducir el sitio
+access_deny: Acceso denegado
 account:
     reset_password: Cambiar la contraseña
     image:
@@ -27,21 +13,10 @@ account:
             delete:
                 success: La imagen ha sido eliminada
                 error: Ocurrió un error al eliminar la imagen
-    name:
-        label: 'Apellido :'
-    email: 
-        label: 'Email :'
-        unique_email: Ya existe este email. Ingrese un nuevo email.
     lang:
-        current: 'Idioma :'
-        all: 'Idiomas :'
-        option: 'Idiomas opcionales :'
-        placeholder: Elige un idioma
+        option: 'Lenguas opcionales :'
         default: Defecto (FR)
-        search_multiple: Buscar
-    roles: 
-        title: 'Estado :'
-        title_s: 'Estados :'
+    roles:
         user: Usuario
         contributor: Contribuyente
         moderator: Moderador
@@ -57,113 +32,41 @@ account:
         translated_s: 'Contribuciones traducidas :'
     update:
         title: Modificar mi cuenta
-        submit: Modificar
-        cancel: Anular
         flash:
             success: Tu perfil ha sido modificado
+            error: Se produjo un error al modificar la ubicación de su perfil
     translator:
-        checkbox: Quiero que se agreguen nuevos idiomas y quiero contribuir a la traducción del sitio.
-        translate: 'Seleccionar los idiomas propuestos para la traducción :'
+        checkbox: Quiero que se agreguen nuevos lenguas y quiero contribuir a la traducción del sitio.
+        translate: 'Seleccionar las lenguas propuestos para la traducción :'
         status: Traductor del sitio
-        choice: 'Ofreces traducir el sitio al idioma :'
-        choice_s: 'Ofreces traducir el sitio a idiomas :'
-button:
-    add: Añadiendo
+        choice: 'Ofreces traducir el sitio al lengua :'
+        choice_s: 'Ofreces traducir el sitio a lenguas :'
+action:
+    action: Acción
+    actions: Acciones
+    add: Agregar
     back: Espalda
     cancel: Regreso
-    create: Añadir
     delete: Eliminar
-    delete_title: Eliminar
-    disable: Desactivar
-    down: Bajar
-    enable: Activar
-    filter: Filtrado
-    next: Próximo
-    previous: Anterior
-    read_title: Detalles
+    edit: Editar
+    read: Leer
     remove: Eliminar
     save: Grabar
+    situ_add: Agregar una contribución
+    situs_all: Todas las contribuciones
     submit: Enviar
-    switch: Para explorar
-    up: Subir
-    update_title: Editar
+    translate: Traducir
+    translated: Traducción
     validate: Validar
-access_deny: Acceso denegado
-lang_deny: Idioma denegado
+    validation: Solicitar validación
 contrib:
-    title: Mis contribuciones
-    table:
-        id: No.
-        title: Título
-        description: Descripción
-        date_creation: Fecha de creación
-        date_last_update: Última actualización
-        date_submission: 
-            title: Fecha de validación
-            empty: Validación en curso
-        status:
-            title: Estado
-            writing: Redacción en curso
-            validation: Validación solicitada
-            validated: Validado
-            refused: Rechazado
-            translation_refused: Traducción rechazada
-        event: Evento
-        category_level1: Categoría
-        category_level2: Subcategoría
-        lang: Idioma
-        actions:
-            title: Acciones
-            validation: Solicitar validación
-            read: Leer
-            edit: Editar
-            delete: Eliminar
-            translate: Traducir
-            translated: Traducción
-        deletion:
-            title: Eliminar una contribución
-            text: ¿Está seguro de que desea eliminar esta contribución?
-            btn: Confirmar
-            error: Se produjo un error al eliminar la contribución.
-            success: La contribución ha sido eliminada.
-    translation:
-        title: Traducir una situación
-        modal:
-            text: ¿A qué idioma quieres traducir esta situación?
-            result:
-                error: Esta traducción ya existe. ¿Quieres ver esta traducción?
-                success: Esta traducción no existe. Puedes traducirlo.
-            btn:
-                read: Ver
-                translate: Traducir
-        label:
-            event: "Événement :"
-            catLevel1: "Catégorie :"
-            catLevel2: "Sous-catégorie :"            
+    delete:
+        title: Eliminar una contribución
+        text: ¿Está seguro de que desea eliminar esta contribución?
+        error: Se produjo un error al eliminar la contribución.
+        success: La contribución ha sido eliminada.
     form:
-        multiple_search: Buscar
-        to_validate: ( validación en curso )
-        situ:
-            h1: Agrega una situación de riesgo
-            h1_update: Cambiar una situación de riesgo
-            label: La situación de riesgo
-            title: 'Título :'
-            title_placeholder: Breve descripción de la situación.
-            description: 'Descripción :'
-            description_placeholder: Descripción detallada de la situación
-        lang:
-            label: Idioma de la situación
-            placeholder: Elige un idioma
-        event:
-            label: Agregar un evento
-            placeholder: Elige un evento
-            add:
-                title: 'Título :'
-                placeholder: Nombre del evento
         category:
-            add:
-                title: 'Título :'
-                description: 'Descripción :'
             level1:
                 label: Agregar una categoría
                 placeholder: Elige una categoría
@@ -174,15 +77,26 @@ contrib:
                 placeholder: Elige una subcategoría
                 title_placeholder: Breve descripción de la subcategoría.
                 description_placeholder: Descripción detallada de la subcategoría
+        edit:
+            flash:
+                error: Ocurrió un error mientras se recuperaba de la situación
+        event:
+            label: Agregar un evento
+            placeholder: Elige un evento
+            placeholder_add: Nombre del evento
+        error: Porfavor complete todos los campos.
+        flash:
+            error: Ocurrió un error al manejar la situación
+        from: De
         item:                
             label: 'La mejor actitud a adoptar: :'
             label_item: 'Otra posible respuesta : '
             add_item:
                 title: ¿Quiere que su contribución participe en la próxima prueba de cociente de riesgo? ¡Así que agregue algunas actitudes que no habría adoptado!
-                comment-begin: 'Puede agregar hasta 3 actitudes: promedio pero aceptable ('
-                comment-1: ), el promedio no recomendado (
-                comment-2: ) y la peor actitud a adoptar (
-                comment-end: ).
+                comment: 'Puede agregar hasta 3 actitudes: 
+                        promedio pero aceptabl (<span class="text-info font-weight-bold"> Puedes hacerlo mejor </span>),
+                        el promedio no recomendado (<span class="text-warning font-weight-bold"> Advertencia </span>),
+                        y la peor actitud a adoptar (<span class="text-danger font-weight-bold"> Peligro </span>).'
                 btn: Agrega una actitud
             title_placeholder: Breve descripción de la respuesta
             description_placeholder: Descripción detallada de la respuesta
@@ -197,38 +111,68 @@ contrib:
             remove:
                 title: Eliminación de respuesta
                 confirm: ¿Estás seguro de que deseas eliminar esta respuesta?
+        lang:
+            label: Lengua de la situación
         save:
-            btn: Salvar
             flash:
                 success: La situación se ha salvado
                 success_update: Los cambios han sido guardados
                 error: Ocurrió un error al guardar la situación.
+        situ:
+            h1: Agrega una situación de riesgo
+            h1_update: Cambiar una situación de riesgo
+            label: La situación de riesgo
+            title_placeholder: Breve descripción de la situación.
+            description_placeholder: Descripción detallada de la situación
+        sr_only:
+            error: "Alerta de error :"
+            success: "Alerta de éxito :"
         submit:
-            btn: Enviar
             flash:
                 success: La situación ha sido enviada
                 success_update: Los cambios han sido enviados
                 error: Se produjo un error al enviar la situación.
-        edit:
-            flash:
-                error: Ocurrió un error mientras se recuperaba de la situación
-        flash:
-            error: Ocurrió un error al manejar la situación
-        error: Porfavor complete todos los campos.
-        sr_only:
-            error: "Alerta de error :"
-            success: "Alerta de éxito :"
-        from: De
         to: A
+        to_validate: ( validación en curso )
     situ:
         title: Situación de riesgo
-        status:
-            writing: Redacción en curso
-            validation: Validación solicitada
-            validated: Validado
-            refused: Rechazado
-            translation_refused: Traducción rechazada
         by_author: "Propuesto por"
+    title: Mis contribuciones
+    translation:
+        title: Traducir una situación
+        modal:
+            text: ¿A qué lengua quieres traducir esta situación?
+            result:
+                error: Esta traducción ya existe. ¿Quieres leer esta traducción?
+                success: Esta traducción no existe. Puedes traducirlo.
+label:
+    description: Descripción
+    email: Email
+    event: Evento
+    catLevel1: Categoría
+    catLevel2: Subcategoría
+    lang: Lengua
+    lang_s: Lenguas
+    lang_placeholder: Elige una lengua
+    name: Apellido
+    situ: La situación de riesgo
+    title: Título
+label_dp:
+    description: 'Descripción :'
+    email: 'Email :'
+    event: 'Evento :'
+    catLevel1: 'Categoría :'
+    catLevel2: 'Subcategoría :'
+    lang: 'Lengua :'
+    lang_s: 'Lenguas :'
+    name: 'Apellido :'
+    situ: 'La situación de riesgo :'
+    title: 'Título :'
+    translation: 'Traducción :'
+    translation_s: 'Traducciones :'
+lang_deny: Lengua denegado
+multiple_search: Rechercher
+no: No
 translation:
     title: Mis traducciones 
     form:
@@ -239,8 +183,15 @@ translation:
             title: Tabla de datos/textos a traducir
     table:
         empty: Aucune traduction de site
-        name: Nombre
-        date_status: Creación
-        langs: Idioma(s)
-'no': No
-'yes': Sí
+        environment: Entorno 
+status:
+    date_creation: Création
+    deleted: Eliminado
+    refused: Rechazado
+    title: Estado
+    title_s: Estatutos
+    translation_refused: Traducción rechazada
+    validated: Validado
+    validation: Validación solicitada
+    writing: Redacción en curso
+yes: Sí

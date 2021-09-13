@@ -99,7 +99,7 @@ class CreateSituFormType extends AbstractType
                 'choice_label' => function($lang, $key, $value) {
                     return html_entity_decode($lang->getName());
                 },
-                'placeholder' => 'contrib.form.lang.placeholder',
+                'placeholder' => 'label.lang_placeholder',
                 'query_builder' => function (EntityRepository $er) use ($userLangs) {
                         return $er->createQueryBuilder('lang')
                                 ->where('lang.id IN (:array)')
@@ -349,7 +349,7 @@ class CreateSituFormType extends AbstractType
         // Situ fields
         $builder
             ->add('title', TextType::class, [
-                'label' => 'contrib.form.situ.title',
+                'label' => 'label_dp.title',
                 'attr' => [
                     'data-id' => '',
                     'class' => 'mb-md-4',
@@ -357,7 +357,7 @@ class CreateSituFormType extends AbstractType
                     ],
             ])
             ->add('description', TextareaType::class, [
-                'label' => 'contrib.form.situ.description',
+                'label' => 'label_dp.description',
                 'attr' => [
                     'rows' => '5',
                     'placeholder' => 'contrib.form.situ.description_placeholder',
