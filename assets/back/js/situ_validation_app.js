@@ -12,7 +12,6 @@ function initSelect2(select) {
 	},
     })
     $(select).select2({
-        language: "fr",
         width: 'resolve'
     });
 }
@@ -72,10 +71,7 @@ function situValidation(dataForm) {
         data: {dataForm},
         success: function(data) {
             location.href = data['redirection']['targetUrl'];
-        },
-//        error: function() {
-//            location.href = data['redirection']['targetUrl'];
-//        }
+        }
     })
 }
 
