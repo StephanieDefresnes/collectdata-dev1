@@ -1,3 +1,4 @@
+access_deny: Accès refusé
 action:
     action: Action
     actions: Actions
@@ -23,6 +24,7 @@ action:
     remove: Supprimer
     save: Sauvegarder
     select: Sélectionner
+    send: Envoyer
     submit: Soumettre
     switch: Explorer
     translate: Traduire

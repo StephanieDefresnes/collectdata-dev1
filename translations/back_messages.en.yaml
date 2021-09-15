@@ -1,3 +1,4 @@
+access_deny: Access denied
 action:
     action: Action
     actions: Actions
@@ -23,6 +24,7 @@ action:
     remove: Remove
     save: Save
     select: Select
+    send: Send
     submit: Submit
     switch: Switch
     translate: Translate
