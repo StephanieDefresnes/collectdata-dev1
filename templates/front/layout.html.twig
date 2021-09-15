@@ -7,13 +7,7 @@
 {% endblock %}
 
 {% block body %}
-    <body id="page" class="bg-dark{% for locale in applocales %}
-        {% if  (locale == app.request.locale and app.request.locale == 'ar')
-            or (locale == app.request.locale and app.request.locale == 'he')
-            or (locale == app.request.locale and app.request.locale == 'ur') %}
-            rtl
-        {% endif %}
-    {% endfor %}">
+    <body id="page" class="bg-dark">
         
         {% include "front/block/_slideshow.html.twig" %}
         

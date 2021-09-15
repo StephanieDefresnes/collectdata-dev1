@@ -37,7 +37,10 @@
                         {{ form_row(form.roles) }}
                     </div>
                     {% endif %}
-                    <div class="{% if is_granted("ROLE_MODERATOR") and not is_granted("ROLE_SUPER_ADMIN") and not is_granted("ROLE_ADMIN") %}col-md-12{% else %}col-md-6{% endif %}">
+                    <div class="{% if is_granted("ROLE_MODERATOR")
+                                    and not is_granted("ROLE_SUPER_ADMIN")
+                                    and not is_granted("ROLE_ADMIN") %}col-md-12{%
+                                else %}col-md-6{% endif %}">
                         {{ form_row(form.adminNote) }}
                     </div>
                     <div class="col-md-12 my-3">

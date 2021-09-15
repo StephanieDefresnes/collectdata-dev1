@@ -6,12 +6,14 @@
                 {% for message in messages %}
                     <div class="alert alert-secondary alert-dismissible px-3 fade show" role="alert">
                         <span class="sr-only">{{ ('alert.' ~ type)|trans() }} : </span>
-                        {% if type == 'success' %}
-                            <span class="icon text-success"><i class="fas fa-check-circle"></i></span>
-                        {% elseif type == 'error' %}
+                        {% if type == 'error' %}
                             <span class="icon text-danger"><i class="fas fa-exclamation-circle"></i></span>
-                        {% elseif type == 'info' %}
-                            <span class="icon text-info"><i class="fas fa-info-circle"></i></span>
+                        {% else %}
+                            <span class="icon text-{{ ~type }}">
+                            {% if type == 'success' %}<i class="fas fa-check-circle"></i>
+                            {% elseif type == 'info' %}<i class="fas fa-info-circle"></i>
+                            {% elseif type == 'warning' %}<i class="fas fa-exclamation-circle"></i>{% endif %}
+                            </span>
                         {% endif %}
                         <span class="msg">{{ message|raw|nl2br }}</span>
                     </div>
