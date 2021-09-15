@@ -43,7 +43,7 @@ class UserBatchType extends AbstractType
             ])
             ->add('action', ChoiceType::class, [
                 'label' => false,
-                'placeholder' => 'action.placeholder',
+                'placeholder' => 'action.select',
                 'choices' => [
                     'action.delete' => 'delete',
                     'action.permute_enabled' => 'permute_enabled',

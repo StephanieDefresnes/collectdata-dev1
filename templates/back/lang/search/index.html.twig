@@ -2,7 +2,7 @@
 {% extends "back/layout.html.twig" %}
 {% set locale = app.request.locale %}
 
-{% block title %}{{ 'lang.search.title'|trans() }}{% endblock %}
+{% block title %}{{ 'label.langs'|trans() }}{% endblock %}
 
 {% block stylesheets %}
     {{ parent() }}
@@ -15,7 +15,7 @@
     <div class="container-fluid pt-4">
         
         <div class="d-sm-flex align-items-center justify-content-between mb-4">
-            <h1 class="h3 mb-0 text-gray-800">{{ 'lang.search.title'|trans() }}</h1>
+            <h1 class="h3 mb-0 text-gray-800">{{ 'label.langs'|trans() }}</h1>
         </div>
 
         {{ include('back/lang/search/_list.html.twig') }}

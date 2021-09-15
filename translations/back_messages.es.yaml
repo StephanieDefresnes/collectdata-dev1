@@ -1,111 +1,56 @@
-sidebar:
-    dashboard: Tablero
-    lang:
-        title: Idiomas
-        search: Listado
-        translation: Traducciones del sitio
-        translator: Traducción forms
-        yaml: Generador de YAML
-    user:
-        title: Usuarios
-        create: Invitación
-        search: Listado
-    contrib:
-        search: Listado
-        title: Contribuciones
-        validation: Validación
-    event: Eventos
-    category: Categorías
-    content: Contenido
-nav:
-    account: Cuenta
-    account_logout: Desconexión
-    account_profile: Mi informacion
-    account_reset_password:  Cambiar la contraseña
-    end_switch: Fin de la exploración
-    front: Ir al sitio web
-footer:
-    copyright: Todos los derechos reservados
-dashboard:
-    title: Tablero
 action:
-    placeholder: Seleccionar
-    delete: Eliminar
-    update: Editar
-    permute_enabled: Activar / Desactivar
-button:
-    add: Añadiendo
+    action: Action
+    actions: Actions
+    action_s: Action(s)
+    add: Agregar
+    archive: Archivado
     back: Espalda
     cancel: Cancelar
+    clone:  Clon
     close: Cerrar
-    create: Añadir
     confirm: Confirmar
+    content: Contenido
     delete: Eliminar
-    delete_title: Eliminar
+    delete_definitively: Eliminar definitivamente
     disable: Desactivar
-    down: Bajar
+    edit: Editar
     enable: Activar
-    filter: Filtrado
-    modify: Actualizar
-    next: Próximo
-    previous: Anterior
+    invite: Invitación
+    permute_enabled: Activar / Desactivar
     read: Leer
     read_title: Detalles
+    refuse: Rechazar
     remove: Eliminar
     save: Grabar
+    select: Seleccionar
     submit: Enviar
     switch: Para explorar
-    up: Subir
-    update_title: Editar
+    translate: Traducir
+    translated: Traducción
     validate: Validar
     validated: Válido
-status:
-    title: Status
-    1: Escrito
-    2: A validar
-    3: Válido
-    4: Rechazado
-    5: Destrozado
+    validation: Validación
 badge:
-    new: Nouveau
+    new: Nuevo
 content:
-    list:
-        title: Gestión de contenidos públicos
-        table:
-            h6: Lista de contenidos
-            empty: Sin contenido
-            action: Acción
-            enabled: Activo
-            lang: Idioma
-            type: Tipo
-            title: Título
-            slug: Slug
     form:
-        title: Crear contenido
         badge: Elección de lengua / Generar slug
         card: Crear contenido nuevo
-        update: Update content
         page:
             collection: 
                 btn: Agregar una sección
-                title: Título (opción)
-                label: Contenido
                 remove:
-                    title: Eliminación de contenido
                     confirm: ¿Está seguro de que desea eliminar este contenido?
-            lang:
-                label: "Lengua :"
+                    title: Eliminación de contenido
+                title: Título (opción)
             type:
-                label: Tipo
                 choice:
                     home: Bienvenida
                     legal: Notas legales
                     cgu: CGU
                     page: Página
                 placeholder: Seleccione tipo
-            title: Título
             title_lang: Entrar en
-            slug: Slug
         save:
             flash:
                 success: La página se ha guardado
@@ -114,8 +59,14 @@ content:
             flash:
                 success: La página ha sido activada
                 error: Ocurrió un error al activar la página
+        title: Contenido de página
+        update: Editar contenido
+    list:
+        table:
+            empty: Sin contenido
+            title: Lista de contenidos
+        title: Gestión de contenidos públicos
 contrib:
-    action: Acción
     category:
         title: Lista de categorías
     categoryLevel1:
@@ -132,45 +83,17 @@ contrib:
             flash:
                 success: El evento ha sido activado
     situ:
-        title: Lista de situaciones
-        details:
-            title: Título
-            description: Descripción
-            date:
-                creation: Creación
-                update: Modificación
-                submit: Sumisión
-                validation: Validación
-            user: Contribuyente
-            lang: Lengua
-            event: Eventos
-            category:
-                level1: Categoría
-                level2: Sub-category
-            initial: Inicial
-            translated: Traducción
-        table:
-            empty: Sin contribución
-            btn:
-                read: Leer
-                valid: Validar
-        validation:
-            title: Validación de contribuciones
+        empty: Sin contribución
+        list: Lista de situaciones
+        read: Leer una contribución
+        validation: Validación de contribuciones
         verify:
-            error: Sin contribución para validar
+            error: 'Sin contribución #%id% para validar'
             title: Validar una contribución  
             data:
                 title: Contribución a validar
-                translated: "Traduction de :"
-                event: 'Evento:'
-                category_level1: 'Categoría:'
-                category_level2: 'Subcategoría:'
-                lang: Lengua
+                translated: "Traducción de :"
                 to_validate: '- A validar !'
-                situ:
-                    label: La situación de riesgo
-                    title: 'Título :'
-                    description: 'Descripción :'
                 item:
                     label: 'La mejor actitud para adoptar:'
                     label_item: 'Otra posible respuesta:'
@@ -182,95 +105,61 @@ contrib:
                         danger: Peligro
             form:
                 title: Campos a verificar
-                event:
-                    title: Verificar el evento
-                category_level1:
-                    title: Verificar la categoría
-                category_level2:
-                    title: Verificar la subcategoría
-                action:
-                    placeholder: Acción
-                    valid: Ok
-                select: Seleccionar
-                btn:
-                    refuse: Rechazar
-                    valid: Validar
-                translated:
-                    title: "Traduccion :"
-                    conflict: Conflicto
-                    validate: "Validar :"
-                    modal:
-                        title: Verificación de traducciones
-                        comment:    Si una traducción ya ha sido validada, rechace esta traducción.
-                                    De lo contrario, depende de usted juzgar la relevancia de la validación en comparación con las otras traducciones en curso.
-                        initial: Contribución inicial
-                        situs:
-                            title: Traducciones
-                            author: "Autor :"
-                            current: "Actual :"
-                            status: "Estado :"
+                event: Verificar el evento
+                category_level1: Verificar la categoría
+                category_level2: Verificar la subcategoría
                 modal:
-                    validation:
-                        contrib: "Contribución :"
-                        flash:
-                            success: The contribution has been validated
                     refuse:
-                        title: Razón de la denegación
-                        question: ¿Por qué motivo rechaza esta contribución?
-                        detail:
-                            line-1: Un evento, una categoría o una subcategoría pueden resultar inapropiados o, más bien, solicitar la creación de uno nuevo.
-                            line-2: La situación o las respuestas pueden ser inapropiadas.
-                            line-3: '"Otro" es un motivo diferente de los anteriores, o puede proporcionar más explicación para el motivo de la denegación.'
-                        select:
-                            placeholder: Seleccione un patrón
-                            inappropriate: Inapropiado
-                            create: Crea uno nuevo
-                            other: Otro
                         comment:
-                            title: Comentario obligatorio
-                            textarea: Comentario
+                            conflict:
+                                validated: Ya se ha validado una traducción para esta contribución.
+                                read: Leer la traducción
+                            create:
+                                eventRefuse: La contribución no corresponde a este evento. Crea otro.
+                                categoryLevel1Refuse: La contribución no corresponde a esta categoría. Crea otro.
+                                categoryLevel2Refuse: La contribución no corresponde a esta subcategoría. Crea otro.
                             inappropriate:
                                 eventRefuse: La contribución no corresponde a este evento. Seleccione uno diferente.
                                 categoryLevel1Refuse: La contribución no corresponde a esta categoría. Seleccione uno diferente.
                                 categoryLevel2Refuse: La contribución no corresponde a esta subcategoría. Seleccione uno diferente.
                                 situRefuse: La situación no se corresponde con las condiciones generales de uso.
                                 itemsRefuse: Las respuestas propuestas no se corresponden con las condiciones generales de uso.
-                            create:
-                                eventRefuse: La contribución no corresponde a este evento. Crea otro.
-                                categoryLevel1Refuse: La contribución no corresponde a esta categoría. Crea otro.
-                                categoryLevel2Refuse: La contribución no corresponde a esta subcategoría. Crea otro.
-                            conflict:
-                                validated: Ya se ha validado una traducción para esta contribución.
-                                read: Leer la traducción
+                            placeholder: Comentario
+                            title: Comentario obligatorio
+                        detail: |
+                                <li>'Un evento, una categoría o una subcategoría pueden resultar inapropiados o, más bien, solicitar la creación de uno nuevo.</li>
+                                <li>La situación o las respuestas pueden ser inapropiadas.</li>
+                                <li>'"Otro" es un motivo diferente de los anteriores, o puede proporcionar más explicación para el motivo de la denegación.'</li>
                         entities: "Entidades :"
-                        categoryLevel1: Categoría
-                        categoryLevel2: Subcategoría
-                        translation: Conflicto de traducción
-                        event: Evento
-                        situ: Situación de riesgo
-                        items: Respuesta(s) propuesta(s)
-                        unvalid: Debes completar al menos una entidad, un motivo y un comentario
                         flash:
                             success: La contribución ha sido rechazada
-        read:
-            title: Leer una contribución
+                        items: Respuesta(s) propuesta(s)
+                        question: ¿Por qué motivo rechaza esta contribución?
+                        select:
+                            create: Crea uno nuevo
+                            inappropriate: Inapropiado
+                            other: Otro
+                            placeholder: Seleccionar
+                        title: Razón de la denegación
+                        translation: Conflicto de traducción
+                        unvalid: Debes completar al menos una entidad, un motivo y un comentario
+                    translated:
+                        comment:    Si una traducción ya ha sido validada, rechace esta traducción.
+                                    De lo contrario, depende de usted juzgar la relevancia de la validación en comparación con las otras traducciones en curso.
+                        conflict: Conflicto
+                        current: "Actual :"
+                        initial: Contribución inicial
+                        title: Verificación de traducciones
+                    validation:
+                        flash:
+                            success: La contribución ha sido validada
 delete:
     confirm: 'Confirmación de eliminación'
     warning: 'La eliminación será definitiva.'
-editor:
-    field:
-        body: Contenido
-    label:
-        body: Contenido
-        key: Llave
-    update:
-        flash:
-            success: 'Los datos se han guardado.'
-        h1: 'Contenido del sitio'
-        h2: 'Edición de texto'
-        title: 'Edición de texto'
 error:
     no_element_selected: 'Ningún artículo seleccionado'
+footer:
+    copyright: Todos los derechos reservados
 invitation:
     email:
         subject: '%website_name% - Invitación'
@@ -289,75 +178,107 @@ invitation:
             Atentamente,
             <a href="%host%">%website_name%</a>
 label:
-    filter_number_by_page: 'Número de elementos por página'
-    filter_search: Buscar
+    contributions: Contribuciones
+    dashboard: Tablero
+    date: Fecha de estado
+    date_creation: Creación
+    date_login: último inicio de sesión
+    date_status: fecha de estado
+    date_submit: Envío
+    date_validate: Validación
+    date_update: Modificado el
+    default: Defecto
+    description: Descripción
+    email: Email
+    enabled: Activo
+    event: Evento
+    categories: Categorías
+    catLevel1: Categoría
+    catLevel2: Subcategoría
+    initial: Inicial
+    lang: Idioma
+    langs: Idiomas
+    lang_placeholder: Elija un idioma
+    multiple_search: Buscar
+    name: Nombre
+    note: Nota
+    ok: Ok
+    roles: Rol(s)
+    search: Liste
+    situ: La situación de riesgo
+    situ_: Situación de riesgo
+    status: Estado
+    title: Título
+    translation_s: Traducciones
+    type: Tipo
+    slug: babosa
+    user: Usuario
+    users: Usuarios
+label_dp:
+    date_create: 'Creado el :'
+    date_login: 'Último inicio de sesión :'
+    date_update: 'Modificado el :'
+    contrib: 'Contribución :'
+    creation: 'Creación :'
+    description: 'Descripción :'
+    email: 'Email :'
+    enabled: 'Activo :'
+    event: 'Evento :'
+    catLevel1: 'Categoría :'
+    catLevel2: 'Subcategoría :'
+    lang: 'Idioma :'
+    lang_s: 'Idiomas :'
+    name: 'Nombre :'
+    roles: 'Rol(s) :'
+    situ: 'La situación de riesgo :'
+    situ_: 'Situación de riesgo :'
+    status: 'Estado :'
+    title: 'Título :'
+    translation: 'Traducción :'
+    translation_s: 'Traducciones :'
+    validate: 'Validar :'
+    user: 'Usuario :'
 lang:
+    default: Idioma predeterminado
     search:
         list:
-            action: Acciónes
-            contributor: Contributpr
-            enabled: Activado
-            english_name: Nombre inglés
-            file: Traducción
-            lang: Código ISO 639-1
-            name: Nombre original
             btn:
                 danger: Alertar de un problema
                 success: Notificar la carga
                 warning: Alerta de modificación
-        title: Idiomas
+            english_name: Nombre inglés
+            lang: Código ISO 639-1
+            name: Nombre original
         table: Lista de idiomas
     translation:
-        title: Traducción del sitio
-        table:
-            title: Lista de traducciones
-            name: Nombre
-            status:
-                thead: Estado
-                1: Escrito
-                2: A validar
-                3: Válido
-                4: Archivado
-                5: Destrozado
-            date:
-                creation: Creación
-                status: Situación a la fecha
-                update: Actualización
-            user: Usuario
-            action: Acción
-            empty: Sin traducción
-            btn:
-                archive: Destrozado
-                clone: Clon
-                delete: Eliminado
-                validate: Válido
-                update: Editar
         contrib:
             lang:
                 table: Idiomas ofrecidos
-            file:
-                table: Archivos de traducción
         form:
-            title: Traducción forms
+            alert:
+                success: Éxito
+                error: Error
             field:
-                title:
-                    create: Crea una traducción
-                    update: Editar una traducción
                 btn:
                     add: Agregar un campo
                     error: Adición obligatoria
-                    remove:
-                        title: Eliminación de campo
-                        content: ¿Está seguro de que desea eliminar este campo?
                 label: Lista de campo
                 name: Nombre del Canal
+                remove:
+                    title: Eliminación de campo
+                    content: ¿Está seguro de que desea eliminar este campo?
+                title:
+                    create: Crea una traducción
+                    update: Editar una traducción
                 type: 
                     label: Type
                     text: Text
                     textarea: Textarea
+            flash:
+                error: Se produjo un error al guardar los datos de la traducción
+                success: Se han guardado los datos de traducción
             message:
                 lang:
-                    label: Idioma
                     enabled: Idiomas activos
                     disabled: Idiomas inactivos
                 name: Nombre de la traducción
@@ -366,22 +287,33 @@ lang:
                     text: Text
                     textarea: Textarea
                 value: Valor
-                sortable: Rango
-            multiple_search: Buscar
-            flash:
-                success: Se han guardado los datos de traducción
-                error: Se produjo un error al guardar los datos de la traducción.
-            alert:
-                success: Éxito
-                error: Error
+            title: Traducción forms
+        table:
+            empty: Sin traducción
+            title: Lista de traducciones
+        title: Traducción del sitio
+        yaml:
+            title: Generador de YAML
+lang_deny: Idioma rechazado
+nav:
+    account: Cuenta
+    account_logout: Desconexión
+    account_profile: Mi informacion
+    account_reset_password:  Cambiar la contraseña
+    end_switch: Fin de la exploración
+    front: Ir al sitio web
 'no': No
-search:
-    action: Acción
-    action_th: Acción(es)
-    no_data_found: 'No se encontraron datos'
 select2:
     no_result: Ningún resultado
-GGtranslate: Traducir
+status:
+    deleted: Destrozado
+    refused: Rechazado
+    title: Estado
+    title_s: Estatutos
+    translation_refused: Traducción rechazada
+    validated: Válido
+    validation: A validar
+    writing: Escrito
 user:
     role:
         super_admin: Superadministrador
@@ -390,52 +322,31 @@ user:
         moderator: Moderador
         translator: Traductor
         user: Usuario
-    button:
-        create: Invitación
     create:
+        card: Enviar una invitación
         flash:
             success: 'Se ha invitado al usuario (%identifier%).'
         title: Invitar a un usuario
-        h2: Enviar una invitación
     delete:
         flash:
             success: 'Usuario(s) eliminado.'
-        h1: 'Borrar usuario'
+        title: 'Borrar usuario'
         h2: 'Se eliminará la siguiente lista'
         modal_title: 'Borrar usuario'
     error:
         cannot_delete_super_admin: No se puede eliminar un superadministrador.
         cannot_permute_enabled_super_admin: Un superadministrador no se puede habilitar ni deshabilitar.
-    field:
+    read:
         contribs:
             title: Numero de contribuciones
             count: contribución
             count_s : contribuciones
             empty: Sin contribución
-        email: Email
-        enabled: Habilitado
-        date:
-            create: Creado
-            last_login: Última conexión
-            update: Modificado
-        lang:
-            title: Idioma
-            default: Defecto
-        note: Nota
-        name: Apellido
-        roles: Rol(s)
         forbidden_acces:
             label: Intrusión(es) prohibida
             text: Intrusión en
-    label:
-        email: Email
-        name: Apellido
-        roles: Roles
-    read:
         title: Detalles Usuario
-        h2: Detalles
     search:
-        title: Usuarios
         table: Lista de usuarios
         actions: Acciones grupales
     update:

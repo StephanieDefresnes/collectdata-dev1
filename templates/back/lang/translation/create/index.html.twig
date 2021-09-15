@@ -24,8 +24,8 @@
             <div id="add-translation" class="btn btn-primary mx-2 pt-1">
                 {{ 'lang.translation.form.field.title.create'|trans() }}
             </div>
-            <div id="cancel" class="btn btn-outline-secondary mx-2 px-3 pt-1">
-                {{ 'button.cancel'|trans() }}
+            <div id="cancel" class="btn btn-secondary mx-2 px-3 pt-1">
+                {{ 'action.cancel'|trans() }}
             </div>
         </div>
 
@@ -42,13 +42,15 @@
     {{ parent() }}
     <script src="{{ asset('jquery-confirm/js/jquery-confirm.js') }}"></script>
     <script>
+        var path = {
+           "locale" : "{{ locale }}",
+        }
         var translations = {
-           "multiple-search" : "{{ 'lang.translation.form.multiple_search' | trans }}",
+           "multiple-search" : "{{ 'label.multiple_search' | trans }}",
            "createTranslation" : "{{ 'lang.translation.form.field.title.create' | trans }}",
            "updateTranslation" : "{{ 'lang.translation.form.field.title.update' | trans }}",
-           "locale" : "{{ locale }}",
-           "deleteField-title" : "{{ 'lang.translation.form.field.btn.remove.title' | trans }}",
-           "deleteField-content" : "{{ 'lang.translation.form.field.btn.remove.content' | trans }}",
+           "deleteField-title" : "{{ 'lang.translation.form.field.remove.title' | trans }}",
+           "deleteField-content" : "{{ 'lang.translation.form.field.remove.content' | trans }}",
            "yes" : "{{ 'yes' | trans }}",
            "no" : "{{ 'no' | trans }}",
            "alertSucces" : "{{ 'lang.translation.form.alert.success' | trans }}",

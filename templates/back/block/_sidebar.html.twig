@@ -22,7 +22,7 @@
     <li class="nav-item{{ route == 'back_home' ? ' active' }}">
         <a class="nav-link dashboard" href="{{ path('back_home') }}">
             <i class="fas fa-fw fa-tachometer-alt"></i>
-            <span>{{ 'sidebar.dashboard'|trans() }}</span>
+            <span>{{ 'label.dashboard'|trans() }}</span>
         </a>
     </li>
 
@@ -35,27 +35,27 @@
         <a class="nav-link collapsed pb-1" href="#" data-toggle="collapse" data-target="#collapseLang"
             aria-expanded="true" aria-controls="collapseLang">
             <i class="fas fa-globe"></i>
-            <span>{{ 'sidebar.lang.title'|trans() }}</span>
+            <span>{{ 'label.langs'|trans() }}</span>
         </a>
         <div id="collapseLang" class="collapse{{ route in ['back_lang_search', 'back_translation_site', 'back_translation_create'] ? ' show' }}"
              aria-labelledby="headingLang" data-parent="#accordionSidebar">
             <div class="bg-white mb-1 py-2 collapse-inner rounded">
                 <a class="collapse-item{{ route == 'back_lang_search' ? ' active' }}"
                    href="{{ path('back_lang_search') }}">
-                    {{ 'sidebar.lang.search'|trans() }}
+                    {{ 'label.search'|trans() }}
                 </a>
                 <a class="collapse-item{{ route == 'back_translation_site' ? ' active' }}"
                    href="{{ path('back_translation_site') }}">
-                    {{ 'sidebar.lang.translation'|trans() }}
+                    {{ 'lang.translation.title'|trans() }}
                 </a>
                 {% if is_granted('ROLE_SUPER_ADMIN')  %}
                 <a class="collapse-item{{ route == 'back_translation_create' ? ' active' }}"
                    href="{{ path('back_translation_create') }}">
-                    {{ 'sidebar.lang.translator'|trans() }}
+                    {{ 'lang.translation.form.title'|trans() }}
                 </a>
                 <a class="collapse-item{{ route == '' ? ' active' }}"
                    href="">
-                    {{ 'sidebar.lang.yaml'|trans() }}
+                    {{ 'lang.translation.yaml.title'|trans() }}
                 </a>
                 {% endif %}
             </div>
@@ -68,17 +68,17 @@
         <a class="nav-link collapsed pb-1" href="#" data-toggle="collapse" data-target="#collapseUser"
             aria-expanded="true" aria-controls="collapseUser">
             <i class="fas fa-users"></i>
-            <span>{{ 'sidebar.user.title'|trans() }}</span>
+            <span>{{ 'label.users'|trans() }}</span>
         </a>
         <div id="collapseUser" class="collapse{{ route in ['back_user_search', 'back_user_create', 'back_user_read', 'back_user_update'] ? ' show' }}"
              aria-labelledby="headingUser" data-parent="#accordionSidebar">
             <div class="bg-white mb-1 py-2 collapse-inner rounded">
                 <a class="collapse-item{{ route == 'back_user_search' ? ' active' }}" href="{{ path('back_user_search') }}">
-                    {{ 'sidebar.user.search'|trans() }}
+                    {{ 'label.search'|trans() }}
                 </a>
                 {% if can_create %}
                     <a class="collapse-item{{ route == 'back_user_create' ? ' active' }}" href="{{ path('back_user_create') }}">
-                        {{ 'sidebar.user.create'|trans() }}
+                        {{ 'action.invite'|trans() }}
                     </a>
                 {% endif %}
             </div>
@@ -94,7 +94,7 @@
         <a class="nav-link collapsed pb-1" href="#" data-toggle="collapse" data-target="#collapseContrib"
             aria-expanded="true" aria-controls="collapseContrib">
             <i class="fas fa-list-ul"></i>
-            <span>{{ 'sidebar.contrib.title'|trans() }}</span>
+            <span>{{ 'label.contributions'|trans() }}</span>
         </a>
         <div id="collapseContrib" class="collapse{{ route in [  'back_situs_search',
                                                                 'back_situ_read',
@@ -107,19 +107,19 @@
             <div class="bg-white mb-1 py-2 collapse-inner rounded">
                 <a class="collapse-item{{ route in ['back_situs_validation', 'back_situ_verify'] ? ' active' }}"
                    href="{{ path('back_situs_validation') }}">
-                    {{ 'sidebar.contrib.validation'|trans() }}
+                    {{ 'action.validation'|trans() }}
                 </a>
                 <a class="collapse-item{{ route == 'back_situs_search' ? ' active' }}"
                    href="{{ path('back_situs_search') }}">
-                    {{ 'sidebar.contrib.search'|trans() }}
+                    {{ 'label.search'|trans() }}
                 </a>
                 <a class="collapse-item{{ route == 'back_events' ? ' active' }}"
                    href="{{ path('back_events') }}">
-                    {{ 'sidebar.event'|trans() }}
+                    {{ 'label.event'|trans() }}
                 </a>
                 <a class="collapse-item{{ route == 'back_categories' ? ' active' }}"
                    href="{{ path('back_categories') }}">
-                    {{ 'sidebar.category'|trans() }}
+                    {{ 'label.categories'|trans() }}
                 </a>
             </div>
                 
@@ -131,7 +131,7 @@
     <li class="nav-item{{ route in ['back_content_search', 'back_content_edit'] ? ' active' }}">
         <a class="nav-link pb-1" href="{{ path('back_content_search') }}">
             <i class="fas fa-edit"></i>
-            <span>{{ 'sidebar.content'|trans() }}</span>
+            <span>{{ 'action.content'|trans() }}</span>
         </a>
     </li>
     {% endif %}

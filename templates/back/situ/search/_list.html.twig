@@ -3,7 +3,7 @@
 <div id="card-list" class="card shadow mb-4">
     
     <div class="card-header py-3">
-        <h6 class="m-0 font-weight-bold text-primary">{{ 'contrib.situ.title'|trans() }}</h6>
+        <h6 class="m-0 font-weight-bold text-primary">{{ 'contrib.situ.list'|trans() }}</h6>
     </div>
     
     <div id="situs" class="card-body pb-3 back-dataTable">
@@ -15,18 +15,18 @@
         <table id="dataTable-situs" class="table table-sm mb-0 nowrap">
             <thead class="bg-gray-600 text-white">
                 <tr>
-                    <th>{{ 'contrib.action'|trans() }}</th>
+                    <th>{{ 'action.action'|trans() }}</th>
                     <th class="pl-2 text-center">#</th>
-                    <th class="pl-2">{{ 'contrib.situ.details.title'|trans() }}</th>
+                    <th class="pl-2">{{ 'label.title'|trans() }}</th>
                     <th class="pl-2">{{ 'status.title'|trans() }}</th>
-                    <th class="pl-2">{{ 'contrib.situ.details.date.creation'|trans() }}</th>
-                    <th class="pl-2">{{ 'contrib.situ.details.date.submit'|trans() }}</th>
-                    <th class="pl-2">{{ 'contrib.situ.details.date.validation'|trans() }}</th>
-                    <th class="pl-2">{{ 'contrib.situ.details.lang'|trans() }}</th>
-                    <th class="pl-2">{{ 'contrib.situ.details.initial'|trans() }}</th>
-                    <th class="pl-2">{{ 'contrib.situ.details.event'|trans() }}</th>
-                    <th class="pl-2">{{ 'contrib.situ.details.category.level1'|trans() }}</th>
-                    <th class="pl-2 text-nowrap">{{ 'contrib.situ.details.category.level2'|trans() }}</th>
+                    <th class="pl-2">{{ 'status.date_creation'|trans() }}</th>
+                    <th class="pl-2">{{ 'status.date_submit'|trans() }}</th>
+                    <th class="pl-2">{{ 'status.date_validate'|trans() }}</th>
+                    <th class="pl-2">{{ 'label.lang'|trans() }}</th>
+                    <th class="pl-2">{{ 'label.initial'|trans() }}</th>
+                    <th class="pl-2">{{ 'label.event'|trans() }}</th>
+                    <th class="pl-2">{{ 'label.catLevel1'|trans() }}</th>
+                    <th class="pl-2 text-nowrap">{{ 'label.catLevel2'|trans() }}</th>
                 </tr>
             </thead>
             <tbody class="bg-white">
@@ -35,22 +35,29 @@
                     <td class="px-2">
                         {% if situ.statusId == 2 %}
                             <a href="{{ path('back_situ_verify', { 'id': situ.id }) }}"
-                               role="button" class="btn btn-outline-warning pcx-2 py-1"
+                               class="btn btn-outline-warning pcx-2 py-1"
                                data-id="{{ situ.id }}" data-action=""
                                data-toggle="tooltip" data-placement="left"
-                               title="{{ 'contrib.situ.table.btn.valid'|trans() }}"
-                               aria-label="{{ 'contrib.situ.table.btn.valid'|trans() }}">
+                               title="{{ 'action.validate'|trans() }}">
                                 <i class="far fa-paper-plane"></i>
                             </a>                            
                         {% else %}
                             <a href="{{ path('back_situ_read', { 'id': situ.id }) }}"
-                               role="button" class="btn btn-outline-primary px-2 py-1"
+                               class="btn {%if situ.statusId == 4 or  situ.statusId == 5 %}btn-outline-danger{% else %}btn-outline-primary{% endif %} px-2 py-1"
                                data-id="{{ situ.id }}" data-action=""
                                data-toggle="tooltip" data-placement="left"
-                               title="{{ 'contrib.situ.table.btn.read'|trans() }}"
-                               aria-label="{{ 'contrib.situ.table.btn.read'|trans() }}">
+                               title="{{ 'action.read'|trans() }}">
                                 <i class="fas fa-eye"></i>
-                            </a>                            
+                            </a>
+                            {% if situ.statusId == 5 %}
+                                <a href=""
+                                   class="btn btn-danger px-2 py-1"
+                                   data-id="{{ situ.id }}" data-action=""
+                                   data-toggle="tooltip" data-placement="left"
+                                   title="{{ 'action.delete_definitively'|trans() }}">
+                                    <i class="far fa-trash-alt"></i>
+                                </a>                            
+                            {% endif %}
                         {% endif %}
                         
                     </td>
@@ -58,15 +65,17 @@
                     <td class="px-2 firstletter text-nowrap">{{ situ.title|u.truncate(20, '...') }}</td>
                     <td class="px-2 text-nowrap">
                         {% if situ.statusId == 1 %}
-                            {{ 'status.1'|trans() }}
+                            {{ 'status.writing'|trans() }}
                         {% elseif situ.statusId == 2 %}
-                            {{ 'status.2'|trans() }}
+                            {{ 'status.validation'|trans() }}
                         {% elseif situ.statusId == 3 %}
-                            {{ '.status.3'|trans() }}
-                        {% elseif situ.statusId == 4 %}
-                            {{ 'status.4'|trans() }}
+                            {{ 'status.validated'|trans() }}
+                        {% elseif situ.statusId == 4 and situ.initialSitu == 1 %}
+                            {{ 'status.refused'|trans() }}
+                        {% elseif situ.statusId == 4 and situ.initialSitu == 0 %}
+                            {{ 'status.translation_refused'|trans() }}
                         {% else %}
-                            {{ 'status.5'|trans() }}
+                            {{ 'status.deleted'|trans() }}
                         {% endif %}
                     </td>
                     <td class="px-2">{{ situ.dateCreation|format_datetime('short', 'none', locale=locale) }}</td>
@@ -74,35 +83,34 @@
                     <td class="px-2">{{ situ.dateValidation ? situ.dateValidation|format_datetime('short', 'none', locale=locale) : '' }}</td>
                     <td class="px-2">{{ situ.lang.englishName }}</td>
                     <td class="px-2 text-nowrap">
-                        {% if situ.initialSitu%}
+                        {% if situ.initialSitu %}
                             {{ 'yes'|trans() }}
                         {% else %}
-                            {{ 'contrib.situ.details.translated'|trans() }}
-                            #{{ situ.translatedSituId }}
+                            <span class="id">{{ situ.translatedSituId }}</span>
                         {% endif %}
                     </td>
                     <td class="px-2 text-nowrap">
-                        {% if situ.event.validated == false %}
+                        {% if situ.event.validated %}
+                            {{ situ.event.title|u.truncate(20, '...') }}
+                        {% else %}
                             {{ situ.event.title|u.truncate(10, '...') }}
                             <span class="badge badge-pill badge-primary">{{ 'badge.new'|trans() }}</span>
-                        {% else %}
-                            {{ situ.event.title|u.truncate(20, '...') }}
                         {% endif %}
                     </td>
                     <td class="px-2 text-nowrap">
-                        {% if situ.categoryLevel1.validated == false %}
+                        {% if situ.categoryLevel1.validated %}
+                            {{ situ.categoryLevel1.title|u.truncate(20, '...') }}
+                        {% else %}
                             {{ situ.categoryLevel1.title|u.truncate(10, '...') }}
                             <span class="badge badge-pill badge-primary">{{ 'badge.new'|trans() }}</span>
-                        {% else %}
-                            {{ situ.categoryLevel1.title|u.truncate(20, '...') }}
                         {% endif %}
                     </td>
                     <td class="px-2 text-nowrap">
-                        {% if situ.categoryLevel2.validated == false %}
+                        {% if situ.categoryLevel2.validated %}
+                            {{ situ.categoryLevel2.title|u.truncate(20, '...') }}
+                        {% else %}
                             {{ situ.categoryLevel2.title|u.truncate(10, '...') }}
                             <span class="badge badge-pill badge-primary">{{ 'badge.new'|trans() }}</span>
-                        {% else %}
-                            {{ situ.categoryLevel2.title|u.truncate(20, '...') }}
                         {% endif %}
                     </td>
                 </tr>

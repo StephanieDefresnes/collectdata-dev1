@@ -14,13 +14,13 @@
         <table id="dataTable-translations" class="table table-sm mb-0 nowrap">
             <thead class="bg-gray-600 text-white">
                 <tr>
-                    <th>{{ 'lang.translation.table.action'|trans() }}</th>
-                    <th class="pl-2">{{ 'lang.translation.table.name'|trans() }}</th>
-                    <th class="pl-2">{{ 'lang.translation.table.status.thead'|trans() }}</th>
-                    <th class="pl-2">{{ 'lang.translation.table.date.status'|trans() }}</th>
-                    <th class="pl-2">{{ 'lang.translation.table.date.update'|trans() }}</th> 
-                    <th class="pl-2">{{ 'lang.translation.table.user'|trans() }}</th>
-                    <th class="pl-2">{{ 'lang.translation.table.date.creation'|trans() }}</th>        
+                    <th>{{ 'action.action'|trans() }}</th>
+                    <th class="pl-2">{{ 'label.name'|trans() }}</th>
+                    <th class="pl-2">{{ 'label.status'|trans() }}</th>
+                    <th class="pl-2">{{ 'label.date_status'|trans() }}</th>
+                    <th class="pl-2">{{ 'label.date_update'|trans() }}</th> 
+                    <th class="pl-2">{{ 'label.user'|trans() }}</th>
+                    <th class="pl-2">{{ 'label.date_creation'|trans() }}</th>        
                 </tr>
             </thead>
             <tbody class="bg-white">
@@ -32,16 +32,16 @@
                             <span role="button" class="selectMessage btn btn-outline-primary"
                                data-id="{{ translation.id }}" data-action=""
                                data-toggle="tooltip" data-placement="left"
-                               title="{{ 'lang.translation.table.btn.update'|trans() }}"
-                               aria-label="{{ 'lang.translation.table.btn.update'|trans() }}">
+                               title="{{ 'action.edit'|trans() }}"
+                               aria-label="{{ 'action.edit'|trans() }}">
                                 <i class="fas fa-edit"></i>
                             </span>
                         {% elseif translation.statusId == 3 %}
                             <span role="button" class="selectMessage btn btn-outline-warning"
                                data-id="{{ translation.id }}" data-action="clone"
                                data-toggle="tooltip" data-placement="left"
-                               title="{{ 'lang.translation.table.btn.clone'|trans() }}"
-                               aria-label="{{ 'lang.translation.table.btn.clone'|trans() }}">
+                               title="{{ 'action.clone'|trans() }}"
+                               aria-label="{{ 'action.clone'|trans() }}">
                                 <i class="far fa-clone"></i>
                             </span>
                         {% endif %}
@@ -50,8 +50,8 @@
                             <span role="button" class="selectMessage btn btn-outline-warning"
                                data-id="{{ translation.id }}" data-action="clone"
                                data-toggle="tooltip" data-placement="left"
-                               title="{{ 'lang.translation.table.btn.clone'|trans() }}"
-                               aria-label="{{ 'lang.translation.table.btn.clone'|trans() }}">
+                               title="{{ 'action.clone'|trans() }}"
+                               aria-label="{{ 'action.clone'|trans() }}">
                                 <i class="far fa-clone"></i>
                             </span>
                         {% endif %}
@@ -60,15 +60,15 @@
                     <td class="px-2">{{ translation.name }}</td>
                     <td class="px-2">
                         {% if translation.statusId == 1 %}
-                            {{ 'lang.translation.table.status.1'|trans() }}
+                            {{ 'status.writing'|trans() }}
                         {% elseif translation.statusId == 2 %}
-                            {{ 'lang.translation.table.status.2'|trans() }}
+                            {{ 'status.validation'|trans() }}
                         {% elseif translation.statusId == 3 %}
-                            {{ 'lang.translation.table.status.3'|trans() }}
+                            {{ 'status.validated'|trans() }}
                         {% elseif translation.statusId == 4 %}
-                            {{ 'lang.translation.table.status.4'|trans() }}
+                            {{ 'status.refused'|trans() }}
                         {% else %}
-                            {{ 'lang.translation.table.status.5'|trans() }}
+                            {{ 'status.deleted'|trans() }}
                         {% endif %}
                     </td>
                     <td class="px-2">{{ translation.dateStatus ? translation.dateStatus|format_datetime('short', 'medium', locale=locale) : '' }}</td>

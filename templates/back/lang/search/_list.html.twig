@@ -1,4 +1,6 @@
 {% trans_default_domain 'back_messages' %}
+{% set locale = app.request.locale %}
+
 <div class="col-lg-10 offset-lg-1 col-12 offset-0 px-0">
     <div class="card shadow mb-4">
         
@@ -14,7 +16,7 @@
                         <th>{{ 'lang.search.list.lang'|trans() }}</th>
                         <th>{{ 'lang.search.list.name'|trans() }}</th>
                         <th>{{ 'lang.search.list.english_name'|trans() }}</th>
-                        <th>{{ 'lang.search.list.enabled'|trans() }}</th>              
+                        <th>{{ 'action.action'|trans() }}</th>              
                     </tr>
                 </thead>
                 <tbody class="bg-white">
@@ -24,12 +26,15 @@
                         <td class="text-capitalize">{{ lang.name }}</td>
                         <td>{{ lang.english_name }}</td>
                         <td>
-                            <a href="{{ path('back_lang_permute_enabled', { 'ids': {0: lang.id} }) }}" role="button"
-                                class="btn btn-primary enablable{{ lang.enabled ? ' active' : '' }}{{ lang.lang == 'fr' ? ' disabled' : '' }}"
-                                aria-pressed="{{ lang.enabled ? 'true' : 'false' }}"
-                                aria-disabled="{{ lang.lang == 'fr'  ? 'true' : 'false' }}">
-                                <span>{{ lang.enabled ? 'button.disable'|trans : 'button.enable'|trans }}</span>
-                            </a>
+                            {% if lang.lang == locale %}
+                                {{ 'lang.default'|trans() }}
+                            {% else %}
+                                <a href="{{ path('back_lang_permute_enabled', { 'ids': {0: lang.id} }) }}" role="button"
+                                    class="btn btn-primary enablable{{ lang.enabled ? ' active' : '' }}"
+                                    aria-pressed="{{ lang.enabled ? 'true' : 'false' }}">
+                                    <span>{{ lang.enabled ? 'action.disable'|trans : 'action.enable'|trans }}</span>
+                                </a>
+                            {% endif %}
                         </td>
                     </tr>
                     {% endfor %}

@@ -16,13 +16,13 @@ class UserUpdateAdminType extends AbstractType
     {
         $builder
             ->add('adminNote', TextareaType::class, [
-                'label' => 'user.field.note',
+                'label' => 'label.note',
                 'attr' => [
                     'rows' => '3',
                 ],
             ])
             ->add('roles', ChoiceType::class, [
-                'label' => 'user.label.roles',
+                'label' => 'label.roles',
                 'choices' => [
                     'user.role.moderator' => 'ROLE_MODERATOR',
                     'user.role.contributor' => 'ROLE_CONTRIBUTOR',

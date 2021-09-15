@@ -2,7 +2,7 @@
 {% extends "back/layout.html.twig" %}
 {% set locale = app.request.locale %}
 
-{% block title %}{{ 'contrib.situ.validation.title'|trans() }}{% endblock %}
+{% block title %}{{ 'contrib.situ.validation'|trans() }}{% endblock %}
 
 {% block stylesheets %}
     {{ parent() }}
@@ -16,7 +16,7 @@
     <div class="container-fluid pt-4">
         
         <div class="d-sm-flex align-items-center justify-content-between mb-4">
-            <h1 class="h3 mb-0 text-gray-800">{{ 'sidebar.contrib.title'|trans() }}</h1>
+            <h1 class="h3 mb-0 text-gray-800">{{ 'label.contributions'|trans() }}</h1>
         </div>
 
         {{ include('back/situ/validation/_list.html.twig') }}

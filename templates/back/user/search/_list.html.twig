@@ -19,16 +19,16 @@
                         {% set col_count = col_count + 1 %}
                         <th name="check"><div class="form-check pl-1"><input type="checkbox" id="select_all" /></div></th>
                     {% endif %}
-                    <th class="px-2" nowrap>{{ 'user.field.name'|trans() }}</th>
-                    <th class="px-2" nowrap>{{ 'user.field.email'|trans() }}</th>
-                    <th class="px-2" nowrap>{{ 'user.field.roles'|trans() }}</th>
-                    <th class="px-2" nowrap>{{ 'user.field.enabled'|trans() }}</th>
-                    <th class="px-2" nowrap>{{ 'user.field.lang.title'|trans() }}</th>
-                    <th class="px-2" nowrap>{{ 'user.field.note'|trans() }}</th>
-                    <th class="px-2" nowrap>{{ 'user.field.date.last_login'|trans() }}</th>
-                    <th class="px-2" nowrap>{{ 'user.field.date.create'|trans() }}</th>
-                    <th class="px-2" nowrap>{{ 'user.field.date.update'|trans() }}</th>
-                    <th class="px-2" nowrap>{{ 'search.action_th'|trans() }}</th>
+                    <th class="pl-2" nowrap>{{ 'label.name'|trans() }}</th>
+                    <th class="pl-2" nowrap>{{ 'label.email'|trans() }}</th>
+                    <th class="pl-2" nowrap>{{ 'label.roles'|trans() }}</th>
+                    <th class="pl-2" nowrap>{{ 'label.enabled'|trans() }}</th>
+                    <th class="pl-2" nowrap>{{ 'label.lang'|trans() }}</th>
+                    <th class="pl-2" nowrap>{{ 'label.note'|trans() }}</th>
+                    <th class="pl-2" nowrap>{{ 'label.date_login'|trans() }}</th>
+                    <th class="pl-2" nowrap>{{ 'label.date_creation'|trans() }}</th>
+                    <th class="pl-2" nowrap>{{ 'label.date_update'|trans() }}</th>
+                    <th class="pl-2 no-sort" nowrap>{{ 'action.actions'|trans() }}</th>
                 </tr>
             </thead>
             <tbody class="bg-white">
@@ -69,7 +69,7 @@
                                     class="btn btn-primary enablable{{ user.enabled ? ' active' : '' }}{{ user.hasRole("ROLE_SUPER_ADMIN") ? ' disabled' : '' }}"
                                     aria-pressed="{{ user.enabled ? 'true' : 'false' }}"
                                     aria-disabled="{{ user.hasRole("ROLE_SUPER_ADMIN") ? 'true' : 'false' }}">
-                                    <span>{{ user.enabled ? 'button.disable'|trans : 'button.enable'|trans }}</span>
+                                    <span>{{ user.enabled ? 'action.disable'|trans : 'action.enable'|trans }}</span>
                                 </a>
                             {% endif %}
                         {% endif %}
@@ -81,7 +81,7 @@
                             {% endif %}
                         {% endfor %}
                         {% if user.langId == '' %}
-                            {{ 'user.field.lang.default'|trans() }}
+                            {{ 'label.default'|trans() }}
                         {% endif %}
                     </td>
                     <td class="px-2">
@@ -98,42 +98,42 @@
                     <td class="px-2">
                         {# Read user #}
                         {% if can_read %}
-                            <a href="{{ path('back_user_read', {'id': user.id}) }}"
-                               data-toggle="tooltip" data-placement="left" title="{{ 'button.read_title'|trans() }}"
-                               class="btn btn-outline-primary" aria-label="{{ 'button.read_title'|trans() }}" role="button">
+                            <a href="{{ path('back_user_read', {'id': user.id}) }}" title="{{ 'action.read_title'|trans() }}"
+                               data-toggle="tooltip" data-placement="left" aria-label="{{ 'action.read_title'|trans() }}"
+                               class="btn btn-outline-primary" role="button">
                                 <i class="fas fa-eye"></i>
                             </a>
                         {% endif %}
                         {# Update user #}
                         {% if not user.hasRole("ROLE_SUPER_ADMIN") and is_granted("ROLE_SUPER_ADMIN") %}
-                            <a href="{{ path('back_user_update', {'id': user.id}) }}" title="{{ 'button.update_title'|trans() }}"
-                                data-toggle="tooltip" data-placement="left" title="{{ 'button.update_title'|trans() }}"
-                                class="btn btn-outline-warning" aria-label="{{ 'button.update_title'|trans() }}" role="button">
+                            <a href="{{ path('back_user_update', {'id': user.id}) }}" title="{{ 'action.edit'|trans() }}"
+                                data-toggle="tooltip" data-placement="left" aria-label="{{ 'action.edit'|trans() }}"
+                                class="btn btn-outline-warning" role="button">
                                 <i class="fas fa-edit"></i>
                             </a>
                         {% elseif not user.hasRole("ROLE_SUPER_ADMIN") %}
                             {% if is_granted("ROLE_ADMIN") and not is_granted("ROLE_SUPER_ADMIN")
                                 and not user.hasRole("ROLE_ADMIN") %}
-                                <a href="{{ path('back_user_update', {'id': user.id}) }}" title="{{ 'button.update_title'|trans() }}"
-                                    data-toggle="tooltip" data-placement="left" title="{{ 'button.update_title'|trans() }}"
-                                    class="btn btn-outline-warning" aria-label="{{ 'button.update_title'|trans() }}" role="button">
+                                <a href="{{ path('back_user_update', {'id': user.id}) }}" title="{{ 'action.edit'|trans() }}"
+                                    data-toggle="tooltip" data-placement="left" aria-label="{{ 'action.edit'|trans() }}"
+                                    class="btn btn-outline-warning" role="button">
                                     <i class="fas fa-edit"></i>
                                 </a>
                             {% elseif is_granted("ROLE_MODERATOR") and not is_granted("ROLE_SUPER_ADMIN") and not is_granted("ROLE_ADMIN")
                                 and not user.hasRole("ROLE_ADMIN") and not user.hasRole("ROLE_MODERATOR") %}
-                                <a href="{{ path('back_user_update', {'id': user.id}) }}" title="{{ 'button.update_title'|trans() }}"
-                                    data-toggle="tooltip" data-placement="left" title="{{ 'button.update_title'|trans() }}"
-                                    class="btn btn-outline-warning" aria-label="{{ 'button.update_title'|trans() }}" role="button">
+                                <a href="{{ path('back_user_update', {'id': user.id}) }}" title="{{ 'action.edit'|trans() }}"
+                                    data-toggle="tooltip" data-placement="left" aria-labe="{{ 'action.edit'|trans() }}"
+                                    class="btn btn-outline-warning" role="button">
                                     <i class="fas fa-edit"></i>
                                 </a>
                             {% endif %}
                         {% endif %}
                         {# Delete user #}
                         {% if can_delete and is_granted("ROLE_SUPER_ADMIN") and not user.hasRole("ROLE_SUPER_ADMIN") %}
-                            <a href="#" data-toggle="modal" data-target="#delete"
+                            <a href="#" data-toggle="tooltip" data-toggle="modal" data-target="#delete" title="{{ 'action.delete'|trans() }}"
                                 data-path="{{ path('back_user_delete', { 'ids': {0: user.id} }) }}" data-title="{{ user }}" 
-                                data-toggle="tooltip" data-placement="left" title="{{ 'button.delete_title'|trans() }}"
-                                class="btn btn-outline-danger btn-delete" aria-label="{{ 'button.delete_title'|trans() }}" role="button">
+                                data-toggle="tooltip" data-placement="left" aria-label="{{ 'action.delete'|trans() }}"
+                                class="btn btn-outline-danger btn-delete" role="button">
                                 <i class="fas fa-times"></i>
                             </a>
                         {% endif %}
@@ -141,9 +141,9 @@
                         {% if not user.hasRole("ROLE_SUPER_ADMIN") and is_granted("ROLE_ALLOWED_TO_SWITCH") %}
                             {% set switch_path = path('front_home', { 'id': user.id, '_switch_user': user.email }) %}
                             <a href="{{ switch_path }}" aria-disabled="{{ is_granted('ROLE_PREVIOUS_ADMIN') ? 'true' : 'false' }}"
-                                data-toggle="tooltip" data-placement="left" title="{{ 'button.switch'|trans() }}"
+                                data-toggle="tooltip" data-placement="left" title="{{ 'action.switch'|trans() }}"
                                 class="btn btn-outline-primary{{ is_granted('ROLE_PREVIOUS_ADMIN') ? ' disabled' : '' }}"
-                                aria-label="{{ 'button.switch'|trans() }}" role="button">
+                                aria-label="{{ 'action.switch'|trans() }}" role="button">
                                 <i class="fas fa-user"></i>
                             </a>
                         {% endif %}
@@ -173,7 +173,7 @@
                             </div>
                             <div class="col-xl-3 col-lg-4 col-md-5 col-sm-4 col-5">
                                 <div class="text-center">
-                                    <button id="submit" class="btn btn-primary btn-block">{{ 'button.validate'|trans() }}</button>
+                                    <button id="submit" class="btn btn-primary btn-block">{{ 'action.validate'|trans() }}</button>
                                 </div>
                             </div>
                         </div>

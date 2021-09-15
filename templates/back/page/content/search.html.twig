@@ -2,7 +2,7 @@
 {% extends "back/layout.html.twig" %}
 {#{% set locale = app.request.locale %}#}
 
-{% block title %}{{ 'content.list.table.h6'|trans() }}{% endblock %}
+{% block title %}{{ 'content.list.table.title'|trans() }}{% endblock %}
 
 {% block stylesheets %}
     {{ parent() }}
@@ -28,7 +28,7 @@
 
             <div class="card-header py-3">
                 <h6 class="m-0 font-weight-bold text-primary">
-                    {{ 'content.list.table.h6'|trans() }}
+                    {{ 'content.list.table.title'|trans() }}
                 </h6>
             </div>
 
@@ -41,12 +41,12 @@
                 <table id="dataTable-pages" class="table table-sm nowrap">
                     <thead class="bg-gray-600 text-white">
                         <tr>
-                            <th class="px-2">{{ 'content.list.table.action'|trans() }}</th>
-                            <th class="px-2">{{ 'content.list.table.enabled'|trans() }}</th>
-                            <th class="px-2">{{ 'content.list.table.lang'|trans() }}</th>
-                            <th class="px-2">{{ 'content.list.table.type'|trans() }}</th>
-                            <th class="px-2">{{ 'content.list.table.title'|trans() }}</th>
-                            <th class="px-2">{{ 'content.list.table.slug'|trans() }}</th>
+                            <th class="px-2">{{ 'action.action'|trans() }}</th>
+                            <th class="px-2">{{ 'label.enabled'|trans() }}</th>
+                            <th class="px-2">{{ 'label.lang'|trans() }}</th>
+                            <th class="px-2">{{ 'label.type'|trans() }}</th>
+                            <th class="px-2">{{ 'label.title'|trans() }}</th>
+                            <th class="px-2">{{ 'label.slug'|trans() }}</th>
                         </tr>
                     </thead>
                     <tbody class="bg-white">
@@ -57,8 +57,7 @@
                                    role="button" class="btn btn-outline-primary px-2 py-1"
                                    data-id="{{ page.id }}" data-action=""
                                    data-toggle="tooltip" data-placement="left"
-                                   title="{{ 'button.modify'|trans() }}"
-                                   aria-label="{{ 'button.modify'|trans() }}">
+                                   title="{{ 'action.edit'|trans() }}">
                                     <i class="fas fa-edit"></i>
                                 </a>    
                                 {% if page.enabled == 0 %}
@@ -66,8 +65,7 @@
                                        role="button" class="btn btn-outline-warning pcx-2 py-1"
                                        data-id="{{ page.id }}" data-action=""
                                        data-toggle="tooltip" data-placement="left"
-                                   title="{{ 'button.validate'|trans() }}"
-                                   aria-label="{{ 'button.validate'|trans() }}">
+                                   title="{{ 'action.validate'|trans() }}">
                                         <i class="far fa-paper-plane"></i>
                                     </a>                             
                                 {% endif %}

@@ -16,7 +16,7 @@ class UserUpdateModeratorType extends AbstractType
     {
         $builder
             ->add('adminNote', TextareaType::class, [
-                'label' => 'user.field.note',
+                'label' => 'label.note',
                 'attr' => [
                     'rows' => '5',
                 ],

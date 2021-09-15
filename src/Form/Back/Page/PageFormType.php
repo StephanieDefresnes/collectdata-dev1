@@ -27,7 +27,7 @@ class PageFormType extends AbstractType
     {
         $builder
             ->add('type', ChoiceType::class, [
-                'label' => 'content.form.page.type.label',
+                'label' => 'label.type',
                 'choices'  => [
                     'content.form.page.type.choice.home' => 'home',
                     'content.form.page.type.choice.legal' => 'legal',
@@ -37,7 +37,7 @@ class PageFormType extends AbstractType
                 'placeholder' => 'content.form.page.type.placeholder'
             ])
             ->add('lang', ChoiceType::class, [
-                'label' => 'content.form.page.lang.label',
+                'label' => 'label_dp.lang',
                 'choice_value' => 'lang',
                 'choice_label' => 'englishName',
                 'choices' => $this->em->getRepository(Lang::class)
@@ -46,10 +46,10 @@ class PageFormType extends AbstractType
                 'attr' => ['class' => 'd-none'],
             ])
             ->add('title', TextType::class, [
-                'label' => 'content.form.page.title',
+                'label' => 'label.title',
             ])
             ->add('slug', TextType::class, [
-                'label' => 'content.form.page.slug',
+                'label' => 'label.slug',
             ])
             ->add('enabled', HiddenType::class)
             ->add($builder->create('pageContents' , CollectionType::class, [

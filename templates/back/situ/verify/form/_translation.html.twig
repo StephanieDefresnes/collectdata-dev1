@@ -7,21 +7,21 @@
             <div class="modal-header bg-dark text-white row">
                 <div class="col-auto mx-auto mb-3 border-bottom">
                     <h5 class="modal-title">
-                        {{ 'contrib.situ.verify.form.translated.modal.title'|trans() }}
+                        {{ 'contrib.situ.verify.form.modal.translated.title'|trans() }}
                     </h5>
                     <p class="small">
-                        {{ 'contrib.situ.verify.form.translated.modal.comment'|trans() }}
+                        {{ 'contrib.situ.verify.form.modal.translated.comment'|trans() }}
                     </p>
                 </div>
                 <div class="col-5">
                     <h5 class="modal-title">
-                        {{ 'contrib.situ.verify.form.translated.modal.initial'|trans() }}
+                        {{ 'contrib.situ.verify.form.modal.translated.initial'|trans() }}
                         <span class="id">{{ situInitial.id }}</span>
                     </h5>
                 </div>
                 <div class="col-7">
                     <h5 class="modal-title">
-                        {{ 'contrib.situ.verify.form.translated.modal.situs.title'|trans() }}
+                        {{ 'label.translation_s'|trans() }}
                     </h5>
                 </div>
             </div>
@@ -34,7 +34,7 @@
                 
                         <div class="row mb-3">
                             <div class="col-md-4 font-weight-bold">
-                                {{ 'contrib.situ.verify.form.translated.modal.situs.author'|trans() }}
+                                {{ 'label_dp.user'|trans() }}
                             </div>
                             <div class="col-md-8 first-letter">
                                 <span class="id">{{ situInitial.userId }}</span>
@@ -43,22 +43,22 @@
                 
                         <div class="row mb-3">
                             <div class="col-md-4 font-weight-bold">
-                                {{ 'contrib.situ.verify.form.translated.modal.situs.status'|trans() }}
+                                {{ 'label_dp.status'|trans() }}
                             </div>
                             <div class="col-md-8 first-letter">
                                 {% if situInitial.statusId == 1 %}
-                                    {{ 'status.1'|trans() }}
+                                    {{ 'status.writing'|trans() }}
                                 {% elseif situInitial.statusId == 2 %}
-                                    {{ 'status.2'|trans() }}
+                                    {{ 'status.validation'|trans() }}
                                 {% elseif situInitial.statusId == 3 %}
-                                    {{ 'status.3'|trans() }}
+                                    {{ 'status.validated'|trans() }}
                                 {% endif %}
                             </div>
                         </div>
                 
                         <div class="row mb-3">
                             <div class="col-md-4 font-weight-bold">
-                                {{ 'contrib.situ.verify.data.event'|trans() }}
+                                {{ 'label_dp.event'|trans() }}
                             </div>
                             <div class="col-md-8 first-letter">
                                 {{ situInitial.event.title }}
@@ -72,7 +72,7 @@
 
                         <div class="row mb-3">
                             <div class="col-md-4 font-weight-bold">
-                                {{ 'contrib.situ.verify.data.category_level1'|trans() }}
+                                {{ 'label_dp.catLevel1'|trans() }}
                             </div>
                             <div class="col-md-8 first-letter">
                                 <span id="{{ situInitial.id }}headingCatLv1">
@@ -88,7 +88,7 @@
                                 </span>
                                 <div id="{{ situInitial.id }}collapseCatLv1" class="mt-1 small collapse"
                                      aria-labelledby="{{ situInitial.id }}headingCatLv1">
-                                    <div class="d-block font-weight-bold">{{ 'contrib.situ.verify.data.situ.description'|trans() }}</div>
+                                    <div class="d-block font-weight-bold">{{ 'label_dp.description'|trans() }}</div>
                                     <div class="mt-1 px-3 line-11 first-letter">{{ situInitial.categoryLevel1.description }}</div>
                                 </div>
                             </div>
@@ -96,7 +96,7 @@
 
                         <div class="row pb-1">
                             <div class="col-md-4 font-weight-bold">
-                                {{ 'contrib.situ.verify.data.category_level2'|trans() }}
+                                {{ 'label_dp.catLevel2'|trans() }}
                             </div>
                             <div class="col-md-8 first-letter mb-1 pb-2">
                                 <span id="{{ situInitial.id }}headingCatLv2">
@@ -112,17 +112,17 @@
                                 </span>
                                 <div id="{{ situInitial.id }}collapseCatLv2" class="mt-1 small collapse"
                                      aria-labelledby="{{ situInitial.id }}headingCatLv2">
-                                    <div class="d-block font-weight-bold">{{ 'contrib.situ.verify.data.situ.description'|trans() }}</div>
+                                    <div class="d-block font-weight-bold">{{ 'label_dp.description'|trans() }}</div>
                                     <div class="mt-1 px-3 line-11 first-letter">{{ situInitial.categoryLevel2.description }}</div>
                                 </div>
                             </div>
                         </div>
 
-                        <h2 class="h5 font-weight-normal mt-2 pt-4">{{ 'contrib.situ.verify.data.situ.label'|trans() }}</h2>
+                        <h2 class="h5 font-weight-normal mt-2 pt-4">{{ 'label.situ'|trans() }}</h2>
 
                         <div class="row">
                             <div class="col-12 mb-1 font-weight-bold">
-                                {{ 'contrib.situ.verify.data.situ.title'|trans() }}
+                                {{ 'label_dp.title'|trans() }}
                             </div>
                             <div class="col-12 mb-3 px-4">
                                 <div class="line-11 first-letter h-title">{{ situInitial.title }}</div>
@@ -131,7 +131,7 @@
 
                         <div class="row">
                             <div class="col-12 mb-1 font-weight-bold">
-                                {{ 'contrib.situ.verify.data.situ.description'|trans() }}
+                                {{ 'label_dp.description'|trans() }}
                             </div>
                             <div class="col-12 mb-3 px-4">
                                 <div class="line-11 first-letter h-description">{{ situInitial.description }}</div>
@@ -174,13 +174,13 @@
                                     {% endif %}
                                 </div>
                                 <div class="col-12 mb-1 font-weight-bold">
-                                    {{ 'contrib.situ.verify.data.situ.title'|trans() }}
+                                    {{ 'label_dp.title'|trans() }}
                                 </div>
                                 <div class="col-12 mb-3 px-4 line-11 first-letter h-title">
                                     {{ item.title }}
                                 </div>
                                 <div class="col-12 mb-1 font-weight-bold">
-                                    {{ 'contrib.situ.verify.data.situ.description'|trans() }}
+                                    {{ 'label_dp.description'|trans() }}
                                 </div>
                                 <div class="col-12 px-5 line-11 first-letter h-description{% if loop.index != 1
                                      and loop.last == false %} border-bottom{% endif %}
@@ -200,6 +200,7 @@
                             <div class="col-xl-3 col-lg-4 col-md-5 col-sm-3 col-4 position-relative">
                                 <div class="nav flex-column nav-pills position-fixed" id="v-pills-tab"
                                      role="tablist" aria-orientation="vertical">
+                                    {# Current first #}
                                     {% for translation in situsTranslated %}
                                         {% if translation.id == situ.id %}
                                             <a class="nav-link mb-1 active"
@@ -207,11 +208,7 @@
                                                data-toggle="pill" href="#v-pills-{{ translation.id }}"
                                                role="tab" aria-controls="v-pills-{{ translation.id }}" aria-selected="false">
                                                 <span class="d-md-inline d-none">
-                                                {% if translation.id == situ.id %}
-                                                    {{ 'contrib.situ.verify.form.translated.modal.situs.current'|trans() }}
-                                                {% else %}
-                                                    {{ 'contrib.situ.verify.form.translated.title'|trans() }}
-                                                {% endif %}
+                                                    {{ 'contrib.situ.verify.form.modal.translated.current'|trans() }}
                                                 </span>
                                                 <span class="id">{{ translation.id }}</span>
                                             </a>
@@ -224,11 +221,7 @@
                                                data-toggle="pill" href="#v-pills-{{ translation.id }}"
                                                role="tab" aria-controls="v-pills-{{ translation.id }}" aria-selected="false">
                                                 <span class="d-md-inline d-none">
-                                                {% if translation.id == situ.id %}
-                                                    {{ 'contrib.situ.verify.form.translated.modal.situs.current'|trans() }}
-                                                {% else %}
-                                                    {{ 'contrib.situ.verify.form.translated.title'|trans() }}
-                                                {% endif %}
+                                                    {{ 'label_dp.translation'|trans() }}
                                                 </span>
                                                 <span class="id">{{ translation.id }}</span>
                                             </a>
@@ -247,7 +240,7 @@
                 
                                             <div class="row mb-3">
                                                 <div class="col-md-4 font-weight-bold">
-                                                    {{ 'contrib.situ.verify.form.translated.modal.situs.author'|trans() }}
+                                                    {{ 'label_dp.user'|trans() }}
                                                 </div>
                                                 <div class="col-md-8 first-letter">
                                                     <span class="id">{{ translation.userId }}</span>
@@ -256,22 +249,22 @@
                 
                                             <div class="row mb-3">
                                                 <div class="col-md-4 font-weight-bold">
-                                                    {{ 'contrib.situ.verify.form.translated.modal.situs.status'|trans() }}
+                                                    {{ 'label_dp.status'|trans() }}
                                                 </div>
                                                 <div class="col-md-8 first-letter">
                                                     {% if translation.statusId == 1 %}
-                                                        {{ 'status.1'|trans() }}
+                                                        {{ 'status.writing'|trans() }}
                                                     {% elseif translation.statusId == 2 %}
-                                                        {{ 'status.2'|trans() }}
+                                                        {{ 'status.validation'|trans() }}
                                                     {% elseif translation.statusId == 3 %}
-                                                        <span class="text-success font-weight-bolder">{{ 'status.3'|trans() }}</span>
+                                                        <span class="text-success font-weight-bolder">{{ 'status.validated'|trans() }}</span>
                                                     {% endif %}
                                                 </div>
                                             </div>
 
                                             <div class="row mb-3">
                                                 <div class="col-md-4 font-weight-bold">
-                                                    {{ 'contrib.situ.verify.data.event'|trans() }}
+                                                    {{ 'label_dp.event'|trans() }}
                                                 </div>
                                                 <div class="col-md-8 first-letter">
                                                     {{ translation.event.title }}
@@ -285,7 +278,7 @@
 
                                             <div class="row mb-3">
                                                 <div class="col-md-4 font-weight-bold">
-                                                    {{ 'contrib.situ.verify.data.category_level1'|trans() }}
+                                                    {{ 'label_dp.catLevel1'|trans() }}
                                                 </div>
                                                 <div class="col-md-8 first-letter">
                                                     <span id="{{ translation.id }}headingCatLv1">
@@ -301,7 +294,7 @@
                                                     </span>
                                                     <div id="{{ translation.id }}collapseCatLv1" class="mt-1 small collapse"
                                                          aria-labelledby="{{ translation.id }}headingCatLv1">
-                                                        <div class="d-block font-weight-bold">{{ 'contrib.situ.verify.data.situ.description'|trans() }}</div>
+                                                        <div class="d-block font-weight-bold">{{ 'label_dp.description'|trans() }}</div>
                                                         <div class="mt-1 px-3 line-11 first-letter">{{ translation.categoryLevel1.description }}</div>
                                                     </div>
                                                 </div>
@@ -309,7 +302,7 @@
 
                                             <div class="row pb-1">
                                                 <div class="col-md-4 font-weight-bold">
-                                                    {{ 'contrib.situ.verify.data.category_level2'|trans() }}
+                                                    {{ 'label_dp.catLevel2'|trans() }}
                                                 </div>
                                                 <div class="col-md-8 first-letter mb-1 pb-2">
                                                     <span id="{{ translation.id }}headingCatLv2">
@@ -325,17 +318,17 @@
                                                     </span>
                                                     <div id="{{ translation.id }}collapseCatLv2" class="mt-1 small collapse"
                                                          aria-labelledby="{{ translation.id }}headingCatLv2">
-                                                        <div class="d-block font-weight-bold">{{ 'contrib.situ.verify.data.situ.description'|trans() }}</div>
+                                                        <div class="d-block font-weight-bold">{{ 'label_dp.description'|trans() }}</div>
                                                         <div class="mt-1 px-3 line-11 first-letter">{{ translation.categoryLevel2.description }}</div>
                                                     </div>
                                                 </div>
                                             </div>
 
-                                            <h2 class="h5 font-weight-normal mt-2 pt-4">{{ 'contrib.situ.verify.data.situ.label'|trans() }}</h2>
+                                            <h2 class="h5 font-weight-normal mt-2 pt-4">{{ 'situ'|trans() }}</h2>
 
                                             <div class="row">
                                                 <div class="col-12 mb-1 font-weight-bold">
-                                                    {{ 'contrib.situ.verify.data.situ.title'|trans() }}
+                                                    {{ 'label_dp.title'|trans() }}
                                                 </div>
                                                 <div class="col-12 mb-3 px-4">
                                                     <div class="line-11 first-letter h-title">{{ translation.title }}</div>
@@ -344,7 +337,7 @@
 
                                             <div class="row">
                                                 <div class="col-12 mb-1 font-weight-bold">
-                                                    {{ 'contrib.situ.verify.data.situ.description'|trans() }}
+                                                    {{ 'label_dp.description'|trans() }}
                                                 </div>
                                                 <div class="col-12 mb-3 px-4">
                                                     <div class="line-11 first-letter h-description">{{ translation.description }}</div>
@@ -387,13 +380,13 @@
                                                         {% endif %}
                                                     </div>
                                                     <div class="col-12 mb-1 font-weight-bold">
-                                                        {{ 'contrib.situ.verify.data.situ.title'|trans() }}
+                                                        {{ 'label_dp.title'|trans() }}
                                                     </div>
                                                     <div class="col-12 mb-3 px-4 line-11 first-letter h-title">
                                                         {{ item.title }}
                                                     </div>
                                                     <div class="col-12 mb-1 font-weight-bold">
-                                                        {{ 'contrib.situ.verify.data.situ.description'|trans() }}
+                                                        {{ 'label_dp.description'|trans() }}
                                                     </div>
                                                     <div class="col-12 px-5 line-11 first-letter h-description{% if loop.index != 1
                                                          and loop.last == false %} border-bottom{% endif %}
@@ -415,7 +408,7 @@
                 
             <div class="modal-footer bg-dark d-flex justify-content-center">
                 <button class="btn bg-white px-4" data-dismiss="modal">
-                    {{ 'button.close'|trans() }}
+                    {{ 'action.close'|trans() }}
                 </button>
             </div>
         </div>

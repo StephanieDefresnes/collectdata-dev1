@@ -4,7 +4,7 @@
 {% set can_update = true %}
 {% set can_delete = true %}
 
-{% block title %}{{ 'user.read.title'|trans() }}{% endblock %}
+{% block title %}{{ 'user.read'|trans() }}{% endblock %}
 
 {% block stylesheets %}
     {{ parent() }}
@@ -25,12 +25,12 @@
                 <div id="modal_body" class="modal-body">
                     <h6 id="modal_body_title"></h6>
                     <div class="alert alert-warning">
-                        <strong>{{ 'delete.warning'|trans() }}</strong>
+                        <strong>{{ 'action.warning'|trans() }}</strong>
                     </div>
                 </div>
                 <div id="modal_footer" class="modal-footer">
                     {{ form_start(form_delete, {'attr': {'id': 'form_back_user_delete' }}) }}
-                        <button type="submit" class="btn btn-danger">{{ 'button.delete'|trans() }}</button>
+                        <button type="submit" class="btn btn-danger">{{ 'action.delete'|trans() }}</button>
                     {{ form_end(form_delete) }}
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">{{ 'button.cancel'|trans() }}</button>
                 </div>
@@ -42,12 +42,12 @@
     <div class="container-fluid pt-4">
         <div class="row">
             <div class="col-sm-6">
-                <h1 class="h3">{{ 'user.read.title'|trans({ '%identifier%': user }) }}</h1>
+                <h1 class="h3">{{ 'user.read'|trans({ '%identifier%': user }) }}</h1>
             </div>
             <div class="col-sm-6 text-right">
                 <p>
                     <a href="{{ path('back_user_search') }}" class="btn btn-primary" role="button">
-                        <i class="fas fa-reply"></i> {{ 'button.back'|trans() }}
+                        <i class="fas fa-reply"></i> {{ 'action.back'|trans() }}
                     </a>
                     {% if can_update and not user.hasRole("ROLE_SUPER_ADMIN")  
                         and (   is_granted("ROLE_SUPER_ADMIN")
@@ -55,16 +55,16 @@
                                 and (user.hasRole("ROLE_MODERATOR") or user.hasRole("ROLE_CONTRIBUTOR")))
                             or (is_granted("ROLE_MODERATOR") and not user.hasRole("ROLE_MODERATOR")
                                 and not user.hasRole("ROLE_ADMIN") and user.hasRole("ROLE_CONTRIBUTOR"))) %}
-                        <a href="{{ path('back_user_update', {'id': user.id}) }}" title="{{ 'button.update_title'|trans() }}"
-                            class="btn btn-warning" aria-label="{{ 'button.update_title'|trans() }}" role="button">
+                        <a href="{{ path('back_user_update', {'id': user.id}) }}" title="{{ 'action.edit'|trans() }}"
+                            class="btn btn-warning" data-toggle="tooltip" data-placement="bottom" aria-label="{{ 'action.edit'|trans() }}" role="button">
                             <i class="fas fa-edit"></i>
                         </a>
                     {% endif %}
                     {% if can_delete and not user.hasRole("ROLE_SUPER_ADMIN") and is_granted("ROLE_SUPER_ADMIN") %}
-                        <a href="#" class="btn btn-danger btn-delete" data-toggle="modal" data-target="#delete"
-                            data-title="{{ user }}" role="button"
+                        <a href="#" class="btn btn-danger btn-delete" data-toggle="tooltip" data-placement="bottom" data-toggle="modal" data-target="#delete"
+                            data-title="{{ user }}" role="button" 
                             data-path="{{ path('back_user_delete', { 'ids': {0: user.id} }) }}"
-                            title="{{ 'button.delete_title'|trans() }}" aria-label="{{ 'button.delete_title'|trans() }}">
+                            title="{{ 'action.delete'|trans() }}" aria-label="{{ 'action.delete'|trans() }}">
                             <i class="fas fa-times"></i>
                         </a>
                     {% endif %}
@@ -75,23 +75,23 @@
         <div class="col-lg-10 offset-lg-1 col-12 offset-0 px-0">
             <div class="card shadow mb-4">
                 <div class="card-header py-3">
-                    <h6 class="m-0 font-weight-bold text-primary">{{ 'user.read.h2'|trans() }}</h2></h6>
+                    <h6 class="m-0 font-weight-bold text-primary">{{ 'action.read_title'|trans() }}</h2></h6>
                 </div>
                 <div class="card-body">
                         <div class="user-field pb-3 row">
-                            <strong class="col-sm-4">{{ 'user.field.name'|trans() }} : </strong>
+                            <strong class="col-sm-4">{{ 'label_dp.name'|trans() }}</strong>
                             <span class="col-sm-8">{{ user.name }}</span>
                         </div>
                         <div class="user-field pb-3 row">
-                            <strong class="col-sm-4">{{ 'user.field.email'|trans() }} : </strong>
+                            <strong class="col-sm-4">{{ 'label_dp.email'|trans() }}</strong>
                             <span class="col-sm-8"><a href="mailto:{{ user.email }}">{{ user.email }}</a></span>
                         </div>
                         <div class="user-field pb-3 row">
-                            <strong class="col-sm-4">{{ 'user.field.enabled'|trans() }} : </strong>
+                            <strong class="col-sm-4">{{ 'label_dp.enabled'|trans() }}</strong>
                             <span class="col-sm-8">{{ user.enabled ? 'yes'|trans : 'no'|trans }}</span>
                         </div>
                         <div class="user-field pb-3 row">
-                            <strong class="col-sm-4">{{ 'user.field.roles'|trans() }} : </strong>
+                            <strong class="col-sm-4">{{ 'label_dp.roles'|trans() }}</strong>
                             <span class="col-sm-8">
                             {% set rolesLength = user.roles|length %}
                             {% for role in user.roles %}
@@ -107,32 +107,32 @@
                             </span>
                         </div>
                         <div class="user-field pb-3 row">
-                            <strong class="col-sm-4">{{ 'user.field.date.create'|trans() }} : </strong>
+                            <strong class="col-sm-4">{{ 'label_dp.date_create'|trans() }}</strong>
                             <span class="col-sm-8">{{ user.dateCreate ? user.dateCreate|format_datetime : '' }}</span>
                         </div>
                         {% if user.dateLastLogin %}
                             <div class="user-field pb-3 row">
-                                <strong class="col-sm-4">{{ 'user.field.date.last_login'|trans() }} : </strong>
+                                <strong class="col-sm-4">{{ 'label_dp.date_login'|trans() }}</strong>
                                 <span class="col-sm-8">{{ user.dateLastLogin ? user.dateLastLogin|format_datetime : '' }}</span>
                             </div>
                         {% endif %}
                         {% if user.dateUpdate %}
-                            <div class="user-field pb-2 row">
-                                <strong class="col-sm-4">{{ 'user.field.date.update'|trans() }} : </strong>
+                            <div class="user-field pb-3 row">
+                                <strong class="col-sm-4">{{ 'label_dp.date_update'|trans() }}</strong>
                                 <span class="col-sm-8">{{ user.dateUpdate ? user.dateUpdate|format_datetime : '' }}</span>
                             </div>
                         {% endif %}
                         <div class="user-field pb-3 row">
-                            <strong class="col-sm-4">{{ 'user.field.contribs.title'|trans() }} : </strong>
+                            <strong class="col-sm-4">{{ 'user.read.contribs.title'|trans() }}</strong>
                             <span class="col-sm-8">
-                                {% if situs ==  0 %}{{ 'user.field.contribs.empty'|trans() }}
-                                {% elseif situs == 1 %} {{ situs }} {{ 'user.field.contribs.count'|trans() }}
-                                {% else %}{{ situs }} {{ 'user.field.contribs.count_s'|trans() }}{% endif %}
+                                {% if situs ==  0 %}{{ 'user.read.contribs.empty'|trans() }}
+                                {% elseif situs == 1 %} {{ situs }} {{ 'user.read.contribs.count'|trans() }}
+                                {% else %}{{ situs }} {{ 'user.read.contribs.count_s'|trans() }}{% endif %}
                             </span>
                         </div>
                         {% if user.forbiddenAccess >= 1 %}
                         <div class="user-field pb-3 row">
-                            <strong class="col-sm-4">{{ 'user.field.forbidden_acces.label'|trans() }} : </strong>
+                            <strong class="col-sm-4">{{ 'user.read.forbidden_acces.label'|trans() }}</strong>
                             <span class="col-sm-8">
                                 {{ user.forbiddenAccess }}
                             </span>

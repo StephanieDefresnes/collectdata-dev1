@@ -35,7 +35,7 @@ class MessageFormType extends AbstractType
                     'Validators' => 'validators',
                     'Visitor' => 'visitor',
                 ],
-                'placeholder' => 'lang.translation.form.multiple_search'
+                'placeholder' => 'label.multiple_search'
             ])
             ->add($builder->create('fields' , CollectionType::class, [
                 'entry_type'   => FieldFormType::class,
