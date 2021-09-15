@@ -10,10 +10,32 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class UserUpdateType extends AbstractType
+class UserUpdateFromType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $choices = [];
+        $bsClass = 'd-none';
+        
+        $role = $options['role'];
+        switch ($role) {
+            case 'super-admin':
+                $choices = [
+                    'user.role.admin' => 'ROLE_ADMIN',
+                    'user.role.moderator' => 'ROLE_MODERATOR',
+                    'user.role.contributor' => 'ROLE_CONTRIBUTOR',
+                ];
+                $bsClass = '';
+                break;
+            case 'admin':
+                $choices = [
+                    'user.role.moderator' => 'ROLE_MODERATOR',
+                    'user.role.contributor' => 'ROLE_CONTRIBUTOR',
+                ];
+                $bsClass = '';
+                break;
+        }
+        
         $builder
             ->add('adminNote', TextareaType::class, [
                 'required' => false,
@@ -24,12 +46,8 @@ class UserUpdateType extends AbstractType
             ])
             ->add('roles', ChoiceType::class, [
                 'label' => 'label.roles',
-                'choices' => [
-                    'user.role.super_admin' => 'ROLE_SUPER_ADMIN',
-                    'user.role.admin' => 'ROLE_ADMIN',
-                    'user.role.moderator' => 'ROLE_MODERATOR',
-                    'user.role.contributor' => 'ROLE_CONTRIBUTOR',
-                ],
+                'row_attr' => ['class' => $bsClass],
+                'choices' => $choices,
                 'expanded' => true,
                 'multiple' => true,
             ]);
@@ -39,6 +57,7 @@ class UserUpdateType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => User::class,
+            'role' => null,
             'translation_domain' => 'back_messages',
         ]);
     }

@@ -4,13 +4,9 @@ namespace App\Controller\Back;
 
 use App\Entity\User;
 use App\Repository\UserRepository;
-use App\Form\Back\User\UserAdminType;
 use App\Form\Back\User\UserBatchType;
-use App\Form\Back\User\UserModeratorType;
-use App\Form\Back\User\UserType;
-use App\Form\Back\User\UserUpdateAdminType;
-use App\Form\Back\User\UserUpdateModeratorType;
-use App\Form\Back\User\UserUpdateType;
+use App\Form\Back\User\UserInvitationFormType;
+use App\Form\Back\User\UserUpdateFromType;
 use App\Mailer\Mailer;
 use App\Manager\UserManager;
 use App\Service\LangService;
@@ -25,7 +21,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
@@ -98,17 +93,16 @@ class UserController extends AbstractController
         
         $user = new User();
         
-        // Form depending on user role
+        $role = '';
         if ($this->container->get('security.authorization_checker')
                 ->isGranted('ROLE_SUPER_ADMIN')) {
-            $form = $this->createForm(UserType::class, $user);
+            $role = 'super-admin';
         } else if ($this->container->get('security.authorization_checker')
                 ->isGranted('ROLE_ADMIN')) {
-            $form = $this->createForm(UserAdminType::class, $user);
-        } else if ($this->container->get('security.authorization_checker')
-                ->isGranted('ROLE_MODERATOR')) {
-            $form = $this->createForm(UserModeratorType::class, $user);
+            $role = 'admin';
         }
+        
+        $form = $this->createForm(UserInvitationFormType::class, $user, ['role' => $role]);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -165,39 +159,49 @@ class UserController extends AbstractController
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
         $this->denyAccessUnlessGranted('ROLE_MODERATOR');
         
+        // Access denied > add adminNote & logout
         // Deny SUPER_ADMIN access to ADMIN
         $noSuperAccess = $this->userService->getRole('SUPER_ADMIN');
-        foreach($noSuperAccess as $noUser) {
-            if ($user == $noUser) {
-                $this->denyAccessUnlessGranted('ROLE_SUPER_ADMIN');
+        foreach($noSuperAccess as $noAccess) {
+            if ($user == $noAccess) {
+                if (!$this->container->get('security.authorization_checker')
+                        ->isGranted('ROLE_SUPER_ADMIN')) {
+                    return $this->redirectToRoute('access_denied', ['_locale' => locale_get_default()]);
+                }
             }
         }     
         // Deny ADMIN access to ADMIN
         $noAdminAccess = $this->userService->getRole('ADMIN');
-        foreach($noAdminAccess as $noUser) {
-            if ($user == $noUser) {
-                $this->denyAccessUnlessGranted('ROLE_SUPER_ADMIN');
+        foreach($noAdminAccess as $noAccess) {
+            if ($user == $noAccess) {
+                if (!$this->container->get('security.authorization_checker')
+                        ->isGranted('ROLE_SUPER_ADMIN')) {
+                    return $this->redirectToRoute('access_denied', ['_locale' => locale_get_default()]);
+                }
             }
         }     
         // Deny MODERATOR access to MODERATOR
-        $noModeratornAccess = $this->userService->getRole('ROLE_MODERATOR');
-        foreach($noModeratornAccess as $noUser) {
-            if ($user == $noUser) {
-                $this->denyAccessUnlessGranted('ROLE_ADMIN');
+        $noModeratornAccess = $this->userService->getRole('MODERATOR');
+        foreach($noModeratornAccess as $noAccess) {
+            if ($user == $noAccess) {
+                if (!$this->container->get('security.authorization_checker')
+                        ->isGranted('ROLE_ADMIN')) {
+                    return $this->redirectToRoute('access_denied', ['_locale' => locale_get_default()]);
+                }
             }
         }
         
         // Form depending on user role
+        $role = '';
         if ($this->container->get('security.authorization_checker')
                 ->isGranted('ROLE_SUPER_ADMIN')) {
-            $form = $this->createForm(UserUpdateType::class, $user);
+            $role = 'super-admin';
         } else if ($this->container->get('security.authorization_checker')
                 ->isGranted('ROLE_ADMIN')) {
-            $form = $this->createForm(UserUpdateAdminType::class, $user);
-        } else if ($this->container->get('security.authorization_checker')
-                ->isGranted('ROLE_MODERATOR')) {
-            $form = $this->createForm(UserUpdateModeratorType::class, $user);
+            $role = 'admin';
         }
+        
+        $form = $this->createForm(UserUpdateFromType::class, $user, ['role' => $role]);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -290,37 +294,5 @@ class UserController extends AbstractController
         }
         $this->getDoctrine()->getManager()->flush();
         return $this->redirectToRoute('back_user_search');
-    }
-
-    /**
-     * @Route("/forbiden", name="back_user_forbiden", methods="GET|POST")
-     */
-    public function forbiden(Security $security): Response
-    {
-        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
-        
-        // Current user
-        $user = $security->getUser();
-        
-        $forbiddenAccess = $user->getForbiddenAccess();
-        $adminNote = $user->getAdminNote();
-        
-        $msg = 'Forbidden access on '.date('Y-m-d H:i:s');
-        
-        $user->setForbiddenAccess(intval($forbiddenAccess)+1);
-        $user->setAdminNote($adminNote.'\n '.$msg);
-        $this->em->persist($user);
-        $this->em->flush();
-        
-        if ($user->getForbiddenAccess() == 3) {
-            $user->setEnabled(0);
-            $user->setDateDelete(new \DateTime('now'));
-            $adminNote = $user->getAdminNote();
-            $user->setAdminNote($adminNote.'\n '.'Deleted ForbiddenAccess');
-            $this->em->persist($user);
-            $this->em->flush();
-        }
-        
-        return $this->redirectToRoute('app_logout');
     }
 }

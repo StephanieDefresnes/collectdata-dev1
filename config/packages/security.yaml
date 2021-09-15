@@ -16,14 +16,15 @@ security:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
         main:
+            access_denied_handler: App\Security\AccessDeniedHandler
             lazy: true
-            provider: app_user_provider
-            guard:
-                authenticators:
-                    - App\Security\LoginFormAuthenticator
             logout:
                 path: app_logout
                 target: front_home
+            guard:
+                authenticators:
+                    - App\Security\LoginFormAuthenticator
+            provider: app_user_provider
             switch_user: true
 
             # activate different ways to authenticate
