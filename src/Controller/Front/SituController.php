@@ -75,17 +75,26 @@ class SituController extends AbstractController
     /**
      * @Route("/read/{id}", name="read_situ", methods="GET")
      */
-    public function readSitu(Situ $situ): Response
+    public function readSitu($id): Response
     {
+        $situ = $this->em->getRepository(Situ::class)
+                ->findOneBy(['id' => $id]);
+        
+        if (!$situ) {
+            return $this->redirectToRoute('no_found', ['_locale' => locale_get_default()]);
+        }
+        
         // Only user can read not validated situ
         if ($situ->getStatusId() != 3) {
             $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+            // Only Super-admin can read deleted situ
             if ($situ->getStatusId() == 5)
-                $this->denyAccessUnlessGranted('ROLE_SUPERADMIN');
+                $this->denyAccessUnlessGranted('ROLE_SUPER_ADMIN');
         }
         
         $user = $this->em->getRepository(User::class)
                 ->findOneBy(['id' => $situ->getUserId()]);
+        
         
         return $this->render('front/situ/read.html.twig', [
             'situ' => $situ,
