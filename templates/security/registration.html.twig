@@ -1,5 +1,5 @@
 {% trans_default_domain 'security' %}
-{% set locale = app.request.locale %}
+{% extends 'front/layout.html.twig' %}
 
 {% block title %}{{ 'registration.title'|trans() }}{% endblock %}
 
