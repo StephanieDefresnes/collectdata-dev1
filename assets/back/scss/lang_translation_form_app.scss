@@ -29,6 +29,9 @@
         &:active {
             background: #f6f6f6 !important;
         }
+        & > .ui-icon {
+            display: none;
+        }
     }
 }
 

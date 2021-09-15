@@ -19,7 +19,7 @@ $(document).ready(function(){
                 +'<"row"<"#info.col-md-6 small"i><"#pagination.col-md-6 mt-3"p>>',
         "columnDefs": [{
             orderable: false,
-            targets: 9
+            targets: 'no-sort'
         }],
         "order": [[ 0, 'asc' ],[ 1, 'asc' ]],
         "fnDrawCallback": function(oSettings) {

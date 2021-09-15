@@ -290,18 +290,6 @@ table.dataTable { margin: 0 !important; }
             }
         }
     }
-    [dir="rtl"] {
-        #search {
-            & > .dataTables_filter {
-                & > label {
-                    & > .clean-search {
-                        right: unset;
-                        left: 9px;
-                    }
-                }
-            }
-        }
-    }
 }
 
 // Back office pages
@@ -318,6 +306,30 @@ table.dataTable { margin: 0 !important; }
                 padding-left: 8px  !important;
             }
         }
+    }
+}
+[dir="rtl"] {
+    .front-dataTable {
+        #search {
+            & > .dataTables_filter {
+                & > label {
+                    & > .clean-search {
+                        right: unset;
+                        left: 9px;
+                    }
+                }
+            }
+        }
+    }
+    .back-dataTable {
+        table.dataTable {
+            & th {
+                &.sorting {
+                    padding-right: 8px !important;
+                    padding-left: 25px  !important;
+                }
+            }
+    }
     }
 }
 @media (max-width: 1047px) {

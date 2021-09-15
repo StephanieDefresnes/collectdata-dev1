@@ -1,9 +1,24 @@
-{{ 'invitation.email.message'|trans({
-        '%user%': user,
-        '%email%': user.email,
-        '%password%': password,
-        '%confirmation_url%': confirmation_url,
-        '%host%': app.request.schemeAndHttpHost,
-        '%website_name%': website_name
-    }, 'back_messages')|raw|nl2br
-}}
+{% apply inline_css %}
+    <style>
+        #email-content {max-width:500px;margin:0 auto;background:#fff;border:1px solid #ccc;padding:6px;font-size: .875rem;}
+        #email-content img {width:100%;height:auto;}
+        #email-content .content {padding:6px;font-size: .875rem;}
+    </style>
+    <div id="email-content">
+    
+        <img src="{{ absolute_url(asset('img/flp_1000x260.jpg')) }}" alt="">
+            
+        <div class="content">
+            {{ 'invitation.email.message'|trans({
+                    '%user%': user,
+                    '%email%': user.email,
+                    '%password%': password,
+                    '%confirmation_url%': confirmation_url,
+                    '%website_url%': app.request.schemeAndHttpHost,
+                    '%website_name%': name_site
+                }, 'back_messages')|raw|nl2br
+            }}
+        </div>
+            
+    </div>
+{% endapply %}

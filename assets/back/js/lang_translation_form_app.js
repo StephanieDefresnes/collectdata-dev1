@@ -77,7 +77,7 @@ function addField(button) {
 // Get data Translation
 function selectMessage(id, action) {
     $.ajax({
-        url: "/"+ translations['locale'] +"/back/translation/edit",
+        url: "/"+ path['locale'] +"/back/translation/edit",
         method: 'GET',
         data: { id: id },
         success: function(data) {
@@ -127,7 +127,7 @@ function loadFieldsValue(data, newElem, i) {
 // Set data Transaltion
 function updateTranslation(messageId, statusId, dataForm) {    
     $.ajax({
-        url: "/"+ translations['locale'] +"/back/translation/updateTranslation",
+        url: "/"+ path['locale'] +"/back/translation/updateTranslation",
         method: 'POST',
         data: { id: messageId, statusId: statusId, data: dataForm },
         success: function() {

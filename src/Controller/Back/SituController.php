@@ -92,15 +92,13 @@ class SituController extends AbstractController
         
         $situ = $this->em->getRepository(Situ::class)->findOneBy(['id' => $id]);
         
-        $author = $this->em->getRepository(User::class)->findOneBy(['id' => $situ->getUserId()]);
-        $authorLang = $langService->getLangById($author->getLangId());
-        
         if (!$situ || $situ->getStatusId() != 2) {
             
             $msg = $this->translator->trans(
-                    'contrib.situ.verify.error',[], 'back_messages'
+                    'contrib.situ.verify.error',['%id%' => $id],
+                    'back_messages', $locale = locale_get_default()
                 );
-            $this->addFlash('success', $msg);
+            $this->addFlash('error', $msg);
             
             return $this->redirectToRoute('back_situs_validation', [
                 '_locale' => locale_get_default()
@@ -130,6 +128,9 @@ class SituController extends AbstractController
             
             $categoriesLevel2 = $this->em->getRepository(Category::class)
                         ->findBy(['parent' => $situ->getCategoryLevel1()->getId()]);
+        
+            $author = $this->em->getRepository(User::class)->findOneBy(['id' => $situ->getUserId()]);
+            $authorLang = $langService->getLangById($author->getLangId());
         }
         
         // Form
