@@ -1,7 +1,7 @@
 nav:
     home: Home
     account: Account
-    account_unknown: User
+    account_unknown: User area
     account_back: Back-office
     account_login: Login
     account_logout: Logout

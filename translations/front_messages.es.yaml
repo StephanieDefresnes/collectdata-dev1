@@ -1,7 +1,7 @@
 nav:
     home: Bienvenida
     account: Cuenta
-    account_unknown: Usuario
+    account_unknown: Área de usuario
     account_back: Back-office
     account_login: Iniciar sesión
     account_logout: Desconexión
