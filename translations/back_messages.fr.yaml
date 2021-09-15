@@ -47,7 +47,7 @@ content:
                 title: Titre (option)
             type:
                 choice:
-                    home: Acc
+                    home: Accueil
                     cgu: CGUueil
                     legal: Mentions légales
                     page: Page
