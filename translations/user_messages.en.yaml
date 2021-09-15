@@ -147,6 +147,7 @@ contrib:
                 success: This translation does not exist. You can translate it.
 lang_deny: Language denied
 label:
+    account_profile: Mes informations
     description: Description
     email: Email
     event: Event

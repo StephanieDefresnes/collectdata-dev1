@@ -146,6 +146,7 @@ contrib:
                 error: Cette traduction existe déjà. Voulez-vous lire cette traduction ?
                 success: Cette traduction n'existe pas. Vous pouvez la traduire.
 label:
+    account_profile: Mes informations
     description: Description
     email: Email
     event: Événement
