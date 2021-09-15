@@ -2,7 +2,7 @@
 {% trans_default_domain 'user_messages' %}
 {% set locale = app.request.locale %}
 
-{% block title %}{{ 'nav.account_profile'|trans() }}{% endblock %}
+{% block title %}{{ 'label.account_profile'|trans() }}{% endblock %}
 
 {% block stylesheets %}
     {{ parent() }}
@@ -14,7 +14,7 @@
     {% block banner%}
     <div class="mt-3 mb-5 pt-5">
         <h1 class="h3 text-white">
-            {{ 'nav.account_profile'|trans() }}
+            {{ 'label.account_profile'|trans() }}
         </h1>
     </div>
     {% endblock %}
