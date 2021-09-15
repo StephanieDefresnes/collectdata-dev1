@@ -28,7 +28,10 @@
                     <th class="pl-2" nowrap>{{ 'label.date_login'|trans() }}</th>
                     <th class="pl-2" nowrap>{{ 'label.date_creation'|trans() }}</th>
                     <th class="pl-2" nowrap>{{ 'label.date_update'|trans() }}</th>
-                    <th class="pl-2 no-sort" nowrap>{{ 'action.actions'|trans() }}</th>
+                    <th class="cust-nowrap pl-2 no-sort" nowrap>{{ 'action.actions'|trans() }}</th>
+                    <th class="no-sort"></th>
+                    <th class="no-sort"></th>
+                    <th class="no-sort"></th>
                 </tr>
             </thead>
             <tbody class="bg-white">
@@ -40,12 +43,12 @@
                             {{ form_row(child, { 'attr': { 'class': 'select'} }) }}
                         </td>
                     {% endif %}
-                    <td class="px-2">{{ user.name }}</td>
-                    <td class="px-2">{{ user.email }}</td>
+                    <td class="px-2 text-nowrap">{{ user.name }}</td>
+                    <td class="px-2 text-nowrap">{{ user.email }}</td>
                     <td class="px-2">
                         {% for role in user.roles %}
                             {% if role == 'ROLE_SUPER_ADMIN' %}
-                                <p class="mb-0">{{ 'user.role.super_admin'|trans() }}</p>
+                                <p class="mb-0 text-nowrap">{{ 'user.role.super_admin'|trans() }}</p>
                             {% elseif role == 'ROLE_ADMIN' %}
                                 <p class="mb-0">{{ 'user.role.admin'|trans() }}</p>
                             {% elseif role == 'ROLE_MODERATOR' %}
@@ -95,39 +98,40 @@
                     <td class="px-2">{{ user.dateLastLogin ? user.dateLastLogin|format_datetime('short', 'short', locale=locale) : '' }}</td>
                     <td class="px-2">{{ user.dateCreate ? user.dateCreate|format_datetime('short', 'short', locale=locale) : '' }}</td>
                     <td class="px-2">{{ user.dateUpdate ? user.dateUpdate|format_datetime('short', 'short', locale=locale) : '' }}</td>
-                    <td class="px-2">
+                    <td class="pr-0">
                         {# Read user #}
                         {% if can_read %}
                             <a href="{{ path('back_user_read', {'id': user.id}) }}" title="{{ 'action.read_title'|trans() }}"
                                data-toggle="tooltip" data-placement="left" aria-label="{{ 'action.read_title'|trans() }}"
-                               class="btn btn-outline-primary" role="button">
+                               class="btn btn-outline-primary px-2" role="button">
                                 <i class="fas fa-eye"></i>
                             </a>
                         {% endif %}
+                    </td>
+                    <td class="px-2">
                         {# Update user #}
-                        {% if not user.hasRole("ROLE_SUPER_ADMIN") and is_granted("ROLE_SUPER_ADMIN") %}
+                        {% if not user.hasRole("ROLE_SUPER_ADMIN") and is_granted("ROLE_SUPER_ADMIN") 
+                            or (not user.hasRole("ROLE_SUPER_ADMIN")
+                                and (
+                                    ( is_granted("ROLE_ADMIN")
+                                        and not is_granted("ROLE_SUPER_ADMIN")
+                                        and not user.hasRole("ROLE_ADMIN") )
+                                    or ( is_granted("ROLE_MODERATOR")
+                                        and not is_granted("ROLE_SUPER_ADMIN")
+                                        and not is_granted("ROLE_ADMIN")
+                                        and not user.hasRole("ROLE_ADMIN")
+                                        and not user.hasRole("ROLE_MODERATOR") )
+                                )
+                            )
+                        %}
                             <a href="{{ path('back_user_update', {'id': user.id}) }}" title="{{ 'action.edit'|trans() }}"
                                 data-toggle="tooltip" data-placement="left" aria-label="{{ 'action.edit'|trans() }}"
-                                class="btn btn-outline-warning" role="button">
+                                class="btn btn-outline-warning px-2" role="button">
                                 <i class="fas fa-edit"></i>
                             </a>
-                        {% elseif not user.hasRole("ROLE_SUPER_ADMIN") %}
-                            {% if is_granted("ROLE_ADMIN") and not is_granted("ROLE_SUPER_ADMIN")
-                                and not user.hasRole("ROLE_ADMIN") %}
-                                <a href="{{ path('back_user_update', {'id': user.id}) }}" title="{{ 'action.edit'|trans() }}"
-                                    data-toggle="tooltip" data-placement="left" aria-label="{{ 'action.edit'|trans() }}"
-                                    class="btn btn-outline-warning" role="button">
-                                    <i class="fas fa-edit"></i>
-                                </a>
-                            {% elseif is_granted("ROLE_MODERATOR") and not is_granted("ROLE_SUPER_ADMIN") and not is_granted("ROLE_ADMIN")
-                                and not user.hasRole("ROLE_ADMIN") and not user.hasRole("ROLE_MODERATOR") %}
-                                <a href="{{ path('back_user_update', {'id': user.id}) }}" title="{{ 'action.edit'|trans() }}"
-                                    data-toggle="tooltip" data-placement="left" aria-labe="{{ 'action.edit'|trans() }}"
-                                    class="btn btn-outline-warning" role="button">
-                                    <i class="fas fa-edit"></i>
-                                </a>
-                            {% endif %}
                         {% endif %}
+                    </td>
+                    <td class="px-0">
                         {# Delete user #}
                         {% if can_delete and is_granted("ROLE_SUPER_ADMIN") and not user.hasRole("ROLE_SUPER_ADMIN") %}
                             <a href="#" data-toggle="tooltip" data-toggle="modal" data-target="#delete" title="{{ 'action.delete'|trans() }}"
@@ -137,6 +141,8 @@
                                 <i class="fas fa-times"></i>
                             </a>
                         {% endif %}
+                    </td>
+                    <td class="px-2">
                         {# Switch user #}
                         {% if not user.hasRole("ROLE_SUPER_ADMIN") and is_granted("ROLE_ALLOWED_TO_SWITCH") %}
                             {% set switch_path = path('front_home', { 'id': user.id, '_switch_user': user.email }) %}
