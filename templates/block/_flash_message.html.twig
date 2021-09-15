@@ -9,7 +9,7 @@
                         {% if type == 'error' %}
                             <span class="icon text-danger"><i class="fas fa-exclamation-circle"></i></span>
                         {% else %}
-                            <span class="icon text-{{ ~type }}">
+                            <span class="icon text-{{ type }}">
                             {% if type == 'success' %}<i class="fas fa-check-circle"></i>
                             {% elseif type == 'info' %}<i class="fas fa-info-circle"></i>
                             {% elseif type == 'warning' %}<i class="fas fa-exclamation-circle"></i>{% endif %}
