@@ -10,9 +10,13 @@
             
         <div class="content">
             
+            {% set expire_message = resetToken.expirationMessageKey|trans(resetToken.expirationMessageData, 'ResetPasswordBundle') %}
+            {% set reset_password_url = url('app_reset_password', {token: resetToken.token}) %}
+            
             {{ 'reset_password.email.message'|trans({
-                    '%user%': user,
+                    '%expire_message%': expire_message,
                     '%reset_password_url%': reset_password_url,
+                    '%user%': user,
                     '%website_url%': app.request.schemeAndHttpHost,
                     '%website_name%': name_site
                 }, 'security', locale)|raw|nl2br

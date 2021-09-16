@@ -82,18 +82,9 @@ class ResetPasswordController extends AbstractController
         if (null === ($resetToken = $this->getTokenObjectFromSession())) {
             $resetToken = $this->resetPasswordHelper->generateFakeResetToken();
         }
-        
-        $url = $this->router->generate(
-            'app_forgot_password_request',
-            [
-                '_locale' => locale_get_default(),
-            ],
-            UrlGeneratorInterface::ABSOLUTE_URL
-        );
 
         return $this->render('security/reset_password/check_email.html.twig', [
             'resetToken' => $resetToken,
-            'reset_password_url' => $url,
         ]);
     }
 
@@ -201,15 +192,6 @@ class ResetPasswordController extends AbstractController
             'security', $locale = $userLang->getLang()
         );
         
-        $url = $this->router->generate(
-            'app_reset_password',
-            [
-                '_locale' => $userLang->getLang(),
-                'token' => $resetToken->getToken(),
-            ],
-            UrlGeneratorInterface::ABSOLUTE_URL
-        );
-        
         $sender = $this->parameters->get('configuration')['from_email'];
         $nameSite = $this->parameters->get('configuration')['name'];
 
@@ -217,11 +199,11 @@ class ResetPasswordController extends AbstractController
             ->from(new Address($sender, $nameSite))
             ->to($user->getEmail())
             ->subject($subject)
-            ->htmlTemplate('front/reset_password/email.html.twig')
+            ->htmlTemplate('security/reset_password/email.html.twig')
             ->context([
                 'locale' => $userLang->getLang(),
                 'user' => $user->getName(),
-                'reset_password_url' => $url,
+                'resetToken' => $resetToken,
             ])
         ;
 

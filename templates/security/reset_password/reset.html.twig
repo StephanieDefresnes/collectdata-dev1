@@ -13,7 +13,18 @@
 
                 {{ form_start(resetForm) }}
                 
-                    {{ form_row(resetForm.plainPassword) }}
+                    {% for password in resetForm.plainPassword %}
+                        <div class="form-group">
+                            {{ form_label(password) }}
+                            <div class="input-group togglePassword">
+                                {{ form_widget(password) }}
+                                <div class="input-group-append">
+                                  <span class="btn input-group-text"><i class="fa fa-eye-slash" aria-hidden="true"></i></span>
+                                </div>
+                            </div>
+                        </div>
+                        {{ form_errors(password) }}
+                    {% endfor %}
 
                     <div class="text-center mt-4 pt-2">
                         <button class="btn btn-secondary px-4 mx-2">
@@ -26,4 +37,9 @@
             </div>
         </div>
     </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {{ encore_entry_script_tags('pw_app', null, 'frontApp') }}
 {% endblock %}

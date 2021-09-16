@@ -65,7 +65,7 @@ reset_password:
 
             <a href="%reset_password_url%">%reset_password_url%</a>.
 
-            Este enlace caduca en 1 hora y solo se puede usar una vez.
+            Este enlace caduca en %expire_message% y solo se puede usar una vez.
 
             Si no es el iniciador de esta solicitud, ignore este mensaje.
 
@@ -76,6 +76,6 @@ reset_password:
         text: |
             Si hay una cuenta correspondiente a su correo electrónico, se acaba de enviar un correo electrónico que contiene un enlace para restablecer su contraseña.
         
-            Este enlace caducará en 1 hora.
+            Este enlace caducará en %expire_message%.
             
             Si no recibe un correo electrónico, verifique su carpeta de correo no deseado o <a href="%reset_password_url%">volver a intentar</a>.

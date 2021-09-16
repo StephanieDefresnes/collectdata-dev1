@@ -65,7 +65,7 @@ reset_password:
 
             <a href="%reset_password_url%">%reset_password_url%</a>.
 
-            This link expires in 1 hour and can only be used once.
+            This link expires in %expire_message% and can only be used once.
 
             If you are not the initiator of this request, please disregard this message.
 
@@ -76,6 +76,6 @@ reset_password:
         text: |
             If there is an account corresponding to your email, an email has just been sent containing a link to reset your password.
         
-            This link will expire in 1 hour.
+            This link will expire in %expire_message%.
             
             If you do not receive an email, please check your spam folder or <a href="%reset_password_url%">try again</a>.

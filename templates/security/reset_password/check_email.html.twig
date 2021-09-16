@@ -11,8 +11,11 @@
                 
                 <h1 class="h3 mb-3 font-weight-normal">{{ 'reset_password.sent.title'|trans() }}</h1>
                 
+                {% set expire_message = resetToken.expirationMessageKey|trans(resetToken.expirationMessageData, 'ResetPasswordBundle') %}
+            
                 {{ 'reset_password.sent.text'|trans({
-                    '%reset_password_url%': reset_password_url,
+                    '%expire_message%': expire_message,
+                    '%reset_password_url%': path('app_forgot_password_request'),
                     }, 'security')|raw|nl2br
                 }}
 

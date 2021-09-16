@@ -28,9 +28,11 @@ registration:
         message: |
             Bonjour %user%,
 
-            Pour valider votre compte utilisateur, merci de cliquer <a href="%confirmation_url%">ici</a>.
+            Veuillez confirmer votre adresse e-mail en cliquant sur le lien suivant :
+            
+            <a href="%signed_url%">Confirmer mon email</a>.
 
-            Ce lien ne peut être utilisé qu'une seule fois pour valider votre compte.
+            Ce lien expirera dans %expire_message%.
 
             Cordialement,
             <a href="%website_url%">%website_name%</a>
@@ -42,6 +44,15 @@ registration:
         password: Mot de passe
         repeat_password: Répéter le mot de passe
         agree_terms: J'ai lu et j'accepte les <a href="%gcu_url%" target="_blank">conditions d'utilisation <span class="small"><i class="fas fa-external-link-alt"></i></span></a>.
+    requested:
+        title: Validation de votre inscription
+        text: |
+            Un mail vient d'être envoyé contenant un lien pour validation de votre inscription.
+        
+            Ce lien expirera dans %expire_message%.
+            
+            Si vous ne trouvez pas d'e-mail, veuillez vérifier votre dossier spam.
+        
     title: Inscription
 reset_password:
     request: Mot de passe oublié
@@ -63,7 +74,7 @@ reset_password:
 
             <a href="%reset_password_url%">%reset_password_url%</a>.
 
-            Ce lien expire dans 1 heure et ne peut être utilisé qu'une seule fois.
+            Ce lien expire dans %expire_message% et ne peut être utilisé qu'une seule fois.
 
             Si vous n'êtes pas à l'origine de cette demande, veuillez ne pas tenir compte de ce message.
 
@@ -74,6 +85,6 @@ reset_password:
         text: |
             S'il existe un compte correspondant à votre email, un mail vient d'être envoyé contenant un lien pour réinitialiser votre mot de passe.
         
-            Ce lien expirera dans 1 heure.
+            Ce lien expirera dans %expire_message%.
             
             Si vous ne recevez pas d'e-mail, veuillez vérifier votre dossier spam ou <a href="%reset_password_url%">réessayer</a>.
