@@ -3,6 +3,11 @@
 
 {% block title %}{{ 'registration.title'|trans() }}{% endblock %}
 
+{% block stylesheets %}
+    {{ parent() }}
+    {{ encore_entry_link_tags('register_app', null, 'frontApp') }}
+{% endblock %}
+
 {% block content %}
     {% for flashError in app.flashes('verify_email_error') %}
         <div class="alert alert-danger" role="alert">{{ flashError }}</div>
@@ -32,7 +37,13 @@
                     {% endfor %}
                     
                     {{ form_row(registrationForm.agreeTerms) }}
-                    <div class="mt-5 text-center">
+                    
+                    <div id="comment" class="mx-2 px-3 pt-2 pb-3 bg-light rounded-lg line-12">
+                        <span class="text-primary"><i class="fas fa-info-circle"></i></span>
+                        <span class="small">{{ 'registration.comment'|trans()|raw|nl2br }}</span>
+                    </div>
+                    
+                    <div class="mt-4 pt-2 text-center">
                         <button class="btn btn-secondary px-5" type="submit">
                             {{ 'button.validate'|trans() }}
                         </button>
@@ -47,5 +58,6 @@
 
 {% block javascripts %}
     {{ parent() }}
+    {{ encore_entry_script_tags('pw_app', null, 'frontApp') }}
     {{ encore_entry_script_tags('register_app', null, 'frontApp') }}
 {% endblock %}

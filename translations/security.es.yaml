@@ -23,15 +23,19 @@ login:
     btn:
         submit: Iniciar sesión
 registration:
-    title: Registro
+    comment: |
+            Se enviará un correo electrónico con un enlace para validar su registro a la dirección de email indicada.
+            Si no recibe un correo electrónico, verifique su carpeta de correo no deseado.
     email:
-        subject: Validación de su cuenta
+        subject: Activación de su cuenta
         message: |
             Hola %user%:
 
-            Para validar su cuenta de usuario, haga clic <a href="%confirmation_url%">aquí </a>.
+            Confirme su email haciendo clic en el siguiente enlace:
+            
+            <a href="%confirmation_url%">Confirma mi email</a>.
 
-            Este enlace solo se puede utilizar una vez para validar su cuenta.
+            Este enlace caducará en %expire_message%.
 
             Atentamente,
             <a href="%website_url%">%website_name% </a>
@@ -43,8 +47,7 @@ registration:
         password: Contraseña
         repeat_password: Repite la contraseña
         agree_terms: He leido y acepto las <a href="%gcu_url%" target="_blank">condiciones de uso <span class="small"><i class="fas fa-external-link-alt"></i></span></a>.
-    message:
-        unique_email: Ya existe este email. Ingrese un nuevo email.
+    title: Registro
 reset_password:
     request: Contraseña olvidada
     title: Restablecer la contraseña

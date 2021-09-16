@@ -23,15 +23,19 @@ login:
     btn:
         submit: Sign in
 registration:
-    title: Register
+    comment: |
+            An email containing a link to validate your registration will be sent to the indicated email address.
+            If you do not receive an email, please check your spam folder.
     email:
-        subject: Validation of your account
+        subject: Activation of your account
         message: |
             Hello %user%,
 
-            To finish activating your account - please click <a href="%confirmation_url%">here</a>.
+            Please confirm your email address by clicking on the following link:
+            
+            <a href="%signed_url%">Confirm my email</a>.
 
-            This link can only be used once to validate your account.
+            This link will expire in %expire_message%.
 
             Regards,
             <a href="%website_url%">%website_name%</a>
@@ -43,8 +47,7 @@ registration:
         password: Password
         repeat_password: Repeat password
         agree_terms: I have read and I accept <a href="%gcu_url%" target="_blank">terms of use <span class="small"><i class="fas fa-external-link-alt"></i></span></a>.
-    message:
-        unique_email: This email already exists. Please enter a new address.
+    title: Register
 reset_password:
     request: Forgot password
     title: Reset password

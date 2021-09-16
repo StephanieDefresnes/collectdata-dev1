@@ -23,8 +23,11 @@ login:
     btn:
         submit: Connexion
 registration:
+    comment: |
+            Un mail contenant un lien pour valider votre inscription sera envoyé à l'adresse indiquée.
+            Si vous ne trouvez pas d'e-mail, veuillez vérifier votre dossier spam.
     email:
-        subject: Validation de votre compte
+        subject: Activation de votre compte
         message: |
             Bonjour %user%,
 
@@ -44,15 +47,6 @@ registration:
         password: Mot de passe
         repeat_password: Répéter le mot de passe
         agree_terms: J'ai lu et j'accepte les <a href="%gcu_url%" target="_blank">conditions d'utilisation <span class="small"><i class="fas fa-external-link-alt"></i></span></a>.
-    requested:
-        title: Validation de votre inscription
-        text: |
-            Un mail vient d'être envoyé contenant un lien pour validation de votre inscription.
-        
-            Ce lien expirera dans %expire_message%.
-            
-            Si vous ne trouvez pas d'e-mail, veuillez vérifier votre dossier spam.
-        
     title: Inscription
 reset_password:
     request: Mot de passe oublié

@@ -5,6 +5,7 @@ namespace App\Controller\Security;
 use App\Entity\User;
 use App\Form\Security\RegistrationFormType;
 use App\Security\EmailVerifier;
+use App\Service\LangService;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
@@ -31,7 +32,8 @@ class RegistrationController extends AbstractController
     /**
      * @Route("/register", name="front_register")
      */
-    public function register(   ParameterBagInterface $parameters,
+    public function register(   LangService $langService,
+                                ParameterBagInterface $parameters,
                                 Request $request,
                                 TranslatorInterface $translator,
                                 UserPasswordEncoderInterface $passwordEncoder): Response
@@ -61,6 +63,13 @@ class RegistrationController extends AbstractController
                 )
             );
 
+            $user->setEnabled(false);
+            $user->setRoles(array('ROLE_CONTRIBUTOR'));
+            $user->setDateCreate(new \DateTime());
+            
+            $lang = $langService->getLangByLang(locale_get_default());
+            $user->setLangId($lang->getId());
+
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($user);
             $entityManager->flush();
@@ -81,16 +90,32 @@ class RegistrationController extends AbstractController
                 (new TemplatedEmail())
                     ->from(new Address($sender, $nameSite))
                     ->to($user->getEmail())
-                    ->subject('Please Confirm your Email')
+                    ->subject($subject)
                     ->htmlTemplate('security/registration/confirmation_email.html.twig')
             );
             // do anything else you need here, like send an email
 
-            return $this->redirectToRoute('front_home');
+            return $this->redirectToRoute('app_registration');
         }
 
         return $this->render('security/registration/register.html.twig', [
             'registrationForm' => $form->createView(),
+        ]);
+    }
+
+    /**
+     * @Route("/registration", name="app_registration")
+     */
+    public function registrationRequested(): Response
+    {
+        // Generate a fake token if the user does not exist or someone hit this page directly.
+        // This prevents exposing whether or not a user was found with the given email address or not
+        if (null === ($resetToken = $this->getTokenObjectFromSession())) {
+            $resetToken = $this->resetPasswordHelper->generateFakeResetToken();
+        }
+        
+        return $this->render('security/registration/requested.html.twig', [
+            'resetToken' => $resetToken,
         ]);
     }
 

@@ -9,24 +9,17 @@
         <img src="{{ absolute_url(asset('img/flp_1000x260.jpg')) }}" alt="">
             
         <div class="content">
-<h1>Hi! Please confirm your email!</h1>
-
-<p>
-    Please confirm your email address by clicking the following link: <br><br>
-    <a href="{{ signedUrl }}">Confirm my Email</a>.
-    This link will expire in {{ expiresAtMessageKey|trans(expiresAtMessageData, 'VerifyEmailBundle') }}.
-</p>
-
-<p>
-    Cheers!
-</p>   
-{#            {{ 'forget_password.email.message'|trans({
+            
+            {% set expire_message = expiresAtMessageKey|trans(expiresAtMessageData, 'VerifyEmailBundle') %}
+            
+            {{ 'registration.email.message'|trans({
                     '%user%': user,
-                    '%confirmation_url%': confirmation_url,
+                    '%signed_url%': signedUrl,
+                    '%expire_message%': expire_message,
                     '%website_url%': app.request.schemeAndHttpHost,
                     '%website_name%': name_site
                 }, 'security')|raw|nl2br
-            }}#}
+            }}
             
         </div>
             
