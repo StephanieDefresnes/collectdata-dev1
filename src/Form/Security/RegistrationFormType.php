@@ -31,21 +31,13 @@ class RegistrationFormType extends AbstractType
             ->add('name', TextType::class, [
                 'label' => 'registration.label.name',
             ])
-            ->add('agreeTerms', CheckboxType::class, [
-                'label' => 'registration.label.agree_terms',
-                'label_translation_parameters' => ['%gcu_url%' => $options['gcu_url']],
-                'label_html' => true,
-                'mapped' => false,
-                'constraints' => [
-                    new IsTrue([
-                        'message' => 'registration.agree_terms_is_true',
-                    ]),
-                ],
-            ])
             ->add('plainPassword', RepeatedType::class, [
                 'type' => PasswordType::class,
                 'invalid_message' => 'repeated_password_invalid',
-                'options' => ['attr' => ['class' => 'password-field']],
+                'options' => ['attr' => [
+                    'class' => 'password-field',
+                    'placeholder' => '●●●●●●'
+                ]],
                 'required' => true,
                 'first_options'  => ['label' => 'registration.label.password'],
                 'second_options' => ['label' => 'registration.label.repeat_password'],
@@ -59,6 +51,17 @@ class RegistrationFormType extends AbstractType
                         'minMessage' => 'password_length_min',
                         // max length allowed by Symfony for security reasons
                         'max' => 4096,
+                    ]),
+                ],
+            ])
+            ->add('agreeTerms', CheckboxType::class, [
+                'label' => 'registration.label.agree_terms',
+                'label_translation_parameters' => ['%gcu_url%' => $options['gcu_url']],
+                'label_html' => true,
+                'mapped' => false,
+                'constraints' => [
+                    new IsTrue([
+                        'message' => 'registration.agree_terms_is_true',
                     ]),
                 ],
             ])

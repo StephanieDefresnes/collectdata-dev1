@@ -117,6 +117,11 @@ class User implements UserInterface
      */
     private $forbiddenAccess;
 
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $isVerified = false;
+
     public function __construct()
     {
         $this->langs = new ArrayCollection();
@@ -457,6 +462,18 @@ class User implements UserInterface
     public function setForbiddenAccess(?int $forbidden_access): self
     {
         $this->forbiddenAccess = $forbidden_access;
+
+        return $this;
+    }
+
+    public function isVerified(): bool
+    {
+        return $this->isVerified;
+    }
+
+    public function setIsVerified(bool $isVerified): self
+    {
+        $this->isVerified = $isVerified;
 
         return $this;
     }

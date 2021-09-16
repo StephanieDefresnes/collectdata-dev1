@@ -49,35 +49,5 @@ class SecurityController extends AbstractController
     public function logout()
     {
         throw new \LogicException('This method can be blank - it will be intercepted by the logout key on your firewall.');
-    }
-
-    /**
-     * @Route("/registration_confirm", name="app_registration_confirm")
-     */
-    public function registrationConfirm(Request $request,
-                                        UserRepository $userRepository,
-                                        GuardAuthenticatorHandler $guardHandler,
-                                        LoginFormAuthenticator $authenticator): Response
-    {
-        $token = $request->query->get('token');
-        $user = $userRepository->findOneByConfirmationToken($token);
-        if (null === $user) {
-            throw $this->createNotFoundException(sprintf('The user with confirmation token "%s" does not exist', $token));
-        }
-        
-        $user->setConfirmationToken(null);
-        $user->setEnabled(true);
-        $this->getDoctrine()->getManager()->flush();
-        
-        $msg = $this->translator->trans('registration.flash.confirmed', [ '%user%' => $user, ], 'security');
-        $this->addFlash('success', $msg);
-        
-        return $guardHandler->authenticateUserAndHandleSuccess(
-            $user,
-            $request,
-            $authenticator,
-            'main' // firewall name in security.yaml
-        );
-    }
-    
+    }    
 }

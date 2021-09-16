@@ -42,7 +42,7 @@ registration:
         name: Name
         password: Password
         repeat_password: Repeat password
-        agree_terms: I have read and I accept <a href="%gcu_url%">terms of use</a>.
+        agree_terms: I have read and I accept <a href="%gcu_url%" target="_blank">terms of use <span class="small"><i class="fas fa-external-link-alt"></i></span></a>.
     message:
         unique_email: This email already exists. Please enter a new address.
 reset_password:

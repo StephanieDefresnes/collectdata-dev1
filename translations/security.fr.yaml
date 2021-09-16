@@ -23,7 +23,6 @@ login:
     btn:
         submit: Connexion
 registration:
-    title: Inscription
     email:
         subject: Validation de votre compte
         message: |
@@ -42,9 +41,8 @@ registration:
         name: Nom
         password: Mot de passe
         repeat_password: Répéter le mot de passe
-        agree_terms: J'ai lu et j'accepte les <a href="%gcu_url%">conditions d'utilisation</a>.
-    message:
-        unique_email: Cet email existe déjà. Veuillez entrer une autre adresse email.
+        agree_terms: J'ai lu et j'accepte les <a href="%gcu_url%" target="_blank">conditions d'utilisation <span class="small"><i class="fas fa-external-link-alt"></i></span></a>.
+    title: Inscription
 reset_password:
     request: Mot de passe oublié
     title: Réinitialiser le mot de passe

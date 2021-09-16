@@ -1,0 +1,51 @@
+{% trans_default_domain 'security' %}
+{% extends 'front/layout.html.twig' %}
+
+{% block title %}{{ 'registration.title'|trans() }}{% endblock %}
+
+{% block content %}
+    {% for flashError in app.flashes('verify_email_error') %}
+        <div class="alert alert-danger" role="alert">{{ flashError }}</div>
+    {% endfor %}
+
+    <div class="col-lg-6 mx-auto pt-5">
+        
+        <div class="card mt-4 mb-4 px-3 py-2 bg-white-80">
+            
+            <div class="card-body">
+                {{ form_start(registrationForm) }}
+                    <h1 class="h3 mb-3 font-weight-normal">{{ 'registration.title'|trans() }}</h1>
+                    {{ form_row(registrationForm.email) }}
+                    {{ form_row(registrationForm.name) }}
+                    
+                    {% for password in registrationForm.plainPassword %}
+                        <div class="form-group">
+                            {{ form_label(password) }}
+                            <div class="input-group togglePassword">
+                                {{ form_widget(password) }}
+                                <div class="input-group-append">
+                                  <span class="btn input-group-text"><i class="fa fa-eye-slash" aria-hidden="true"></i></span>
+                                </div>
+                            </div>
+                        </div>
+                        {{ form_errors(password) }}
+                    {% endfor %}
+                    
+                    {{ form_row(registrationForm.agreeTerms) }}
+                    <div class="mt-5 text-center">
+                        <button class="btn btn-secondary px-5" type="submit">
+                            {{ 'button.validate'|trans() }}
+                        </button>
+                    </div>
+                {{ form_end(registrationForm) }}
+            </div>
+            
+        </div>
+            
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {{ encore_entry_script_tags('register_app', null, 'frontApp') }}
+{% endblock %}

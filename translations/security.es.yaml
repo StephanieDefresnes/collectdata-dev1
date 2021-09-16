@@ -29,7 +29,7 @@ registration:
         message: |
             Hola %user%:
 
-            Para validar su cuenta de usuario, haga clic <a href="%confirmation_url%">aquí</a>.
+            Para validar su cuenta de usuario, haga clic <a href="%confirmation_url%">aquí </a>.
 
             Este enlace solo se puede utilizar una vez para validar su cuenta.
 
@@ -42,7 +42,7 @@ registration:
         name: Apellido
         password: Contraseña
         repeat_password: Repite la contraseña
-        agree_terms: He leido y acepto las <a href="%gcu_url%">condiciones de uso</a>.
+        agree_terms: He leido y acepto las <a href="%gcu_url%" target="_blank">condiciones de uso <span class="small"><i class="fas fa-external-link-alt"></i></span></a>.
     message:
         unique_email: Ya existe este email. Ingrese un nuevo email.
 reset_password:
