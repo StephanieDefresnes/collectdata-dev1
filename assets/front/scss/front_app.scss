@@ -164,7 +164,7 @@ body {
                         background: transparent !important;
                         border-radius: 0 0 0.25rem 0.25rem;
                         &.pt-md-2 {
-                            padding-top: 1.7rem !important;
+                            padding-top: 1.5rem !important;
                         }
                         &.lang-menu {
                             left: -4px;
@@ -641,23 +641,31 @@ table {
         right: unset;
         left: 0;
     }
-    & .navbar .navbar-nav > li:hover > .dropdown-menu {
-        text-align: right;
-        &.dropdown-menu-right {
-            right: unset !important;
-            left: -17px;
-        }
-        & > li {
-            & > a {
-                & > i {
-                    width: 25px;
-                }
-                & > img {
-                    &.mr-2 {
-                        margin-right: 0 !important;
-                        margin-left: 0.5rem !important;
+    & .navbar {
+        & .navbar-nav > li:hover > .dropdown-menu {
+            text-align: right;
+            &.dropdown-menu-right {
+                right: unset !important;
+                left: -17px;
+            }
+            & > li {
+                & > a {
+                    & > i {
+                        width: 25px;
+                    }
+                    & > img {
+                        &.mr-2 {
+                            margin-right: 0 !important;
+                            margin-left: 0.5rem !important;
+                        }
                     }
                 }
+            }
+        }
+        #navbarCollapse {
+            & .dropdown-menu {
+                left: unset !important;
+                right: 0;
             }
         }
     }

@@ -4,12 +4,12 @@
 <div class="container-fluid fixed-top">
     <nav class="navbar navbar-expand-md navbar-dark bg-dark-50 shadow-lg" role="navigation">
         {% if route == 'front_home' %}
-            <h1 class="navbar-brand">
+            <h1 class="navbar-brand pt-0">
                 <img src="{{ asset('img/forlifeproject.png') }}" alt="{{ name_site }}" class="nav-logo">
                 <span>{{ name_site }}</span>
             </h1>
         {% else %}
-            <a class="navbar-brand" href="{{ path('front_home') }}">
+            <a class="navbar-brand pt-0" href="{{ path('front_home') }}">
                 <img src="{{ asset('img/forlifeproject.png') }}" alt="{{ name_site }}" class="nav-logo">
                 <span>{{ name_site }}</span>
             </a>
@@ -18,8 +18,8 @@
                 aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
-        <div class="collapse navbar-collapse" id="navbarCollapse">
-            <ul class="navbar-nav mr-auto">
+        <div class="collapse navbar-collapse d-flex justify-content-between px-3" id="navbarCollapse">
+            <ul class="navbar-nav p-0">
                 {% if app.user %}
                     {% include "front/block/_contrib.html.twig" %}
                     {% include "front/block/_translation.html.twig" %}

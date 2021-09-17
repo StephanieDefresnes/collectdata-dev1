@@ -5,7 +5,7 @@ $(document).ready(function() {
     
     $('#registration_form_agreeTerms, '
             +'label[for="registration_form_agreeTerms"]').bind('click', function() {
-        $('#comment').show()
+        $('#comment').fadeIn()
     })
     
 })
