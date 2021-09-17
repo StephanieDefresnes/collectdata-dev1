@@ -262,10 +262,10 @@ $(function() {
             submissionStatus($(this).attr('id'))
             
             // Create Translation
-            //  -- if status is validated (3) clone TranslationMessage
+            //  -- if new ou status is validated (3) clone TranslationMessage
             if ( (messageId == '' && statusId == '') || statusId == 3
                || action == 'clone') {
-                $('#submit').click()
+                $('form').submit()
             }            
             // Or Update Translation
             else {
