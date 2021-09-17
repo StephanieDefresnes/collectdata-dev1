@@ -60,18 +60,12 @@ class Lang
     */
     private $users;
 
-    /**
-    * @ORM\OneToMany(targetEntity=UserFile::class, cascade={"persist"}, mappedBy="lang")
-    */
-    protected $userFiles;
-
     public function __construct()
     {
         $this->events = new ArrayCollection();
         $this->categories = new ArrayCollection();
         $this->situs = new ArrayCollection();
         $this->users = new ArrayCollection();
-        $this->userFiles = new ArrayCollection();
     }
 
     public function __toString()
@@ -245,36 +239,6 @@ class Lang
     {
         if ($this->users->contains($user)) {
             $this->users->removeElement($user);
-        }
-        return $this;
-    }
-
-    /**
-     * @return Collection|UserFile[]
-     */
-    public function getUserFiles(): ?Collection
-    {
-        return $this->userFiles;
-    }
-     
-    public function addUserFile(UserFile $userFile): self
-    {
-        if (!$this->userFiles->contains($userFile)) {
-            $this->userFiles[] = $userFile;
-            $userFile->setLang($this);
-        }
-        
-        return $this;
-    }
-
-    public function removeUserFile(UserFile $userFile): self
-    {
-        if ($this->userFiles->contains($userFile)) {
-            $this->userFiles->removeElement($userFile);
-            // set the owning side to null (unless already changed)
-            if ($userFile->getLang() === $this) {
-                $userFile->setLang(null);
-            }
         }
         return $this;
     }

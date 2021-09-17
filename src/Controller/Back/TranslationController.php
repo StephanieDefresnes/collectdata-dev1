@@ -8,7 +8,6 @@ use App\Entity\TranslationMessage;
 use App\Form\Back\Translation\MessageFormType;
 use App\Repository\TranslationMessageRepository;
 use App\Service\TranslationService;
-use App\Service\UserFileService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -28,19 +27,16 @@ class TranslationController extends AbstractController
     private $translator;
     private $translationRepository;
     private $translationService;
-    private $userFileService;
     
     public function __construct(EntityManagerInterface $em,
                                 TranslatorInterface $translator,
                                 TranslationMessageRepository $translationRepository,
-                                TranslationService $translationService,
-                                UserFileService $userFileService)
+                                TranslationService $translationService)
     {
         $this->em = $em;
         $this->translator = $translator;
         $this->translationRepository = $translationRepository;
         $this->translationService = $translationService;
-        $this->userFileService = $userFileService;
     }
     
     /**
@@ -51,15 +47,7 @@ class TranslationController extends AbstractController
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
         $this->denyAccessUnlessGranted('ROLE_ADMIN');
         
-        $repositoryLang = $this->em->getRepository(Lang::class);
-        $langs = $repositoryLang->findAll();
-        
-        $userFiles = $this->userFileService->getTranslationFilesByLang();
-        
-        return $this->render('back/lang/translation/index.html.twig', [
-            'langs' => $langs,
-            'userFiles' => $userFiles
-        ]);
+        return $this->render('back/lang/translation/index.html.twig');
     }
 
     /**

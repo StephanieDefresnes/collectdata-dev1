@@ -59,7 +59,7 @@ class LangManager
         $request = $this->requestStack->getCurrentRequest();
         $ids = $request->query->get('ids', null);
         if (!is_array($ids)) { throw new InvalidParameterException(); }
-        $langs = $this->em->getRepository('App\Entity\Lang')->findById($ids);
+        $langs = $this->em->getRepository(Lang::class)->findById($ids);
         if (count($ids) !== count($langs)) { throw new NotFoundHttpException(); }
         return $langs;
     }

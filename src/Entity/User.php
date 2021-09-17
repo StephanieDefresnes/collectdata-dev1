@@ -108,11 +108,6 @@ class User implements UserInterface
     protected $langs;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\UserFile", cascade={"persist", "remove"}, mappedBy="user")
-    */
-    protected $userFiles;
-
-    /**
      * @ORM\Column(type="integer", nullable=true)
      */
     private $forbiddenAccess;
@@ -126,7 +121,6 @@ class User implements UserInterface
     {
         $this->langs = new ArrayCollection();
         $this->contributorLangs = new ArrayCollection();
-        $this->userFiles = new ArrayCollection();
     }
 
     public function __toString()
@@ -418,37 +412,6 @@ class User implements UserInterface
         if ($this->contributorLangs->contains($lang)) {
             $this->contributorLangs->removeElement($lang);
             $lang->removeUser($this);
-        }
-        
-        return $this;
-    }
-    
-    /**
-     * @return Collection|UserFile[]
-     */
-    public function getUserFiles(): Collection
-    {
-        return $this->userFiles;
-    }
-     
-    public function addUserFile(UserFile $userFile): self
-    {
-        if (!$this->userFiles->contains($userFile)) {
-            $this->userFiles[] = $userFile;
-            $userFile->setUserFile($this);
-        }
-        
-        return $this;
-    }
-
-    public function removeUserFile(UserFile $userFile): self
-    {
-        if ($this->userFiles->contains($userFile)) {
-            $this->userFiles->removeElement($userFile);
-            // set the owning side to null (unless already changed)
-            if ($userFile->getUserFile() === $this) {
-                $userFile->setUserFile(null);
-            }
         }
         
         return $this;

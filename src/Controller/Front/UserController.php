@@ -4,9 +4,6 @@ namespace App\Controller\Front;
 
 use App\Entity\User;
 use App\Entity\Lang;
-use App\Entity\UserFile;
-use App\Form\Front\User\UserFilesFormType;
-use App\Form\Front\User\UserFilesRemoveFormType;
 use App\Form\Front\User\UserUpdateFormType;
 use App\Service\LangService;
 use App\Service\SituService;
