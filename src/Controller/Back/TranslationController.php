@@ -3,10 +3,10 @@
 namespace App\Controller\Back;
 
 use App\Entity\Lang;
+use App\Entity\Translation;
 use App\Entity\TranslationField;
-use App\Entity\TranslationMessage;
-use App\Form\Back\Translation\MessageFormType;
-use App\Repository\TranslationMessageRepository;
+use App\Form\Back\Translation\TranslationFormType;
+use App\Repository\TranslationRepository;
 use App\Service\TranslationService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -30,7 +30,7 @@ class TranslationController extends AbstractController
     
     public function __construct(EntityManagerInterface $em,
                                 TranslatorInterface $translator,
-                                TranslationMessageRepository $translationRepository,
+                                TranslationRepository $translationRepository,
                                 TranslationService $translationService)
     {
         $this->em = $em;
@@ -60,21 +60,22 @@ class TranslationController extends AbstractController
         $this->denyAccessUnlessGranted('ROLE_SUPER_ADMIN');
         
         // Translations list
-        $translations = $this->translationService->getAllMessagesReferent();
+        $translations = $this->translationService->getAllTranslationsReferent();
         
         $user = $this->getUser();
         $userId = $user->getId();
         
         // Form
-        $translation = new TranslationMessage();
+        $translation = new Translation();
             
         $fields = new ArrayCollection();
         foreach ($translation->getFields() as $field) {
             $fields->add($field);
         }
         
-        $form = $this->createForm(MessageFormType::class, $translation);
+        $form = $this->createForm(TranslationFormType::class, $translation);
         $form->handleRequest($request);
+        
         if ($form->isSubmitted() && $form->isValid()) {
             
             $translation->setDateCreation(new \DateTime('now'));
@@ -90,26 +91,24 @@ class TranslationController extends AbstractController
                 $field->setDateCreation(new \DateTime('now'));
                 $field->setUserId($userId);
                 $field->setReferent(1);
-                $field->setMessage($translation);
+                $field->setTranslation($translation);
             }
-            
-            $em->flush();
-            
-            $msg = $this->translator
-                    ->trans('lang.translation.form.flash.success',[],
-                            'back_messages', $locale = locale_get_default());
-            $this->addFlash('success', $msg);
-            
-            return $this
-                    ->redirectToRoute('back_translation_create',
-                            ['_locale' => locale_get_default()]); 
-            
-        } elseif ($form->isSubmitted() && !$form->isValid()) {
-            
-            $msg = $this->translator
-                    ->trans('lang.translation.form.flash.error', [],
-                            'back_messages', $locale = locale_get_default());
-            $this->addFlash('error', $msg);
+
+            try {
+                $em->flush();
+
+                $msg = $this->translator
+                        ->trans('lang.translation.form.flash.success',[],
+                                'back_messages', $locale = locale_get_default());
+                $this->addFlash('success', $msg);
+
+                return $this
+                        ->redirectToRoute('back_translation_create',
+                                ['_locale' => locale_get_default()]);  
+                
+            } catch (Exception $e) {
+                throw new \Exception('An exception appeared while creating the translation');
+            }
             
         }
         
@@ -127,17 +126,17 @@ class TranslationController extends AbstractController
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
         $this->denyAccessUnlessGranted('ROLE_SUPER_ADMIN');
         
-        // Get TranslationMessage
+        // Get Translation
         $id = $request->query->get('id');
-        $message = $this->translationService->getTranslationById($id);
-        if (!$message) { return new NotFoundHttpException(); }
+        $translation = $this->translationService->getTranslationById($id);
+        if (!$translation) { return new NotFoundHttpException(); }
         
         // Get collection - TranslationField
-        $fields = $this->translationService->getFieldsByMessageId($message[0]['id']);
+        $fields = $this->translationService->getFieldsByTranslationId($translation[0]['id']);
 
         return $this->json([
             'success' => true,
-            'message' => $message,
+            'translation' => $translation,
             'fields' => $fields,
         ]);
     }
@@ -152,48 +151,48 @@ class TranslationController extends AbstractController
         
         $entityManager = $this->getDoctrine()->getManager();
         
+        // Get request data
+        $request = $this->get('request_stack')->getCurrentRequest();
+        $data = $request->request->all();
+
+//        dd($data);
+
+        // Current user
+        $user = $this->getUser();
+        $userId = $user->getId();
+
+        // Translation to update
+        $translation = $this->em->getRepository(Translation::class)->find($data['id']);
+
+        // Clear original collection
+        foreach ($translation->getFields() as $field) {
+            $translation->getFields()->removeElement($field);
+            $entityManager->remove($field);
+        }
+
+        // Add new collection
+        $translation->setDateLastUpdate(new \DateTime('now'));
+        $translation->setStatusId($data['statusId']);
+        $translation->setUserId($userId);
+        $translation->setReferent(1);
+        $entityManager->persist($translation);
+
+        $fields = $data['data'];
+
+        foreach ($fields as  $key => $field) {
+            $translationField = new TranslationField();
+            $translationField->setName($field['name']);
+            $translationField->setType($field['type']);
+            $translationField->setSorting($key + 1);
+            $translationField->setDateCreation(new \DateTime('now'));
+            $translationField->setUserId($userId);
+            $translationField->setReferent(1);
+            $translationField->setTranslation($translation);
+            $entityManager->persist($translationField);
+        }
+
         try {
             
-            // Get request data
-            $request = $this->get('request_stack')->getCurrentRequest();
-            $data = $request->request->all();
-            
-            dd($data);
-
-            // Current user
-            $user = $this->getUser();
-            $userId = $user->getId();
-
-            // TranslationMessage to update
-            $translationMessage = $this->em->getRepository(TranslationMessage::class)->find($data['id']);
-
-            // Clear original collection
-            foreach ($translationMessage->getFields() as $field) {
-                $translationMessage->getFields()->removeElement($field);
-                $entityManager->remove($field);
-            }
-
-            // Add new collection
-            $translationMessage->setDateLastUpdate(new \DateTime('now'));
-            $translationMessage->setStatusId($data['statusId']);
-            $translationMessage->setUserId($userId);
-            $translationMessage->setReferent(1);
-            $entityManager->persist($translationMessage);
-
-            $fields = $data['data'];
-
-            foreach ($fields as  $key => $field) {
-                $translationField = new TranslationField();
-                $translationField->setName($field['name']);
-                $translationField->setType($field['type']);
-                $translationField->setSorting($key + 1);
-                $translationField->setDateCreation(new \DateTime('now'));
-                $translationField->setUserId($userId);
-                $translationField->setReferent(1);
-                $translationField->setMessage($translationMessage);
-                $entityManager->persist($translationField);
-            }
-
             $entityManager->flush();
             
             $msg = $this->translator
@@ -201,8 +200,9 @@ class TranslationController extends AbstractController
                             'back_messages', $locale = locale_get_default());
             $this->addFlash('success', $msg);
 
-            // To reload page in ajax
-            return new Response();
+            return $this->json([
+                'success' => true,
+            ]);
             
         } catch (Exception $e) {
             throw new \Exception('An exception appeared while updating the translation');
