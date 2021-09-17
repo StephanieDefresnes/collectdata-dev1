@@ -669,6 +669,13 @@ table {
             }
         }
     }
+    .nav-img {
+        & > .nav-img-circle {
+            & > img {
+                margin: 0 4px 0 0;
+            }
+        }
+    }
     .fa, .fas {
         &.ltr {
             display: none;
