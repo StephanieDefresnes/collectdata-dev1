@@ -4,3 +4,14 @@
     }
 }
 #comment { display: none; }
+
+[dir="rtl"] {
+    .form-check {
+        padding-left: unset;
+        padding-right: 1.25rem;
+        & > input {
+            margin-left: unset;
+            margin-right: -1.25rem;
+        }
+    }
+}

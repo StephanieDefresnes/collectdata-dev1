@@ -19,7 +19,8 @@
             
             <div class="card-body">
                 {{ form_start(registrationForm) }}
-                    <h1 class="h3 mb-3 font-weight-normal">{{ 'registration.title'|trans() }}</h1>
+                    <h1 class="h3 mb-3 font-weight-normal d-flex justify-content-start">{{ 'registration.title'|trans() }}</h1>
+                    
                     {{ form_row(registrationForm.email) }}
                     {{ form_row(registrationForm.name) }}
                     
@@ -36,7 +37,9 @@
                         {{ form_errors(password) }}
                     {% endfor %}
                     
-                    {{ form_row(registrationForm.agreeTerms) }}
+                    <div class="d-flex justify-content-start">
+                        {{ form_row(registrationForm.agreeTerms) }}
+                    </div>
                     
                     <div id="comment" class="mx-2 px-3 pt-2 pb-3 bg-light rounded-lg line-12">
                         <span class="text-primary"><i class="fas fa-info-circle"></i></span>

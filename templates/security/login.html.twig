@@ -22,16 +22,16 @@
                             {{ 'login.message.logged_as'|trans({ '%user%': app.user }) }}, <a href="{{ path('app_logout') }}">{{ 'login.link.logout'|trans() }}</a>
                         </div>
                     {% else %}
-                        <h1 class="h3 mb-3 font-weight-normal">{{ 'login.title'|trans() }}</h1>
+                        <h1 class="h3 mb-3 font-weight-normal d-flex justify-content-start">{{ 'login.title'|trans() }}</h1>
                         <div class="form-group">
-                            <label for="inputEmail" class="sr-only">{{ 'label.email'|trans() }}</label>
+                            <label for="inputEmail" class="d-flex justify-content-start required">{{ 'label.email'|trans() }}</label>
                             <input type="email" value="{{ last_username }}" name="email" id="inputEmail" class="form-control mb-2" placeholder="email@example.com" required autofocus>
                         </div>
                         <div class="form-group">
-                            <label for="inputPassword" class="sr-only">{{ 'login.label.password'|trans() }}</label>
+                            <label for="inputPassword" class="d-flex justify-content-start required">{{ 'login.label.password'|trans() }}</label>
                             <div class="input-group" id="show_hide_password">
                                 <input type="password" name="password"
-                                        aria-label="{{ 'login.label.password'|trans() }}" aria-describedby="basic-addon"
+                                       aria-label="{{ 'login.label.password'|trans() }}" aria-describedby="basic-addon"
                                        id="inputPassword" class="form-control"
                                        placeholder="●●●●●●" required>
                                 <div class="input-group-append">
@@ -41,7 +41,7 @@
                         </div>
                         <input type="hidden" name="_csrf_token"
                             value="{{ csrf_token('authenticate') }}">
-                        <div class="form-group">
+                        <div class="form-group d-flex justify-content-start">
                             <div class="checkbox mb-3">
                                 <label>
                                     <input type="checkbox" name="_remember_me"> {{ 'login.label.remember_me'|trans() }}

@@ -22,6 +22,9 @@ class RegistrationFormType extends AbstractType
         $builder
             ->add('email', EmailType::class, [
                 'label' => 'label.email',
+                'label_attr' => [
+                    'class' => 'd-flex justify-content-start',
+                ],
                 'constraints' => [
                     new NotBlank([
                         'message' => 'unique_email',
@@ -30,14 +33,22 @@ class RegistrationFormType extends AbstractType
             ])
             ->add('name', TextType::class, [
                 'label' => 'registration.label.name',
+                'label_attr' => [
+                    'class' => 'd-flex justify-content-start',
+                ]
             ])
             ->add('plainPassword', RepeatedType::class, [
                 'type' => PasswordType::class,
                 'invalid_message' => 'repeated_password_invalid',
-                'options' => ['attr' => [
-                    'class' => 'password-field',
-                    'placeholder' => '●●●●●●'
-                ]],
+                'options' => [
+                    'attr' => [
+                        'class' => 'password-field',
+                        'placeholder' => '●●●●●●'
+                    ],
+                    'label_attr' => [
+                        'class' => 'd-flex justify-content-start',
+                    ],
+                ],
                 'required' => true,
                 'first_options'  => ['label' => 'registration.label.password'],
                 'second_options' => ['label' => 'registration.label.repeat_password'],
