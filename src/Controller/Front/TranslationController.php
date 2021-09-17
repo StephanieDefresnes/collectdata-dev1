@@ -4,10 +4,10 @@ namespace App\Controller\Front;
 
 use App\Entity\Lang;
 use App\Entity\TranslationField;
-use App\Entity\TranslationMessage;
+use App\Entity\Translation;
 use App\Entity\User;
 use App\Form\Front\Translation\MessageFormType;
-use App\Repository\TranslationMessageRepository;
+use App\Repository\TranslationRepository;
 use App\Service\TranslationService;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
@@ -31,7 +31,7 @@ class TranslationController extends AbstractController
     
     public function __construct(EntityManagerInterface $em,
                                 TranslatorInterface $translator,
-                                TranslationMessageRepository $translationRepository,
+                                TranslationRepository $translationRepository,
                                 TranslationService $translationService)
     {
         $this->em = $em;
@@ -69,13 +69,13 @@ class TranslationController extends AbstractController
             ]);
         
         // Valideted translations list
-        $translations = $this->translationService->getMessagesByStatusId(3);
+        $translations = $this->translationService->getTranslationsByStatusId(3);
         
         // User translations
-        $userTranslations = $this->translationService->getUserMessages(3);
+        $userTranslations = $this->translationService->getUserTranslations(3);
         
         // Form
-        $translation = new TranslationMessage();
+        $translation = new Translation();
             
         $fields = new ArrayCollection();
         foreach ($translation->getFields() as $field) {
@@ -87,7 +87,7 @@ class TranslationController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             
             
-            
+            // TODO
             
             
         }
@@ -106,13 +106,13 @@ class TranslationController extends AbstractController
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
 //        $this->denyAccessUnlessGranted('ROLE_USER');
         
-        // Get TranslationMessage
+        // Get Translation
         $id = $request->query->get('id');
         $message = $this->translationService->getTranslationById($id);
         if (!$message) { return new NotFoundHttpException(); }  // TODO JS management
         
         // Get collection - TranslationField
-        $fields = $this->translationService->getFieldsByMessageId($message[0]['id']);
+        $fields = $this->translationService->getFieldsByTranslationId($message[0]['id']);
 
         return $this->json([
             'success' => true,

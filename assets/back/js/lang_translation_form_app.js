@@ -75,20 +75,20 @@ function addField(button) {
  * Update Translation
  */
 // Get data Translation
-function selectMessage(id, action) {
+function selectTranslation(id, action) {
     $.ajax({
         url: "/"+ path['locale'] +"/back/translation/edit",
         method: 'GET',
         data: { id: id },
         success: function(data) {
-            $('#message_form_name').addClass('disabled')
-                    .attr('data-message', data.message[0].id)
-                    .attr('data-status', data.message[0].statusId)
-                    .val(data.message[0].name)
+            $('#translation_form_name').addClass('disabled')
+                    .attr('data-translation', data.translation[0].id)
+                    .attr('data-status', data.translation[0].statusId)
+                    .val(data.translation[0].name)
                     .find('option').each(function() {
                 if ($(this).val() == '')
                     $(this).removeAttr('selected').prop('disabled', true)
-                else if ($(this).val() == data.message[0].name)
+                else if ($(this).val() == data.translation[0].name)
                     $(this).attr('selected', 'selected')
                 else $(this).removeAttr('selected').prop('disabled', true)
             })
@@ -125,11 +125,11 @@ function loadFieldsValue(data, newElem, i) {
 }
 
 // Set data Transaltion
-function updateTranslation(messageId, statusId, dataForm) {    
+function updateTranslation(translationId, statusId, dataForm) {    
     $.ajax({
         url: "/"+ path['locale'] +"/back/translation/updateTranslation",
         method: 'POST',
-        data: { id: messageId, statusId: statusId, data: dataForm },
+        data: { id: translationId, statusId: statusId, data: dataForm },
         success: function() {
             // To reload page to the top
             var pathname = window.location.pathname;
@@ -145,7 +145,7 @@ function updateTranslation(messageId, statusId, dataForm) {
 function submissionStatus(buttonId) {
     var statusId;
     buttonId == 'save-btn' ? statusId = 1 : statusId = 2
-    $('#message_form_statusId').val(statusId)
+    $('#translation_form_statusId').val(statusId)
 }
 
 $(function() {
@@ -198,9 +198,9 @@ $(function() {
     })
     
     // Load data Translation from table
-    $('.selectMessage').click(function (evt) {
+    $('.selectTranslation').click(function (evt) {
         evt.stopPropagation()
-        selectMessage($(this).data('id'), $(this).data('action'))
+        selectTranslation($(this).data('id'), $(this).data('action'))
     })
     
     /**
@@ -211,7 +211,7 @@ $(function() {
         $('#card-form h6').text(translations['createTranslation'])
         $('#card-form, #cancel').hide()
         $('#card-list, #add-translation').show()
-        $('#message_form_name').removeClass('disabled').val('')
+        $('#translation_form_name').removeClass('disabled').val('')
                 .find('option').each(function() {
             if ($(this).val() == '')
                 $(this).attr('selected', 'selected').prop('disabled', false)
@@ -221,13 +221,13 @@ $(function() {
         $('#fields').empty()
         $('#add-field').addClass('d-none')
         $('#form-submit').attr('data-action', '').addClass('d-none')
-        $('#message_form_name').attr('data-message', '')
-        $('#message_form_name').attr('data-status', '')
+        $('#translation_form_name').attr('data-translation', '')
+        $('#translation_form_name').attr('data-status', '')
     })
     
     // Add new field into collection then show fields and buttons
     // & Placeholder disabled
-    $('#message_form_name').change(function() {
+    $('#translation_form_name').change(function() {
         if ($(this).val() != '' && $('#add-field').hasClass('d-none'))
             $('#add-field').removeClass('d-none')
     }).find('option').each(function() {
@@ -248,10 +248,12 @@ $(function() {
     
     /*
      * Submission */
-    $('#save-btn, #submit-btn').click(function(){  
+    $('#save-btn, #submit-btn').click(function(){
         
-        var messageId = $('#message_form_name').attr('data-message')
-        var statusId = $('#message_form_name').attr('data-status')
+        $('#loader').show()
+        
+        var translationId = $('#translation_form_name').attr('data-translation')
+        var statusId = $('#translation_form_name').attr('data-status')
         var action = $('#form-submit').attr('data-action')
 
         if ($('#fields li').length == 0 && $('#add-error').hasClass('d-none')) {
@@ -262,8 +264,8 @@ $(function() {
             submissionStatus($(this).attr('id'))
             
             // Create Translation
-            //  -- if new ou status is validated (3) clone TranslationMessage
-            if ( (messageId == '' && statusId == '') || statusId == 3
+            //  -- if new ou status is validated (3) clone Translation
+            if ( (translationId == '' && statusId == '') || statusId == 3
                || action == 'clone') {
                 $('form').submit()
             }            
@@ -282,7 +284,7 @@ $(function() {
                     dataForm.push({'name': name, 'type': type})
                 })
                 // Update Translation in ajax 
-                updateTranslation(messageId, statusId, dataForm)
+                updateTranslation(translationId, statusId, dataForm)
             }
             
         }

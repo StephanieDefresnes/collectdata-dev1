@@ -2,7 +2,7 @@
 
 namespace App\Form\Back\Translation;
 
-use App\Entity\TranslationMessage;
+use App\Entity\Translation;
 use App\Form\Back\Translation\FieldFormType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -11,7 +11,7 @@ use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class MessageFormType extends AbstractType
+class TranslationFormType extends AbstractType
 {       
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
@@ -53,7 +53,7 @@ class MessageFormType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'data_class' => TranslationMessage::class,
+            'data_class' => Translation::class,
             'translation_domain' => 'back_messages',
         ]);
     }

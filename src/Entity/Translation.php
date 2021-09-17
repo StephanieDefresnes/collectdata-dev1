@@ -3,16 +3,16 @@
 namespace App\Entity;
 
 use App\Entity\TranslationField;
-use App\Repository\TranslationMessageRepository;
+use App\Repository\TranslationRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\MaxDepth;
 
 /**
- * @ORM\Entity(repositoryClass=TranslationMessageRepository::class)
+ * @ORM\Entity(repositoryClass=TranslationRepository::class)
  */
-class TranslationMessage
+class Translation
 {
     /**
      * @ORM\Id
@@ -63,7 +63,7 @@ class TranslationMessage
     private $referent;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\TranslationField", cascade={"persist", "remove"}, mappedBy="message")
+     * @ORM\OneToMany(targetEntity="App\Entity\TranslationField", cascade={"persist", "remove"}, mappedBy="translation")
      * @MaxDepth(4)
      */
     protected $fields;
@@ -197,23 +197,8 @@ class TranslationMessage
     {
         if (!$this->fields->contains($field)) {
             $this->fields[] = $field;
-            $field->setMessage($this);
+            $field->setTranslation($this);
         }
-//        if (!$this->fields->contains($field)) {
-//            $this->fields[] = $field;
-//            $field->setMessage($this);
-//        }
-//        if (!$this->fields->contains($field)) {
-//            $this->fields[] = $field;
-//            $field->setField($this);
-//            $this->fields->add($field);
-//        }
-//        if (!$this->fields->contains($field)) {
-//            $this->fields[] = $field;
-//            $field->setMessage($this);
-//            $this->fields->add($field);
-//        }
-        
         return $this;
     }
 
@@ -222,8 +207,8 @@ class TranslationMessage
         if ($this->fields->contains($field)) {
             $this->fields->removeElement($field);
             // set the owning side to null (unless already changed)
-            if ($field->getMessage() === $this) {
-                $field->setMessage(null);
+            if ($field->getTranslation() === $this) {
+                $field->setTranslation(null);
             }
         }
         return $this;

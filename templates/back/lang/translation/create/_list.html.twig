@@ -29,7 +29,7 @@
                     <td class="updateMssage">
                     {% if app.user.id == translation.userId %}
                         {% if translation.statusId == 1 or translation.statusId == 2 %}
-                            <span role="button" class="selectMessage btn btn-outline-primary"
+                            <span role="button" class="selectTranslation btn btn-outline-primary"
                                data-id="{{ translation.id }}" data-action=""
                                data-toggle="tooltip" data-placement="left"
                                title="{{ 'action.edit'|trans() }}"
@@ -37,7 +37,7 @@
                                 <i class="fas fa-edit"></i>
                             </span>
                         {% elseif translation.statusId == 3 %}
-                            <span role="button" class="selectMessage btn btn-outline-warning"
+                            <span role="button" class="selectTranslation btn btn-outline-warning"
                                data-id="{{ translation.id }}" data-action="clone"
                                data-toggle="tooltip" data-placement="left"
                                title="{{ 'action.clone'|trans() }}"
@@ -47,7 +47,7 @@
                         {% endif %}
                     {% else %}
                         {% if translation.statusId == 1 or translation.statusId == 2 or translation.statusId == 3%}
-                            <span role="button" class="selectMessage btn btn-outline-warning"
+                            <span role="button" class="selectTranslation btn btn-outline-warning"
                                data-id="{{ translation.id }}" data-action="clone"
                                data-toggle="tooltip" data-placement="left"
                                title="{{ 'action.clone'|trans() }}"

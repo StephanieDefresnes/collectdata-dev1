@@ -54,14 +54,14 @@ class TranslationField
     private $referent;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\TranslationMessage", inversedBy="fields")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Translation", inversedBy="fields")
      * @MaxDepth(4)
      */
-    private $message;
+    private $translation;
     
-    public function __construct(TranslationMessage $message = null)
+    public function __construct(Translation $translation = null)
     {
-        $this->message = $message;
+        $this->translation = $translation;
     }
 
     public function getId(): ?int
@@ -153,23 +153,23 @@ class TranslationField
         return $this;
     }
 
-    public function getMessage(): ?TranslationMessage
+    public function getTranslation(): ?Translation
     {
-        return $this->message;
+        return $this->translation;
     }
 
-    public function addMessage(?TranslationMessage $message): self
+    public function addTranslation(?Translation $translation): self
     {
-        if (!$this->fields->contains($message)) {
-            $this->fields->add($message);
+        if (!$this->fields->contains($translation)) {
+            $this->fields->add($translation);
         }
         return $this;
     }
 
-    public function setMessage(?TranslationMessage $message): self
+    public function setTranslation(?Translation $translation): self
     {
-        $this->message = $message;
-//        $this->message->addField($message);
+        $this->translation = $translation;
+//        $this->translation->addField($translation);
 
         return $this;
     }
