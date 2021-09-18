@@ -575,11 +575,16 @@ th.cust-nowrap {
  * Forms
  */
 /* Override Bootstrap class */
-form label {
-    line-height: 18px !important;
-    display: contents;
-    & > .invalid-feedback {
-        display: none !important;
+form {
+    & label {
+        line-height: 18px !important;
+        display: contents;
+        & > .invalid-feedback {
+            display: none !important;
+        }
+    }
+    & .invalid-feedback {
+        margin-bottom: 1.25em;
     }
 }
 .form-control {
@@ -640,6 +645,14 @@ table {
     & #flash_message {
         right: unset;
         left: 0;
+        & #logged.pr-2 {
+            padding-right: unset !important;
+            padding-left: 0.5rem !important;
+        }
+        & #hideFlash.pr-4 {
+            padding-right: 1.5rem !important;
+            padding-left: unset !important;
+        }
     }
     & .navbar {
         & .navbar-nav > li:hover > .dropdown-menu {

@@ -10,6 +10,33 @@
 
         
 {% block content %}
+    
+    {% block flash_message %}
+        {% if app.request.hasPreviousSession %}
+            {% set flashbag = app.session.flashbag.all() %}
+            {% if flashbag|length %}
+                <div id="flash_message" class="container" translate="no">
+                    {% for type, messages in flashbag %}
+                        {% for message in messages %}
+                            <div class="alert alert-secondary alert-dismissible px-3 fade show" role="alert">
+                                <span class="sr-only">{{ ('alert.' ~ type)|trans() }} : </span>
+                                {% if type == 'error' %}
+                                    <span class="icon text-danger"><i class="fas fa-exclamation-circle"></i></span>
+                                {% elseif type == 'success' %}
+                                    <span id="logged" class="icon text-success pr-2"><i class="fas fas fa-hands"></i></span>
+                                {% else %}
+                                    <span class="icon text-{{ type }}"><i class="fas fa-info-circle"></i></span>
+                                {% endif %}
+                                <span class="msg">{{ message|raw|nl2br }}</span>
+                                <span id="hideFlash" class="pl-4 text-secondary pointer"><i class="far fa-times-circle"></i></span>
+                            </div>
+                        {% endfor %}
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endif %}
+    {% endblock %}
+    
     <div class="row mt-5 pt-5">
             
         <div id="carouselContent" class="carousel slide" data-ride="carousel">
@@ -53,7 +80,7 @@
                        class="btn btn-outline-light bg-dark-50-0 mx-3 px-4 py-3 h3">
                         {{ 'nav.account_login'|trans() }}
                     </a>
-                    <a href="{{ path('front_register') }}"
+                    <a href="{{ path('app_register') }}"
                        class="btn btn-outline-light bg-dark-50-0 mx-3 px-4 py-3 h3">
                         {{ 'nav.account_register'|trans() }}
                     </a>
