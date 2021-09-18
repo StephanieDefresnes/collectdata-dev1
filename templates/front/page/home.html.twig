@@ -10,7 +10,7 @@
 
         
 {% block content %}
-    
+        
     {% block flash_message %}
         {% if app.request.hasPreviousSession %}
             {% set flashbag = app.session.flashbag.all() %}
@@ -23,7 +23,7 @@
                                 {% if type == 'error' %}
                                     <span class="icon text-danger"><i class="fas fa-exclamation-circle"></i></span>
                                 {% elseif type == 'success' %}
-                                    <span id="logged" class="icon text-success pr-2"><i class="fas fas fa-hands"></i></span>
+                                    <span class="icon text-success pr-2"><i class="fas fa-hands"></i></span>
                                 {% else %}
                                     <span class="icon text-{{ type }}"><i class="fas fa-info-circle"></i></span>
                                 {% endif %}
@@ -36,7 +36,7 @@
             {% endif %}
         {% endif %}
     {% endblock %}
-    
+        
     <div class="row mt-5 pt-5">
             
         <div id="carouselContent" class="carousel slide" data-ride="carousel">

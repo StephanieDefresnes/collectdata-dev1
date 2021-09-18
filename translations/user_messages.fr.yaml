@@ -34,7 +34,7 @@ account:
         title: Modifier mon compte
         flash:
             success: Votre profil a bien été modifié
-            error: Une erreur s'est produite lors de la modofocation de votre profil
+            error: Une erreur s'est produite lors de la modification de votre profil
     translator:
         checkbox: Je souhaite que de nouvelles langues soient ajoutées, et je veux contribuer à la traduction du site.
         translate: 'Sélectionner la ou les langue(s) proposée(s) à la traduction :'
