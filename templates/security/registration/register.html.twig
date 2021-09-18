@@ -9,9 +9,17 @@
 {% endblock %}
 
 {% block content %}
-    {% for flashError in app.flashes('verify_email_error') %}
-        <div class="alert alert-danger" role="alert">{{ flashError }}</div>
-    {% endfor %}
+    
+    {% block flash_message %}
+        {% for flashError in app.flashes('verify_email_error') %}
+            <div class="alert alert-danger" role="alert">
+                <span class="sr-only">{{ ('alert.danger')|trans() }} : </span>
+                <span class="icon text-danger"><i class="fas fa-exclamation-circle"></i></span>
+                <span class="msg">{{ flashError }}</span>
+                <span id="hideFlash" class="pl-4 text-secondary pointer"><i class="far fa-times-circle"></i></span>
+            </div>
+        {% endfor %}
+    {% endblock %}
 
     <div class="col-lg-6 mx-auto pt-5">
         

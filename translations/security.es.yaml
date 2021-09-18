@@ -9,10 +9,10 @@ login:
     title: Iniciar sesión
     link:
         logout: Desconectarse
-        forget_password: ¿ Contraseña olvidada ?
+        forget_password: ¿Contraseña olvidada ?
         registration: Registro
     message:
-        welcome: Bienvenido %user%
+        welcome: ¡Hola %user% !
         logged_as: Has iniciado sesión como %user%
         email_not_found: No se pudo encontrar este correo electrónico.
         not_activated: Esta cuenta no está activada.
@@ -26,22 +26,18 @@ registration:
     comment: |
             Se enviará un correo electrónico con un enlace para validar su registro a la dirección de email indicada.
             Si no recibe un correo electrónico, verifique su carpeta de correo no deseado.
+    confirmed:
+        error: 'Ocurrió un error al revisar su correo electrónico:'
+        success: ¡Felicitaciones, su cuenta ya está activada!
     email:
         subject: Activación de su cuenta
         message: |
-            Hola %user%:
-
+            Hola %user%,
             Confirme su email haciendo clic en el siguiente enlace:
             
-            <a href="%confirmation_url%">Confirma mi email</a>.
-
-            Este enlace caducará en %expire_message%.
-
+            <center><a href="%confirmation_url%">Confirma mi email</a></center>
             Atentamente,
             <a href="%website_url%">%website_name% </a>
-    flash:
-        check_email: Se ha enviado un correo electrónico a %email%. Contiene un enlace de activación en el que deberá hacer clic para activar su cuenta.
-        confirmed: Felicitaciones %user%, su cuenta ahora está activada.
     label:
         name: Apellido
         password: Contraseña
@@ -82,3 +78,5 @@ reset_password:
             Este enlace caducará en %expire_message%.
             
             Si no recibe un correo electrónico, verifique su carpeta de correo no deseado o <a href="%reset_password_url%">volver a intentar</a>.
+# SymfonyCast EmailVerify
+'The link to verify your email is invalid. Please request a new link': El enlace para verificar su correo electrónico no es válido. Solicite un nuevo enlace

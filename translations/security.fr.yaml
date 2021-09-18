@@ -12,7 +12,7 @@ login:
         forget_password: Mot de passe oublié ?
         registration: Inscription
     message:
-        welcome: Bienvenue %user%
+        welcome: Bonjour %user% !
         logged_as: Vous êtes connecté en tant que %user%
         email_not_found: Ce email n'a pas pu être trouvé.
         not_activated: Ce compte n'est pas activé.
@@ -26,22 +26,18 @@ registration:
     comment: |
             Un mail contenant un lien pour valider votre inscription sera envoyé à l'adresse indiquée.
             Si vous ne trouvez pas d'e-mail, veuillez vérifier votre dossier spam.
+    confirmed:
+        error: 'Une erreur s''est produite lors de la vérification de votre email:'
+        success: Félicitations, votre compte est maintenant activé !
     email:
         subject: Activation de votre compte
         message: |
             Bonjour %user%,
-
             Veuillez confirmer votre adresse e-mail en cliquant sur le lien suivant :
             
-            <a href="%signed_url%">Confirmer mon email</a>.
-
-            Ce lien expirera dans %expire_message%.
-
+            <center><a href="%signed_url%">Confirmer mon email</a></center>
             Cordialement,
             <a href="%website_url%">%website_name%</a>
-    flash:
-        check_email: Un e-mail a été envoyé à l'adresse %email%. Il contient un lien d'activation sur lequel il vous faudra cliquer afin d'activer votre compte.
-        confirmed: Félicitations %user%, votre compte est maintenant activé.
     label:
         name: Nom
         password: Mot de passe
@@ -82,3 +78,5 @@ reset_password:
             Ce lien expirera dans %expire_message%.
             
             Si vous ne recevez pas d'e-mail, veuillez vérifier votre dossier spam ou <a href="%reset_password_url%">réessayer</a>.
+# SymfonyCast EmailVerify
+'The link to verify your email is invalid. Please request a new link' : Le lien pour vérifier votre email n'est pas valide. Veuillez demander un nouveau lien.

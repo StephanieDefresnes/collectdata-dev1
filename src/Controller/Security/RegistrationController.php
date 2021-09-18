@@ -4,38 +4,51 @@ namespace App\Controller\Security;
 
 use App\Entity\User;
 use App\Form\Security\RegistrationFormType;
-use App\Security\EmailVerifier;
+use App\Repository\UserRepository;
 use App\Service\LangService;
+use Doctrine\ORM\EntityManagerInterface;
+use Exception;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Address;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use SymfonyCasts\Bundle\VerifyEmail\Exception\VerifyEmailExceptionInterface;
+use SymfonyCasts\Bundle\VerifyEmail\VerifyEmailHelperInterface;
 
-/**
- * @Route("/{_locale<%app_locales%>}")
- */
 class RegistrationController extends AbstractController
 {
-    private $emailVerifier;
+    private $entityManager;
+    private $langService;
+    private $mailer;
+    private $parameters;
+    private $translator;
+    private $verifyEmailHelper;
 
-    public function __construct(EmailVerifier $emailVerifier)
+    public function __construct(EntityManagerInterface $manager,
+                                LangService $langService,
+                                MailerInterface $mailer,
+                                ParameterBagInterface $parameters,
+                                TranslatorInterface $translator,
+                                VerifyEmailHelperInterface $helper)
     {
-        $this->emailVerifier = $emailVerifier;
+        $this->entityManager = $manager;
+        $this->langService = $langService;
+        $this->mailer = $mailer;
+        $this->parameters = $parameters;
+        $this->translator = $translator;
+        $this->verifyEmailHelper = $helper;
     }
 
     /**
-     * @Route("/register", name="front_register")
+     * @Route("/{_locale<%app_locales%>}/register", name="app_register")
      */
-    public function register(   LangService $langService,
-                                ParameterBagInterface $parameters,
-                                Request $request,
-                                TranslatorInterface $translator,
+    public function register(   Request $request,
                                 UserPasswordEncoderInterface $passwordEncoder): Response
     {
         
@@ -64,38 +77,61 @@ class RegistrationController extends AbstractController
             );
 
             $user->setEnabled(false);
+            $user->setIsVerified(false);
             $user->setRoles(array('ROLE_CONTRIBUTOR'));
             $user->setDateCreate(new \DateTime());
             
-            $lang = $langService->getLangByLang(locale_get_default());
+            $lang = $this->langService->getLangByLang(locale_get_default());
             $user->setLangId($lang->getId());
 
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->persist($user);
-            $entityManager->flush();
+            $this->entityManager->persist($user);
+            
+            try {
+                $this->entityManager->flush();
+
+                $nameSite = $this->parameters->get('configuration')['name'];
+                $sender = $this->parameters->get('configuration')['from_email'];
+
+                $subject = $this->translator->trans(
+                    'registration.email.subject', [],
+                    'security', $locale = locale_get_default()
+                );
         
-            $nameSite = $parameters->get('configuration')['name'];
-            $sender = $parameters->get('configuration')['from_email'];
+                $signatureComponents = $this->verifyEmailHelper->generateSignature(
+                        'registration_confirmation_route',
+                        $user->getId(),
+                        $user->getEmail(),
+                        ['id' => $user->getId()]
+                    );
 
-            $subject = $translator->trans(
-                'registration.email.subject',
-                [
-                    '%user%' => $user
-                ],
-                'security', $locale = $parameters->get('locale')
-            );
-
-            // generate a signed url and email it to the user
-            $this->emailVerifier->sendEmailConfirmation('app_verify_email', $user,
-                (new TemplatedEmail())
-                    ->from(new Address($sender, $nameSite))
+                $email = new TemplatedEmail();
+                $email->from(new Address($sender, $nameSite))
                     ->to($user->getEmail())
                     ->subject($subject)
                     ->htmlTemplate('security/registration/confirmation_email.html.twig')
-            );
-            // do anything else you need here, like send an email
+                    ->context([
+                            'signedUrl' => $signatureComponents->getSignedUrl(),
+                            'user' => $user->getName(),
+                    ]);
 
-            return $this->redirectToRoute('app_registration');
+                $this->mailer->send($email);
+                
+                return $this->redirectToRoute('front_home', [
+                    '_locale' => locale_get_default()
+                ]);
+                        
+            } catch (Exception $e) {
+
+                $msg = $this->translator->trans(
+                    'registration.confirmed.error', [],
+                    'security', $locale = locale_get_default()
+                );
+                $this->addFlash('error', $msg.PHP_EOL.$e->getMessage());
+
+                return $this->redirectToRoute('app_register', [
+                    '_locale' => locale_get_default()
+                ]);
+            }
         }
 
         return $this->render('security/registration/register.html.twig', [
@@ -104,46 +140,56 @@ class RegistrationController extends AbstractController
     }
 
     /**
-     * @Route("/registration", name="app_registration")
+     * @Route("/verify", name="registration_confirmation_route")
      */
-    public function registrationRequested(): Response
+    public function verifyUserEmail(Request $request, UserRepository $userRepository): Response
     {
-        // Generate a fake token if the user does not exist or someone hit this page directly.
-        // This prevents exposing whether or not a user was found with the given email address or not
-        if (null === ($resetToken = $this->getTokenObjectFromSession())) {
-            $resetToken = $this->resetPasswordHelper->generateFakeResetToken();
-        }
+        $id = $request->get('id');
         
-        return $this->render('security/registration/requested.html.twig', [
-            'resetToken' => $resetToken,
-        ]);
-    }
-
-    /**
-     * @Route("/verify/email", name="app_verify_email")
-     */
-    public function verifyUserEmail(Request $request): Response
-    {
-        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
-
-        // validate email confirmation link, sets User::isVerified=true and persists
-        try {
-            $this->emailVerifier->handleEmailConfirmation($request, $this->getUser());
-        } catch (VerifyEmailExceptionInterface $exception) {
-            $this->addFlash('verify_email_error', $exception->getReason());
-
-            return $this->redirectToRoute('app_register');
+        if (null === $id) {
+            return $this->redirectToRoute('front_home', [
+                '_locale' => $this->parameters->get('locale')
+            ]);
         }
+        $user = $userRepository->find($id);
+        if (null === $user) {
+            return $this->redirectToRoute('front_home', [
+                '_locale' => $this->parameters->get('locale')
+            ]);
+        }
+        $userLang = $this->langService->getLangById($user->getLangId());
+        
+        try {
+            $this->verifyEmailHelper->validateEmailConfirmation($request->getUri(), $user->getId(), $user->getEmail());
+            
+            $user->setEnabled(true);
+            $user->setIsVerified(true);
+            $user->setDateUpdate(new \DateTime());
 
-        $msg = $translator->trans(
-            'registration.flash.confirmed',
-            [
-                '%user%' => $user
-            ],
-            'security', $locale = $parameters->get('locale')
-        );
-        $this->addFlash('success', $msg);
+            $this->entityManager->persist($user);
+            $this->entityManager->flush();
 
-        return $this->redirectToRoute('front_home');
+            $msg = $this->translator->trans(
+                'registration.confirmed.success', [],
+                'security', $locale = $userLang->getLang()
+            );
+            $this->addFlash('success', $msg);
+
+            return $this->redirectToRoute('app_login', [
+                '_locale' => $userLang->getLang()
+            ]);
+
+        } catch (VerifyEmailExceptionInterface $exception) {
+            $msg = $this->translator->trans(
+                $exception->getReason(), [],
+                'security', $locale = $this->parameters->get('locale')
+            );
+            $this->addFlash('verify_email_error', $msg);
+
+            return $this->redirectToRoute('app_register', [
+                '_locale' => $this->parameters->get('locale')
+            ]);
+        }
     }
+    
 }

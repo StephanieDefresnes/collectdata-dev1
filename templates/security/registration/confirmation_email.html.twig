@@ -3,6 +3,7 @@
         #email-content {max-width:500px;margin:0 auto;background:#fff;border:1px solid #4177d6;padding:6px;font-size: .875rem;}
         #email-content img {width:100%;height:auto;}
         #email-content .content {padding:6px;font-size: .875rem;}
+        #email-content center > a {background: #15c;color: #fff;text-decoration: none;padding: 10px 15px;border-radius: 3px;}
     </style>
     <div id="email-content">
     
@@ -10,12 +11,9 @@
             
         <div class="content">
             
-            {% set expire_message = expiresAtMessageKey|trans(expiresAtMessageData, 'VerifyEmailBundle') %}
-            
             {{ 'registration.email.message'|trans({
                     '%user%': user,
                     '%signed_url%': signedUrl,
-                    '%expire_message%': expire_message,
                     '%website_url%': app.request.schemeAndHttpHost,
                     '%website_name%': name_site
                 }, 'security')|raw|nl2br
