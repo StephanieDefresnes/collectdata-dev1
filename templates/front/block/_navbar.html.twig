@@ -18,17 +18,19 @@
                 aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
-        <div class="collapse navbar-collapse d-flex justify-content-between px-3" id="navbarCollapse">
-            <ul class="navbar-nav p-0">
-                {% if app.user %}
-                    {% include "front/block/_contrib.html.twig" %}
-                    {% include "front/block/_translation.html.twig" %}
-                {% endif %}
-                {% include 'block/_locale_switcher.html.twig' %}
-            </ul>
-            <div class="d-flex">
-                {% include 'front/block/_user.html.twig' %}
-            </div>
+        <div class="collapse navbar-collapse" id="navbarCollapse">
+            <div class="d-flex justify-content-between container-fluid px-3">
+                <ul class="navbar-nav p-0">
+                    {% if app.user %}
+                        {% include "front/block/_contrib.html.twig" %}
+                        {% include "front/block/_translation.html.twig" %}
+                    {% endif %}
+                    {% include 'block/_locale_switcher.html.twig' %}
+                </ul>
+                <div class="d-flex">
+                    {% include 'front/block/_user.html.twig' %}
+                </div>
+        </div>
         </div>
     </nav>
 </div>

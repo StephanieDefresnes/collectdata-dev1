@@ -259,7 +259,7 @@ body {
                 & .navbar-nav {
                     & > li {
                         & > .dropdown-menu {
-                            &.pt-md-2 {
+                            &.pt-md-4 {
                                 padding-top: 0.5rem !important;
                             }
                         }
@@ -358,7 +358,6 @@ body {
                                 &.active,
                                 &:hover,
                                 &:active {
-                                    /*background-color: $sm-nav-background;*/
                                     & a {
                                         padding: 8px !important;
                                         color: $sm-nav-color-hover;
@@ -370,6 +369,9 @@ body {
                                     & > .lang-flag {
                                         vertical-align: inherit;
                                     }
+                                }
+                                &.bg-dark-95 {
+                                    background: transparent !important;
                                 }
                             }
                         }

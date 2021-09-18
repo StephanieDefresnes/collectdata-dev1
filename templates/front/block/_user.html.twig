@@ -6,7 +6,7 @@
         <a class="nav-link line-12 dropdown-toggle" id="dropdown_account" 
            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             {% if app.user.imageFilename %}
-            <span class="nav-img">
+            <span class="nav-img d-md-inline d-none">
                 <span class="nav-img-circle">
                     <img src="{{ asset('/uploads/img/'~ app.user.imageFilename) }}" alt="">
                 </span>
@@ -14,9 +14,9 @@
             {% else %}
                 <i class="fas fa-user"></i>
             {% endif %}
-            <span class="mx-1 text-capitalize">{{  app.user.name }}</span>
+            <span class="mx-md-1 mx-0 text-capitalize">{{  app.user.name }}</span>
         </a>
-        <ul class="dropdown-menu dropdown-menu-right pt-md-2" aria-labelledby="dropdown_account">
+        <ul class="dropdown-menu dropdown-menu-right pt-md-4 pt-0" aria-labelledby="dropdown_account">
             {% if is_granted("ROLE_MODERATOR") %}
                 <li class="dropdown-item bg-dark-95{{ route == 'back_home' ? ' active' }}">
                     <a href="{{ path('back_home') }}">
@@ -54,7 +54,7 @@
                 </a>
             </li>
             <li class="dropdown-item bg-dark{{ route == 'front_register' ? ' active' }}">
-                <a href="{{ path('front_register') }}">
+                <a href="{{ path('app_register') }}">
                     <i class="fas fa-user"></i>
                     {{ 'nav.account_register'|trans() }}
                 </a>

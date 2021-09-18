@@ -1,11 +1,11 @@
 {% trans_default_domain 'front_messages' %}
 
 <li class="nav-item dropdown{{ route in ['user_situs', 'create_situ'] ? ' active' }}">
-    <a class="nav-link dropdown-toggle mx-md-0 mx-4" id="dropdown_contribs" 
+    <a class="nav-link dropdown-toggle" id="dropdown_contribs" 
        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             {{ 'nav.contribs.title'|trans() }}
     </a>
-    <ul class="dropdown-menu pt-md-2" aria-labelledby="dropdown_contribs">
+    <ul class="dropdown-menu pt-md-4 pt-0" aria-labelledby="dropdown_contribs">
         <li class="dropdown-item bg-dark-95{{ route == '' ? ' active' }}">
             <a href="{{ path('all_situs') }}">
                 <i class="far fa-list-alt"></i> {{ 'nav.contribs.all'|trans() }}
