@@ -1,28 +1,5 @@
 access_deny: Access denied
 account:
-    reset_password: Reset password
-    image:
-        label: 'Avatar :'
-        mimeTypesMessage: Please upload a valid image .png/.jpeg/.jpg/.gif maximum 1024kb
-        add: Edit Image
-        update: Add Image
-        flash:
-            add:
-                success: The image has been sent
-                error: An error occurred while adding the image
-            delete:
-                success: The image has been deleted
-                error: An error occurred while deleting the image
-    lang:
-        option: 'Optional languages :'
-        default: Default (FR)
-    roles: 
-        user: User
-        contributor: Contributor
-        moderator: Moderator
-        admin: Administrator
-        super_admin: Super administrator
-    date_create: 'Creation date :'
     contribs:
         title: 'Number of contributions :'
         empty: No contribution
@@ -30,17 +7,39 @@ account:
         count_s: validated contributions
         translated: 'Translated contribution :'
         translated_s: 'Translated contributions :'
+    date_create: 'Creation date :'
+    image:
+        add: Edit Image
+        flash:
+            add:
+                error: An error occurred while adding the image
+                success: The image has been sent
+            delete:
+                error: An error occurred while deleting the image
+                success: The image has been deleted
+        label: 'Avatar :'
+        mimeTypesMessage: Please upload a valid image .png/.jpeg/.jpg/.gif maximum 1024kb
+        update: Add Image
+    lang:
+        default: Default (FR)
+        option: 'Optional languages :'
+    roles: 
+        admin: Administrator
+        contributor: Contributor
+        moderator: Moderator
+        super_admin: Super administrator
+        user: User
+    translator:
+        checkbox: I want new languages to be added, and I want to contribute to the translation of the site.
+        choice: 'You offer to translate the site into language :'
+        choice_s: 'You offer to translate the site into languages :'
+        status: Site translator
+        translate: 'Select the languages proposed for the translation :'
     update:
-        title: Modify my account
         flash:
             success: Your profile has been modified
             error: An error occurred while modofocating your profile
-    translator:
-        checkbox: I want new languages to be added, and I want to contribute to the translation of the site.
-        translate: 'Select the languages proposed for the translation :'
-        status: Site translator
-        choice: 'You offer to translate the site into language :'
-        choice_s: 'You offer to translate the site into languages :'
+        title: Modify my account
 action:
     action: Action
     actions: Actions

@@ -1,11 +1,14 @@
 access_deny: Acceso denegado
 account:
-    reset_password: Cambiar la contraseña
+    contribs:
+        empty: Sin contribución
+        count: contribución validada
+        count_s: contribuciones validadas
+        title: 'Numero de contribuciones :'
+        translated: 'Contribución traducida:'
+        translated_s: 'Contribuciones traducidas :'
     image:
-        label: 'Avatar :'
-        mimeTypesMessage: Sube una imagen válida .png/.jpeg/.jpg/.gif de 1024 kb como máximo
         add: Añadir imagen
-        update: Editar imagen
         flash:
             add:
                 success: La imagen ha sido enviada
@@ -13,34 +16,30 @@ account:
             delete:
                 success: La imagen ha sido eliminada
                 error: Ocurrió un error al eliminar la imagen
+        label: 'Avatar :'
+        mimeTypesMessage: Sube una imagen válida .png/.jpeg/.jpg/.gif de 1024 kb como máximo
+        update: Editar imagen
     lang:
-        option: 'Lenguas opcionales :'
         default: Defecto (FR)
+        option: 'Lenguas opcionales :'
     roles:
-        user: Usuario
+        admin: Administrador
         contributor: Contribuyente
         moderator: Moderador
-        admin: Administrador
         super_admin: Superadministrador
+        user: Usuario
     date_create: 'Fecha de creación :'
-    contribs:
-        title: 'Numero de contribuciones :'
-        empty: Sin contribución
-        count: contribución validada
-        count_s: contribuciones validadas
-        translated: 'Contribución traducida:'
-        translated_s: 'Contribuciones traducidas :'
+    translator:
+        checkbox: Quiero que se agreguen nuevos lenguas y quiero contribuir a la traducción del sitio.
+        choice: 'Ofreces traducir el sitio al lengua :'
+        choice_s: 'Ofreces traducir el sitio a lenguas :'
+        status: Traductor del sitio
+        translate: 'Seleccionar las lenguas propuestos para la traducción :'
     update:
-        title: Modificar mi cuenta
         flash:
             success: Tu perfil ha sido modificado
             error: Se produjo un error al modificar la ubicación de su perfil
-    translator:
-        checkbox: Quiero que se agreguen nuevos lenguas y quiero contribuir a la traducción del sitio.
-        translate: 'Seleccionar las lenguas propuestos para la traducción :'
-        status: Traductor del sitio
-        choice: 'Ofreces traducir el sitio al lengua :'
-        choice_s: 'Ofreces traducir el sitio a lenguas :'
+        title: Modificar mi cuenta
 action:
     action: Acción
     actions: Acciones
