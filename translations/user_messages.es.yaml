@@ -15,7 +15,7 @@ account:
                 error: Ocurrió un error al agregar la imagen
             delete:
                 success: La imagen ha sido eliminada
-                error: Ocurrió un error al eliminar la imagen
+                error: Se produjo un error al eliminar la imagen
         label: 'Avatar :'
         mimeTypesMessage: Sube una imagen válida .png/.jpeg/.jpg/.gif de 1024 kb como máximo
         update: Editar imagen
@@ -38,7 +38,7 @@ account:
     update:
         flash:
             success: Tu perfil ha sido modificado
-            error: Se produjo un error al modificar la ubicación de su perfil
+            error: 'Se produjo un error al modificar la ubicación de su perfil:'
         title: Modificar mi cuenta
 action:
     action: Acción

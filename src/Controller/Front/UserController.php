@@ -2,16 +2,13 @@
 
 namespace App\Controller\Front;
 
-use App\Entity\User;
 use App\Entity\Lang;
 use App\Form\Front\User\UserUpdateFormType;
 use App\Service\LangService;
 use App\Service\SituService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -103,7 +100,7 @@ class UserController extends AbstractController
         $form->handleRequest($request);
         
         // User image
-        $userImageFilename = $this->getUser()->getImageFilename();
+        $currentImage = $this->getUser()->getImageFilename();
         
         // Optional lang choices
         $langs = $this->langService->getLangsEnabledOrNot(1);
@@ -117,44 +114,43 @@ class UserController extends AbstractController
             $user->addLang($this->langService->getLangById($langid));
             
             // Avatar
-            $imageFilename = $form->get('imageFilename')->getData();
+            $newImage = $form->get('imageFilename')->getData();
             
-            if ($imageFilename != null) {
+            if ($newImage) {
                 
-                $imageName = $this->generateUniqueFileName() . '.' . $imageFilename->guessExtension();
+                $originalFilename = pathinfo(
+                        $newImage->getClientOriginalName(),
+                        PATHINFO_FILENAME
+                    );
+                $safeFilename = $slugger->slug($originalFilename);
+                $newFilename = $safeFilename.'-'.uniqid().'.'
+                        .$newImage->guessExtension();
                 
                 try {
-                    $imageFilename->move(
+                    
+                    $newImage->move(
                         $this->getParameter('user_img'),
-                        $imageName
+                        $newFilename
                     );
-                    if ($userImageFilename != null) {
-                        try {
-                        unlink($this->getParameter('user_img').'/'
-                                .$userImageFilename);
-                        } catch (FileException $e) {
-                            $error = $this->translator->trans(
-                                'account.image.flash.remove.error', [],
-                                'user_messages', $locale = locale_get_default()
-                            );
-                            $msg = sprintf($error, $e->getReason());
-
-                            $this->addFlash('error', $msg);
-
-                            return $this->redirectToRoute('user_update');
-                        }
+                    
+                    if ($currentImage) {
+                    unlink($this->getParameter('user_img').'/'
+                            .$currentImage);
                     }
+                    
                 } catch (FileException $e) {
-                    $error = $this->translator->trans(
+                    
+                    $msg = $this->translator->trans(
                         'account.image.flash.add.error', [],
                         'user_messages', $locale = locale_get_default()
                     );
-                    $msg = sprintf($error, $e->getReason());
-
-                    $this->addFlash('error', $msg);
+                    $this->addFlash('error', $msg.PHP_EOL.$e->getMessage());
 
                     return $this->redirectToRoute('user_update');
                 }
+                
+                $user->setImageFilename($newFilename);
+                
             }
             
             // Switch locale
@@ -183,17 +179,17 @@ class UserController extends AbstractController
                     '_locale' => $user_lang
                 ]);
                         
-            } catch (FileException $e) {
+            } catch (Exception $e) {
 
-                $error = $this->translator->trans(
+                $msg = $this->translator->trans(
                     'account.update.flash.error', [],
                     'user_messages', $locale = locale_get_default()
                 );
-                $msg = sprintf($error, $e->getReason());
+                $this->addFlash('error', $msg.PHP_EOL.$e->getMessage());
 
-                $this->addFlash('error', $msg);
-
-                return $this->redirectToRoute('user_update');
+                return $this->redirectToRoute('user_update', [
+                    '_locale' => $user_lang
+                ]);
             }
             
         }

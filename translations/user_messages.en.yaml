@@ -9,7 +9,7 @@ account:
         translated_s: 'Translated contributions :'
     date_create: 'Creation date :'
     image:
-        add: Edit Image
+        add: Add Image
         flash:
             add:
                 error: An error occurred while adding the image
@@ -19,7 +19,7 @@ account:
                 success: The image has been deleted
         label: 'Avatar :'
         mimeTypesMessage: Please upload a valid image .png/.jpeg/.jpg/.gif maximum 1024kb
-        update: Add Image
+        update: Edit Image
     lang:
         default: Default (FR)
         option: 'Optional languages :'
@@ -38,7 +38,7 @@ account:
     update:
         flash:
             success: Your profile has been modified
-            error: An error occurred while modofocating your profile
+            error: 'An error occurred while modofocating your profile :'
         title: Modify my account
 action:
     action: Action
