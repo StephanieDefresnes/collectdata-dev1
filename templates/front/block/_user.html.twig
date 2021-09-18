@@ -2,7 +2,7 @@
 
 <ul class="navbar-nav">
 {% if app.user %}
-    <li class="nav-item dropdown{{ route in ['back_home', 'user_account'] ? ' active' }}">
+    <li class="nav-item mx-md-0 mx-sm-4 mx-0 px-md-0 px-md-0 px-sm-2 px-0 dropdown{{ route in ['back_home', 'user_account'] ? ' active' }}">
         <a class="nav-link line-12 dropdown-toggle" id="dropdown_account" 
            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             {% if app.user.imageFilename %}

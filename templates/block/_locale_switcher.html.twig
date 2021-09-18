@@ -5,7 +5,7 @@
 
 {% set localesEnabled = langs_enabled.getLangsEnabledOrNot(1) %}
 
-<li class="nav-item dropdown lang-item">
+<li class="nav-item mx-md-0 mx-sm-4 mx-0 px-md-0 px-md-0 px-sm-2 px-0 dropdown lang-item">
     {% for locale in localesEnabled %}
         {% if locale.lang == app.request.locale %}
         <a class="nav-link dropdown-toggle" id="menu_lang" 
