@@ -144,6 +144,11 @@ contrib:
             result:
                 error: Esta traducción ya existe. ¿Quieres leer esta traducción?
                 success: Esta traducción no existe. Puedes traducirlo.
+    update_validated:
+        title: Editar una contribución
+        question: Esta contribución ya ha sido validada.
+                ¿Estás seguro de que quieres cambiarlo?<br>
+                En cuyo caso, debe <strong>enviarse nuevamente para su validación</strong>.
 label:
     account_profile: Mi informacion
     description: Descripción
@@ -185,7 +190,7 @@ translation:
         empty: Aucune traduction de site
         environment: Entorno 
 status:
-    date_creation: Création
+    date_creation: Creación
     deleted: Eliminado
     refused: Rechazado
     title: Estado

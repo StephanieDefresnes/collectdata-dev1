@@ -167,7 +167,41 @@ $(document).ready(function() {
     })
     
     /**
-     * Deletion situ
+     * Update situ validated (statusId == 3)
+     */
+    $('.updateConfirm').on('click', function() {
+        let situId = $(this).attr('data-id')
+        $(this).addClass('to-confirm')
+        $.confirm({
+            animation: 'scale',
+            closeAnimation: 'scale',
+            animateFromElement: false,
+            columnClass: 'col-xl-6 col-xl-offset-3 col-lg-8 col-lg-offset-2',
+            type: 'orange',
+            typeAnimated: true,
+            title: translations['updateSituTitle'],
+            content: translations['updateSituQuestion'],
+            buttons: {
+                cancel: {
+                    text: translations['no'],
+                    action: function () {
+                        $(this).removeClass('to-confirm')
+                    }
+                },
+                formSubmit: {
+                    text: translations['yes'],
+                    btnClass: 'btn-orange',
+                    action: function () {
+                        $('#loader').show()
+                        location.href = '/'+ path['locale'] +'/contrib/'+ situId
+                    }
+                }
+            },
+        })
+    })
+    
+    /**
+     * Delete situ
      */
     $('.situDelete').on('click', function() {
         let situTr = $(this).parents('tr')
@@ -202,6 +236,5 @@ $(document).ready(function() {
             },
         })
     })
-    
     
 });

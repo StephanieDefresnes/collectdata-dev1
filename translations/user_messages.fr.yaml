@@ -144,6 +144,11 @@ contrib:
             result:
                 error: Cette traduction existe déjà. Voulez-vous lire cette traduction ?
                 success: Cette traduction n'existe pas. Vous pouvez la traduire.
+    update_validated:
+        title: Modifier une contribution
+        question: Cette contribution a déjà été validée.
+                Êtes-vous certain(e) de vouloir la modifier ?<br>
+                Auquel cas, elle devra <strong>être à nouveau soumise à la validation</strong>.
 label:
     account_profile: Mes informations
     description: Description

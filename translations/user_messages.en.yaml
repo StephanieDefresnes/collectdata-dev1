@@ -144,7 +144,11 @@ contrib:
             result:
                 error: This translation already exists. Do you want to read this translation?
                 success: This translation does not exist. You can translate it.
-lang_deny: Language denied
+    update_validated:
+        title: Edit a contribution
+        question: This contribution has already been validated.
+                Are you sure you want to change it?<br>
+                In which case, it must <strong>be submitted again for validation</strong>.
 label:
     account_profile: Mes informations
     description: Description
@@ -171,6 +175,7 @@ label_dp:
     title: 'Title :'
     translation: 'Translation :'
     translation_s: 'Translations :'
+lang_deny: Language denied
 multiple_search: Search
 'no': No
 translation:
@@ -185,6 +190,7 @@ translation:
         empty: No site translation
         environment: Environment 
 status:
+    date_creation: Creation
     deleted: Deleted
     refused: Refused
     title: Status

@@ -115,6 +115,15 @@
                                 <td class="px-0 first-action"></td>
                             {% else %}
                                 <td class="px-0 first-action">
+                                {% if situ.statusId == 3 %}
+                                    <span data-id="{{ situ.id }}"
+                                       class="btn btn-outline-secondary btn-sm px-1 updateConfirm"
+                                       data-toggle="tooltip" data-placement="left"
+                                       title="{{ 'action.edit'|trans() }}"
+                                       aria-label="{{ 'action.edit'|trans() }}">
+                                        <i class="fas fa-pen"></i>
+                                    </span>
+                                {% else %}
                                     <a href="{{ path('create_situ', { 'id': situ.id }) }}"
                                        class="btn btn-outline-secondary btn-sm px-1"
                                        data-toggle="tooltip" data-placement="left"
@@ -122,6 +131,7 @@
                                        aria-label="{{ 'action.edit'|trans() }}">
                                         <i class="fas fa-pen"></i>
                                     </a>
+                                {% endif %}
                                 </td>
                             {% endif %}
                             
@@ -246,8 +256,10 @@
             "modalBtnValid" : "{{ 'action.translate'|trans() }}",
             "deleteTitle" : "{{ 'contrib.delete.title'|trans() }}",
             "deleteText" : "{{ 'contrib.delete.text'|trans() }}",
-            "yes" : "{{ 'yes' | trans }}",
-            "no" : "{{ 'no' | trans }}",
+            "no" : "{{ 'no'|trans }}",
+            "updateSituTitle" : "{{ 'contrib.update_validated.title'|trans }}",
+            "updateSituQuestion" : "{{ 'contrib.update_validated.question'|trans|raw }}",
+            "yes" : "{{ 'yes'|trans }}",
         }
     </script>
 {% endblock %}
