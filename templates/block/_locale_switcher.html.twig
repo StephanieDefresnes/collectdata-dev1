@@ -22,7 +22,7 @@
                     <li class="dropdown-item bg-dark-95">
                         <a class="" href="{{ path(route, params|merge({ _locale: locale.lang })) }}">
                             <img src="{{ asset('img/flag/'~ locale.lang ~'.jpg') }}" alt="{{ locale.lang }}" class="lang-flag mr-2">
-                            <span class="text-capitalize d-inline d-md-inline d-sm-none decode">{{ locale.name }}</span>
+                            <span class="text-capitalize d-md-inline d-none decode">{{ locale.name }}</span>
                         </a>
                     </li>
                 {% endif %}
@@ -33,7 +33,7 @@
                     <li class="dropdown-item bg-dark-95">
                         <a class="" href="{{ path(route, params|merge({ _locale: locale.lang })) }}">
                             <img src="{{ asset('img/flag/'~ locale.lang ~'.jpg') }}" alt="{{ locale.lang }}" class="lang-flag mr-2">
-                            <span class="text-capitalize d-inline d-md-inline d-sm-none">{{ locale.name }}</span>
+                            <span class="text-capitalize d-md-inline d-none">{{ locale.name }}</span>
                         </a>
                     </li>
                 {% endif %}

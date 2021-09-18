@@ -6,13 +6,15 @@
         <a class="nav-link line-12 dropdown-toggle" id="dropdown_account" 
            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             {% if app.user.imageFilename %}
-            <span class="nav-img d-md-inline d-none">
-                <span class="nav-img-circle">
-                    <img src="{{ asset('/uploads/img/'~ app.user.imageFilename) }}" alt="">
+                <span class="nav-img d-md-inline d-none">
+                    <span class="nav-img-circle">
+                        <img src="{{ asset('/uploads/img/'~ app.user.imageFilename) }}" alt="">
+                    </span>
                 </span>
-            </span>
             {% else %}
-                <i class="fas fa-user"></i>
+                <span class="d-md-inline d-none">
+                    <i class="fas fa-user"></i>
+                </span>
             {% endif %}
             <span class="mx-md-1 mx-0 text-capitalize">{{  app.user.name }}</span>
         </a>
@@ -40,20 +42,22 @@
         </ul>
     </li>
 {% else %}
-    <li class="nav-item dropdown{{ route in ['app_login', 'front_register'] ? ' active' }}">
+    <li class="nav-item mx-md-0 mx-sm-4 mx-0 px-md-0 px-md-0 px-sm-2 px-0 dropdown {{ route in ['app_login', 'app_register'] ? ' active' }}">
         <a class="nav-link dropdown-toggle" id="dropdown_account" 
            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            <i class="fas fa-user"></i>
+            <span class="d-md-inline d-none">
+                <i class="fas fa-user"></i>
+            </span>
             {{ 'nav.account_unknown'|trans() }}
         </a>
-        <ul class="dropdown-menu dropdown-menu-right pt-md-2" aria-labelledby="dropdown_account">
-            <li class="dropdown-item bg-dark{{ route == 'app_login' ? ' active' }}">
+        <ul class="dropdown-menu dropdown-menu-right pt-md-4 pt-0" aria-labelledby="dropdown_account">
+            <li class="dropdown-item bg-dark-95{{ route == 'app_login' ? ' active' }}">
                 <a href="{{ path('app_login') }}">
                     <i class="fas fa-sign-in-alt"></i>
                     {{ 'nav.account_login'|trans() }}
                 </a>
             </li>
-            <li class="dropdown-item bg-dark{{ route == 'front_register' ? ' active' }}">
+            <li class="dropdown-item bg-dark-95{{ route == 'app_register' ? ' active' }}">
                 <a href="{{ path('app_register') }}">
                     <i class="fas fa-user"></i>
                     {{ 'nav.account_register'|trans() }}
