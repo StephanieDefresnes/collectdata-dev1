@@ -62,7 +62,7 @@ contrib:
     delete:
         title: Suppression d'une contribution
         text: Êtes-vous certain(e) de vouloir supprimer cette contribution ?
-        error: Une erreur s'est produite lors de la suppression de la contribution.
+        error: 'Une erreur s''est produite lors de la suppression de la contribution:'
         success: La contribution a bien été supprimée.
     form:
         category:
@@ -130,7 +130,7 @@ contrib:
             flash:
                 success: La situation a bien été soumise
                 success_update: Les modifications ont bien été soumises
-                error: Une erreur s'est produite lors de la soumission de la situation
+                error: 'Une erreur s''est produite lors de la soumission de la situation:'
         to: À
         to_validate: ( validation en cours )
     situ:

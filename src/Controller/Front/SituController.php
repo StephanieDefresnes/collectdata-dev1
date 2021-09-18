@@ -138,12 +138,17 @@ class SituController extends AbstractController
                     'user_messages', $locale = locale_get_default()
                 );
             $this->addFlash('success', $msg);
-        
-            return $this->redirectToRoute('user_situs', ['_locale' => locale_get_default()]);
 
         } catch (Exception $e) {
-            throw new \Exception('An exception appeared while updating the translation');
+
+            $msg = $this->translator->trans(
+                'contrib.form.submit.flash.error', [],
+                'user_messages', $locale = locale_get_default()
+            );
+            $this->addFlash('error', $msg.PHP_EOL.$e->getMessage());
         }
+        
+        return $this->redirectToRoute('user_situs', ['_locale' => locale_get_default()]);
     }
     
     /**
@@ -176,7 +181,7 @@ class SituController extends AbstractController
             $this->em->flush();
 
             $msg = $this->translator->trans(
-                    'contrib.deletion.success', [],
+                    'contrib.delete.success', [],
                     'user_messages', $locale = locale_get_default()
                 );
             $this->addFlash('success', $msg);
@@ -184,7 +189,12 @@ class SituController extends AbstractController
             return $this->redirectToRoute('user_situs', ['_locale' => locale_get_default()]);
 
         } catch (Exception $e) {
-            throw new \Exception('An exception appeared while deleting the translation');
+
+            $msg = $this->translator->trans(
+                'contrib.delete.error', [],
+                'user_messages', $locale = locale_get_default()
+            );
+            $this->addFlash('error', $msg.PHP_EOL.$e->getMessage());
         }
     }
     
@@ -402,16 +412,16 @@ class SituController extends AbstractController
             $this->em->persist($situItem);
             $situItem->setSitu($situ);
         }
-            
+        
+        $msgType = empty($data['id']) ? 'success_update' : 'success';
+        
         try {
             $this->em->flush();
 
-            $msgType = empty($data['id']) ? 'success_update' : 'success';
-
             $msg = $this->translator->trans(
-                        'contrib.form.'. $msgAction .'.flash.'. $msgType, [],
-                        'user_messages', $locale = locale_get_default()
-                        );
+                'contrib.form.'. $msgAction .'.flash.'. $msgType, [],
+                'user_messages', $locale = locale_get_default()
+            );
 
             $request->getSession()->getFlashBag()->add('success', $msg);
 
@@ -423,7 +433,21 @@ class SituController extends AbstractController
             ]);
 
         } catch (Exception $e) {
-            throw new \Exception('An exception appeared while updating the situ');
+            
+            $msg = $this->translator->trans(
+                'contrib.form.'. $msgAction .'.flash.error', [],
+                'user_messages', $locale = locale_get_default()
+            );
+            $this->addFlash('error', $msg.PHP_EOL.$e->getMessage());
+            
+            if (empty($data['id'])) {
+                return $this->redirectToRoute('create_situ', ['_locale' => locale_get_default()]);
+            } else {
+                return $this->redirectToRoute('create_situ', [
+                    '_locale' => locale_get_default(),
+                    'id' => $data['id'],
+                ]);
+            }
         }
     }
     
