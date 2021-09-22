@@ -71,7 +71,7 @@ class UserUpdateFormType extends AbstractType
                 'choice_label' => 'name',
                 'choices' => $langs = $this->em->getRepository(Lang::class)->findBy(['enabled' => 1]),
                 'attr' => [
-                    'class' => 'form-control select-multiple'
+                    'class' => 'select-multiple'
                 ],
                 'choice_attr' => function($choice, $key, $value) {
                     return [
@@ -82,6 +82,9 @@ class UserUpdateFormType extends AbstractType
             ])
             ->add('langContributor', CheckboxType::class, [
                 'required' => false,
+                'attr' => [
+                    'class' => 'custom-checkbox'
+                ],
                 'label' => 'account.translator.checkbox',
                 'label_attr' => ['class' => 'pointer'],
             ])
