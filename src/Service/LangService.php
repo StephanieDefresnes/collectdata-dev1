@@ -11,52 +11,16 @@ class LangService {
 
     private $em;
     
-    public function __construct(EntityManagerInterface $em,
-                                ParameterBagInterface $parameters)
+    public function __construct(EntityManagerInterface $em)
     {
         $this->em = $em;
-        $this->parameters = $parameters;
-    }
-
-    public function getLangById($lang_id)
-    {
-        $repository = $this->em->getRepository(Lang::class);
-        
-        $default = $repository->findOneBy(
-            ['lang' => $this->parameters->get('locale')]
-        );
-        if ($lang_id == '') $lang_id = $default->getId();
-        
-        $lang = $repository->findOneBy(
-            ['id' => $lang_id]
-        );
-        return $lang;
-    }
-
-    public function getLangByLang($lang)
-    {
-        $repository = $this->em->getRepository(Lang::class);
-        
-        $lang = $repository->findOneBy(
-            ['lang' => $lang]
-        );
-        return $lang;
     }
     
-    public function findLangsEnabledOrNot($boolean)
-    {
-        
-        $repository = $this->em->getRepository(Lang::class);
-        
-        $langs = $repository->findBy(
-            ['enabled' => $boolean]
-        );
-        return $langs;
-    }
-
     public function getLangsEnabledOrNot($boolean)
     {
-        $langs = $this->findLangsEnabledOrNot($boolean);
+        $langs = $this->em->getRepository(Lang::class)->findBy(
+            ['enabled' => $boolean]
+        );
         
         $result = [];
         foreach ($langs as $lang) {
@@ -88,17 +52,4 @@ class LangService {
         return $result;
     }
     
-    
-    public function getUsedUserLangs($userId)
-     {
-        $query = $this->em->createQueryBuilder()
-            ->from(Lang::class,'lang')
-            ->select('user.langId, user.langs')
-            ->leftJoin(User::class, 'user', 'WITH', 'user.langId=lang.id')
-            ->where("user.langId = '$userId' ");
-        
-        $langs = $query->getQuery()->getResult();
-        
-        return $langs;
-    }
 }

@@ -64,7 +64,9 @@ class PageController extends AbstractController
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
         $this->denyAccessUnlessGranted('ROLE_SUPER_ADMIN');
         
-        $lang = $langService->getLangByLang(locale_get_default());
+        $lang = $this->em->getRepository(Lang::class)->findOneBy(
+            ['lang' => locale_get_default()]
+        );
         
         
         // Update or Create new Page

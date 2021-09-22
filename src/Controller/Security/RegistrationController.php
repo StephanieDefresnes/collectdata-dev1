@@ -51,7 +51,7 @@ class RegistrationController extends AbstractController
     public function register(   Request $request,
                                 UserPasswordEncoderInterface $passwordEncoder): Response
     {
-        
+        // GCU url
 //        $url = $this->router->generate(
 //            'TODO Page content',
 //            [
@@ -81,7 +81,9 @@ class RegistrationController extends AbstractController
             $user->setRoles(array('ROLE_CONTRIBUTOR'));
             $user->setDateCreate(new \DateTime());
             
-            $lang = $this->langService->getLangByLang(locale_get_default());
+            $lang = $this->em->getRepository(Lang::class)->findOneBy(
+                ['lang' => locale_get_default()]
+            );
             $user->setLangId($lang->getId());
 
             $this->entityManager->persist($user);
@@ -157,7 +159,7 @@ class RegistrationController extends AbstractController
                 '_locale' => $this->parameters->get('locale')
             ]);
         }
-        $userLang = $this->langService->getLangById($user->getLangId());
+        $userLang = $this->em->getRepository(Lang::class)->find($user->getLangId());
         
         try {
             $this->verifyEmailHelper->validateEmailConfirmation($request->getUri(), $user->getId(), $user->getEmail());

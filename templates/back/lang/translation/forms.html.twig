@@ -1,0 +1,61 @@
+{% trans_default_domain 'back_messages' %}
+{% extends "back/layout.html.twig" %}
+{% set locale = app.request.locale %}
+
+{% block title %}{{ 'lang.translation.form.title'|trans() }}{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('jquery-confirm/css/jquery-confirm.css') }}">
+    {{ encore_entry_link_tags('flp_theme') }}
+    {{ encore_entry_link_tags('lang_translation_form_app', null, 'backApp') }}
+    <style>
+        
+    </style>
+ {% endblock %}
+
+
+{% block content %}
+    <div id="loader"></div>
+    <div class="container-fluid pt-4">
+        
+        <div class="d-sm-flex align-items-center justify-content-between mb-4">
+            <h1 class="h3 mb-0 text-gray-800">{{ 'lang.translation.form.title'|trans() }}</h1>
+            <div id="add-translation" class="btn btn-primary mx-2 pt-1">
+                {{ 'lang.translation.form.field.title.create'|trans() }}
+            </div>
+            <div id="cancel" class="btn btn-secondary mx-2 px-3 pt-1">
+                {{ 'action.cancel'|trans() }}
+            </div>
+        </div>
+
+        {{ include('back/lang/translation/create/_create.html.twig') }}
+
+        {{ include('back/lang/translation/create/_list.html.twig') }}
+        
+        <div id="response"></div>
+
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ asset('jquery-confirm/js/jquery-confirm.js') }}"></script>
+    <script>
+        var path = {
+           "locale" : "{{ locale }}",
+        }
+        var translations = {
+           "multiple-search" : "{{ 'label.multiple_search' | trans }}",
+           "createTranslation" : "{{ 'lang.translation.form.field.title.create' | trans }}",
+           "updateTranslation" : "{{ 'lang.translation.form.field.title.update' | trans }}",
+           "deleteField-title" : "{{ 'lang.translation.form.field.remove.title' | trans }}",
+           "deleteField-content" : "{{ 'lang.translation.form.field.remove.content' | trans }}",
+           "yes" : "{{ 'yes' | trans }}",
+           "no" : "{{ 'no' | trans }}",
+           "alertSucces" : "{{ 'lang.translation.form.alert.success' | trans }}",
+           "alertError" : "{{ 'lang.translation.form.alert.error' | trans }}",
+        }
+    </script>
+    {{ encore_entry_script_tags('lang_translation_form_app', null, 'backApp') }}
+{% endblock %}

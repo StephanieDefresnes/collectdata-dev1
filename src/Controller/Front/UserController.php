@@ -111,7 +111,10 @@ class UserController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             
             $langid = $form['langId']->getData();
-            $user->addLang($this->langService->getLangById($langid));
+            $userLang = $this->em->getRepository(Lang::class)->findOneBy(
+                ['lang' => $langid]
+            );
+            $user->addLang($userLang);
             
             // Avatar
             $newImage = $form->get('imageFilename')->getData();
@@ -158,7 +161,7 @@ class UserController extends AbstractController
             if ($request_lang_id == null) {
                 $user_lang = $this->getParameter('locale');
             } else {
-                $lang = $this->langService->getLangById($request_lang_id);
+                $lang = $this->em->getRepository(Lang::class)->find($request_lang_id);
                 $user_lang = $lang->getLang();
             }
             
@@ -197,7 +200,6 @@ class UserController extends AbstractController
         return $this->render('front/user/account/update.html.twig', [
             'user' => $user,
             'langs' => $langs,
-            'contribLangs' => $contribLangs,
             'form' => $form->createView(),
         ]);
     }

@@ -3,7 +3,6 @@
 namespace App\Controller\Security;
 
 use App\Entity\User;
-use App\Service\LangService;
 use App\Form\Security\ChangePasswordFormType;
 use App\Form\Security\ResetPasswordRequestFormType;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
@@ -29,19 +28,16 @@ class ResetPasswordController extends AbstractController
 {
     use ResetPasswordControllerTrait;
 
-    private $langService;
     private $parameters;
     private $resetPasswordHelper;
     private $router;
     private $translator;
 
-    public function __construct(LangService $langService,
-                                ParameterBagInterface $parameters,
+    public function __construct(ParameterBagInterface $parameters,
                                 ResetPasswordHelperInterface $resetPasswordHelper,
                                 TranslatorInterface $translator,
                                 UrlGeneratorInterface $router)
     {
-        $this->langService = $langService;
         $this->parameters = $parameters;
         $this->resetPasswordHelper = $resetPasswordHelper;
         $this->router = $router;
@@ -185,7 +181,7 @@ class ResetPasswordController extends AbstractController
             return $this->redirectToRoute('app_check_email');
         }
         
-        $userLang = $this->langService->getLangById($user->getLangId());
+        $userLang = $this->em->getRepository(Lang::class)->find($user->getLangId());
         
         $subject = $this->translator->trans(
             'reset_password.email.subject', [],

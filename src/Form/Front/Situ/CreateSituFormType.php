@@ -6,7 +6,6 @@ use App\Entity\Situ;
 use App\Form\Front\Situ\CreateSituItemType;
 use App\Service\EventService;
 use App\Service\CategoryService;
-use App\Service\LangService;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
@@ -25,22 +24,19 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class CreateSituFormType extends AbstractType
 {
-    private $translator;
-    private $langService;
-    private $eventService;
     private $categoryService;
+    private $eventService;
+    private $translator;
     
-    public function __construct(LangService $langService,
+    public function __construct(CategoryService $categoryService,
                                 EventService $eventService,
-                                CategoryService $categoryService,
                                 Security $security,
                                 TranslatorInterface $translator)
     {
-        $this->translator = $translator;
-        $this->langService = $langService;
-        $this->eventService = $eventService;
         $this->categoryService = $categoryService;
+        $this->eventService = $eventService;
         $this->security = $security;
+        $this->translator = $translator;
     }
     
     public function buildForm(FormBuilderInterface $builder, array $options)
@@ -48,11 +44,11 @@ class CreateSituFormType extends AbstractType
         $user = $this->security->getUser();
         
         // Get User current lang
-        $usertLang = $this->langService->getLangById($user->getLangId());
+        $userLang = $this->em->getRepository(Lang::class)->find($user->getLangId());
         $GLOBALS['usertLangId'] = $user->getLangId();
         
         // Get Events by locale and by user events
-        $GLOBALS['events'] = $this->eventService->getByLangAndUserLang($usertLang);
+        $GLOBALS['events'] = $this->eventService->getByLangAndUserLang($userLang);
         
         /**
          * If no optional language neither event,

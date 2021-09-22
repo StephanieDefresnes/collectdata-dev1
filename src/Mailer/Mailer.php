@@ -4,7 +4,6 @@ namespace App\Mailer;
 
 use App\Entity\Situ;
 use App\Entity\User;
-use App\Service\LangService;
 use App\Service\UserService;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Component\Mailer\MailerInterface;
@@ -15,7 +14,6 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class Mailer
 {
-    private $langService;
     protected $mailer;
     protected $parameters;
     protected $router;
@@ -26,14 +24,12 @@ class Mailer
      * Mailer constructor.
      *
      */
-    public function __construct(LangService $langService,
-                                MailerInterface $mailer,
+    public function __construct(MailerInterface $mailer,
                                 ParameterBagInterface $parameters,
                                 TranslatorInterface $translator,
                                 UrlGeneratorInterface $router,
                                 UserService $userService)
     {
-        $this->langService = $langService;
         $this->mailer = $mailer;
         $this->parameters = $parameters;
         $this->router = $router;
@@ -135,7 +131,7 @@ class Mailer
         if ($moderators) {
             foreach ($moderators as $moderator) {
                 
-                $moderatorLang = $this->langService->getLangById($moderator->getLangId());
+                $moderatorLang = $this->em->getRepository(Lang::class)->find($moderator->getLangId());
             
                 $subject = $this->translator->trans(
                     'situ.validate.email.subject', [
@@ -153,8 +149,6 @@ class Mailer
                     ],
                     UrlGeneratorInterface::ABSOLUTE_URL
                 );
-
-                $moderatorLang = $this->langService->getLangById($moderator->getLangId());
 
                 $email = (new TemplatedEmail())
                     ->from(new Address($sender, $nameSite))

@@ -16,14 +16,15 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\File;
 use Symfony\Component\Validator\Constraints\NotBlank;
+use Doctrine\ORM\EntityManagerInterface;
 
 class UserUpdateFormType extends AbstractType
 {
-    private $langService;
+    private $em;
 
-    public function __construct(LangService $langService)
+    public function __construct(EntityManagerInterface $em,LangService $langService)
     {
-        $this->langService = $langService;
+        $this->em = $em;
     }
     
     public function buildForm(FormBuilderInterface $builder, array $options)
@@ -60,7 +61,6 @@ class UserUpdateFormType extends AbstractType
                 ],
             ])
             ->add('langId', HiddenType::class, [
-                'required' => false,
                 'label' => 'label_dp.lang',
             ])
             ->add('langs', EntityType::class, [
@@ -69,7 +69,7 @@ class UserUpdateFormType extends AbstractType
                 'label' => 'account.lang.option',
                 'multiple' => true,
                 'choice_label' => 'name',
-                'choices' => $this->langService->findLangsEnabledOrNot(1),
+                'choices' => $langs = $this->em->getRepository(Lang::class)->findBy(['enabled' => 1]),
                 'attr' => [
                     'class' => 'form-control select-multiple'
                 ],
@@ -91,7 +91,7 @@ class UserUpdateFormType extends AbstractType
                 'label' => 'account.translator.translate',
                 'multiple' => true,
                 'choice_label' => 'name',
-                'choices' => $this->langService->findLangsEnabledOrNot(0),
+                'choices' => $langs = $this->em->getRepository(Lang::class)->findBy(['enabled' => 0]),
                 'attr' => [
                     'class' => 'form-control select-multiple'
                 ],
