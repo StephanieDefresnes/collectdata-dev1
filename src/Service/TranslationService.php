@@ -32,22 +32,6 @@ class TranslationService {
         return $translation;
     }
     
-    public function getTranslationById($translation_id)
-    {
-        $query = $this->em->createQueryBuilder()
-            ->from(Translation::class,'translation')
-            ->select('  translation.id              id,
-                        translation.name            name,
-                        translation.userId          userId,
-                        translation.statusId        statusId,
-                        translation.dateLastUpdate  dateLastUpdate')
-            ->andWhere('translation.id = ?1')
-            ->setParameter(1, $translation_id);
-        
-        $translation = $query->getQuery()->getResult();
-        return $translation;
-    }
-    
     public function getAllTranslationsReferent()
     {
         $query = $this->em->createQueryBuilder()

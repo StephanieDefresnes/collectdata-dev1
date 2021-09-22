@@ -18,7 +18,9 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
@@ -30,16 +32,19 @@ class SituController extends AbstractController
     private $em;
     private $mailer;
     private $security;
+    private $tokenStorage;
     private $translator;
     
     public function __construct(EntityManagerInterface $em,
                                 Mailer $mailer,
                                 Security $security,
+                                TokenStorageInterface $tokenStorage,
                                 TranslatorInterface $translator)
     {
         $this->em = $em;
         $this->mailer = $mailer;
         $this->security = $security;
+        $this->tokenStorage = $tokenStorage;
         $this->translator = $translator;
     }
     
@@ -201,7 +206,7 @@ class SituController extends AbstractController
     /**
      * @Route("/contrib/{id}", defaults={"id" = null}, name="create_situ", methods="GET|POST")
      */
-    public function situEdit(Request $request, $id): Response
+    public function situEdit($id, Request $request): Response
     {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
         $this->denyAccessUnlessGranted('ROLE_CONTRIBUTOR');
@@ -220,17 +225,19 @@ class SituController extends AbstractController
             $situ = $this->getDoctrine()->getRepository(Situ::class)
                     ->findOneBy(['id' => $id]);
         
+            if (!$situ) { return new NotFoundHttpException(); }
+        
             // Only situ author can update situ
-            if (!empty($situ) && $user->getId() != $situ->getUserId()) {
-
+            if ($user->getId() != $situ->getUserId()) {
                 $msg = $this->translator->trans(
                         'access_deny', [],
                         'user_messages', $locale = locale_get_default()
                     );
                 $this->addFlash('error', $msg);
 
-                return $this->redirectToRoute('user_situs', ['_locale' => locale_get_default()]);
+                return $this->redirectToRoute('access_denied', ['_locale' => locale_get_default()]);
             }
+            
         } else {
             $situ = new Situ();
         }
@@ -516,11 +523,13 @@ class SituController extends AbstractController
         $data = $dataForm['dataForm'];
         
         $event = isset($data['event'])
-                ? $eventService->getDataById($data['event']) : '';
+                ? $this->em->getRepository(Event::class)->find($data['event']) : '';
         $categoryLevel1 = isset($data['categoryLevel1'])
-                ? $categoryService->getDataById($data['categoryLevel1']) : '';
+                ? $this->em->getRepository(Category::class)
+                    ->findBy([ 'event' => $data['categoryLevel1'] ]) : '';
         $categoryLevel2 = isset($data['categoryLevel2'])
-                ? $categoryService->getDataById($data['categoryLevel2']) : '';
+                ? $this->em->getRepository(Category::class)
+                    ->findBy([ 'parent' => $data['categoryLevel2'] ]) : '';
         
         return $this->json([
             'success' => true,

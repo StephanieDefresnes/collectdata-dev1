@@ -83,18 +83,4 @@ class CategoryService {
                 ]);
         return $qb->getQuery()->getResult();
     }
-        
-    /**
-     * @return []   Returns Category data description & validated
-     */
-    public function getDataById($category_id)
-    {
-        return $this->em->createQueryBuilder()
-                ->from(Category::class,'c')
-                ->select('c.title, c.description, c.validated')
-                ->where('c.id = ?1')
-                ->setParameter(1, $category_id)
-                ->getQuery()
-                ->getOneOrNullResult();
-    }
 }
