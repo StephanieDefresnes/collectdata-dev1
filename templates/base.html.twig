@@ -18,6 +18,7 @@
         <title translate="no">{% block title %}{{ name_site }}{% endblock %}{% block subtitle %} - FLP{% endblock %}</title>
         <meta name="description" content="{% block description %}{{ '' }}{% endblock %}" />
         <link rel="icon" type="image/png" href="{{ asset('img/forlifeproject.png')}}" />
+        {% block seo %}{% endblock %}
         {% block stylesheets %}{% endblock %}
     </head>
     {% block body %}{% endblock %}
