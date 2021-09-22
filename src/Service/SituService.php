@@ -18,40 +18,6 @@ class SituService {
     {
         $this->em = $em;
     }
-
-    public function getSituById($situId) 
-    {   
-        $query = $this->em->createQueryBuilder()
-            ->from(Situ::class,'situ')
-            ->select('  situ.id                 id,
-                        lang.id                 langId,
-                        evt.id                  eventId,
-                        cat1.id                 categoryLevel1Id,
-                        cat2.id                 categoryLevel2Id')
-            ->leftJoin(Event::class, 'evt', 'WITH', 'situ.event=evt.id')
-            ->leftJoin(Category::class, 'cat1', 'WITH', 'situ.categoryLevel1=cat1.id')
-            ->leftJoin(Category::class, 'cat2', 'WITH', 'situ.categoryLevel2=cat2.id')
-            ->leftJoin(Lang::class, 'lang', 'WITH', 'situ.lang=lang.id')
-            ->andWhere('situ.id = ?1')
-            ->setParameter(1, $situId);
-        
-        return $query->getQuery()->getOneOrNullResult();
-    }
-    
-    public function getSituItemsBySituId($situId)
-    {
-        $query = $this->em->createQueryBuilder()
-            ->from(SituItem::class,'item')
-            ->select('  item.title          title, 
-                        item.description    description,
-                        item.score          score')
-            ->andWhere('item.situ = ?1')
-            ->setParameter(1, $situId)
-            ->orderBy('item.score', 'ASC');
-        
-        $message = $query->getQuery()->getResult();
-        return $message;
-    }
     
     public function countSitusByUser($userId)
     {
