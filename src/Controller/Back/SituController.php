@@ -2,10 +2,11 @@
 
 namespace App\Controller\Back;
 
-use App\Entity\Situ;
-use App\Entity\User;
 use App\Entity\Event;
 use App\Entity\Category;
+use App\Entity\Lang;
+use App\Entity\Situ;
+use App\Entity\User;
 use App\Form\Back\Situ\VerifySituFormType;
 use App\Service\LangService;
 use Doctrine\ORM\EntityManagerInterface;
@@ -131,9 +132,7 @@ class SituController extends AbstractController
         
             $author = $this->em->getRepository(User::class)->findOneBy(['id' => $situ->getUserId()]);
             
-            $authorLang = $this->em->getRepository(Lang::class)->findOneBy(
-                ['lang' => $author->getLangId()]
-            );
+            $authorLang = $this->em->getRepository(Lang::class)->find($author->getLangId());
         }
         
         // Form
