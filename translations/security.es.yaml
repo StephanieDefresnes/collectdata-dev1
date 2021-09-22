@@ -3,6 +3,9 @@ button:
     cancel: Cancelar
     send: Enviar
     validate: Validar
+error:
+    403: Acceso denegado
+    404: Esta página no existe
 label:
     email: Email
 login:

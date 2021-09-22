@@ -7,12 +7,23 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Security;
+use Symfony\Contracts\Translation\TranslatorInterface;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 /**
- * @Route("/{_locale<%app_locales%>}/error")
+ * @Route("/{_locale<%app_locales%>}")
  */
 class ErrorController extends AbstractController
 {
+    private $tokenStorage;
+    private $translator;
+    
+    public function __construct(TokenStorageInterface $tokenStorage,
+                                TranslatorInterface $translator)
+    {
+        $this->tokenStorage = $tokenStorage;
+        $this->translator = $translator;
+    }
     /**
      * @Route("/404", name="no_found")
      */
@@ -34,10 +45,19 @@ class ErrorController extends AbstractController
             $forbiddenAccess = $user->getForbiddenAccess();
             $adminNote = $user->getAdminNote();
             
-            $msg = 'Forbidden access on '.date('Y-m-d H:i:s');
-
+            if ($_GET['d']) {
+                $d = $_GET['d'];
+                if ($d == '1211') $msg = 'Validation Contrib author forbidden: ';
+                if ($d == '1411') $msg = 'Delete Contrib auhtor forbidden: ';
+                if ($d == '1918181') $msg = 'Read Contrib refused auhtor forbidden: ';
+                if ($d == '19184') $msg = 'Read Contrib deleted forbidden: ';
+                if ($d == '19211') $msg = 'Update Contrib auhtor forbidden: ';
+                else $msg = 'Forbidden access: ';
+            }
+            else $msg = 'Forbidden access: ';
+                
             $user->setForbiddenAccess(intval($forbiddenAccess)+1);
-            $user->setAdminNote(($adminNote ? $adminNote.PHP_EOL : '').$msg);
+            $user->setAdminNote(($adminNote ? $adminNote.PHP_EOL : '').$msg.date('Y-m-d H:i:s'));
             $em->persist($user);
             $em->flush();
 
@@ -48,8 +68,8 @@ class ErrorController extends AbstractController
                 $user->setAdminNote($adminNote.PHP_EOL.'Deleted ForbiddenAccess x 3');
                 $this->em->persist($user);
                 $this->em->flush();
-            }            
-            return $this->redirectToRoute('app_logout');
+            }
+            $this->tokenStorage->setToken();
         }
         
         return $this->render('error/error403.html.twig');
