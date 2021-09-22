@@ -18,22 +18,6 @@ class EventService {
     }
         
     /**
-     * @return []   Returns event land id
-     *              Use to get not validated Events yet and added by current user
-     */
-    public function getByIdAndEventLang($event_id)
-    {
-        return $this->em->createQueryBuilder()
-                ->from(Event::class,'e')
-                ->select('l.id landId')
-                ->leftJoin(Lang::class, 'l', 'WITH', 'e.lang = l.id')
-                ->where('e.id = ?1')
-                ->setParameter(1, $event_id)
-                ->getQuery()
-                ->getOneOrNullResult();
-    }
-        
-    /**
      * @return []   Returns an array of Events objects
      *              by lang selected and by user events not validated yet
      */

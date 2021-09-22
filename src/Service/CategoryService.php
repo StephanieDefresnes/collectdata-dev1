@@ -18,22 +18,6 @@ class CategoryService {
     }
         
     /**
-     * @return []   Returns categoryLevel1 land id
-     *              Use to get not validated Categories Level1 added by current user
-     */
-    public function getCategoryLangById($category_id)
-    {
-        return $this->em->createQueryBuilder()
-                ->from(Category::class,'c')
-                ->select('l.id landId')
-                ->leftJoin(Lang::class, 'l', 'WITH', 'c.lang = l.id')
-                ->where('c.id = ?1')
-                ->setParameter(1, $category_id)
-                ->getQuery()
-                ->getOneOrNullResult();
-    }
-        
-    /**
      * @return []   Returns an array of Categories Level1 objects
      *              by event selected and by user categories
      */

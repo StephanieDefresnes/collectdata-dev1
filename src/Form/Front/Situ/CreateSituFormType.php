@@ -2,10 +2,14 @@
 
 namespace App\Form\Front\Situ;
 
+use App\Entity\Category;
+use App\Entity\Event;
+use App\Entity\Lang;
 use App\Entity\Situ;
 use App\Form\Front\Situ\CreateSituItemType;
 use App\Service\EventService;
 use App\Service\CategoryService;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
@@ -25,15 +29,18 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 class CreateSituFormType extends AbstractType
 {
     private $categoryService;
+    private $em;
     private $eventService;
     private $translator;
     
     public function __construct(CategoryService $categoryService,
+                                EntityManagerInterface $em,
                                 EventService $eventService,
                                 Security $security,
                                 TranslatorInterface $translator)
     {
         $this->categoryService = $categoryService;
+        $this->em = $em;
         $this->eventService = $eventService;
         $this->security = $security;
         $this->translator = $translator;
@@ -45,7 +52,6 @@ class CreateSituFormType extends AbstractType
         
         // Get User current lang
         $userLang = $this->em->getRepository(Lang::class)->find($user->getLangId());
-        $GLOBALS['usertLangId'] = $user->getLangId();
         
         // Get Events by locale and by user events
         $GLOBALS['events'] = $this->eventService->getByLangAndUserLang($userLang);
@@ -181,7 +187,7 @@ class CreateSituFormType extends AbstractType
                 if ($event_id) {
                     
                     // Get event lang id to load categories user not validated if exist
-                    $eventLang = $this->eventService->getByIdAndEventLang($event_id);
+                    $eventLang = $this->em->getRepository(Event::class)->find($event_id);
                     $categoriesLevel1 = $this->categoryService
                                 ->getByEventAndbyUserEvent($event_id, $eventLang);
                     
@@ -242,10 +248,9 @@ class CreateSituFormType extends AbstractType
                 if ($categoryLevel1_id) {
                     
                     // Get event lang id to load categories user not validated if exist
-                    $category_lang = $this->categoryService
-                                    ->getCategoryLangById($categoryLevel1_id);
+                    $categoryLang = $this->em->getRepository(Category::class)->find($categoryLevel1_id);
                     $categoriesLevel2 = $this->categoryService
-                                ->getByLevel1AndUserLevel1($categoryLevel1_id, $category_lang);
+                                ->getByLevel1AndUserLevel1($categoryLevel1_id, $categoryLang);
                 
                     if ($categoriesLevel2) {
                         /**
