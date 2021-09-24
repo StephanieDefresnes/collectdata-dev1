@@ -26,9 +26,8 @@ $(document).ready(function(){
     $('body').find('[data-toggle="tooltip"]').tooltip()
     
     // Flash message display
-    if( $('#flash_message').length )
-    {
-        $('#flash_message').delay(3000).fadeOut()
-    }
+    $('body').find('#hideFlash').click(function() {
+        $('#flash_message').fadeOut();
+    })
     
 })
