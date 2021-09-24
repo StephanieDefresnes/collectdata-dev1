@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controller;
+namespace App\Controller\Security;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -48,10 +48,11 @@ class ErrorController extends AbstractController
             if ($_GET['d']) {
                 $d = $_GET['d'];
                 if ($d == '1211') $msg = 'Validation Contrib author forbidden: ';
-                if ($d == '1411') $msg = 'Delete Contrib auhtor forbidden: ';
-                if ($d == '1918181') $msg = 'Read Contrib refused auhtor forbidden: ';
+                if ($d == '1411') $msg = 'Delete Contrib author forbidden: ';
+                if ($d == '1918181') $msg = 'Read Contrib refused author forbidden: ';
                 if ($d == '19184') $msg = 'Read Contrib deleted forbidden: ';
-                if ($d == '19211') $msg = 'Update Contrib auhtor forbidden: ';
+                if ($d == '19211') $msg = 'Update Contrib author forbidden: ';
+                if ($d == 'B122021') $msg = 'Back Lang translation update author forbidden: ';
                 else $msg = 'Forbidden access: ';
             }
             else $msg = 'Forbidden access: ';
