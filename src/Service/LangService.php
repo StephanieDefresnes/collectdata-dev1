@@ -3,8 +3,6 @@
 namespace App\Service;
 
 use App\Entity\Lang;
-use App\Entity\User;
-use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Doctrine\ORM\EntityManagerInterface;
 
 class LangService {
