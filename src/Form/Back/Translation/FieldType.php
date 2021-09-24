@@ -14,8 +14,9 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Security\Core\Security;
+use Symfony\Component\Validator\Constraints\NotBlank;
 
-class FieldFormType extends AbstractType
+class FieldType extends AbstractType
 {       
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
@@ -23,6 +24,11 @@ class FieldFormType extends AbstractType
             ->add('name', TextType::class, [
                 'label' => 'lang.translation.form.field.name',
                 'label_attr' => ['class' => 'text-secondary'],
+                'constraints' => [
+                    new NotBlank([
+                        'message' => 'translation.field_name_not_blank',
+                    ]),
+                ],
             ])
             ->add('type', ChoiceType::class, [
                 'label' => 'lang.translation.form.field.type.label',
@@ -35,13 +41,22 @@ class FieldFormType extends AbstractType
                 ],
             ])
         ;
-        
+    }
+
+    /**
+     * @return null|string
+     */
+    public function getBlockPrefix()
+    {
+        return 'app_lang_translation_create';
     }
 
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
             'data_class' => TranslationField::class,
+            'csrf_protection'       => true,
+            'validation'            => true,
             'translation_domain' => 'back_messages',
         ]);
     }

@@ -1,5 +1,5 @@
 // css
-import '../scss/lang_translation_form_app.scss';
+import '../scss/lang_translation_forms_app.scss';
 
 // js
 require('datatables.net/js/jquery.dataTables.min.js');
@@ -67,75 +67,8 @@ function addField(button) {
     list.attr('data-widget-counter', counter)
 
     var newElem = $(list.attr('data-widget-fields')).html(newWidget)
-    addFieldLiDeleteButton(newElem)
+//    addFieldLiDeleteButton(newElem)
     newElem.appendTo(list)
-}
-
-/*
- * Update Translation
- */
-// Get data Translation
-function selectTranslation(id, action) {
-    $.ajax({
-        url: "/"+ path['locale'] +"/back/translation/edit",
-        method: 'GET',
-        data: { id: id },
-        success: function(data) {
-            $('#translation_form_name').addClass('disabled')
-                    .attr('data-translation', data.translation[0].id)
-                    .attr('data-status', data.translation[0].statusId)
-                    .val(data.translation[0].name)
-                    .find('option').each(function() {
-                if ($(this).val() == '')
-                    $(this).removeAttr('selected').prop('disabled', true)
-                else if ($(this).val() == data.translation[0].name)
-                    $(this).attr('selected', 'selected')
-                else $(this).removeAttr('selected').prop('disabled', true)
-            })
-            loadFieldsToUpdate(data.fields, data.fields.length)
-            $('#card-form h6').text(translations['updateTranslation'])
-            $('#card-form, #cancel').show()
-            $('#card-list, #add-translation').hide()
-            $('#add-field').removeClass('d-none')
-            $('#form-submit').attr('data-action', action).removeClass('d-none')
-        }
-    })
-}
-
-// Load Current fields from prototype
-function loadFieldsToUpdate(data, counter) {
-    var list = $('#fields')
-    for (var i = 0; i < counter; i++) {
-        var newWidget = list.attr('data-prototype')
-        newWidget = newWidget.replace(/__name__/g, i)
-        var newElem = $(list.attr('data-widget-fields')).html(newWidget)
-        addFieldLiDeleteButton(newElem)
-        loadFieldsValue(data, newElem, i)
-        newElem.appendTo(list)
-    }
-    list.attr('data-widget-counter', counter)
-}
-
-// Load Values fields
-function loadFieldsValue(data, newElem, i) {
-    $(newElem).find('input').val(data[i].name)
-    $(newElem).find('select option').each(function() {
-        if ($(this).val() == data[i].type) $(this).prop('selected', true)
-    })
-}
-
-// Set data Transaltion
-function updateTranslation(translationId, statusId, dataForm) {    
-    $.ajax({
-        url: "/"+ path['locale'] +"/back/translation/updateTranslation",
-        method: 'POST',
-        data: { id: translationId, statusId: statusId, data: dataForm },
-        success: function() {
-            // To reload page to the top
-            var pathname = window.location.pathname;
-            window.location.replace(pathname)
-        }
-    })
 }
     
 /**
@@ -189,105 +122,6 @@ $(function() {
     $('#langs-list').on('click', '.clean-search', function() {
         table.search('').columns().search('').draw();
         $(this).remove()
-    })
-    
-    // Add new Translation
-    $('#add-translation').click(function() {
-        $('#card-form, #cancel').show()
-        $('#card-list, #add-translation').hide()
-    })
-    
-    // Load data Translation from table
-    $('.selectTranslation').click(function (evt) {
-        evt.stopPropagation()
-        selectTranslation($(this).data('id'), $(this).data('action'))
-    })
-    
-    /**
-     * Translation form
-     */
-    // Cancel Translation creation or update
-    $('#cancel').click(function() {
-        $('#card-form h6').text(translations['createTranslation'])
-        $('#card-form, #cancel').hide()
-        $('#card-list, #add-translation').show()
-        $('#translation_form_name').removeClass('disabled').val('')
-                .find('option').each(function() {
-            if ($(this).val() == '')
-                $(this).attr('selected', 'selected').prop('disabled', false)
-            else
-                $(this).removeAttr('selected').prop('disabled', false)
-        })
-        $('#fields').empty()
-        $('#add-field').addClass('d-none')
-        $('#form-submit').attr('data-action', '').addClass('d-none')
-        $('#translation_form_name').attr('data-translation', '')
-        $('#translation_form_name').attr('data-status', '')
-    })
-    
-    // Add new field into collection then show fields and buttons
-    // & Placeholder disabled
-    $('#translation_form_name').change(function() {
-        if ($(this).val() != '' && $('#add-field').hasClass('d-none'))
-            $('#add-field').removeClass('d-none')
-    }).find('option').each(function() {
-        if ($(this).val() == '') $(this).prop('disabled', true)
-    })
-    
-    // Init jQuery ui sortable on fields list item
-    $('#fields').sortable();
-    
-    // Add new field into collection & show lirs fields and submit buttons
-    $('#add-field-link').click(function() {
-        addField($(this))
-        if ($('#form-fields').hasClass('d-none') && $('#form-submit').hasClass('d-none'))
-            $('#form-fields').removeClass('d-none')
-            $('#form-submit').removeClass('d-none')
-        if ($('#add-error').hasClass('d-none')) $('#add-error').addClass('d-none')
-    })
-    
-    /*
-     * Submission */
-    $('#save-btn, #submit-btn').click(function(){
-        
-        $('#loader').show()
-        
-        var translationId = $('#translation_form_name').attr('data-translation')
-        var statusId = $('#translation_form_name').attr('data-status')
-        var action = $('#form-submit').attr('data-action')
-
-        if ($('#fields li').length == 0 && $('#add-error').hasClass('d-none')) {
-            $('#add-error').removeClass('d-none')
-        } else {
-            
-            // Load statusId
-            submissionStatus($(this).attr('id'))
-            
-            // Create Translation
-            //  -- if new ou status is validated (3) clone Translation
-            if ( (translationId == '' && statusId == '') || statusId == 3
-               || action == 'clone') {
-                $('form').submit()
-            }            
-            // Or Update Translation
-            else {
-                var dataForm = []
-                $('#fields li').each(function(index) {
-                    var name,type;
-                    $(this).find('.form-control').each(function() {
-                        if($(this).is('input')) {
-                            name = $(this).val()
-                        } else {
-                            type = $(this).val()
-                        }
-                    })
-                    dataForm.push({'name': name, 'type': type})
-                })
-                // Update Translation in ajax 
-                updateTranslation(translationId, statusId, dataForm)
-            }
-            
-        }
     })
     
 });

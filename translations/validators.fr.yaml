@@ -6,3 +6,6 @@ repeated_password_invalid: Les champs de mot de passe doivent correspondre
 unique_email: Il existe déjà un compte avec cet email
 registration:
     agree_terms_is_true: Vous devez accepter nos conditions
+translation:
+    field_name_not_blank: Veuillez renseigner le nom de la chaîne
+    name_not_blank: Veuillez sélectionner le nom de la traduction

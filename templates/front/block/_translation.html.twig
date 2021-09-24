@@ -1,29 +1,25 @@
 {% trans_default_domain 'front_messages' %}
 
-{#{% if app.user %}#}
     <li class="nav-item mx-md-0 mx-sm-4 mx-0 px-md-0 px-md-0 px-sm-2 px-0 dropdown{{ route in ['front_translations', 'front_translation_add'] ? ' active' }}">
         <a class="nav-link dropdown-toggle" id="dropdown_translation" 
            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             {{ 'nav.translation.title'|trans() }}
         </a>
         <ul class="dropdown-menu pt-md-4 pt-0" aria-labelledby="dropdown_translation">
-            <li class="dropdown-item bg-dark-95{{ route == 'front_translations' ? ' active' }}">
-                <a href="{{ path('front_translations', { 'id': app.user.id }) }}">
-                    <i class="fas fa-list-ul"></i>
-                    {{ 'nav.translation.dashboard'|trans() }}
-                </a>
-            </li>
-            <li class="dropdown-item bg-dark-95{{ route == 'front_translation_add' ? ' active' }}">
-                <a href="{{ path('front_translation_add', { 'id': app.user.id }) }}">
-                    <i class="far fa-edit"></i>
-                    {{ 'nav.translation.create'|trans() }}
-                </a>
-            </li>
-            <li class="dropdown-item bg-dark-95{{ route == '' ? ' active' }}">
-                <a href="">
-                    <i class="fas fa-globe"></i> {{ 'nav.contribs.translate'|trans() }}
-                </a>
-            </li>
+            {% if app.user and app.user.langContributor and app.user.contributorLangs is not empty %}
+                <li class="dropdown-item bg-dark-95{{ route == 'user_translations' ? ' active' }}">
+                    <a href="{{ path('user_translations') }}">
+                        <i class="fas fa-list-ul"></i>
+                        {{ 'nav.translation.site'|trans() }}
+                    </a>
+                </li>
+            {% endif %}
+            {% if app.user and app.user.langs|length > 1 %}
+                <li class="dropdown-item bg-dark-95{{ route == '' ? ' active' }}">
+                    <a href="">
+                        <i class="fas fa-globe"></i> {{ 'nav.translation.contrib'|trans() }}
+                    </a>
+                </li>
+            {% endif %}
         </ul>
     </li>
-{#{% endif %}#}

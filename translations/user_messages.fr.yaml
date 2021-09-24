@@ -179,7 +179,7 @@ lang_deny: Langue refusée
 multiple_search: Rechercher
 no: Non
 translation:
-    title: Mes traductions
+    title: Traduire le site
     form:
         title: Créer une traduction du site
         create: 'Créer une traduction environnement :'

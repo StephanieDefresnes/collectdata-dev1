@@ -64,7 +64,6 @@ class Translation
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\TranslationField", cascade={"persist", "remove"}, mappedBy="translation")
-     * @MaxDepth(4)
      */
     protected $fields;
     

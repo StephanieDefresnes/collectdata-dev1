@@ -257,14 +257,11 @@ lang:
             lang:
                 table: Idiomas ofrecidos
         form:
-            alert:
-                success: Éxito
-                error: Error
             field:
                 btn:
                     add: Agregar un campo
-                    error: Adición obligatoria
-                label: Lista de campo
+                    create: Crea una traducción
+                    update: Editar una traducción
                 name: Nombre del Canal
                 remove:
                     title: Eliminación de campo
@@ -277,8 +274,12 @@ lang:
                     text: Text
                     textarea: Textarea
             flash:
-                error: Se produjo un error al guardar los datos de la traducción
-                success: Se han guardado los datos de traducción
+                edit:
+                    error: Se produjo un error al guardar los datos de la traducción
+                    success: Se han guardado los datos de traducción
+                submit:
+                    error: Se produjo un error al enviar los datos de traducción
+                    success: Los datos de traducción se han enviado
             message:
                 lang:
                     enabled: Idiomas activos

@@ -6,3 +6,6 @@ repeated_password_invalid: Los campos de la nueva contraseña deben coincidir
 unique_email: Ya existe este email. Ingrese un nuevo email.
 registration:
     agree_terms_is_true: Debes aceptar nuestros términos
+translation:
+    field_name_not_blank: Ingrese el nombre del canal
+    name_not_blank: Seleccione el nombre de la traducción

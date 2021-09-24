@@ -2,13 +2,14 @@
 {% extends "back/layout.html.twig" %}
 {% set locale = app.request.locale %}
 
-{% block title %}{{ 'lang.translation.form.title'|trans() }}{% endblock %}
+{% block title %}{{ translation.id
+                        ? 'lang.translation.form.field.title.update'|trans()
+                        : 'lang.translation.form.field.title.create'|trans() }}{% endblock %}
 
 {% block stylesheets %}
     {{ parent() }}
     <link rel="stylesheet" href="{{ asset('jquery-confirm/css/jquery-confirm.css') }}">
-    {{ encore_entry_link_tags('flp_theme') }}
-    {{ encore_entry_link_tags('lang_translation_form_app', null, 'backApp') }}
+    {{ encore_entry_link_tags('lang_translation_create_app', null, 'backApp') }}
     <style>
         
     </style>
@@ -16,22 +17,80 @@
 
 
 {% block content %}
-    <div id="loader"></div>
     <div class="container-fluid pt-4">
         
         <div class="d-sm-flex align-items-center justify-content-between mb-4">
             <h1 class="h3 mb-0 text-gray-800">{{ 'lang.translation.form.title'|trans() }}</h1>
-            <div id="add-translation" class="btn btn-primary mx-2 pt-1">
-                {{ 'lang.translation.form.field.title.create'|trans() }}
-            </div>
-            <div id="cancel" class="btn btn-secondary mx-2 px-3 pt-1">
+            <a href="{{ path('back_translation_forms') }}" class="btn btn-secondary mx-2 px-3 pt-1">
                 {{ 'action.cancel'|trans() }}
-            </div>
+            </a>
         </div>
 
-        {{ include('back/lang/translation/create/_create.html.twig') }}
+        <div id="card-form" class="card shadow mb-4" data-id="{{ translation.id }}">
 
-        {{ include('back/lang/translation/create/_list.html.twig') }}
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary">{{ translation.id
+                        ? 'lang.translation.form.field.title.update'|trans()
+                        : 'lang.translation.form.field.title.create'|trans() }}</h6>
+            </div>
+            <div class="card-body pb-3">
+
+                {{ form_start(form) }}
+                {{ form_errors(form) }}
+
+                <div class="d-flex justify-content-between row mx-0 mb-3">
+                    <div class="col-lg-6 col-sm-7 px-0 form-inline">
+                        {{ form_label(form.name) }}
+                        {{ form_widget(form.name) }}
+                        <div class="form-error">
+                            {{ form_errors(form.name) }}
+                        </div>
+                    </div>
+                    <div id="add-field" class="col-lg-6 col-sm-5 my-md-0 my-sm-4 mt-0 mb-3 pt-md-0 pt-sm-2 pt-0 px-0">
+                        <div class="d-flex justify-content-end row">
+                            <div class="col-auto mx-3">
+                                <div id="add-field-link" class="btn btn-primary pt-1"
+                                    data-list-selector="#fields">
+                                    <i class="fas fa-plus-circle"></i>
+                                    {{ 'lang.translation.form.field.btn.add'|trans() }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row px-2">
+                    <div id="form-fields" class="col-12">
+                        <div class="mx-4 d-none">
+                            <label>{{ 'lang.translation.form.field.label'|trans() }}</label>
+                        </div>
+                        <div id="fields" class="row ui-sortable"
+                            data-prototype="{{ form_widget(form.fields.vars.prototype)|e('html_attr') }}"
+                            data-widget-fields="{{ '<div class="translationField col-md-6 col-12 d-inline border"></div>'|e }}"
+                            data-widget-counter="{{ form.fields|length }}">
+                            {% for field in form.fields %}
+                                <div class="translationField col-md-6 col-12 d-inline border">
+                                    {{ form_widget(field) }}
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+
+                <div id="form-submit" class="mt-4 mb-3 d-none" data-action="">
+                    <div class="d-flex justify-content-center">
+                        <span id="save-btn" class="btn btn-outline-primary mx-2 px-3 pt-1">
+                            {{ 'action.save'|trans() }}
+                        </span>
+                        <span id="submit-btn" class="btn btn-primary mx-2 px-4 pt-1">
+                            {{ 'action.submit'|trans() }}
+                        </span>
+                    </div>
+                </div>
+                {{ form_end(form) }}
+
+            </div>
+
+        </div>
         
         <div id="response"></div>
 
@@ -41,6 +100,7 @@
 {% block javascripts %}
     {{ parent() }}
     <script src="{{ asset('jquery-confirm/js/jquery-confirm.js') }}"></script>
+    {{ encore_entry_script_tags('lang_translation_create_app', null, 'backApp') }}
     <script>
         var path = {
            "locale" : "{{ locale }}",
@@ -53,9 +113,6 @@
            "deleteField-content" : "{{ 'lang.translation.form.field.remove.content' | trans }}",
            "yes" : "{{ 'yes' | trans }}",
            "no" : "{{ 'no' | trans }}",
-           "alertSucces" : "{{ 'lang.translation.form.alert.success' | trans }}",
-           "alertError" : "{{ 'lang.translation.form.alert.error' | trans }}",
         }
     </script>
-    {{ encore_entry_script_tags('lang_translation_form_app', null, 'backApp') }}
 {% endblock %}

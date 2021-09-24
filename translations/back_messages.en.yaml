@@ -257,14 +257,11 @@ lang:
             lang:
                 table: Languages offered
         form:
-            alert:
-                success: Success
-                error: Error
             field:
                 btn:
                     add: Add a field
-                    error: Addition required
-                label: Field List
+                    create: Create a translation
+                    update: Editar una traducción
                 name: Channel name
                 remove:
                     title: Field deletion
@@ -277,8 +274,12 @@ lang:
                     text: Text
                     textarea: Textarea
             flash:
-                success: Translation data has been saved
-                error: An error occurred while saving translation data
+                edit:
+                    error: Translation data has been saved
+                    success: An error occurred while saving translation data
+                submit:
+                    error: Translation data has been submitted
+                    success: An error occurred while submitting translation data
             message:
                 lang:
                     enabled: Active languages

@@ -5,4 +5,7 @@ password_length_min: Your password should be at least 6 characters
 repeated_password_invalid: The new password fields must match.
 unique_email: This email already exists. Please enter a new address.
 registration:
-    agree_terms_is_true: You should agree to our terms.
+    agree_terms_is_true: You should agree to our terms
+translation:
+    field_name_not_blank: Please enter the channel name
+    name_not_blank: Please select the name of the translation

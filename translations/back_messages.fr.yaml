@@ -257,28 +257,29 @@ lang:
             lang:
                 table: Langues proposées
         form:
-            alert:
-                success: Succès
-                error: Erreur
             field:
                 btn:
                     add: Ajouter un champ
-                    error: Ajout obligatoire
-                label: Liste de champs
+                    create: Créer une traduction
+                    update: Modifier une traduction
                 name: Nom de la chaîne
                 remove:
                     title: Suppresion de champ
                     content: Êtes-vous certain(e) de vouloir supprimer ce champs ?
                 title:
-                    create: Créer une traduction
-                    update: Modifier une traduction
+                    create: Créer un formulaire de traduction
+                    update: Modifier un formulaire de traduction
                 type: 
                     label: Type
                     text: Texte
                     textarea: Textarea
             flash:
-                error: Une erreur s'est produite lors de l'enregisterment des données de traduction
-                success: Les données de traduction ont bien été enregistrées
+                edit:
+                    error: Une erreur s'est produite lors de l'enregisterment des données de traduction
+                    success: Les données de traduction ont bien été enregistrées
+                submit:
+                    error: Une erreur s'est produite lors de la soumission des données de traduction
+                    success: Les données de traduction ont bien été soumises
             message:
                 lang:
                     enabled: Langues actives

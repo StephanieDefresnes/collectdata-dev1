@@ -1,17 +1,12 @@
 {% trans_default_domain 'back_messages' %}
 {% extends "back/layout.html.twig" %}
-{% set locale = app.request.locale %}
 
-{% block title %}{{ 'lang.translation.form.title'|trans() }}{% endblock %}
+{% block title %}{{ 'lang.translation.table.title'|trans() }}{% endblock %}
 
 {% block stylesheets %}
     {{ parent() }}
-    <link rel="stylesheet" href="{{ asset('jquery-confirm/css/jquery-confirm.css') }}">
+    {{ encore_entry_link_tags('lang_translation_forms_app', null, 'backApp') }}
     {{ encore_entry_link_tags('flp_theme') }}
-    {{ encore_entry_link_tags('lang_translation_form_app', null, 'backApp') }}
-    <style>
-        
-    </style>
  {% endblock %}
 
 
@@ -21,17 +16,96 @@
         
         <div class="d-sm-flex align-items-center justify-content-between mb-4">
             <h1 class="h3 mb-0 text-gray-800">{{ 'lang.translation.form.title'|trans() }}</h1>
-            <div id="add-translation" class="btn btn-primary mx-2 pt-1">
-                {{ 'lang.translation.form.field.title.create'|trans() }}
+            <a href="{{ path('back_translation_create') }}"  class="btn btn-primary mx-2 pt-1">
+                <i class="fas fa-plus"></i>
+                {{ 'lang.translation.form.field.btn.create'|trans() }}
+            </a>
+        </div>
+            
+        <div id="card-list" class="card shadow mb-4">
+
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary">{{ 'lang.translation.table.title'|trans() }}</h6>
             </div>
-            <div id="cancel" class="btn btn-secondary mx-2 px-3 pt-1">
-                {{ 'action.cancel'|trans() }}
+
+            <div id="langs-list" class="card-body pb-3 back-dataTable">
+
+                {% if translations is empty %}
+                    {{ 'lang.translation.table.empty'|trans() }}
+                {% else %}
+
+                <table id="dataTable-translations" class="table table-sm mb-0 nowrap">
+                    <thead class="bg-gray-600 text-white">
+                        <tr>
+                            <th>{{ 'action.action'|trans() }}</th>
+                            <th class="pl-2">{{ 'label.name'|trans() }}</th>
+                            <th class="pl-2">{{ 'label.status'|trans() }}</th>
+                            <th class="pl-2">{{ 'label.date_status'|trans() }}</th>
+                            <th class="pl-2">{{ 'label.date_update'|trans() }}</th> 
+                            <th class="pl-2">{{ 'label.user'|trans() }}</th>
+                            <th class="pl-2">{{ 'label.date_creation'|trans() }}</th>        
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white">
+                        {% for translation in translations %}
+                        <tr>
+                            <td class="updateMssage">
+                            {% if app.user.id == translation.userId %}
+                                {% if translation.statusId == 1 or translation.statusId == 2 %}
+                                    <a href="{{ path('back_translation_create', { 'id': translation.id }) }}"
+                                       class="btn btn-outline-primary width-max-40"
+                                       data-toggle="tooltip" data-placement="left"
+                                       title="{{ 'action.edit'|trans() }}"
+                                       aria-label="{{ 'action.edit'|trans() }}">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                {% elseif translation.statusId == 3 %}
+                                    <a href="{{ path('back_translation_create', { 'id': translation.id, 'new': 'new' }) }}"
+                                       class="btn btn-outline-warning width-max-40"
+                                       data-toggle="tooltip" data-placement="left"
+                                       title="{{ 'action.clone'|trans() }}"
+                                       aria-label="{{ 'action.clone'|trans() }}">
+                                        <i class="far fa-clone"></i>
+                                    </a>
+                                {% endif %}
+                            {% else %}
+                                {% if translation.statusId == 1 or translation.statusId == 2 or translation.statusId == 3 %}
+                                    <a href="{{ path('back_translation_create', { 'id': translation.id, 'new': 'new' }) }}"
+                                       class="btn btn-outline-warning width-max-40"
+                                       data-toggle="tooltip" data-placement="left"
+                                       title="{{ 'action.clone'|trans() }}"
+                                       aria-label="{{ 'action.clone'|trans() }}">
+                                        <i class="far fa-clone"></i>
+                                    </a>
+                                {% endif %}
+                            {% endif %}
+                            </td>
+                            <td class="px-2">{{ translation.name }}</td>
+                            <td class="px-2">
+                                {% if translation.statusId == 1 %}
+                                    {{ 'status.writing'|trans() }}
+                                {% elseif translation.statusId == 2 %}
+                                    {{ 'status.validation'|trans() }}
+                                {% elseif translation.statusId == 3 %}
+                                    {{ 'status.validated'|trans() }}
+                                {% elseif translation.statusId == 4 %}
+                                    {{ 'status.refused'|trans() }}
+                                {% else %}
+                                    {{ 'status.deleted'|trans() }}
+                                {% endif %}
+                            </td>
+                            <td class="px-2">{{ translation.dateStatus ? translation.dateStatus|format_datetime('short', 'medium', locale=locale) : '' }}</td>
+                            <td class="px-2">{{ translation.dateLastUpdate ? translation.dateLastUpdate|format_datetime('short', 'medium', locale=locale) : '' }}</td>
+                            <td class="px-2">{{ translation.userName }}</td>
+                            <td class="px-2">{{ translation.dateCreation|format_datetime('short', 'medium', locale=locale) }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>            
+                {% endif %}
             </div>
         </div>
 
-        {{ include('back/lang/translation/create/_create.html.twig') }}
-
-        {{ include('back/lang/translation/create/_list.html.twig') }}
         
         <div id="response"></div>
 
@@ -40,22 +114,5 @@
 
 {% block javascripts %}
     {{ parent() }}
-    <script src="{{ asset('jquery-confirm/js/jquery-confirm.js') }}"></script>
-    <script>
-        var path = {
-           "locale" : "{{ locale }}",
-        }
-        var translations = {
-           "multiple-search" : "{{ 'label.multiple_search' | trans }}",
-           "createTranslation" : "{{ 'lang.translation.form.field.title.create' | trans }}",
-           "updateTranslation" : "{{ 'lang.translation.form.field.title.update' | trans }}",
-           "deleteField-title" : "{{ 'lang.translation.form.field.remove.title' | trans }}",
-           "deleteField-content" : "{{ 'lang.translation.form.field.remove.content' | trans }}",
-           "yes" : "{{ 'yes' | trans }}",
-           "no" : "{{ 'no' | trans }}",
-           "alertSucces" : "{{ 'lang.translation.form.alert.success' | trans }}",
-           "alertError" : "{{ 'lang.translation.form.alert.error' | trans }}",
-        }
-    </script>
-    {{ encore_entry_script_tags('lang_translation_form_app', null, 'backApp') }}
+    {{ encore_entry_script_tags('lang_translation_forms_app', null, 'backApp') }}
 {% endblock %}

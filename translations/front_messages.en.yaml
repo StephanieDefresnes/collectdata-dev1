@@ -16,9 +16,9 @@ nav:
         add: Add contribution
         translate: Translate contribution
     translation:
+        contrib: Translate a contribution
         title: Translation
-        dashboard: My translations
-        create: Translate the site
+        site: Translate the site
 btn:
     close: Close
     contribute: Contribute

@@ -51,9 +51,9 @@ class TranslationController extends AbstractController
     }
 
     /**
-     * @Route("/create", name="back_translation_create", methods="GET|POST")
+     * @Route("/forms", name="back_translation_forms", methods="GET|POST")
      */
-    public function create( EntityManagerInterface $em,
+    public function search( EntityManagerInterface $em,
                             Request $request): Response 
    {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
@@ -62,152 +62,105 @@ class TranslationController extends AbstractController
         // Translations list
         $translations = $this->translationService->getAllTranslationsReferent();
         
-        $user = $this->getUser();
-        $userId = $user->getId();
+        return $this->render('back/lang/translation/forms.html.twig', [
+            'translations' => $translations,
+        ]);
+    }
+
+    /**
+     * @Route("/create/{id}/{new}", defaults={"id" = null, "new" = null}, name="back_translation_create", methods="GET|POST")
+     */
+    public function create( EntityManagerInterface $em,
+                            Request $request, $id): Response 
+   {
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+        $this->denyAccessUnlessGranted('ROLE_SUPER_ADMIN');
         
-        // Form
-        $translation = new Translation();
+        $user = $this->getUser();        
+                
+        // Update or Create new Situ
+        if ($id && !isset($news)) {
             
-        $fields = new ArrayCollection();
-        foreach ($translation->getFields() as $field) {
-            $fields->add($field);
+            $translation = $this->getDoctrine()
+                    ->getRepository(Translation::class)->find($id);
+            
+            if (!$translation) {
+                return $this->redirectToRoute('no_found', ['_locale' => locale_get_default()]);
+            }
+        
+            // Only situ author can update situ
+            if ($user->getId() != $translation->getUserId()) {
+
+                $msg = $this->translator->trans(
+                        'access_deny', [],
+                        'user_messages', $locale = locale_get_default()
+                    );
+                $this->addFlash('error', $msg);
+
+                return $this->redirectToRoute('user_situs', ['_locale' => locale_get_default()]);
+            }
+        } else {
+            $translation = new Translation();
         }
         
         $form = $this->createForm(TranslationFormType::class, $translation);
         $form->handleRequest($request);
         
         if ($form->isSubmitted() && $form->isValid()) {
-            
+
             $translation->setDateCreation(new \DateTime('now'));
-            $translation->setUserId($userId);
+            $translation->setUserId($user->getId());
             $translation->setReferent(1);
-            
+
             $em->persist($translation);
-                        
+
             // Collection
             $fields = $translation->getFields();
             foreach ($fields as $key => $field) {
                 $field->setSorting($key + 1);
                 $field->setDateCreation(new \DateTime('now'));
-                $field->setUserId($userId);
+                $field->setUserId($user->getId());
                 $field->setReferent(1);
-                $field->setTranslation($translation);
             }
+
+            if ($form->getData()->getStatusId() == 1 ) {
+                $type = 'edit';
+            } else $type = 'submit';
 
             try {
                 $em->flush();
 
                 $msg = $this->translator
-                        ->trans('lang.translation.form.flash.success',[],
+                        ->trans('lang.translation.form.flash.'. $type .'.success',[],
                                 'back_messages', $locale = locale_get_default());
                 $this->addFlash('success', $msg);
 
-                return $this
-                        ->redirectToRoute('back_translation_create',
+                return $this->redirectToRoute('back_translation_forms',
                                 ['_locale' => locale_get_default()]);  
-                
+
             } catch (Exception $e) {
-                throw new \Exception('An exception appeared while creating the translation');
+                $msg = $this->translator
+                        ->trans('lang.translation.form.flash.'. $type .'.error',[],
+                                'back_messages', $locale = locale_get_default());
+                $this->addFlash('success', $msg);
+
+                if ($id && !isset($news)) {
+                    return $this->redirectToRoute('back_translation_create', [
+                        '_locale' => locale_get_default(),
+                        'id' => $id
+                    ]);
+                } else {
+                    return $this->redirectToRoute('back_translation_create',[
+                        '_locale' => locale_get_default()]
+                    );
+                }  
             }
-            
         }
         
         return $this->render('back/lang/translation/create/index.html.twig', [
             'form' => $form->createView(),
-            'translations' => $translations,
-        ]);
-    }
-    
-    /**
-     * @Route("/edit", methods="GET")
-     */
-    public function getById(Request $request): JsonResponse
-    {
-        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
-        $this->denyAccessUnlessGranted('ROLE_SUPER_ADMIN');
-        
-        // Get Translation
-        $id = $request->query->get('id');
-        $translation = $this->translationService->getTranslationById($id);
-        if (!$translation) { return new NotFoundHttpException(); }
-        
-        // Get collection - TranslationField
-        $fields = $this->translationService->getFieldsByTranslationId($translation[0]['id']);
-
-        return $this->json([
-            'success' => true,
             'translation' => $translation,
-            'fields' => $fields,
         ]);
-    }
-
-    /**
-     * @Route("/updateTranslation", methods="GET|POST")
-     */
-    public function updateTranslation()
-    {
-        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
-        $this->denyAccessUnlessGranted('ROLE_SUPER_ADMIN');
-        
-        $entityManager = $this->getDoctrine()->getManager();
-        
-        // Get request data
-        $request = $this->get('request_stack')->getCurrentRequest();
-        $data = $request->request->all();
-
-//        dd($data);
-
-        // Current user
-        $user = $this->getUser();
-        $userId = $user->getId();
-
-        // Translation to update
-        $translation = $this->em->getRepository(Translation::class)->find($data['id']);
-
-        // Clear original collection
-        foreach ($translation->getFields() as $field) {
-            $translation->getFields()->removeElement($field);
-            $entityManager->remove($field);
-        }
-
-        // Add new collection
-        $translation->setDateLastUpdate(new \DateTime('now'));
-        $translation->setStatusId($data['statusId']);
-        $translation->setUserId($userId);
-        $translation->setReferent(1);
-        $entityManager->persist($translation);
-
-        $fields = $data['data'];
-
-        foreach ($fields as  $key => $field) {
-            $translationField = new TranslationField();
-            $translationField->setName($field['name']);
-            $translationField->setType($field['type']);
-            $translationField->setSorting($key + 1);
-            $translationField->setDateCreation(new \DateTime('now'));
-            $translationField->setUserId($userId);
-            $translationField->setReferent(1);
-            $translationField->setTranslation($translation);
-            $entityManager->persist($translationField);
-        }
-
-        try {
-            
-            $entityManager->flush();
-            
-            $msg = $this->translator
-                    ->trans('lang.translation.form.flash.success',[],
-                            'back_messages', $locale = locale_get_default());
-            $this->addFlash('success', $msg);
-
-            return $this->json([
-                'success' => true,
-            ]);
-            
-        } catch (Exception $e) {
-            throw new \Exception('An exception appeared while updating the translation');
-        }
-
     }
     
 }

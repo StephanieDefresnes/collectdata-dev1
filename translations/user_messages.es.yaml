@@ -179,7 +179,7 @@ lang_deny: Lengua denegado
 multiple_search: Rechercher
 no: No
 translation:
-    title: Mis traducciones 
+    title: Traducir el sitio
     form:
         title: Crear una traducción del sitio
         create: 'Crea una traducción medioambiental :'

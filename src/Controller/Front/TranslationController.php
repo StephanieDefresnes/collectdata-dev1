@@ -2,25 +2,22 @@
 
 namespace App\Controller\Front;
 
-use App\Entity\Lang;
-use App\Entity\TranslationField;
 use App\Entity\Translation;
 use App\Entity\User;
-use App\Form\Front\Translation\MessageFormType;
+use App\Form\Front\Translation\TranslationFormType;
 use App\Repository\TranslationRepository;
 use App\Service\TranslationService;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\Security;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
- * @Route("/{_locale<%app_locales%>}/translation")
+ * @Route("/{_locale<%app_locales%>}")
  */
 class TranslationController extends AbstractController
 {
@@ -41,48 +38,58 @@ class TranslationController extends AbstractController
     }
     
     /**
-     * @Route("/{id}/all", name="front_translations", methods="GET|POST")
+     * @Route("/my-translations", name="user_translations", methods="GET|POST")
      */
-    public function index(): Response
+    public function index(Security $security): Response
     {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
         
+        // Valideted translations list
+        $referents = $this->em->getRepository(Translation::class)->findBy([
+            'statusId' => 3,
+            'referent' => 1,
+        ]);
+        
+        // User translations
+        $user = $security->getUser();
+        $userTranslations = $this->em->getRepository(Translation::class)->findBy([
+            'userId' => $user->getId(),
+            'referent' => 0,
+        ]);
+        
         return $this->render('front/translation/index.html.twig', [
+            'referents' => $referents,
+            'userTranslations' => $userTranslations,
         ]);
     }
     
     /**
-     * @Route("/{id}/add", name="front_translation_add", methods="GET|POST")
+     * @Route("/{referent}/translate/{id}", defaults={"id" = null}, name="front_translation_create", methods="GET|POST")
      */
     public function create( EntityManagerInterface $em,
                             Request $request,
-                            User $user): Response
+                            Security $security,
+                            $referent, $id): Response
     {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
-//        $this->denyAccessUnlessGranted('ROLE_USER');
         
         // Current user
-        $user = $this->getDoctrine()
-            ->getRepository(User::class)
-            ->findOneBy([
-                'id' => $this->getUser()->getId()
-            ]);
+        $user = $security->getUser();
         
-        // Valideted translations list
-        $translations = $this->translationService->getTranslationsByStatusId(3);
+        $referent = $this->em->getRepository(Translation::class)->find($referent);
         
-        // User translations
-        $userTranslations = $this->translationService->getUserTranslations(3);
+        if ($id) {
+            $translation = $this->em->getRepository(Translation::class)->find($id);
+        } else {
+            $translation = new Translation();
+        }
+        $userTranslations = $this->em->getRepository(Translation::class)->findBy([
+            'userId' => $user->getId(),
+            'referent' => 0,
+        ]);
         
         // Form
-        $translation = new Translation();
-            
-        $fields = new ArrayCollection();
-        foreach ($translation->getFields() as $field) {
-            $fields->add($field);
-        }
-        
-        $form = $this->createForm(MessageFormType::class, $translation);
+        $form = $this->createForm(TranslationFormType::class, $translation);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             
@@ -92,32 +99,10 @@ class TranslationController extends AbstractController
             
         }
         
-        return $this->render('front/translation/create/index.html.twig', [
-            'translations' => $translations,
+        return $this->render('front/translation/create.html.twig', [
+            'referent' => $referent,
             'userTranslations' => $userTranslations,
         ]);
     }
     
-    /**
-     * @Route("/edit", methods="GET")
-     */
-    public function getById(Request $request): JsonResponse
-    {
-        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
-//        $this->denyAccessUnlessGranted('ROLE_USER');
-        
-        // Get Translation
-        $id = $request->query->get('id');
-        $message = $this->translationService->getTranslationById($id);
-        if (!$message) { return new NotFoundHttpException(); }  // TODO JS management
-        
-        // Get collection - TranslationField
-        $fields = $this->translationService->getFieldsByTranslationId($message[0]['id']);
-
-        return $this->json([
-            'success' => true,
-            'message' => $message,
-            'fields' => $fields,
-        ]);
-    }
 }

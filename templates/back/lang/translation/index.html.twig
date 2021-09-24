@@ -5,7 +5,6 @@
 
 {% block stylesheets %}
     {{ parent() }}
-{#    {{ encore_entry_link_tags('lang_translation_app', null, 'backApp') }}#}
  {% endblock %}
 
 
@@ -15,16 +14,12 @@
         <div class="d-sm-flex align-items-center justify-content-between mb-4">
             <h1 class="h3 mb-0 text-gray-800">{{ 'lang.translation.title'|trans() }}</h1>
         </div>
-
-{#        {{ include('back/lang/translation/_lang.html.twig') }}#}
-
-{#        {{ include('back/lang/translation/_file.html.twig') }}#}
+        
+{#        TODO #}
 
     </div>
 {% endblock %}
 
 {% block javascripts %}
     {{ parent() }}
-{#    {{ encore_entry_script_tags('lang_translation_app', null, 'backApp') }}#}
-
 {% endblock %}

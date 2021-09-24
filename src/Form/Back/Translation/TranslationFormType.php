@@ -3,13 +3,14 @@
 namespace App\Form\Back\Translation;
 
 use App\Entity\Translation;
-use App\Form\Back\Translation\FieldFormType;
+use App\Form\Back\Translation\FieldType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\NotBlank;
 
 class TranslationFormType extends AbstractType
 {       
@@ -19,13 +20,7 @@ class TranslationFormType extends AbstractType
         $builder
             ->add('name', ChoiceType::class, [
                 'label' => 'lang.translation.form.message.name',
-                'label_attr' => ['class' => 'col-md-6 mt-1'],
-                'row_attr' => ['class' => 'mx-3 form-row'],
-                'attr' => [
-                    'class' => 'col-md-6',
-                    'data-message' => '',
-                    'data-status' => '',
-                ],
+                'label_attr' => ['class' => 'pr-2'],
                 'choices'  => [
                     'Back' => 'back_message',
                     'Front' => 'front_message',
@@ -35,15 +30,19 @@ class TranslationFormType extends AbstractType
                     'Validators' => 'validators',
                     'Visitor' => 'visitor',
                 ],
+                'constraints' => [
+                    new NotBlank([
+                        'message' => 'translation.name_not_blank',
+                    ]),
+                ],
                 'placeholder' => 'label.multiple_search'
             ])
             ->add($builder->create('fields' , CollectionType::class, [
-                'entry_type'   => FieldFormType::class,
-                'label' => false,
-                'allow_add' => true,
-                'allow_delete' => true,
-                'prototype' => true,
-                'by_reference' => false,
+                    'entry_type'   => FieldType::class,
+                    'label' => false,
+                    'allow_add' => true,
+                    'allow_delete' => true,
+                    'prototype' => true,
                 ])
             )
             ->add('statusId', HiddenType::class)
