@@ -47,9 +47,9 @@ content:
                 title: Título (opción)
             type:
                 choice:
+                    cgu: CGU
                     home: Bienvenida
                     legal: Notas legales
-                    cgu: CGU
                     page: Página
                 placeholder: Seleccione tipo
             title_lang: Entrar en

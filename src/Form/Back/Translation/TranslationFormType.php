@@ -22,13 +22,14 @@ class TranslationFormType extends AbstractType
                 'label' => 'lang.translation.form.message.name',
                 'label_attr' => ['class' => 'pr-2'],
                 'choices'  => [
-                    'Back' => 'back_message',
-                    'Front' => 'front_message',
-                    'Message' => 'message',
+                    'Back' => 'back_messages',
+                    'Email' => 'email_messages',
+                    'Front' => 'front_messages',
+                    'Message' => 'messages',
                     'Security' => 'security',
-                    'User' => 'user_message',
+                    'User' => 'user_messages',
                     'Validators' => 'validators',
-                    'Visitor' => 'visitor',
+                    'Visitor' => 'visitors',
                 ],
                 'constraints' => [
                     new NotBlank([
@@ -43,6 +44,7 @@ class TranslationFormType extends AbstractType
                     'allow_add' => true,
                     'allow_delete' => true,
                     'prototype' => true,
+                    'by_reference' => false,
                 ])
             )
             ->add('statusId', HiddenType::class)

@@ -47,9 +47,9 @@ content:
                 title: Title (option)
             type:
                 choice:
+                    cgu: GGU
                     home: Home
                     legal: Legal Notice
-                    cgu: GGU
                     page: Page
                 placeholder: Select type
             title_lang: Enter en

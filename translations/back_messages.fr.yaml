@@ -47,8 +47,8 @@ content:
                 title: Titre (option)
             type:
                 choice:
+                    cgu: CGU
                     home: Accueil
-                    cgu: CGUueil
                     legal: Mentions légales
                     page: Page
                 placeholder: Sélectionner un type

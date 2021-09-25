@@ -53,8 +53,7 @@ class TranslationController extends AbstractController
     /**
      * @Route("/forms", name="back_translation_forms", methods="GET|POST")
      */
-    public function search( EntityManagerInterface $em,
-                            Request $request): Response 
+    public function search(): Response 
    {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
         $this->denyAccessUnlessGranted('ROLE_SUPER_ADMIN');
@@ -72,7 +71,7 @@ class TranslationController extends AbstractController
      */
     public function create( EntityManagerInterface $em,
                             Request $request, $id): Response 
-   {
+    {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
         $this->denyAccessUnlessGranted('ROLE_SUPER_ADMIN');
         
@@ -113,15 +112,6 @@ class TranslationController extends AbstractController
             $translation->setReferent(1);
 
             $em->persist($translation);
-
-            // Collection
-            $fields = $translation->getFields();
-            foreach ($fields as $key => $field) {
-                $field->setSorting($key + 1);
-                $field->setDateCreation(new \DateTime('now'));
-                $field->setUserId($user->getId());
-                $field->setReferent(1);
-            }
 
             if ($form->getData()->getStatusId() == 1 ) {
                 $type = 'edit';

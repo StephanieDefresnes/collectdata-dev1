@@ -34,26 +34,6 @@ class TranslationField
     private $value;
 
     /**
-     * @ORM\Column(type="integer")
-     */
-    private $sorting;
-
-    /**
-     * @ORM\Column(type="datetime")
-     */
-    private $dateCreation;
-
-    /**
-     * @ORM\Column(type="integer")
-     */
-    private $userId;
-
-    /**
-     * @ORM\Column(type="boolean", nullable=true)
-     */
-    private $referent;
-
-    /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Translation", inversedBy="fields")
      * @MaxDepth(4)
      */
@@ -101,54 +81,6 @@ class TranslationField
     public function setValue(?string $value): self
     {
         $this->value = $value;
-
-        return $this;
-    }
-
-    public function getSorting(): ?int
-    {
-        return $this->sorting;
-    }
-
-    public function setSorting(int $sorting): self
-    {
-        $this->sorting = $sorting;
-
-        return $this;
-    }
-
-    public function getDateCreation(): ?\DateTimeInterface
-    {
-        return $this->dateCreation;
-    }
-
-    public function setDateCreation(\DateTimeInterface $dateCreation): self
-    {
-        $this->dateCreation = $dateCreation;
-
-        return $this;
-    }
-
-    public function getUserId(): ?int
-    {
-        return $this->userId;
-    }
-
-    public function setUserId(int $userId): self
-    {
-        $this->userId = $userId;
-
-        return $this;
-    }
-
-    public function getReferent(): ?bool
-    {
-        return $this->referent;
-    }
-
-    public function setReferent(bool $referent): self
-    {
-        $this->referent = $referent;
 
         return $this;
     }
