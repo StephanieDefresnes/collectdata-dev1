@@ -83,6 +83,8 @@ function submissionStatus(buttonId) {
 
 $(function() {
     
+    if ($('#dataTable-translations tbody tr').length == 0) $('#loader').hide()
+    
     /**
      * Translations list
      */

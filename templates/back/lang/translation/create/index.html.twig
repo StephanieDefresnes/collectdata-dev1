@@ -67,6 +67,9 @@
                             {% for field in form.fields %}
                                 <div class="translationField col-md-6 col-12 d-inline border">
                                     {{ form_widget(field) }}
+                                    <div class="form-error">
+                                        {{ form_errors(field) }}
+                                    </div>
                                 </div>
                             {% endfor %}
                         </div>
