@@ -32,7 +32,7 @@ class Translation
     private $referent;
 
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="integer", nullable=true)
      */
     private $referentId;
 
@@ -73,7 +73,12 @@ class Translation
     private $userId;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\TranslationField", cascade={"persist", "remove"}, mappedBy="translation")
+     * @ORM\OneToMany(
+     *      targetEntity="App\Entity\TranslationField",
+     *      cascade={"persist", "remove"},
+     *      mappedBy="translation",
+     *      fetch="EXTRA_LAZY",
+     *      orphanRemoval=true)
      * @ORM\OrderBy({"name" = "ASC"})
      */
     protected $fields;
@@ -122,7 +127,7 @@ class Translation
         return $this->referentId;
     }
 
-    public function setReferentId(int $referentId): self
+    public function setReferentId($referentId): self
     {
         $this->referentId = $referentId;
 
@@ -134,7 +139,7 @@ class Translation
         return $this->lang;
     }
 
-    public function setLang(string $lang): self
+    public function setLang($lang): self
     {
         $this->lang = $lang;
 
@@ -146,7 +151,7 @@ class Translation
         return $this->langId;
     }
 
-    public function setLangId(int $langId): self
+    public function setLangId($langId): self
     {
         $this->langId = $langId;
 

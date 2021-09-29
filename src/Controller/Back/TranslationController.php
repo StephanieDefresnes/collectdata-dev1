@@ -7,8 +7,10 @@ use App\Form\Back\Translation\TranslationFormType;
 use App\Service\LangService;
 use App\Service\ContributorLangsService;
 use App\Service\TranslationService;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -125,10 +127,9 @@ class TranslationController extends AbstractController
     }
 
     /**
-     * @Route("/create/{id}/{new}", defaults={"id" = null, "new" = null}, name="back_translation_create", methods="GET|POST")
+     * @Route("/create/{id}", defaults={"id" = null}, name="back_translation_create", methods="GET|POST")
      */
-    public function create( EntityManagerInterface $em,
-                            Request $request, $id): Response 
+    public function create(Request $request, $id): Response 
     {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
         $this->denyAccessUnlessGranted('ROLE_SUPER_ADMIN');
@@ -136,8 +137,7 @@ class TranslationController extends AbstractController
         $user = $this->getUser();        
                 
         // Update or Create new Situ
-        if ($id && !isset($news)) {
-            
+        if ($id) {
             $translation = $this->getDoctrine()
                     ->getRepository(Translation::class)->find($id);
             
@@ -160,6 +160,11 @@ class TranslationController extends AbstractController
             $translation = new Translation();
         }
         
+        $originalFields = new ArrayCollection();
+        foreach ($translation->getFields() as $field) {
+            $originalFields->add($translation);
+        }
+        
         $form = $this->createForm(TranslationFormType::class, $translation);
         $form->handleRequest($request);
         
@@ -168,15 +173,23 @@ class TranslationController extends AbstractController
             $translation->setDateCreation(new \DateTime('now'));
             $translation->setUserId($user->getId());
             $translation->setReferent(1);
-
-            $em->persist($translation);
+            $translation->setEnabled(0);
+            
+            foreach ($originalFields as $field) {
+                if (false === $translation->getFields()->contains($field)) {
+                    $translation->getFields()->removeElement($field);
+                    $this->em->remove($field);
+                }
+            }
+            
+            $this->em->persist($translation);
 
             if ($form->getData()->getStatusId() == 1 ) {
                 $type = 'save';
             } else $type = 'validate';
 
             try {
-                $em->flush();
+                $this->em->flush();
 
                 $msg = $this->translator
                         ->trans('lang.translation.form.flash.'. $type .'.success',[],
@@ -192,7 +205,7 @@ class TranslationController extends AbstractController
                                 'back_messages', $locale = locale_get_default());
                 $this->addFlash('success', $msg);
 
-                if ($id && !isset($news)) {
+                if ($id) {
                     return $this->redirectToRoute('back_translation_create', [
                         '_locale' => locale_get_default(),
                         'id' => $id
@@ -209,6 +222,63 @@ class TranslationController extends AbstractController
             'form' => $form->createView(),
             'translation' => $translation,
         ]);
+    }
+
+    /**
+     * Clones form and its last collection values in default language
+     * 
+     * @Route("/cloneForm/{id}", name="back_translation_form_clone", methods="GET|POST")
+     */
+    public function cloneForm(ParameterBagInterface $parameters, $id): Response 
+    {
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+        $this->denyAccessUnlessGranted('ROLE_SUPER_ADMIN');
+        
+        // Default language
+        $locale = $parameters->get('locale');
+        
+        // Current user
+        $user = $this->security->getUser();
+        
+        $referent = $this->em->getRepository(Translation::class)->find($id);
+        $localeReferent = $this->em->getRepository(Translation::class)->findBy(
+            [
+                'referent' => 0,
+                'referentId' => $referent->getId(),
+                'lang' => $locale,
+            ],[
+                'id' => 'DESC'
+            ],
+            $limit = 1
+        );
+        
+        if ($localeReferent) {
+            $referentFields = $localeReferent[0]->getFields();
+            $translation = clone $localeReferent[0];
+        } else {
+            $referentFields = $referent->getFields();
+            $translation = clone $referent;
+        }
+        $translation->setReferent(1);
+        $translation->setReferentId(null);
+        $translation->setLang(null);
+        $translation->setLangId(null);
+        $translation->setStatusId(1);
+        $translation->setDateCreation(new \DateTime('now'));
+        $translation->setDateLastUpdate(null);
+        $translation->setDateStatus(null);
+        $translation->setUserId($user->getId());
+        $translation->setEnabled(0);
+        $this->em->persist($translation);
+        
+        foreach ($referentFields as $key => $field) {
+            $translationField = clone $field;
+            $translationField->setTranslation($translation);
+            $this->em->persist($translationField);
+        }
+
+        $this->em->flush();
+        return $this->redirectToRoute('back_translation_create', ['id' => $translation->getId()]);
     }
     
 }

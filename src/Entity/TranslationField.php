@@ -35,7 +35,6 @@ class TranslationField
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Translation", inversedBy="fields")
-     * @MaxDepth(4)
      */
     private $translation;
     
@@ -90,19 +89,10 @@ class TranslationField
         return $this->translation;
     }
 
-    public function addTranslation(?Translation $translation): self
-    {
-        if (!$this->fields->contains($translation)) {
-            $this->fields->add($translation);
-        }
-        return $this;
-    }
-
     public function setTranslation(?Translation $translation): self
     {
         $this->translation = $translation;
-//        $this->translation->addField($translation);
-
+        
         return $this;
     }
 }

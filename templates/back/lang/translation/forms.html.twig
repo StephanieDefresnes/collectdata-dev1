@@ -62,7 +62,7 @@
                                         <i class="fas fa-edit"></i>
                                     </a>
                                 {% elseif form.statusId == 3 %}
-                                    <a href="{{ path('back_translation_create', { 'id': form.id, 'new': 'new' }) }}"
+                                    <a href="{{ path('back_translation_form_clone', { 'id': form.id }) }}"
                                        class="btn btn-outline-warning width-max-40"
                                        data-toggle="tooltip" data-placement="left"
                                        title="{{ 'action.clone'|trans() }}"
@@ -72,7 +72,7 @@
                                 {% endif %}
                             {% else %}
                                 {% if form.statusId == 1 or form.statusId == 2 or form.statusId == 3 %}
-                                    <a href="{{ path('back_translation_create', { 'id': form.id, 'new': 'new' }) }}"
+                                    <a href="{{ path('back_translation_form_clone', { 'id': form.id }) }}"
                                        class="btn btn-outline-warning width-max-40"
                                        data-toggle="tooltip" data-placement="left"
                                        title="{{ 'action.clone'|trans() }}"
