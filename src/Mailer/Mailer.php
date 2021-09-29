@@ -37,48 +37,6 @@ class Mailer
         $this->userService = $userService;
     }
     
-    public function sendRegistration(User $user)
-    {
-        $nameSite = $this->parameters->get('configuration')['name'];
-        $sender = $this->parameters->get('configuration')['from_email'];
-            
-        $url = $this->router->generate(
-            'app_registration_confirm',
-            [
-                'token' => $user->getConfirmationToken(),
-            ],
-            UrlGeneratorInterface::ABSOLUTE_URL
-        );
-        
-        $subject = $this->translator->trans(
-            'registration.email.subject',
-            [
-                '%user%' => $user
-            ],
-            'security', $locale = $this->parameters->get('locale')
-        );
-            
-        $email = (new TemplatedEmail())
-            ->from(new Address($sender, $nameSite))
-            ->to(new Address($user->getEmail()))
-            ->subject($subject)
-            ->htmlTemplate('front/register/email/register.html.twig')
-            ->context([
-                'user' => $user,
-                'website_name' => $nameSite,
-                'confirmation_url' => $url,
-            ])
-        ;
-
-        try {
-            $this->mailer->send($email);
-        } catch (TransportExceptionInterface $e) {
-            throw $e->getResponse()->getStatusCode();
-            // some error prevented the email sending; display an
-            // error message or try to resend the message
-        }
-    }
-    
     public function sendInvitation(User $user, string $password)
     {
         $nameSite = $this->parameters->get('configuration')['name'];
@@ -104,7 +62,7 @@ class Mailer
             ->from(new Address($sender, $nameSite))
             ->to(new Address($user->getEmail()))
             ->subject($subject)
-            ->htmlTemplate('back/email/invite.html.twig')
+            ->htmlTemplate('email/back/user/invite.html.twig')
             ->context([
                 'user' => $user,
                 'password' => $password,
@@ -155,7 +113,7 @@ class Mailer
                     ->to(new Address($moderator->getEmail()))
                     ->cc(new Address($this->parameters->get('configuration')['to_admin']))
                     ->subject($subject)
-                    ->htmlTemplate('back/email/situ/validate.html.twig')
+                    ->htmlTemplate('email/back/situ/validate.html.twig')
                     ->context([
                         'user' => $moderator->getName(),
                         'moderator_url' => $url,

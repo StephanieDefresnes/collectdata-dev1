@@ -1,37 +1,34 @@
 situ:
-    no_moderator: Auncun modérateur.
+    no_moderator: Aucun modérateur.
     validate:
-        email:
-            subject: 'Nouvelle contribution #%id%'
-            message: |
-                Bonjour %user%,
+        subject: 'Nouvelle contribution #%id%'
+        message: |
+            Bonjour %user%,
 
-                Une nouvelle contribution a été soumise.
+            Une nouvelle contribution a été soumise.
 
-                Vous pouvez vérifier et valider cette contribution en vous connectant
-                sur votre espace <a href="%moderate_url%">Modérateur</a>.
+            Vous pouvez vérifier et valider cette contribution en vous connectant
+            sur votre espace <a href="%moderate_url%">Modérateur</a>.
 
-                Cordialement,
-                <a href="%website_url%">%website_name%</a>
+            Cordialement,
+            <a href="%website_url%">%website_name%</a>
     validation:
-        email:
-            subject: '%website_name% - Validation de votre contribution'
-            message: |
-                Bonjour %user%,
+        subject: '%website_name% - Validation de votre contribution'
+        message: |
+            Bonjour %user%,
 
-                Votre contribution a été validée.
+            Votre contribution a été validée.
 
-                Vous pouvez lire contribution à l'adresse...
+            Vous pouvez lire contribution à l'adresse...
 
-                Cordialement,
-                <a href="%website_url%">%website_name%</a>
+            Cordialement,
+            <a href="%website_url%">%website_name%</a>
     refuse:
-        email:
-            subject: '%website_name% - Nouveau message'
-            message: |
-                Bonjour %user%,
+        subject: '%website_name% - Nouveau message'
+        message: |
+            Bonjour %user%,
 
-                Vous avez un nouveau message. Veuillez vous connecter pour lire votre message.
+            Vous avez un nouveau message. Veuillez vous connecter pour lire votre message.
 
-                Cordialement,
-                <a href="%website_url%">%website_name%</a>
+            Cordialement,
+            <a href="%website_url%">%website_name%</a>
