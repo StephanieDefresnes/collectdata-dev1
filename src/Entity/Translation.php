@@ -87,6 +87,11 @@ class Translation
      * @ORM\Column(type="boolean")
      */
     private $enabled;
+
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $yaml_generated;
     
     public function __construct()
     {
@@ -255,6 +260,18 @@ class Translation
     public function setEnabled(bool $enabled): self
     {
         $this->enabled = $enabled;
+
+        return $this;
+    }
+
+    public function getYamlGenerated(): ?bool
+    {
+        return $this->yaml_generated;
+    }
+
+    public function setYamlGenerated(bool $yaml_generated): self
+    {
+        $this->yaml_generated = $yaml_generated;
 
         return $this;
     }
