@@ -2,9 +2,7 @@
 
 namespace App\Controller\Back;
 
-use App\Entity\Lang;
 use App\Entity\Translation;
-use App\Entity\TranslationField;
 use App\Form\Back\Translation\TranslationFormType;
 use App\Service\LangService;
 use App\Service\ContributorLangsService;

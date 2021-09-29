@@ -64,9 +64,7 @@ class UserService {
             ->andWhere($qb->expr()->like('u.roles', '?1'))
             ->setParameter(1, '%'.$role.'%');
         
-        $users = $qb->getQuery()->getResult();
-        
-        return $users;
+        return $qb->getQuery()->getResult();
     }
     
     public function getRoleByLang($role, $lang)
@@ -80,8 +78,6 @@ class UserService {
             ->setParameter(1, '%'.$role.'%')
             ->setParameter(2, $lang);
         
-        $users = $qb->getQuery()->getResult();
-        
-        return $users;
-    }
+        return $qb->getQuery()->getResult();
+    }    
 }
