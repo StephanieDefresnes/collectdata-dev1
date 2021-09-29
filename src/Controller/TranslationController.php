@@ -83,6 +83,8 @@ class TranslationController extends AbstractController
                     $em->persist($translationField);
                 }
             }
+            
+            // as detach() do not works, persit empty value
             $referentFields = $referent->getFields();
             foreach ($referentFields as $field) {
                 $field->setValue(null);
