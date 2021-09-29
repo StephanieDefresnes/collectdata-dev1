@@ -296,6 +296,7 @@ lang:
                     textarea: Textarea
                 value: Value
             title: Traduction forms
+        list: List of translations
         table:
             empty: No translatio
             title: List of translation
