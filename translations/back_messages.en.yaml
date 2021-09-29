@@ -183,7 +183,7 @@ label:
     complete: Full
     contributions: Contributions
     dashboard: Dashboard
-    date: Status date
+    date_activity: Activity date
     date_creation: Creation
     date_login: Last login
     date_status: Status date

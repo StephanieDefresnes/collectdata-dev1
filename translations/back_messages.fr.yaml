@@ -183,8 +183,8 @@ label:
     complete: Complet
     contributions: Contributions
     dashboard: Tableau de bord
-    date: Date du status
     date_creation: Création
+    date_enable: Date d'activité
     date_login: Dernière connexion
     date_status: Date du status
     date_submit: Soumission

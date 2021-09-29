@@ -183,7 +183,7 @@ label:
     complete: Lleno
     contributions: Contribuciones
     dashboard: Tablero
-    date: Fecha de estado
+    date_activity: Fecha de actividad
     date_creation: Creación
     date_login: último inicio de sesión
     date_status: fecha de estado
