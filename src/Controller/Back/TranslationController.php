@@ -5,7 +5,7 @@ namespace App\Controller\Back;
 use App\Entity\Lang;
 use App\Entity\Translation;
 use App\Entity\TranslationField;
-use App\Form\Translation\TranslationFormType;
+use App\Form\Back\Translation\TranslationFormType;
 use App\Service\LangService;
 use App\Service\ContributorLangsService;
 use App\Service\TranslationService;
@@ -207,7 +207,7 @@ class TranslationController extends AbstractController
             }
         }
         
-        return $this->render('back/lang/translation/form/index.html.twig', [
+        return $this->render('back/lang/translation/create/index.html.twig', [
             'form' => $form->createView(),
             'translation' => $translation,
         ]);
