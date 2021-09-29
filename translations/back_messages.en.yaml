@@ -180,6 +180,7 @@ invitation:
             Regards,
             <a href=\"%host%\">%website_name%</a>
 label:
+    complete: Full
     contributions: Contributions
     dashboard: Dashboard
     date: Status date
@@ -197,6 +198,7 @@ label:
     categories: Categories
     catLevel1: Category
     catLevel2: Sub-category
+    incomplete: Incomplete
     initial: Initial
     lang: Language
     langs: Languages
@@ -209,6 +211,7 @@ label:
     search: List
     situ_: Risk situation
     situ: The risky situation
+    state: State
     status: Status
     title: Title
     translation_s: Translations
@@ -225,6 +228,7 @@ label_dp:
     description: 'Description :'
     email: 'Email :'
     enabled: 'Active :'
+    environnement: 'Environnment :'
     event: 'Event :'
     catLevel1: 'Category :'
     catLevel2: 'Subcategory :'
@@ -254,14 +258,15 @@ lang:
         table: List of languages
     translation:
         contrib:
-            lang:
-                table: Languages offered
+            table:
+                empty: No translation offered
+                title: Languages offered
         form:
             field:
                 btn:
                     add: Add a field
-                    create: Create a translation
-                    update: Editar una traducción
+                    create: Create a 
+                    update: Editar una 
                 name: Channel name
                 remove:
                     title: Field deletion
@@ -274,12 +279,12 @@ lang:
                     text: Text
                     textarea: Textarea
             flash:
-                edit:
-                    error: Translation data has been saved
-                    success: An error occurred while saving translation data
-                submit:
-                    error: Translation data has been submitted
-                    success: An error occurred while submitting translation data
+                save:
+                    error: Translation data has been sav
+                    success: An error occurred while saving transation data
+                validate:
+                    error: Translation data has been submited
+                    success: An error occurred while submiting translation data
             message:
                 lang:
                     enabled: Active languages
@@ -292,9 +297,17 @@ lang:
                 value: Value
             title: Traduction forms
         table:
-            empty: No translation
-            title: List of translations
-        title: Site translation
+            empty: No translatio
+            title: List of translation
+        title: Site translations
+        site:
+            action: Create a translation
+            form:
+                create: Create a site translation
+                update: Edit a site translation
+            table:
+                empty: No translation
+                title: Site languages
         yaml:
             title: YAML generator
 lang_deny: Language denied

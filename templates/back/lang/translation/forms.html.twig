@@ -22,7 +22,7 @@
             </a>
         </div>
             
-        <div id="card-list" class="card shadow mb-4">
+        <div class="card shadow mb-4">
 
             <div class="card-header py-3">
                 <h6 class="m-0 font-weight-bold text-primary">{{ 'lang.translation.table.title'|trans() }}</h6>
@@ -30,7 +30,7 @@
 
             <div id="langs-list" class="card-body pb-3 back-dataTable">
 
-                {% if translations is empty %}
+                {% if translationsForms is empty %}
                     {{ 'lang.translation.table.empty'|trans() }}
                 {% else %}
 
@@ -40,6 +40,8 @@
                             <th>{{ 'action.action'|trans() }}</th>
                             <th class="pl-2">{{ 'label.name'|trans() }}</th>
                             <th class="pl-2">{{ 'label.status'|trans() }}</th>
+                            <th class="pl-2">{{ 'label.translation_s'|trans() }}</th>
+                            <th class="pl-2">{{ 'label.state'|trans() }}</th>
                             <th class="pl-2">{{ 'label.date_status'|trans() }}</th>
                             <th class="pl-2">{{ 'label.date_update'|trans() }}</th> 
                             <th class="pl-2">{{ 'label.user'|trans() }}</th>
@@ -47,20 +49,20 @@
                         </tr>
                     </thead>
                     <tbody class="bg-white">
-                        {% for translation in translations %}
+                        {% for form in translationsForms %}
                         <tr>
-                            <td class="updateMssage">
-                            {% if app.user.id == translation.userId %}
-                                {% if translation.statusId == 1 or translation.statusId == 2 %}
-                                    <a href="{{ path('back_translation_create', { 'id': translation.id }) }}"
+                            <td class="align-middle">
+                            {% if app.user.id == form.userId %}
+                                {% if form.statusId == 1 or form.statusId == 2 %}
+                                    <a href="{{ path('back_translation_create', { 'id': form.id }) }}"
                                        class="btn btn-outline-primary width-max-40"
                                        data-toggle="tooltip" data-placement="left"
                                        title="{{ 'action.edit'|trans() }}"
                                        aria-label="{{ 'action.edit'|trans() }}">
                                         <i class="fas fa-edit"></i>
                                     </a>
-                                {% elseif translation.statusId == 3 %}
-                                    <a href="{{ path('back_translation_create', { 'id': translation.id, 'new': 'new' }) }}"
+                                {% elseif form.statusId == 3 %}
+                                    <a href="{{ path('back_translation_create', { 'id': form.id, 'new': 'new' }) }}"
                                        class="btn btn-outline-warning width-max-40"
                                        data-toggle="tooltip" data-placement="left"
                                        title="{{ 'action.clone'|trans() }}"
@@ -69,8 +71,8 @@
                                     </a>
                                 {% endif %}
                             {% else %}
-                                {% if translation.statusId == 1 or translation.statusId == 2 or translation.statusId == 3 %}
-                                    <a href="{{ path('back_translation_create', { 'id': translation.id, 'new': 'new' }) }}"
+                                {% if form.statusId == 1 or form.statusId == 2 or form.statusId == 3 %}
+                                    <a href="{{ path('back_translation_create', { 'id': form.id, 'new': 'new' }) }}"
                                        class="btn btn-outline-warning width-max-40"
                                        data-toggle="tooltip" data-placement="left"
                                        title="{{ 'action.clone'|trans() }}"
@@ -80,24 +82,49 @@
                                 {% endif %}
                             {% endif %}
                             </td>
-                            <td class="px-2">{{ translation.name }}</td>
-                            <td class="px-2">
-                                {% if translation.statusId == 1 %}
+                            <td class="px-2 align-middle">{{ form.name }}</td>
+                            <td class="px-2 align-middle">
+                                {% if form.statusId == 1 %}
                                     {{ 'status.writing'|trans() }}
-                                {% elseif translation.statusId == 2 %}
+                                {% elseif form.statusId == 2 %}
                                     {{ 'status.validation'|trans() }}
-                                {% elseif translation.statusId == 3 %}
+                                {% elseif form.statusId == 3 %}
                                     {{ 'status.validated'|trans() }}
-                                {% elseif translation.statusId == 4 %}
+                                {% elseif form.statusId == 4 %}
                                     {{ 'status.refused'|trans() }}
                                 {% else %}
                                     {{ 'status.deleted'|trans() }}
                                 {% endif %}
                             </td>
-                            <td class="px-2">{{ translation.dateStatus ? translation.dateStatus|format_datetime('short', 'medium', locale=locale) : '' }}</td>
-                            <td class="px-2">{{ translation.dateLastUpdate ? translation.dateLastUpdate|format_datetime('short', 'medium', locale=locale) : '' }}</td>
-                            <td class="px-2">{{ translation.userName }}</td>
-                            <td class="px-2">{{ translation.dateCreation|format_datetime('short', 'medium', locale=locale) }}</td>
+                            <td class="px-2 align-middle">
+                                {% set countTranslations = 0 %}
+                                {% if translations %}
+                                    {% for translation in translations %}
+                                        {% if translation.name == form.name %}
+                                            {% set countTranslations = countTranslations + 1 %}
+                                        {% endif %}
+                                    {% endfor %}
+                                {% endif %}
+                                {{ langsEnabled|length == countTranslations ? 'label.complete'|trans() : 'label.incomplete'|trans() }}
+                            </td>
+                            <td class="px-2">
+                                {% if form.statusId == 3 %}
+                                    {% if form.enabled == 0 %}
+                                        {% if langsEnabled|length == countTranslations %}
+                                            <a href="{{ path('back_translation_permute_enabled', { 'ids': {0: form.id} }) }}"
+                                               role="button" class="btn btn-primary py-1">
+                                                <span>{{ 'action.enable'|trans }}</span>
+                                            </a>
+                                        {% endif %}
+                                    {% else %}
+                                        <span>{{ 'label.enabled'|trans }}</span>
+                                    {% endif %}
+                                {% endif %}
+                            </td>
+                            <td class="px-2 align-middle">{{ form.dateStatus ? form.dateStatus|format_datetime('short', 'medium', locale=locale) : '' }}</td>
+                            <td class="px-2 align-middle">{{ form.dateLastUpdate ? form.dateLastUpdate|format_datetime('short', 'medium', locale=locale) : '' }}</td>
+                            <td class="px-2 align-middle">{{ form.userName }}</td>
+                            <td class="px-2 align-middle">{{ form.dateCreation|format_datetime('short', 'medium', locale=locale) }}</td>
                         </tr>
                         {% endfor %}
                     </tbody>

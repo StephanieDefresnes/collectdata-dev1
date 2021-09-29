@@ -179,16 +179,34 @@ lang_deny: Language denied
 multiple_search: Search
 'no': No
 translation:
-    title: Translate the site
+    comment: |
+            Please do not translate and leave as is:
+            <ul class="mb-1">
+            <li>Everything in between &lt;...&gt; , ex :<br><span class="text-success">...translate here</span> <span class="text-danger">&lt;do not translate&gt;</span> <span class="text-success">translate here</span> <span class="text-danger">&lt;/do not translate&gt;</span> <span class="text-success">translate here...</span>    </li>
+            <li>Everything in between %..% , ex :<br>Bonjour %user% => translate "<span class="text-success">Bonjour</span>", do not translate "<span class="text-danger">%user%</span>"</li>
+            </ul>
+            Please respect the returns and newlines, and punctuation "?", ":", "," etc.
     form:
-        title: Create a site translation
-        create: 'Create an environmental translation :'
+        create: Create a site translation
+        environnement: 'Environment :'
+        flash:
+            save:
+                error: An error occurred while saving the translation
+                success: The translation has been saved
+            submit:
+                error: An error occurred while submitting the translation
+                success: The translation has been submitted successfully
+            validate:
+                error: An error occurred while validating the translation
+                success: The translation has been validated
+        in: 'In :'
         update: Edit a site translation
         table:
             title: Table of data/texts to be translated
     table:
         empty: No site translation
-        environment: Environment 
+        environment: Environment
+    title: Translate the site 
 status:
     date_creation: Creation
     deleted: Deleted

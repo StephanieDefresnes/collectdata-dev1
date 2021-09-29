@@ -55,7 +55,7 @@ function addField() {
 // Set status value depending on button clicked
 function submissionStatus(buttonId) {
     let statusId;
-    buttonId == 'save-btn' ? statusId = 1 : statusId = 2
+    buttonId == 'save-btn' ? statusId = 1 : statusId = 3
     $('#translation_form_statusId').val(statusId)
 }
 

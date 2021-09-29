@@ -1,11 +1,10 @@
 <?php
 
-namespace App\Form\Front\Translation;
+namespace App\Form\Translation;
 
 use App\Entity\Translation;
-use App\Form\Front\Translation\FieldFormType;
+use App\Form\Translation\FieldType;
 use Symfony\Component\Form\AbstractType;
-//use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -15,17 +14,20 @@ class TranslationFormType extends AbstractType
 {       
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $lang = $options['lang'];
         
         $builder
             ->add($builder->create('fields' , CollectionType::class, [
-                'entry_type'   => FieldFormType::class,
-                'label' => false,
-                'allow_add' => true,
-                'allow_delete' => true,
-                'prototype' => true,
-                'by_reference' => false,
+                    'entry_type'   => FieldType::class,
+                    'label' => false,
+                    'allow_add' => true,
+                    'allow_delete' => false,
+                    'prototype' => true,
                 ])
             )
+            ->add('lang', HiddenType::class, [
+                'empty_data' => $options['lang'],
+            ])
             ->add('statusId', HiddenType::class)
         ;
     }
@@ -34,6 +36,7 @@ class TranslationFormType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => Translation::class,
+            'lang' => null,
             'translation_domain' => 'back_messages',
         ]);
     }

@@ -180,6 +180,7 @@ invitation:
             Atentamente,
             <a href="%host%">%website_name%</a>
 label:
+    complete: Lleno
     contributions: Contribuciones
     dashboard: Tablero
     date: Fecha de estado
@@ -197,6 +198,7 @@ label:
     categories: Categorías
     catLevel1: Categoría
     catLevel2: Subcategoría
+    incomplete: Incompleto
     initial: Inicial
     lang: Idioma
     langs: Idiomas
@@ -209,6 +211,7 @@ label:
     search: Liste
     situ: La situación de riesgo
     situ_: Situación de riesgo
+    state: Estado
     status: Estado
     title: Título
     translation_s: Traducciones
@@ -225,6 +228,7 @@ label_dp:
     description: 'Descripción :'
     email: 'Email :'
     enabled: 'Activo :'
+    environnement: 'Entorno :'
     event: 'Evento :'
     catLevel1: 'Categoría :'
     catLevel2: 'Subcategoría :'
@@ -254,14 +258,15 @@ lang:
         table: Lista de idiomas
     translation:
         contrib:
-            lang:
-                table: Idiomas ofrecidos
+            table:
+                empty: No se ofrece traducción
+                title: Idiomas ofrecidos
         form:
             field:
                 btn:
                     add: Agregar un campo
-                    create: Crea una traducción
-                    update: Editar una traducción
+                    create: Crea una 
+                    update: Editar una 
                 name: Nombre del Canal
                 remove:
                     title: Eliminación de campo
@@ -274,10 +279,10 @@ lang:
                     text: Text
                     textarea: Textarea
             flash:
-                edit:
+                save:
                     error: Se produjo un error al guardar los datos de la traducción
                     success: Se han guardado los datos de traducción
-                submit:
+                validate:
                     error: Se produjo un error al enviar los datos de traducción
                     success: Los datos de traducción se han enviado
             message:
@@ -294,7 +299,15 @@ lang:
         table:
             empty: Sin traducción
             title: Lista de traducciones
-        title: Traducción del sitio
+        title: Traducciones del sitio
+        site:
+            action: Crea una traducción
+            form:
+                create: Crear una traducción del sitio
+                update: Editar la traducción de un sitio
+            table:
+                empty: Sin traducción
+                title: Idiomas del sitio
         yaml:
             title: Generador de YAML
 lang_deny: Idioma rechazado

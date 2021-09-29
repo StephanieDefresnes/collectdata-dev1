@@ -1,5 +1,6 @@
 {% extends 'front/layout.html.twig' %}
 {% trans_default_domain 'user_messages' %}
+{% set locale = app.request.locale %}
 
 {% block title %}{{ 'translation.title'|trans() }}{% endblock %}
 
@@ -8,7 +9,6 @@
 {% endblock %}
 
 {% block content %}
-{#    <div id="loader"></div>#}
         
     {% block banner%}
     <div class="d-flex justify-content-start mt-3 mb-5 pt-5">
@@ -17,78 +17,85 @@
     {% endblock %}
 
     <div class="row">
-
+        
         <div class="col-lg-7 mx-auto p-0">
-
             <div class="card card bg-secondary-50">
                 <div id="situs" class="card-body text-white front-dataTable">
 
                     {% if referents is empty %}
-                        <div class="mb-5 p-3 bg-white-70">
+                        <div class="p-3 bg-white-70 text-dark">
                             {{ 'translation.table.empty'|trans() }}
                         </div>
                     {% else %}
-                    <table class="shadow table table-sm table-borderless table-hover border border-secondary text-nowrap bg-white-80">
-                        <thead class="bg-secondary-80 text-white">
-                            <tr>
-                                <th class="px-3">{{ 'translation.table.environment'|trans() }}</th>
-                                <th class="px-3">{{ 'status.date_creation'|trans() }}</th>
-                                {% for lang in app.user.contributorLangs %}
-                                    <th class="px-3 text-center">{{ lang.englishName }}</th>
-                                {% endfor %}
-                                <th class=""></th>
-                            </tr>
-                        </thead>
-                        <tbody class="small bg-white-80">
-                        {% for referent in referents %}
-                            <tr>
-                                <th class="px-3 align-middle">
-                                    {{ referent.name }}
-                                </th>
-                                <td class="px-3 align-middle">
-                                    {{ referent.dateStatus|format_datetime('short', 'medium', locale=locale) }}
-                                </td>
-                                {% for lang in app.user.contributorLangs %}
-                                    <td class="align-middle text-center">
-                                        {% if userTranslations is not empty %}
-                                            {% for translation in userTranslations %}
-                                                {% if translation.lang == lang.lang %}
-                                                    <a href="{{ path('front_translation_create', { 'referent': referent.id , 'id': situ.id }) }}"
+                    <div class="table-responsive">
+                        <table class="shadow table table-sm table-borderless table-hover border border-secondary mb-0 text-nowrap bg-white-80">
+                            <thead class="bg-secondary-80 text-white">
+                                <tr>
+                                    <th class="px-3">{{ 'translation.table.environment'|trans() }}</th>
+                                    <th class="px-3">{{ 'status.date_creation'|trans() }}</th>
+                                    {% for lang in app.user.contributorLangs %}
+                                        <th class="px-3 text-center decode">{{ lang.name }}</th>
+                                    {% endfor %}
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody class="small bg-white-80">
+                            {% for referent in referents %}
+                                <tr>
+                                    <th class="px-3 align-middle">
+                                        {{ referent.name }}
+                                    </th>
+                                    <td class="px-3 align-middle">
+                                        {{ referent.dateStatus|format_datetime('short', 'none', locale=locale) }}
+                                    </td>
+                                    {% for lang in app.user.contributorLangs %}
+                                        <td class="align-middle text-center">
+                                            {% set translation = translation_service.getUserTranslation(app.user.id, referent.id, lang.id) %}
+                                            {% if translation %}
+                                                {% if translation.statusId == 1 %}
+                                                    <a href="{{ path('front_translation_create', {
+                                                                'locale': locale,
+                                                                'referentId': referent.id,
+                                                                'langId': lang.id,
+                                                                'id': translation.id }) }}"
                                                        class="btn text-primary"
-                                                       data-id="{{ referent.id }}" data-user="{{ app.user.id }}" data-action=""
                                                        data-toggle="tooltip" data-placement="right"
                                                        title="{{ 'action.edit'|trans() }}">
                                                         <i class="fas fa-edit"></i>
                                                     </a>
-                                                {% else %}
-                                                    <a href="{{ path('front_translation_create', { 'referent': referent.id }) }}"
-                                                       class="btn text-success"
-                                                       data-id="{{ referent.id }}" data-user="{{ app.user.id }}" data-action=""
+                                                {% elseif translation.statusId == 2 %}
+                                                    <span class="text-success"
                                                        data-toggle="tooltip" data-placement="right"
-                                                       title="{{ 'action.add'|trans() }}">
-                                                        <i class="fas fa-plus-circle"></i>
-                                                    </a>
-                                                {% endif %} 
-                                            {% endfor %}
-                                        {% else %}
-                                            <a href="{{ path('front_translation_create', { 'referent': referent.id }) }}"
-                                               class="btn text-success"
-                                               data-id="{{ referent.id }}" data-user="{{ app.user.id }}" data-action=""
-                                               data-toggle="tooltip" data-placement="right"
-                                               title="{{ 'action.add'|trans() }}">
-                                                <i class="fas fa-plus-circle"></i>
-                                            </a>
-                                        {% endif %} 
-                                    </td>
-                                {% endfor %}
-                                <td class="align-middle">
-        {#                                {{ translation.fields|length }}#}
-                                </td>
-                            </tr>
-                        {% endfor %}
-                        </tbody>
-                    </table>
-                    {% endif %}                                
+                                                       title="{{ 'status.validation'|trans() }}">
+                                                        <i class="fas fa-paper-plane"></i>
+                                                    </span>
+                                                {% elseif translation.statusId == 3 %}
+                                                    <span class="text-success"
+                                                       data-toggle="tooltip" data-placement="right"
+                                                       title="{{ 'status.validated'|trans() }}">
+                                                        <i class="fas fa-check"></i>
+                                                    </span>
+                                                {% endif %}
+                                            {% else %}
+                                                <a href="{{ path('front_translation_create', {
+                                                            'locale': locale,
+                                                            'referentId': referent.id,
+                                                            'langId': lang.id }) }}"
+                                                   class="btn text-primary"
+                                                   data-toggle="tooltip" data-placement="right"
+                                                   title="{{ 'action.add'|trans() }}">
+                                                    <i class="fas fa-plus-circle"></i>
+                                                </a>
+                                            {% endif %}
+                                        </td>
+                                    {% endfor %}
+                                    <th></th>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    {% endif %}
 
                 </div>
             </div>

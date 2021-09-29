@@ -1,4 +1,12 @@
-#index:
-#    path: /
-#    controller: App\Controller\DefaultController::index
-#
+back_translation_situ_create:
+    path:       /{locale}/{back}/translation/{referentId}/{langId}/{id}
+    controller: App\Controller\TranslationController::createTranslate
+    methods:    ['GET', 'POST']
+    defaults:
+        id: null
+front_translation_create:
+    path:       /{locale}/translation/{referentId}/{langId}/{id}
+    controller: App\Controller\TranslationController::createTranslate
+    methods:    ['GET', 'POST']
+    defaults:
+        id: null

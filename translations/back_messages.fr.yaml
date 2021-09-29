@@ -180,6 +180,7 @@ invitation:
             Cordialement,
             <a href=\"%host%\">%website_name%</a>
 label:
+    complete: Complet
     contributions: Contributions
     dashboard: Tableau de bord
     date: Date du status
@@ -197,6 +198,7 @@ label:
     categories: Catégories
     catLevel1: Catégorie
     catLevel2: Sous-catégorie
+    incomplete: Incomplet
     initial: Initial
     lang: Langue
     langs: Langues
@@ -209,6 +211,7 @@ label:
     search: Liste
     situ: La situation à risque
     situ_: Situation à risque
+    state: État
     status: Statut
     title: Titre
     translation_s: Traductions 
@@ -225,6 +228,7 @@ label_dp:
     description: 'Description :'
     email: 'Email :'
     enabled: 'Actif :'
+    environnement: 'Environnment :'
     event: 'Événement :'
     catLevel1: 'Catégorie :'
     catLevel2: 'Sous-catégorie :'
@@ -254,14 +258,15 @@ lang:
         table: Liste de langues
     translation:
         contrib:
-            lang:
-                table: Langues proposées
+            table:
+                empty: Aucune traduction proposée
+                title: Langues proposées
         form:
             field:
                 btn:
                     add: Ajouter un champ
-                    create: Créer une traduction
-                    update: Modifier une traduction
+                    create: Créer un formulaire
+                    update: Modifier un formulaire
                 name: Nom de la chaîne
                 remove:
                     title: Suppresion de champ
@@ -274,12 +279,12 @@ lang:
                     text: Texte
                     textarea: Textarea
             flash:
-                edit:
+                save:
                     error: Une erreur s'est produite lors de l'enregisterment des données de traduction
                     success: Les données de traduction ont bien été enregistrées
-                submit:
-                    error: Une erreur s'est produite lors de la soumission des données de traduction
-                    success: Les données de traduction ont bien été soumises
+                validate:
+                    error: Une erreur s'est produite lors de la validation des données de traduction
+                    success: Les données de traduction ont bien été validées
             message:
                 lang:
                     enabled: Langues actives
@@ -292,9 +297,17 @@ lang:
                 value: Valeur
             title: Traduction forms
         table:
-            empty: Aucune traduction
-            title: Liste des traductions
+            empty: Aucun formulaire
+            title: Liste des formulaires
         title: Traductions du site
+        site:
+            action: Créer une traduction
+            form:
+                create: Créer une traduction du site
+                update: Modifier une traduction du site
+            table:
+                empty: Aucune traduction
+                title: Langues du site
         yaml:
             title: Générateur YAML
 lang_deny: Langue refusée

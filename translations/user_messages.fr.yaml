@@ -179,16 +179,34 @@ lang_deny: Langue refusée
 multiple_search: Rechercher
 no: Non
 translation:
-    title: Traduire le site
+    comment: |
+            Merci de ne pas traduire et laisser en l'état :
+            <ul class="mb-1">
+            <li>Tout ce qui se trouve entre &lt;...&gt; , ex :<br><span class="text-success">...traduire ici</span> <span class="text-danger">&lt;ne pas traduire&gt;</span> <span class="text-success">traduire ici</span> <span class="text-danger">&lt;/ne pas traduire&gt;</span> <span class="text-success">traduire ici...</span>    </li>
+            <li>Tout ce qui se trouve entre %..% , ex :<br>Bonjour %user% => traduire "<span class="text-success">Bonjour</span>", ne pas traduire "<span class="text-danger">%user%</span>"</li>
+            </ul>
+            Merci de respecter les retours et saut de ligne, et les ponctuations "?", ":", "," etc.
     form:
-        title: Créer une traduction du site
-        create: 'Créer une traduction environnement :'
+        create: Créer une traduction du site
+        environnement: 'Environnement :'
+        flash:
+            save:
+                error: Une erreur s'est produite lors de l'enregisterment de la traduction
+                success: La traduction a bien été enregistrée
+            submit:
+                error: Une erreur s'est produite lors de la soumision de la traduction
+                success: La traduction a bien été soumise 
+            validate:
+                error: Une erreur s'est produite lors de la validation de la traduction
+                success: La traduction ont bien été validée
+        in: 'En :'
         update: Modifier une traduction du site
         table:
             title: Tableau de données/texte à traduire
     table:
-        empty: Aucune traduction de site
+        empty: Aucune traduction de site à faire
         environment: Environnement 
+    title: Traduire le site
 status:
     date_creation: Création
     deleted: Supprimé

@@ -1,0 +1,59 @@
+{% trans_default_domain 'user_messages' %}
+
+{{ form_start(form) }}
+<div class="card-body px-4 pt-3 bg-white-80">
+    
+    {% if route == 'front_translation_create' %}
+        <div class="row mb-3 px-1">
+            <div class="col-12 p-2 bg-light-50 border border-secondary rounded shadow-sm small font-weight-bold">
+                {{ 'translation.comment'|trans()|raw }}
+            </div>
+        </div>
+    {% endif %}
+    
+    <div id="fields" class="row">
+        {% for key,field in form.fields %}
+
+            {% if field.vars.value.type == 'text' %}
+            <div class="col-md-6 col-12 px-1">
+                <div class="form-group mb-2 px-2 pt-1 pb-2 rounded bg-white-50">
+                    <div class="d-flex justify-content-start">
+                        <label for="translation_form_fields_value_{{ key }}">{{ field.vars.value.name|trans({}, referent.name) }}</label>
+                    </div>
+                    {{ form_widget(field.value, {'attr': {'rows': '1', 'class': 'custom-textarea'}} ) }}
+                    {{ form_widget(field.type) }}
+                    {{ form_widget(field.name) }}
+                </div>
+            </div>
+            {% else %}
+            <div class="col-12 px-0">
+                <div class="form-group row mx-1 mb-2 pt-2 pb-2 rounded bg-white-50">
+                    <div class="d-flex justify-content-start col-md-6 col-12 px-2 pb-2">
+                        <label for="translation_form_fields_value_{{ key }}">{{ field.vars.value.name|trans({}, referent.name)|nl2br }}</label>
+                    </div>
+                    <div class="col-md-6 col-12 px-2">
+                        {{ form_widget(field.value, {'attr': {'rows': '12'}} ) }}
+                        {{ form_widget(field.type) }}
+                        {{ form_widget(field.name) }}
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+
+        {% endfor %}
+    </div>
+    {{ form_row(form.lang) }}
+
+</div>
+
+<div class="card-footer bg-light d-flex justify-content-center">
+    <button id="save-btn" type="submit" class="btn btn-outline-primary px-3 mx-2">
+        {{ 'action.save'|trans() }}
+    </button>
+    <div id="submit-btn" type="submit" class="btn btn-primary px-4 mx-2">
+        {{ route == 'front_translation_create'
+                    ? 'action.submit'|trans()
+                    : 'action.validate'|trans() }}
+    </div>
+</div> 
+{{ form_end(form) }}

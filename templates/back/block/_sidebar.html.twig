@@ -37,14 +37,19 @@
             <i class="fas fa-globe"></i>
             <span>{{ 'label.langs'|trans() }}</span>
         </a>
-        <div id="collapseLang" class="collapse{{ route in ['back_lang_search', 'back_translation_site', 'back_translation_forms', 'back_translation_create'] ? ' show' }}"
+        <div id="collapseLang" class="collapse{{ route in [
+                                                    'back_lang_search',
+                                                    'back_translation_site',
+                                                    'back_translation_situ_create',
+                                                    'back_translation_forms',
+                                                    'back_translation_create'] ? ' show' }}"
              aria-labelledby="headingLang" data-parent="#accordionSidebar">
             <div class="bg-white mb-1 py-2 collapse-inner rounded">
                 <a class="collapse-item{{ route == 'back_lang_search' ? ' active' }}"
                    href="{{ path('back_lang_search') }}">
                     {{ 'label.search'|trans() }}
                 </a>
-                <a class="collapse-item{{ route == 'back_translation_site' ? ' active' }}"
+                <a class="collapse-item{{ route in ['back_translation_site', 'back_translation_situ_create'] ? ' active' }}"
                    href="{{ path('back_translation_site') }}">
                     {{ 'lang.translation.title'|trans() }}
                 </a>

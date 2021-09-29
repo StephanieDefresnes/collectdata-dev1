@@ -97,9 +97,10 @@ class User implements UserInterface
     private $langContributor;
 
     /**
-    * @ORM\ManyToMany(targetEntity=Lang::class, inversedBy="users")
+    * @ORM\ManyToMany(targetEntity=Lang::class)
+    * @ORM\JoinTable(name="contributor_langs")
     */
-    private $contributorLangs;
+    protected $contributorLangs;
 
     /**
     * @ORM\ManyToMany(targetEntity=Lang::class)

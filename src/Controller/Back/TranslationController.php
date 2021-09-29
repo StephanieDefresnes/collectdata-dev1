@@ -5,17 +5,17 @@ namespace App\Controller\Back;
 use App\Entity\Lang;
 use App\Entity\Translation;
 use App\Entity\TranslationField;
-use App\Form\Back\Translation\TranslationFormType;
-use App\Repository\TranslationRepository;
+use App\Form\Translation\TranslationFormType;
+use App\Service\LangService;
+use App\Service\ContributorLangsService;
 use App\Service\TranslationService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Doctrine\Common\Collections\ArrayCollection;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\Security;
+use Symfony\Component\Yaml\Yaml;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
@@ -24,30 +24,63 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 class TranslationController extends AbstractController
 {
     private $em;
+    private $langService;
+    private $security;
     private $translator;
-    private $translationRepository;
     private $translationService;
     
     public function __construct(EntityManagerInterface $em,
+                                LangService $langService,
+                                Security $security,
                                 TranslatorInterface $translator,
-                                TranslationRepository $translationRepository,
                                 TranslationService $translationService)
     {
         $this->em = $em;
+        $this->langService = $langService;
+        $this->security = $security;
         $this->translator = $translator;
-        $this->translationRepository = $translationRepository;
         $this->translationService = $translationService;
     }
     
     /**
      * @Route("/site", name="back_translation_site", methods="GET|POST")
      */
-    public function translationSite(Request $request): Response
-    {   
+    public function translationSite(ContributorLangsService $contributorLangsService): Response 
+   {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
-        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+        $this->denyAccessUnlessGranted('ROLE_SUPER_ADMIN');
         
-        return $this->render('back/lang/translation/index.html.twig');
+        // Translation user contribs
+        $usersContributorLangs = $contributorLangsService->getContributorLangs();
+        $contributorLangs = [];
+        foreach ($usersContributorLangs as $lang) {
+            array_push($contributorLangs, $lang['lang']);
+        }
+        $translationsContributor = $this->translationService->getTranslations($contributorLangs);
+        
+        // Translation lang enabled
+        $langsEnabled = $this->langService->getLangsEnabledOrNot(1);
+        $langs = [];
+        foreach ($langsEnabled as $lang) {
+            array_push($langs, $lang['lang']);
+        }
+        $translationsSite = $this->translationService->getTranslations($langs);
+        
+        $translationForms = $this->getDoctrine()
+                    ->getRepository(Translation::class)->findBy([
+                        'referent' => 1,
+                        'statusId' => 3,
+                    ]);
+        
+        // Get current user
+        $user = $this->security->getUser();
+        
+        return $this->render('back/lang/translation/site/index.html.twig', [
+            'translationsContributor' => $translationsContributor,
+            'translationsSite' => $translationsSite,
+            'translationForms' => $translationForms,
+            'user' => $user,
+        ]);
     }
 
     /**
@@ -58,12 +91,39 @@ class TranslationController extends AbstractController
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
         $this->denyAccessUnlessGranted('ROLE_SUPER_ADMIN');
         
-        // Translations list
-        $translations = $this->translationService->getAllTranslationsReferent();
+        // Translation forms list
+        $translationsForms = $this->translationService->getTranslationsForms();
+        
+        // Translation lang enabled
+        $langsEnabled = $this->langService->getLangsEnabledOrNot(1);
+        $langs = [];
+        foreach ($langsEnabled as $lang) {
+            array_push($langs, $lang['lang']);
+        }
+        $translationsSite = $this->translationService->getTranslations($langs);
         
         return $this->render('back/lang/translation/forms.html.twig', [
-            'translations' => $translations,
+            'translationsForms' => $translationsForms,
+            'translations' => $translationsSite,
+            'langsEnabled' => $langsEnabled,
         ]);
+    }
+    
+    /**
+     * @Route("/permute/enabled", name="back_translation_permute_enabled", methods="GET")
+     */
+    public function permuteEnabled(TranslationManager $translationManager, Request $request): Response
+    {    
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+        
+        $translations = $translationManager->getLangs();
+        foreach ($translations as $translation) {
+            $permute = $translation->getEnabled() ? false : true;
+            $translation->setEnabled($permute);
+        }
+        $this->getDoctrine()->getManager()->flush();
+        return $this->redirectToRoute('back_translation_forms');
     }
 
     /**
@@ -114,8 +174,8 @@ class TranslationController extends AbstractController
             $em->persist($translation);
 
             if ($form->getData()->getStatusId() == 1 ) {
-                $type = 'edit';
-            } else $type = 'submit';
+                $type = 'save';
+            } else $type = 'validate';
 
             try {
                 $em->flush();
@@ -147,7 +207,7 @@ class TranslationController extends AbstractController
             }
         }
         
-        return $this->render('back/lang/translation/create/index.html.twig', [
+        return $this->render('back/lang/translation/form/index.html.twig', [
             'form' => $form->createView(),
             'translation' => $translation,
         ]);

@@ -1,0 +1,43 @@
+{% trans_default_domain 'back_messages' %}
+
+<div class="card shadow mb-4">
+
+    <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-primary">{{ 'lang.translation.table.title'|trans() }}</h6>
+    </div>
+
+    <div id="dataTable-translationsContributor-list" class="card-body pb-3 back-dataTable">
+
+        {% if translationsContributor is empty %}
+            <span id="contributorEmpty">{{ 'lang.translation.contrib.table.empty'|trans() }}</span>
+        {% else %}
+
+            <table id="dataTable-translationsContributor" class="table table-sm mb-0 nowrap">
+                <thead class="bg-gray-600 text-white">
+                    <tr>
+                        <th class="py-2">{{ 'action.action'|trans() }}</th>
+                        <th class="py-2">{{ 'label.name'|trans() }}</th>
+                        <th class="py-2">{{ 'label.lang'|trans() }}</th>
+                        <th class="py-2">{{ 'label.status'|trans() }}</th>
+                        <th class="py-2">{{ 'label.enabled'|trans() }}</th>
+                        <th class="py-2">{{ 'label.user'|trans() }}</th>
+                    </tr>
+                </thead>
+                <tbody class="bg-white">
+                    {% for translation in translationsContributor %}
+                        <tr>
+                            <td>
+                                
+                            </td>
+                            <td class="align-middle">{{ translation.name }}</td>
+                            <td class="align-middle">{{ translation.lang }}</td>
+                            <td class="align-middle">{{ translation.statusId }}</td>
+                            <td class="align-middle">{{ translation.enabled }}</td>
+                            <td class="align-middle">{{ translation.userName }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>            
+        {% endif %}
+    </div>
+</div>

@@ -55,17 +55,11 @@ class Lang
     */
     protected $situs;
 
-    /**
-    * @ORM\ManyToMany(targetEntity=User::class, mappedBy="contributorLangs")
-    */
-    private $users;
-
     public function __construct()
     {
         $this->events = new ArrayCollection();
         $this->categories = new ArrayCollection();
         $this->situs = new ArrayCollection();
-        $this->users = new ArrayCollection();
     }
 
     public function __toString()
@@ -214,31 +208,6 @@ class Lang
             if ($situ->getLang() === $this) {
                 $situ->setLang(null);
             }
-        }
-        return $this;
-    }
-
-    /**
-     * @return Collection|User[]
-     */
-    public function getUsers(): ?Collection
-    {
-        return $this->users;
-    }
-     
-    public function addUser(User $user): self
-    {
-        if (!$this->users->contains($user)) {
-            $this->users[] = $user;
-        }
-        
-        return $this;
-    }
-
-    public function removeUser(User $user): self
-    {
-        if ($this->users->contains($user)) {
-            $this->users->removeElement($user);
         }
         return $this;
     }

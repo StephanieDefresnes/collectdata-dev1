@@ -179,16 +179,34 @@ lang_deny: Lengua denegado
 multiple_search: Rechercher
 no: No
 translation:
-    title: Traducir el sitio
+    comment: |
+            Por favor, no traduzca y déjelo como está:
+            <ul class="mb-1">
+            <li>Todo en el medio &lt;...&gt; , ex :<br><span class="text-success">...traducir aquí</span> <span class="text-danger">&lt;no traducir&gt;</span> <span class="text-success">traducir aquí</span> <span class="text-danger">&lt;/no traducir&gt;</span> <span class="text-success">traducir aquí...</span>    </li>
+            <li>Todo en el medio %..% , ex :<br>Bonjour %user% => traducir "<span class="text-success">Bonjour</span>", no traducir "<span class="text-danger">%user%</span>"</li>
+            </ul>
+            Respete las devoluciones y las nuevas líneas, la puntuación "?", ":", "," etc.
     form:
-        title: Crear una traducción del sitio
-        create: 'Crea una traducción medioambiental :'
+        create: Crear una traducción del sitio
+        environnement: 'Entorno :'
+        flash:
+            save:
+                error: Se produjo un error al guardar la traducción
+                success: La traducción se ha guardado
+            submit:
+                error: Se produjo un error al enviar la traducción
+                success: La traducción se ha enviado correctamente
+            validate:
+                error: Se produjo un error al validar la traducción.
+                success: La traducción ha sido validada
+        in: 'En :'
         update: Editar la traducción de un sitio
         table:
             title: Tabla de datos/textos a traducir
     table:
         empty: Aucune traduction de site
-        environment: Entorno 
+        environment: Entorno
+    title: Traducir el sitio
 status:
     date_creation: Creación
     deleted: Eliminado

@@ -27,9 +27,24 @@ class Translation
     private $name;
 
     /**
+     * @ORM\Column(type="boolean")
+     */
+    private $referent;
+
+    /**
+     * @ORM\Column(type="integer")
+     */
+    private $referentId;
+
+    /**
      * @ORM\Column(type="string", length=2, nullable=true)
      */
     private $lang;
+
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $langId;
 
     /**
      * @ORM\Column(type="integer")
@@ -58,29 +73,19 @@ class Translation
     private $userId;
 
     /**
-     * @ORM\Column(type="boolean")
-     */
-    private $referent;
-
-    /**
      * @ORM\OneToMany(targetEntity="App\Entity\TranslationField", cascade={"persist", "remove"}, mappedBy="translation")
+     * @ORM\OrderBy({"name" = "ASC"})
      */
     protected $fields;
+
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $enabled;
     
     public function __construct()
     {
         $this->fields = new ArrayCollection();
-    }
-//    
-    public function __toString() {
-//        return $this->getName();
-//        return $this->getLang();
-//        return $this->getStatusId();
-//        return $this->getDateCreation();
-//        return $this->getDateStatus();
-//        return $this->getUserId();
-//        return $this->getReferent();
-//        return $this->getFields();
     }
 
     public function getId(): ?int
@@ -100,6 +105,30 @@ class Translation
         return $this;
     }
 
+    public function getReferent(): ?bool
+    {
+        return $this->referent;
+    }
+
+    public function setReferent(bool $referent): self
+    {
+        $this->referent = $referent;
+
+        return $this;
+    }
+
+    public function getReferentId(): ?int
+    {
+        return $this->referentId;
+    }
+
+    public function setReferentId(int $referentId): self
+    {
+        $this->referentId = $referentId;
+
+        return $this;
+    }
+
     public function getLang(): ?string
     {
         return $this->lang;
@@ -108,6 +137,18 @@ class Translation
     public function setLang(string $lang): self
     {
         $this->lang = $lang;
+
+        return $this;
+    }
+
+    public function getLangId(): ?int
+    {
+        return $this->langId;
+    }
+
+    public function setLangId(int $langId): self
+    {
+        $this->langId = $langId;
 
         return $this;
     }
@@ -171,18 +212,6 @@ class Translation
 
         return $this;
     }
-
-    public function getReferent(): ?bool
-    {
-        return $this->referent;
-    }
-
-    public function setReferent(bool $referent): self
-    {
-        $this->referent = $referent;
-
-        return $this;
-    }
     
     /**
      * @return Collection|TranslationField[]
@@ -210,6 +239,18 @@ class Translation
                 $field->setTranslation(null);
             }
         }
+        return $this;
+    }
+
+    public function getEnabled(): ?bool
+    {
+        return $this->enabled;
+    }
+
+    public function setEnabled(bool $enabled): self
+    {
+        $this->enabled = $enabled;
+
         return $this;
     }
     

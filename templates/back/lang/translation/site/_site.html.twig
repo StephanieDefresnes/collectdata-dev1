@@ -1,0 +1,129 @@
+{% trans_default_domain 'back_messages' %}
+
+<div class="card shadow mb-4">
+
+    <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-primary">{{ 'lang.translation.table.title'|trans() }}</h6>
+    </div>
+
+    <div id="dataTable-translationsSite-list" class="card-body pb-3 back-dataTable">
+
+        {% if translationsSite is empty %}
+            <span id="siteEmpty">{{ 'lang.translation.site.table.empty'|trans() }}</span>
+        {% else %}
+
+            <table id="dataTable-translationsSite" class="table table-sm nowrap">
+                <thead class="bg-gray-600 text-white">
+                    <tr>
+                        <th class="py-2">{{ 'action.actions'|trans() }}</th>
+                        <th class="py-2">{{ 'label.name'|trans() }}</th>
+                        <th class="py-2">{{ 'label.lang'|trans() }}</th>
+                        <th class="py-2">{{ 'label.status'|trans() }}</th>
+                        <th class="py-2">{{ 'label.enabled'|trans() }}</th>
+                        <th class="py-2">{{ 'label.user'|trans() }}</th>
+                    </tr>
+                </thead>
+                <tbody class="bg-white">
+                    {% for translation in translationsSite %}
+                        <tr>
+                            <td class="px-2 align-middle">
+                                <a href="{{ path('back_translation_situ_create', {
+                                            'locale': locale,
+                                            'back': 'back',
+                                            'referentId': translation.referentId,
+                                            'langId': translation.langId,
+                                            'id': translation.id }) }}"
+                                   class="btn btn-outline-secondary btn-sm px-2 {{ translation.statusId == 3 ? 'btn-outline-warning confirmUpdate' }}"
+                                   data-toggle="tooltip" data-placement="left"
+                                   title="{{ 'action.edit'|trans() }}"
+                                   aria-label="{{ 'action.edit'|trans() }}">
+                                    <i class="fas fa-pen"></i>
+                                </a>
+                                <a href="#"
+                                   class="btn btn-outline-danger btn-sm px-2 translationDelete"
+                                   data-toggle="tooltip" data-placement="left"
+                                   title="{{ 'action.delete'|trans() }}"
+                                   aria-label="{{ 'action.delete'|trans() }}">
+                                    <i class="far fa-trash-alt"></i>
+                                </a>
+                            </td>
+                            <td class="px-2 align-middle">{{ translation.name }}</td>
+                            <td class="px-2 align-middle text-uppercase">{{ translation.lang }}</td>
+                            <td class="px-2 align-middle">
+                                {% if translation.statusId == 1 %}
+                                    {{ 'status.writing'|trans() }}
+                                {% elseif translation.statusId == 3 %}
+                                    {{ 'status.validated'|trans() }}
+                                {% elseif translation.statusId == 5 %}
+                                    {{ 'status.deleted'|trans() }}
+                                {% endif %}
+                            </td>
+                            <td class="px-2 align-middle">
+                                {{ translation.enabled == 1
+                                    ? 'yes'|trans()
+                                    : 'no'|trans() }}
+                            </td>
+                            <td class="px-2 py-0 align-middle">{{ translation.userName }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>            
+        {% endif %}
+    </div>
+    
+</div>
+    
+<div class="d-flex justify-content-end">
+    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#createModal">
+        <i class="fas fa-plus"></i>
+        {{ 'lang.translation.site.action'|trans() }}
+    </button>
+</div>
+
+<div class="modal fade" id="createModal"data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="createModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header d-flex justify-content-start py-2 bg-dark text-white">
+                <h5 class="modal-title" id="createModalLabel">
+                    {{ 'lang.translation.site.action'|trans() }}
+                </h5>
+            </div>
+            <div class="modal-body">
+                <div class="d-flex justify-content-center row">
+                    <div class="col-4 d-flex justify-content-end pt-2">
+                        <label for="siteEnvironnement">{{ 'label_dp.environnement'|trans() }}</label>
+                    </div>
+                    <div class="col-5 d-flex justify-content-start">
+                        <select class="form-control" id="siteEnvironnement">
+                            <option>{{ 'action.select'|trans() }}</option>
+                            {% for form in translationForms %}
+                                <option value="{{ form.id }}">{{ form.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+                <div class="d-flex justify-content-center row mt-3">
+                    <div class="col-4 d-flex justify-content-end pt-2">
+                        <label for="siteLang">{{ 'label_dp.lang'|trans() }}</label>
+                    </div>
+                    <div class="col-5 d-flex justify-content-start">
+                        <select class="form-control" id="siteLang">
+                            <option>{{ 'action.select'|trans() }}</option>
+                            {% for lang in user.langs %}
+                                <option value="{{ lang.id }}" class="decode">{{ lang.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer d-flex justify-content-end bg-light p-2">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                    {{ 'action.cancel'|trans() }}
+                </button>
+                <span id="createTranslation" class="btn btn-primary">
+                    {{ 'action.validate'|trans() }}
+                </span>
+            </div>
+        </div>
+    </div>
+</div>

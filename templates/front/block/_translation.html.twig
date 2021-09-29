@@ -9,7 +9,7 @@
             {% if app.user and app.user.langContributor and app.user.contributorLangs is not empty %}
                 <li class="dropdown-item bg-dark-95{{ route == 'user_translations' ? ' active' }}">
                     <a href="{{ path('user_translations') }}">
-                        <i class="fas fa-list-ul"></i>
+                        <i class="fas fa-globe-americas"></i>
                         {{ 'nav.translation.site'|trans() }}
                     </a>
                 </li>

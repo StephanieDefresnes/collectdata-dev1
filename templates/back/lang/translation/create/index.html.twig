@@ -10,9 +10,6 @@
     {{ parent() }}
     <link rel="stylesheet" href="{{ asset('jquery-confirm/css/jquery-confirm.css') }}">
     {{ encore_entry_link_tags('lang_translation_create_app', null, 'backApp') }}
-    <style>
-        
-    </style>
  {% endblock %}
 
 
@@ -82,7 +79,7 @@
                             {{ 'action.save'|trans() }}
                         </span>
                         <span id="submit-btn" class="btn btn-primary mx-2 px-4 pt-1">
-                            {{ 'action.submit'|trans() }}
+                            {{ 'action.validate'|trans() }}
                         </span>
                     </div>
                 </div>
