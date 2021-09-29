@@ -107,7 +107,7 @@
                                 {% endif %}
                                 {{ langsEnabled|length == countTranslations ? 'label.complete'|trans() : 'label.incomplete'|trans() }}
                             </td>
-                            <td class="px-2">
+                            <td class="px-2 align-middle">
                                 {% if form.statusId == 3 %}
                                     {% if form.enabled == 0 %}
                                         {% if langsEnabled|length == countTranslations %}
