@@ -73,7 +73,7 @@ class PageController extends AbstractController
         $langPage = '';
         if ($id) {
             $page = $this->getDoctrine()->getRepository(Page::class)
-                    ->findOneBy(['id' => $id]);
+                    ->find($id);
             $langPage = $this->getDoctrine()->getRepository(Lang::class)
                     ->findOneBy(['lang' => $page->getLang()])
                     ->getEnglishName();
