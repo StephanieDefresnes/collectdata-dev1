@@ -15,7 +15,7 @@
 /nbproject/
 /public/bundles/
 /tests/
-/src/DataFixtures/
+/src/DataFixtures/AppFixtures.php
 /var/
 /vendor/
 ###< symfony/framework-bundle ###
