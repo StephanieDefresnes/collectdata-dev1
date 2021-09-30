@@ -2,9 +2,11 @@
 
 namespace App\Mailer;
 
+use App\Entity\Lang;
 use App\Entity\Situ;
 use App\Entity\User;
 use App\Service\UserService;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Address;
@@ -14,6 +16,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class Mailer
 {
+    protected $em;
     protected $mailer;
     protected $parameters;
     protected $router;
@@ -24,12 +27,14 @@ class Mailer
      * Mailer constructor.
      *
      */
-    public function __construct(MailerInterface $mailer,
+    public function __construct(EntityManagerInterface $em,
+                                MailerInterface $mailer,
                                 ParameterBagInterface $parameters,
                                 TranslatorInterface $translator,
                                 UrlGeneratorInterface $router,
                                 UserService $userService)
     {
+        $this->em = $em;
         $this->mailer = $mailer;
         $this->parameters = $parameters;
         $this->router = $router;
