@@ -40,7 +40,12 @@ class Page
     private $lang;
 
     /**
-     * @ORM\OneToMany(targetEntity=PageContent::class, cascade={"persist"}, mappedBy="page")
+     * @ORM\OneToMany(
+     *      targetEntity=PageContent::class,
+     *      cascade={"persist"},
+     *      mappedBy="page",
+     *      fetch="EXTRA_LAZY",
+     *      orphanRemoval=true)
      */
     private $pageContents;
 
