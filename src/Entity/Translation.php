@@ -61,7 +61,6 @@ class Translation
      */
     private $dateLastUpdate;
 
-
     /**
      * @ORM\Column(type="datetime", nullable=true)
      */
@@ -91,7 +90,12 @@ class Translation
     /**
      * @ORM\Column(type="boolean")
      */
-    private $yaml_generated;
+    private $yamlGenerated;
+
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $dateGenerated;
     
     public function __construct()
     {
@@ -266,12 +270,24 @@ class Translation
 
     public function getYamlGenerated(): ?bool
     {
-        return $this->yaml_generated;
+        return $this->yamlGenerated;
     }
 
-    public function setYamlGenerated(bool $yaml_generated): self
+    public function setYamlGenerated(bool $yamlGenerated): self
     {
-        $this->yaml_generated = $yaml_generated;
+        $this->yamlGenerated = $yamlGenerated;
+
+        return $this;
+    }
+
+    public function getDateGenerated(): ?\DateTimeInterface
+    {
+        return $this->dateGenerated;
+    }
+
+    public function setDateGenerated(?\DateTimeInterface $dateGenerated): self
+    {
+        $this->dateGenerated = $dateGenerated;
 
         return $this;
     }

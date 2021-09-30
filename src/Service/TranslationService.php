@@ -21,12 +21,13 @@ class TranslationService {
             ->from(Translation::class,'t')
             ->select('  t.id                id,
                         t.name              name,
+                        t.referentId        referentId,
                         t.lang              lang,
                         t.statusId          statusId,
                         t.dateCreation      dateCreation,
                         t.dateLastUpdate    dateLastUpdate,
                         t.dateStatus        dateStatus,
-                        t.enabled           enabled,    
+                        t.enabled           enabled,
                         t.userId            userId,
                         user.name           userName')
             ->leftJoin(User::class, 'user', 'WITH', 't.userId=user.id')
@@ -43,6 +44,7 @@ class TranslationService {
             $result[] = [
                 'id' =>             $t['id'],
                 'name' =>           $t['name'],
+                'referentId' =>     $t['referentId'],
                 'lang' =>           $t['lang'],
                 'statusId' =>       $t['statusId'],
                 'dateCreation' =>   $t['dateCreation'],
@@ -71,6 +73,7 @@ class TranslationService {
                         t.dateLastUpdate    dateLastUpdate,
                         t.dateStatus        dateStatus,
                         t.enabled           enabled,
+                        t.yamlGenerated     yamlGenerated,
                         t.userId            userId,
                         user.name           userName')
             ->leftJoin(User::class, 'user', 'WITH', 't.userId=user.id')
@@ -95,6 +98,7 @@ class TranslationService {
                 'dateLastUpdate' => $t['dateLastUpdate'],
                 'dateStatus' =>     $t['dateStatus'],
                 'enabled' =>        $t['enabled'],
+                'yamlGenerated' =>  $t['yamlGenerated'],
                 'userId' =>         $t['userId'],
                 'userName' =>       $t['userName'],
             ];
