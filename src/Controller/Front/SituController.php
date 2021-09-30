@@ -13,8 +13,10 @@ use App\Mailer\Mailer;
 use App\Service\CategoryService;
 use App\Service\EventService;
 use App\Service\SituService;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -29,16 +31,19 @@ class SituController extends AbstractController
 {
     private $em;
     private $mailer;
+    private $parameters;
     private $security;
     private $translator;
     
     public function __construct(EntityManagerInterface $em,
                                 Mailer $mailer,
+                                ParameterBagInterface $parameters,
                                 Security $security,
                                 TranslatorInterface $translator)
     {
         $this->em = $em;
         $this->mailer = $mailer;
+        $this->parameters = $parameters;
         $this->security = $security;
         $this->translator = $translator;
     }
@@ -303,9 +308,9 @@ class SituController extends AbstractController
         $user = $this->security->getUser();
         $userId = $user->getId();
         
-        $defaultLang = $this->em->getRepository(Lang::class)->findOneBy(
-            ['englishName' => 'French']
-        );
+        $defaultLang = $this->getDoctrine()->getRepository(Lang::class)->findBy([
+                        'lang' => $this->parameters->get('locale'),
+                    ]);
         
         $userLang = $user->getLangId() == '' ? $defaultLang->getId() : $user->getLangId();
             
@@ -376,12 +381,11 @@ class SituController extends AbstractController
             }
             
             $situ->setDateLastUpdate($dateNow);
-
-            // Clear original collection
-            foreach ($situ->getSituItems() as $item) {
-                $situ->getSituItems()->removeElement($item);
-                $this->em->remove($item);
-            }
+        }
+        
+        $originalSituItems = new ArrayCollection();
+        foreach ($situ->getSituItems() as $item) {
+            $originalSituItems->add($item);
         }
         
         if (!empty($data['translatedSituId'])) {
@@ -410,18 +414,27 @@ class SituController extends AbstractController
         $situ->setCategoryLevel2($categoryLevel2);
         $situ->setStatusId($statusId);
         $this->em->persist($situ);
-
-        // Add new collection
-        foreach ($data['situItems'] as $key => $d) {
-            $situItem = new SituItem();
+        
+        // Check if orgiginal situItems are delete
+        foreach ($originalSituItems as $situItem) {
+            if (!in_array($situItem, $data['situItems'])) {
+                $situ->getSituItems()->removeElement($situItem);
+                $this->em->remove($situItem);
+            }
+        }
+        // Add new or update situItems
+        foreach ($data['situItems'] as $key => $dataItem) {
+            if (false === $situ->getSituItems()->contains($dataItem)) {
+                $situItem = new SituItem();
+            }
             if ($key == 0) $situItem->setScore(0);
-            else $situItem->setScore($d['score']);
-            $situItem->setTitle($d['title']);
-            $situItem->setDescription($d['description']);
+            else $situItem->setScore($dataItem['score']);
+            $situItem->setTitle($dataItem['title']);
+            $situItem->setDescription($dataItem['description']);
             $this->em->persist($situItem);
             $situItem->setSitu($situ);
         }
-        
+    
         $msgType = empty($data['id']) ? 'success_update' : 'success';
         
         try {

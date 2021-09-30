@@ -9,6 +9,7 @@ use App\Repository\SituRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=SituRepository::class)
@@ -98,7 +99,12 @@ class Situ
     private $translatedSituId;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\SituItem", cascade={"persist", "remove"}, mappedBy="situ")
+     * @ORM\OneToMany(
+     *      targetEntity=SituItem::class,
+     *      cascade={"persist", "remove"},
+     *      mappedBy="situ",
+     *      fetch="EXTRA_LAZY",
+     *      orphanRemoval=true)
      */
     protected $situItems;
 
