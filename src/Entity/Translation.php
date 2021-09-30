@@ -73,7 +73,7 @@ class Translation
 
     /**
      * @ORM\OneToMany(
-     *      targetEntity="App\Entity\TranslationField",
+     *      targetEntity=TranslationField::class,
      *      cascade={"persist", "remove"},
      *      mappedBy="translation",
      *      fetch="EXTRA_LAZY",
