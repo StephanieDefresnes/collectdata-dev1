@@ -40,9 +40,8 @@
                             <th>{{ 'action.action'|trans() }}</th>
                             <th class="pl-2">{{ 'label.name'|trans() }}</th>
                             <th class="pl-2">{{ 'label.status'|trans() }}</th>
-                            <th class="pl-2">{{ 'label.translation_s'|trans() }}</th>
                             <th class="pl-2">{{ 'label.state'|trans() }}</th>
-                            <th class="pl-2">{{ 'label.date_status'|trans() }}</th>
+                            <th class="pl-2">{{ 'label.date_enable'|trans() }}</th>
                             <th class="pl-2">{{ 'label.date_update'|trans() }}</th> 
                             <th class="pl-2">{{ 'label.user'|trans() }}</th>
                             <th class="pl-2">{{ 'label.date_creation'|trans() }}</th>        
@@ -95,17 +94,6 @@
                                 {% else %}
                                     {{ 'status.deleted'|trans() }}
                                 {% endif %}
-                            </td>
-                            <td class="px-2 align-middle">
-                                {% set countTranslations = 0 %}
-                                {% if translations %}
-                                    {% for translation in translations %}
-                                        {% if translation.name == form.name %}
-                                            {% set countTranslations = countTranslations + 1 %}
-                                        {% endif %}
-                                    {% endfor %}
-                                {% endif %}
-                                {{ langsEnabled|length == countTranslations ? 'label.complete'|trans() : 'label.incomplete'|trans() }}
                             </td>
                             <td class="px-2 align-middle">
                                 {% if form.statusId == 3 %}

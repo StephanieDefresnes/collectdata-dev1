@@ -15,25 +15,60 @@
             <table id="dataTable-translationsContributor" class="table table-sm mb-0 nowrap">
                 <thead class="bg-gray-600 text-white">
                     <tr>
-                        <th class="py-2">{{ 'action.action'|trans() }}</th>
-                        <th class="py-2">{{ 'label.name'|trans() }}</th>
-                        <th class="py-2">{{ 'label.lang'|trans() }}</th>
-                        <th class="py-2">{{ 'label.status'|trans() }}</th>
-                        <th class="py-2">{{ 'label.enabled'|trans() }}</th>
-                        <th class="py-2">{{ 'label.user'|trans() }}</th>
+                        <th class="pl-2">{{ 'action.action'|trans() }}</th>
+                        <th class="pl-2">{{ 'lang.translation.yaml.action.title'|trans() }}</th>
+                        <th class="pl-2">{{ 'label.name'|trans() }}</th>
+                        <th class="pl-2">{{ 'label.lang'|trans() }}</th>
+                        <th class="pl-2">{{ 'label.status'|trans() }}</th>
+                        <th class="pl-2">{{ 'label.user'|trans() }}</th>
                     </tr>
                 </thead>
                 <tbody class="bg-white">
                     {% for translation in translationsContributor %}
                         <tr>
-                            <td>
-                                
+                            <td class="px-2 align-middle">
+                                {% if translation.statusId == 2 %}
+                                    <a href="{# todo #}"
+                                       role="button" class="btn btn-outline-warning pcx-2 py-1"
+                                       data-toggle="tooltip" data-placement="left"
+                                       title="{{ 'action.validate'|trans() }}">
+                                        <i class="far fa-paper-plane"></i>
+                                    </a>
+                                {% endif %}
                             </td>
-                            <td class="align-middle">{{ translation.name }}</td>
-                            <td class="align-middle">{{ translation.lang }}</td>
-                            <td class="align-middle">{{ translation.statusId }}</td>
-                            <td class="align-middle">{{ translation.enabled }}</td>
-                            <td class="align-middle">{{ translation.userName }}</td>
+                            <td class="px-2 align-middle">
+                                {% if translation.statusId == 3
+                                    and translation.enabled == false
+                                    and translation.yamlGenerated == false %}
+                                    <a href="{{ path('back_translation_permute_enabled', { 'ids': {0: translation.id} }) }}" role="button"
+                                        class="btn btn-primary py-1">
+                                        <span>{{ 'action.add'|trans }}</span>
+                                    </a>
+                                {% elseif translation.statusId == 3
+                                    and translation.enabled
+                                    and translation.yamlGenerated == false %}
+                                    <span class="px-3">{{ 'lang.translation.yaml.action.added'|trans }}</span>
+                                {% elseif translation.statusId == 3
+                                    and translation.yamlGenerated %}
+                                    <span class="px-3">{{ 'lang.translation.yaml.action.generated'|trans }}</span>
+                                {% endif %}
+                            </td>
+                            <td class="px-2 align-middle">{{ translation.name }}</td>
+                            <td class="px-2 align-middle text-uppercase">{{ translation.lang }}</td>
+                            <td class="px-2 align-middle">
+                                {% if translation.statusId == 1 %}
+                                    {{ 'status.writing'|trans() }}
+                                {% elseif translation.statusId == 2 %}
+                                    {{ 'status.validation'|trans() }}
+                                {% elseif translation.statusId == 3 %}
+                                    {{ 'status.validated'|trans() }}
+                                {% elseif translation.statusId == 4 %}
+                                    {{ 'status.refused'|trans() }}
+                                {% elseif translation.statusId == 5 %}
+                                    {{ 'status.deleted'|trans() }}
+                                {% endif %}
+                            </td>
+                            <td class="px-2 align-middle">{{ translation.userName }}</td>
                         </tr>
                     {% endfor %}
                 </tbody>

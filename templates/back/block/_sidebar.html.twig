@@ -42,7 +42,8 @@
                                                     'back_translation_site',
                                                     'back_translation_situ_create',
                                                     'back_translation_forms',
-                                                    'back_translation_create'] ? ' show' }}"
+                                                    'back_translation_create',
+                                                    'back_translation_generate_list'] ? ' show' }}"
              aria-labelledby="headingLang" data-parent="#accordionSidebar">
             <div class="bg-white mb-1 py-2 collapse-inner rounded">
                 <a class="collapse-item{{ route == 'back_lang_search' ? ' active' }}"
@@ -58,8 +59,8 @@
                    href="{{ path('back_translation_forms') }}">
                     {{ 'lang.translation.form.title'|trans() }}
                 </a>
-                <a class="collapse-item{{ route == '' ? ' active' }}"
-                   href="">
+                <a class="collapse-item{{ route == 'back_translation_generate_list' ? ' active' }}"
+                   href="{{ path('back_translation_generate') }}">
                     {{ 'lang.translation.yaml.title'|trans() }}
                 </a>
                 {% endif %}

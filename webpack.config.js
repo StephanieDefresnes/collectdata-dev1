@@ -88,6 +88,7 @@ Encore
     .addEntry('lang_search_app', './assets/back/js/lang_search_app.js')
     .addEntry('lang_translation_create_app', './assets/back/js/lang_translation_create_app.js')
     .addEntry('lang_translation_forms_app', './assets/back/js/lang_translation_forms_app.js')
+    .addEntry('lang_translation_generate_app', './assets/back/js/lang_translation_generate_app.js')
     .addEntry('lang_translation_site_app', './assets/back/js/lang_translation_site_app.js')
     .addEntry('lang_translation_site_create_app', './assets/back/js/lang_translation_site_create_app.js')
     .addEntry('page_edit_app', './assets/back/js/page_edit_app.js')

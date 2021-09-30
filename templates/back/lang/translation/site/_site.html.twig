@@ -15,12 +15,13 @@
             <table id="dataTable-translationsSite" class="table table-sm nowrap">
                 <thead class="bg-gray-600 text-white">
                     <tr>
-                        <th class="py-2">{{ 'action.actions'|trans() }}</th>
-                        <th class="py-2">{{ 'label.name'|trans() }}</th>
-                        <th class="py-2">{{ 'label.lang'|trans() }}</th>
-                        <th class="py-2">{{ 'label.status'|trans() }}</th>
-                        <th class="py-2">{{ 'label.enabled'|trans() }}</th>
-                        <th class="py-2">{{ 'label.user'|trans() }}</th>
+                        <th class="pl-2">{{ 'action.actions'|trans() }}</th>
+                        <th class="pl-2">{{ 'lang.translation.yaml.action.title'|trans() }}</th>
+                        <th class="pl-2">{{ 'label.enabled'|trans() }}</th>
+                        <th class="pl-2">{{ 'label.name'|trans() }}</th>
+                        <th class="pl-2">{{ 'label.lang'|trans() }}</th>
+                        <th class="pl-2">{{ 'label.status'|trans() }}</th>
+                        <th class="pl-2">{{ 'label.user'|trans() }}</th>
                     </tr>
                 </thead>
                 <tbody class="bg-white">
@@ -33,19 +34,36 @@
                                             'referentId': translation.referentId,
                                             'langId': translation.langId,
                                             'id': translation.id }) }}"
-                                   class="btn btn-outline-secondary btn-sm px-2 {{ translation.statusId == 3 ? 'btn-outline-warning confirmUpdate' }}"
+                                   class="btn btn-outline-primary btn-sm px-2{%
+                                                if translation.statusId == 3
+                                                and translation.enabled
+                                                and translation.yamlGenerated
+                                   %} btn-outline-warning confirmUpdate{% endif %}"
                                    data-toggle="tooltip" data-placement="left"
                                    title="{{ 'action.edit'|trans() }}"
                                    aria-label="{{ 'action.edit'|trans() }}">
                                     <i class="fas fa-pen"></i>
                                 </a>
-                                <a href="#"
-                                   class="btn btn-outline-danger btn-sm px-2 translationDelete"
-                                   data-toggle="tooltip" data-placement="left"
-                                   title="{{ 'action.delete'|trans() }}"
-                                   aria-label="{{ 'action.delete'|trans() }}">
-                                    <i class="far fa-trash-alt"></i>
-                                </a>
+                            </td>
+                            <td class="px-2 align-middle">
+                                {% if translation.statusId == 3
+                                    and translation.enabled == false
+                                    and translation.yamlGenerated == false %}
+                                    <a href="{{ path('back_translation_permute_enabled', { 'ids': {0: translation.id} }) }}" role="button"
+                                        class="btn btn-primary py-1">
+                                        <span>{{ 'action.add'|trans }}</span>
+                                    </a>
+                                {% elseif translation.statusId == 3
+                                    and translation.enabled
+                                    and translation.yamlGenerated == false %}
+                                    <span class="px-3">{{ 'lang.translation.yaml.action.added'|trans }}</span>
+                                {% elseif translation.statusId == 3
+                                    and translation.yamlGenerated %}
+                                    <span class="px-3">{{ 'lang.translation.yaml.action.generated'|trans }}</span>
+                                {% endif %}
+                            </td>
+                            <td class="px-2 align-middle">
+                                {{ translation.enabled ? 'yes'|trans : 'no'|trans}}
                             </td>
                             <td class="px-2 align-middle">{{ translation.name }}</td>
                             <td class="px-2 align-middle text-uppercase">{{ translation.lang }}</td>
@@ -57,11 +75,6 @@
                                 {% elseif translation.statusId == 5 %}
                                     {{ 'status.deleted'|trans() }}
                                 {% endif %}
-                            </td>
-                            <td class="px-2 align-middle">
-                                {{ translation.enabled == 1
-                                    ? 'yes'|trans()
-                                    : 'no'|trans() }}
                             </td>
                             <td class="px-2 py-0 align-middle">{{ translation.userName }}</td>
                         </tr>

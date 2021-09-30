@@ -4,6 +4,7 @@ namespace App\Controller\Back;
 
 use App\Entity\Translation;
 use App\Form\Back\Translation\TranslationFormType;
+use App\Manager\TranslationManager;
 use App\Service\LangService;
 use App\Service\ContributorLangsService;
 use App\Service\TranslationService;
@@ -46,9 +47,9 @@ class TranslationController extends AbstractController
      * @Route("/site", name="back_translation_site", methods="GET|POST")
      */
     public function translationSite(ContributorLangsService $contributorLangsService): Response 
-   {
+    {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
-        $this->denyAccessUnlessGranted('ROLE_SUPER_ADMIN');
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
         
         // Translation user contribs
         $usersContributorLangs = $contributorLangsService->getContributorLangs();
@@ -84,10 +85,12 @@ class TranslationController extends AbstractController
     }
 
     /**
+     * Translation forms list
+     * 
      * @Route("/forms", name="back_translation_forms", methods="GET|POST")
      */
     public function search(): Response 
-   {
+    {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
         $this->denyAccessUnlessGranted('ROLE_SUPER_ADMIN');
         
@@ -108,25 +111,10 @@ class TranslationController extends AbstractController
             'langsEnabled' => $langsEnabled,
         ]);
     }
-    
-    /**
-     * @Route("/permute/enabled", name="back_translation_permute_enabled", methods="GET")
-     */
-    public function permuteEnabled(TranslationManager $translationManager, Request $request): Response
-    {    
-        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
-        $this->denyAccessUnlessGranted('ROLE_ADMIN');
-        
-        $translations = $translationManager->getLangs();
-        foreach ($translations as $translation) {
-            $permute = $translation->getEnabled() ? false : true;
-            $translation->setEnabled($permute);
-        }
-        $this->getDoctrine()->getManager()->flush();
-        return $this->redirectToRoute('back_translation_forms');
-    }
 
     /**
+     * Create Translation form
+     * 
      * @Route("/create/{id}", defaults={"id" = null}, name="back_translation_create", methods="GET|POST")
      */
     public function create(Request $request, $id): Response 
@@ -223,6 +211,28 @@ class TranslationController extends AbstractController
             'translation' => $translation,
         ]);
     }
+    
+    /**
+     * List of Translations to generate
+     * 
+     * @Route("/generate", name="back_translation_generate_list", methods="GET|POST")
+     */
+    public function searchToGenerate()
+    {
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+        $this->denyAccessUnlessGranted('ROLE_SUPER_ADMIN');
+        
+        $translations = $this->getDoctrine()
+                    ->getRepository(Translation::class)->findBy([
+                        'referent' => 0,
+                        'statusId' => 3,
+                        'enabled' => 1,
+                    ]);
+        
+        return $this->render('back/lang/translation/generate.html.twig', [
+            'translations' =>$translations,
+        ]);
+    }
 
     /**
      * Clones form and its last collection values in default language
@@ -279,6 +289,40 @@ class TranslationController extends AbstractController
 
         $this->em->flush();
         return $this->redirectToRoute('back_translation_create', ['id' => $translation->getId()]);
+    }
+    
+    /**
+     * Permutes property "enabled" to true, to allow YAML generate
+     *  
+     * @Route("/permute/enabled", name="back_translation_permute_enabled", methods="GET")
+     */
+    public function permuteEnabled(TranslationManager $translationManager, Request $request): Response
+    {    
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+        
+        $translations = $translationManager->getTranslations();
+        foreach ($translations as $translation) {
+            $permute = $translation->getEnabled() ? false : true;
+            $translation->setEnabled($permute);
+        }
+        $this->getDoctrine()->getManager()->flush();
+        return $this->redirectToRoute('back_translation_site');
+    }
+    
+    /**
+     * Generates Yaml
+     * 
+     * @Route("/generateYaml/{id}", name="back_translation_generate", methods="GET|POST")
+     */
+    public function generateYaml(Request $request, $id): Response
+    {
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+        $this->denyAccessUnlessGranted('ROLE_SUPER_ADMIN');
+        
+        $translation = $this->em->getRepository(Translation::class)->find($id);
+        
+        // TODO
     }
     
 }

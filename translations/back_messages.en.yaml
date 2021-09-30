@@ -310,6 +310,13 @@ lang:
                 empty: No translation
                 title: Site languages
         yaml:
+            action:
+                added: Added
+                date_generated: Generation date
+                generate: Generate
+                generated: Generated
+                title: Generate YAML
+            table: List of translations to generate
             title: YAML generator
 lang_deny: Language denied
 nav:
