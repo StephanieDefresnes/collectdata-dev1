@@ -8,7 +8,7 @@ use App\Entity\Category;
 use App\Entity\Event;
 use App\Entity\Lang;
 use App\Entity\User;
-use App\Form\Front\Situ\CreateSituFormType;
+use App\Form\Front\Situ\SituFormType;
 use App\Mailer\Mailer;
 use App\Service\CategoryService;
 use App\Service\EventService;
@@ -249,7 +249,7 @@ class SituController extends AbstractController
             $situ = new Situ();
         }
         
-        $form = $this->createForm(CreateSituFormType::class, $situ);
+        $form = $this->createForm(SituFormType::class, $situ);
         $form->handleRequest($request);
                 
         return $this->render('front/situ/create.html.twig', [

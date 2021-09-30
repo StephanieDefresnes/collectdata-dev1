@@ -6,7 +6,7 @@ use App\Entity\Category;
 use App\Entity\Event;
 use App\Entity\Lang;
 use App\Entity\Situ;
-use App\Form\Front\Situ\CreateSituItemType;
+use App\Form\Front\Situ\SituItemType;
 use App\Service\EventService;
 use App\Service\CategoryService;
 use Doctrine\ORM\EntityManagerInterface;
@@ -27,7 +27,7 @@ use Symfony\Component\Security\Core\Security;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Symfony\Component\Validator\Constraints\Count;
 
-class CreateSituFormType extends AbstractType
+class SituFormType extends AbstractType
 {
     private $categoryService;
     private $em;
@@ -366,7 +366,7 @@ class CreateSituFormType extends AbstractType
                     ],
             ])
             ->add($builder->create('situItems' , CollectionType::class, [
-                    'entry_type'   => CreateSituItemType::class,
+                    'entry_type'   => SituItemType::class,
                     'label' => false,
                     'allow_add' => true,
                     'allow_delete' => true,
