@@ -4,6 +4,10 @@ password_not_blank: Please enter a password
 password_length_min: Your password should be at least 6 characters
 repeated_password_invalid: The new password fields must match.
 unique_email: This email already exists. Please enter a new address.
+situ:
+    situItems:
+        max: You cannot specify more than 4 answers
+        min: You must specify at least one answer
 registration:
     agree_terms_is_true: You should agree to our terms
 translation:

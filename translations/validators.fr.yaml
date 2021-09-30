@@ -4,6 +4,10 @@ password_not_blank: Veuillez entrer un mot de passe
 password_length_min: Votre mot de passe doit comporter au moins 6 caractères
 repeated_password_invalid: Les champs de mot de passe doivent correspondre
 unique_email: Il existe déjà un compte avec cet email
+situ:
+    situItems:
+        max: Vous ne pouvez pas spécifier plus de 4 réponses
+        min: Vous devez spécifier au moins une réponse
 registration:
     agree_terms_is_true: Vous devez accepter nos conditions
 translation:

@@ -25,6 +25,7 @@ use Symfony\Component\Form\FormInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Contracts\Translation\TranslatorInterface;
+use Symfony\Component\Validator\Constraints\Count;
 
 class CreateSituFormType extends AbstractType
 {
@@ -365,11 +366,19 @@ class CreateSituFormType extends AbstractType
                     ],
             ])
             ->add($builder->create('situItems' , CollectionType::class, [
-                'entry_type'   => CreateSituItemType::class,
-                'label' => false,
-                'allow_add' => true,
-                'allow_delete' => true,
-                'prototype' => true,
+                    'entry_type'   => CreateSituItemType::class,
+                    'label' => false,
+                    'allow_add' => true,
+                    'allow_delete' => true,
+                    'prototype' => true,
+                    'constraints' => [
+                        new Count([
+                            'min' => 1,
+                            'minMessage' => 'situ.situItems.min',
+                            'max' => 4,
+                            'maxMessage' => 'situ.situItems.max',
+                        ]),
+                    ],
                 ])
             )
             ->add('statusId', HiddenType::class)

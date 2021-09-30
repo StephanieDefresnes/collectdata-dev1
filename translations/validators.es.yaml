@@ -4,6 +4,10 @@ password_not_blank: Porfavor ingrese una contraseña
 password_length_min: Tu contraseña debe tener al menos 6 caracteres
 repeated_password_invalid: Los campos de la nueva contraseña deben coincidir
 unique_email: Ya existe este email. Ingrese un nuevo email.
+situ:
+    situItems:
+        max: No puede especificar más de 4 respuestas
+        min: Debes especificar al menos una respuesta
 registration:
     agree_terms_is_true: Debes aceptar nuestros términos
 translation:
