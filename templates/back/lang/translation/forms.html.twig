@@ -98,12 +98,10 @@
                             <td class="px-2 align-middle">
                                 {% if form.statusId == 3 %}
                                     {% if form.enabled == 0 %}
-                                        {% if langsEnabled|length == countTranslations %}
-                                            <a href="{{ path('back_translation_permute_enabled', { 'ids': {0: form.id} }) }}"
-                                               role="button" class="btn btn-primary py-1">
-                                                <span>{{ 'action.enable'|trans }}</span>
-                                            </a>
-                                        {% endif %}
+                                        <a href="{{ path('back_translation_permute_enabled', { 'ids': {0: form.id} }) }}"
+                                           role="button" class="btn btn-primary py-1">
+                                            <span>{{ 'action.enable'|trans }}</span>
+                                        </a>
                                     {% else %}
                                         <span>{{ 'label.enabled'|trans }}</span>
                                     {% endif %}
