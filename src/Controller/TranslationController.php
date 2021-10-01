@@ -63,14 +63,15 @@ class TranslationController extends AbstractController
             } else {
                 $translation->setDateCreation(new \DateTime('now'));
             }
-            $translation->setReferent(0);
+            $translation->setReferent(false);
             $translation->setReferentId($referentId);
             $translation->setLang($form->get('lang')->getData());
             $translation->setLangId($langId);
             $translation->setName($referent->getName());
             $translation->setStatusId($form->get('statusId')->getData());
             $translation->setUserId($user->getId());
-            $translation->setEnabled(0);
+            $translation->setEnabled(false);
+            $translation->setYamlGenerated(false);
             
             if (!$id) {
                 $fields = $form->get('fields');
