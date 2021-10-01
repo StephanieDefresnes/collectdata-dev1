@@ -5,7 +5,7 @@
 
 {% block stylesheets %}
     {{ parent() }}
-    {{ encore_entry_link_tags('lang_translation_generate_app', null, 'backApp') }}
+    {{ encore_entry_link_tags('table_app', null, 'backApp') }}
     {{ encore_entry_link_tags('flp_theme') }}
  {% endblock %}
 
@@ -16,6 +16,10 @@
         
         <div class="d-sm-flex justify-content-between mb-4">
             <h1 class="h3 mb-0 text-gray-800">{{ 'lang.translation.yaml.title'|trans() }}</h1>
+            <a href="{{ path('back_translation_clean') }}"  class="btn btn-primary mx-2 pt-1">
+                <i class="fas fa-cog"></i>
+                {{ 'lang.translation.yaml.clean.btn'|trans() }}
+            </a>
         </div>
         
         <div class="row">
@@ -26,13 +30,13 @@
                         <h6 class="m-0 font-weight-bold text-primary">{{ 'lang.translation.yaml.table'|trans() }}</h6>
                     </div>
 
-                    <div id="translations-list" class="card-body pb-3 back-dataTable">
+                    <div id="list" class="card-body pb-3 back-dataTable">
 
                     {% if translations is empty %}
                         {{ 'lang.translation.site.table.empty'|trans() }}
                     {% else %}
 
-                        <table id="dataTable-translations" class="table table-sm nowrap">
+                        <table id="dataTable-list" class="table table-sm nowrap">
                             <thead class="bg-gray-600 text-white">
                                 <tr>
                                     <th class="pl-2">{{ 'lang.translation.yaml.action.title'|trans() }}</th>
@@ -49,8 +53,8 @@
                                             {% if translation.statusId == 3
                                                 and translation.enabled
                                                 and translation.yamlGenerated == false %}
-                                                <a href="{{ path('back_translation_permute_enabled', { 'ids': {0: translation.id} }) }}" role="button"
-                                                    class="btn btn-primary py-1">
+                                                <a href="{{ path('back_translation_generate', { 'id': translation.id }) }}"
+                                                    class="btn btn-primary py-1" role="button">
                                                     <span>{{ 'lang.translation.yaml.action.generate'|trans }}</span>
                                                 </a>
                                             {% elseif translation.statusId == 3
@@ -83,5 +87,5 @@
 
 {% block javascripts %}
     {{ parent() }}
-    {{ encore_entry_script_tags('lang_translation_generate_app', null, 'backApp') }}
+    {{ encore_entry_script_tags('table_app', null, 'backApp') }}
 {% endblock %}

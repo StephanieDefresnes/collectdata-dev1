@@ -18,6 +18,10 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Yaml\Yaml;
 use Symfony\Contracts\Translation\TranslatorInterface;
+use Symfony\Component\Serializer\Encoder\JsonEncoder;
+use Symfony\Component\Serializer\Encoder\XmlEncoder;
+use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
+use Symfony\Component\Serializer\Serializer;
 
 /**
  * @Route("/{_locale<%app_locales%>}/back/translation")
@@ -160,8 +164,9 @@ class TranslationController extends AbstractController
 
             $translation->setDateCreation(new \DateTime('now'));
             $translation->setUserId($user->getId());
-            $translation->setReferent(1);
-            $translation->setEnabled(0);
+            $translation->setReferent(true);
+            $translation->setEnabled(false);
+            $translation->setYamlGenerated(false);
             
             foreach ($originalFields as $field) {
                 if (false === $translation->getFields()->contains($field)) {
@@ -233,6 +238,21 @@ class TranslationController extends AbstractController
             'translations' =>$translations,
         ]);
     }
+    
+    /**
+     * Clean Yaml files
+     * 
+     * @Route("/clean", name="back_translation_clean", methods="GET|POST")
+     */
+    public function cleanYaml()
+    {
+        $translationFolder = $this->getParameter('translation_folder');
+        $translationFiles = preg_grep('/^([^.])/', scandir($translationFolder));;
+        
+        return $this->render('back/lang/translation/clean.html.twig', [
+            'translationFiles' =>$translationFiles,
+        ]);
+    }
 
     /**
      * Clones form and its last collection values in default language
@@ -278,7 +298,7 @@ class TranslationController extends AbstractController
         $translation->setDateLastUpdate(null);
         $translation->setDateStatus(null);
         $translation->setUserId($user->getId());
-        $translation->setEnabled(0);
+        $translation->setEnabled(false);
         $this->em->persist($translation);
         
         foreach ($referentFields as $key => $field) {
@@ -315,14 +335,70 @@ class TranslationController extends AbstractController
      * 
      * @Route("/generateYaml/{id}", name="back_translation_generate", methods="GET|POST")
      */
-    public function generateYaml(Request $request, $id): Response
+    public function generateYaml($id): Response
     {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
         $this->denyAccessUnlessGranted('ROLE_SUPER_ADMIN');
         
         $translation = $this->em->getRepository(Translation::class)->find($id);
         
-        // TODO
+        $newFile = $translation->getName().'.'.$translation->getLang().'.test.yaml';
+        
+        // Get translation fields
+        $arrayFields = [];        
+        foreach ($translation->getFields() as $field) {
+            $arrayFields[$field->getName()] = $field->getValue();
+        }
+        
+        // Nested multidimentional array depending on key
+        $result = [];
+        $countArray = [];
+        foreach($arrayFields as $path => $value) {
+            $temp = &$result;
+            $paths = explode('.', $path);
+            array_push($countArray, count($paths));            
+            foreach($paths as $key) {
+                $temp = &$temp[$key];
+            }
+            $temp = $value;
+        }
+        unset($temp);
+        
+        // Convert to yaml content
+        try {
+            // If translation exists, rename it in .old_"dateNow"
+            $dateNow = new \DateTime('now');
+            $dateFile = $dateNow->format('Y-m-d_H-i-s');
+            if (file_exists($this->getParameter('translation_folder').'/'.$newFile)) {
+                $newFilename = $newFile .'.old_'. $dateFile;
+                rename(
+                    $this->getParameter('translation_folder').'/'.$newFile,
+                    $this->getParameter('translation_folder').'/'.$newFilename
+                );
+            }
+            
+            // Create new translation file
+            $yaml = Yaml::dump($result, max($countArray));
+            file_put_contents($this->getParameter('translation_folder').'/'.$newFile, $yaml);
+            
+            // Update object
+            $translation->setYamlGenerated(true);
+            $translation->setDateGenerated($dateNow);
+            $this->em->persist($translation);
+            $this->em->flush();
+            
+            $msg = $this->translator
+                    ->trans('lang.translation.yaml.flash.success',[],
+                            'back_messages', $locale = locale_get_default());
+            $this->addFlash('success', $msg);
+            
+        } catch (Exception $ex) {
+            $msg = $this->translator
+                    ->trans('lang.translation.yaml.flash.error',[],
+                            'back_messages', $locale = locale_get_default());
+            $this->addFlash('success', $msg);
+        }
+        return $this->redirectToRoute('back_translation_generate_list');
     }
     
 }

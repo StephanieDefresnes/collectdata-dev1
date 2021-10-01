@@ -1,0 +1,72 @@
+{% trans_default_domain 'back_messages' %}
+{% extends "back/layout.html.twig" %}
+
+{% block title %}{{  'lang.translation.yaml.clean.btn'|trans }}{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {{ encore_entry_link_tags('table_app', null, 'backApp') }}
+    {{ encore_entry_link_tags('flp_theme') }}
+ {% endblock %}
+
+
+{% block content %}
+{#    <div id="loader"></div>#}
+    <div class="container-fluid pt-4">
+        
+        <div class="d-sm-flex justify-content-between mb-4">
+            <h1 class="h3 mb-0 text-gray-800">{{ 'lang.translation.yaml.clean.btn'|trans() }}</h1>
+            <a href="{{ path('back_translation_generate_list') }}"  class="btn btn-secondary mx-2 pt-1">
+                {{ 'action.back'|trans() }}
+            </a>
+        </div>
+        
+        <div class="row">
+            <div class="col-lg-6 col-12 mx-auto">
+                <div class="card shadow mb-4">
+
+                    <div class="card-header py-3">
+                        <h6 class="m-0 font-weight-bold text-primary">{{ 'lang.translation.yaml.clean.table.title'|trans() }}</h6>
+                    </div>
+
+                    <div id="list" class="card-body pb-3 back-dataTable">
+
+                    {% if translationFiles is empty %}
+                        {{ 'lang.translation.site.table.empty'|trans() }}
+                    {% else %}
+
+                        <table id="dataTable-list" class="table table-sm nowrap">
+                            <thead class="bg-gray-600 text-white">
+                                <tr>
+                                    <th class="no-sort" name="check"><div class="form-check pl-1"><input type="checkbox" id="select_all" /></div></th>
+                                    <th class="pl-2">{{ 'lang.translation.yaml.clean.table.name_file'|trans() }}</th>
+                                    <th class="pl-2 no-sort"></th>
+                                </tr>
+                            </thead>
+                            <tbody class="bg-white">
+                                {% for file in translationFiles %}
+                                    <tr>
+                                        <td class="align-middle">
+                                            <div class="form-check pl-1"><input type="checkbox" /></div>
+                                        </td>
+                                        <td class="px-2 align-middle removeField">
+                                            {{ file }}
+                                        </td>
+                                        <td class="px-2 align-middle"></td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>            
+                    {% endif %}
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {{ encore_entry_script_tags('table_app', null, 'backApp') }}
+{% endblock %}
