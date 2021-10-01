@@ -19,6 +19,11 @@ textarea:focus {
     outline: none !important;
     box-shadow: none !important;
 }
+#fields {
+    textarea {
+        line-height: 1.1 !important;
+    }
+}
 
 #flash_message {
     width: auto;

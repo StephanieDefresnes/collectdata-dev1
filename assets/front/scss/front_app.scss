@@ -599,6 +599,11 @@ form {
         color: $gray-b !important;
     }
 }
+#fields {
+    textarea {
+        line-height: 1.1 !important;
+    }
+}
 
 /* Override SF Bootstrap Custom class checkbox */
 .custom-control-label {
