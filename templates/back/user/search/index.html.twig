@@ -13,8 +13,8 @@
 
 {% block stylesheets %}
     {{ parent() }}
+    {{ encore_entry_link_tags('table_app', null, 'backApp') }}
     {{ encore_entry_link_tags('flp_theme') }}
-    {{ encore_entry_link_tags('user_search_app', null, 'backApp') }}
  {% endblock %}
 
 {% block content %}
@@ -58,7 +58,7 @@
 
 {% block javascripts %}
     {{ parent() }}
-    {{ encore_entry_script_tags('user_search_app', null, 'backApp') }}
+    {{ encore_entry_script_tags('table_app', null, 'backApp') }}
 
     {% if can_delete %}
         {{ encore_entry_script_tags('user_can_delete', null, 'backApp') }}

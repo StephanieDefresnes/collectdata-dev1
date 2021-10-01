@@ -1,15 +1,20 @@
 // css
-import '../scss/user_search_app.scss';
+import '../scss/table_app.scss';
 
 // js
 require('datatables.net/js/jquery.dataTables.min.js');
 require('datatables.net-bs4/js/dataTables.bootstrap4.min.js');
 const lang = require('../../datatables.json')
 
-$(document).ready(function(){
+$(function() {
     
-    // Datatables configutration
-    var table = $('#dataTable-usersList').DataTable({
+    if ($('#dataTable-list tbody tr').length == 0) $('#loader').hide()
+    
+    /**
+     * Translations list
+     */
+    // Datatables configuration
+    var table = $('#dataTable-list').DataTable({
         language: {
             url: '//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/'
                     + lang[$('html').attr('lang')] +'.json',
@@ -21,29 +26,30 @@ $(document).ready(function(){
             orderable: false,
             targets: 'no-sort'
         }],
-        "order": [[ 0, 'asc' ],[ 1, 'asc' ]],
+        "order": [[ 1, 'asc' ]],
         "fnDrawCallback": function(oSettings) {
-            $('#dataTable-usersList_filter input').addClass('search')
+            $('#dataTable-list_filter input').addClass('search')
+            
+            // Hide length select & pagination if only one page
+            if ($('#dataTable-list').dataTable().fnSettings().fnRecordsTotal() <= 10) {
+               $('#length, #pagination .dataTables_paginate').hide()
+               $('#search .dataTables_filter').addClass('text-left')
+            
+            }
             $('#loader').hide()
         }
     })
-    
-    // Hide length select & pagination if only one page
-    if (table.data().count() <= 10) {
-       $('#length, #pagination .dataTables_paginate').hide()
-       $('#search .dataTables_filter').addClass('text-left')
-    }
 
     // Reset search filter
-    $('#users-list').on('keyup paste', 'input.search', function() {
+    $('#list').on('keyup paste', 'input.search', function() {
         $(this).parent().find('.clean-search').remove('.clean-search')
         if ($(this).val() != '') {
             $(this).parent().append('<span class="clean-search"><i class="fas fa-times"></i></span>')
         }
     })
-    $('#users-list').on('click', '.clean-search', function() {
+    $('#list').on('click', '.clean-search', function() {
         table.search('').columns().search('').draw();
         $(this).remove()
     })
     
-})
+});

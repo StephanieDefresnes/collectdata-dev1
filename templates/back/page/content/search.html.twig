@@ -6,14 +6,12 @@
 
 {% block stylesheets %}
     {{ parent() }}
-    {{ encore_entry_link_tags('page_search_app', null, 'backApp') }}
-    <style>
-        
-    </style>
+    {{ encore_entry_link_tags('table_app', null, 'backApp') }}
+    {{ encore_entry_link_tags('flp_theme') }}
 {% endblock %}
 
 {% block content %}
-{#    <div id="loader"></div>#}
+    <div id="loader"></div>
     <div class="container-fluid pt-4">
         
         <div class="d-sm-flex align-items-center justify-content-between mb-4">
@@ -32,16 +30,16 @@
                 </h6>
             </div>
 
-            <div id="pages" class="card-body pb-3 back-dataTable">
+            <div id="list" class="card-body pb-3 back-dataTable">
 
                 {% if pages is empty %}
                     {{ 'content.list.table.empty'|trans() }}
                 {% else %}
 
-                <table id="dataTable-pages" class="table table-sm nowrap">
+                <table id="dataTable-list" class="table table-sm nowrap">
                     <thead class="bg-gray-600 text-white">
                         <tr>
-                            <th class="px-2">{{ 'action.action'|trans() }}</th>
+                            <th class="px-2 no-sort">{{ 'action.action'|trans() }}</th>
                             <th class="px-2">{{ 'label.enabled'|trans() }}</th>
                             <th class="px-2">{{ 'label.lang'|trans() }}</th>
                             <th class="px-2">{{ 'label.type'|trans() }}</th>
@@ -107,5 +105,5 @@
 
 {% block javascripts %}
     {{ parent() }}
-    {{ encore_entry_script_tags('page_search_app', null, 'backApp') }}
+    {{ encore_entry_script_tags('table_app', null, 'backApp') }}
 {% endblock %}

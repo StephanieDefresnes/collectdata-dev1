@@ -6,8 +6,8 @@
 
 {% block stylesheets %}
     {{ parent() }}
+    {{ encore_entry_link_tags('table_app', null, 'backApp') }}
     {{ encore_entry_link_tags('flp_theme') }}
-    {{ encore_entry_link_tags('situ_search_app', null, 'backApp') }}
 {% endblock %}
 
 {% block content %}
@@ -26,5 +26,5 @@
 
 {% block javascripts %}
     {{ parent() }}
-    {{ encore_entry_script_tags('situ_search_app', null, 'backApp') }}
+    {{ encore_entry_script_tags('table_app', null, 'backApp') }}
 {% endblock %}

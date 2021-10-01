@@ -6,8 +6,8 @@
 
 {% block stylesheets %}
     {{ parent() }}
+    {{ encore_entry_link_tags('table_app', null, 'backApp') }}
     {{ encore_entry_link_tags('flp_theme') }}
-    {{ encore_entry_link_tags('lang_search_app', null, 'backApp') }}
  {% endblock %}
 
 
@@ -25,5 +25,5 @@
 
 {% block javascripts %}
     {{ parent() }}
-    {{ encore_entry_script_tags('lang_search_app', null, 'backApp') }}
+    {{ encore_entry_script_tags('table_app', null, 'backApp') }}
 {% endblock %}

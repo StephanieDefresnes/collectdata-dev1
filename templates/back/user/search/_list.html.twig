@@ -8,11 +8,14 @@
 {% endif %}
 
 <div class="card shadow mb-4">
+    
     <div class="card-header py-3">
         <h6 class="m-0 font-weight-bold text-primary">{{ 'user.search.table'|trans() }}</h6>
     </div>
-    <div id="users-list" class="card-body pb-3">
-        <table id="dataTable-usersList" class="table table-sm mb-0">
+    
+    <div id="list" class="card-body pb-3">
+        
+        <table id="dataTable-list" class="table table-sm mb-0">
             <thead class="bg-gray-600 text-white">
                 <tr>
                     {% if is_granted("ROLE_SUPER_ADMIN") %}
@@ -162,6 +165,7 @@
             {% endfor %}
             </tbody>
         </table>
+            
     </div>
 </div>
             
