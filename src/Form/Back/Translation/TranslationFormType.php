@@ -22,13 +22,13 @@ class TranslationFormType extends AbstractType
                 'label' => 'lang.translation.form.message.name',
                 'label_attr' => ['class' => 'pr-2'],
                 'choices'  => [
-                    'Back' => 'back_message',
-                    'Front' => 'front_message',
-                    'Message' => 'message',
+                    'Back Message' => 'back_messages',
+                    'Front Message' => 'front_messages',
+                    'Message' => 'messages',
                     'Security' => 'security',
-                    'User' => 'user_message',
+                    'User Message' => 'user_messages',
                     'Validators' => 'validators',
-                    'Visitor' => 'visitor',
+                    'Visitor Messages' => 'visitor_messages',
                 ],
                 'constraints' => [
                     new NotBlank([
