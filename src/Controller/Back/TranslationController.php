@@ -94,7 +94,7 @@ class TranslationController extends AbstractController
      * 
      * @Route("/forms", name="back_translation_forms", methods="GET|POST")
      */
-    public function search(): Response 
+    public function seachTransaltionForms(): Response 
     {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
         $this->denyAccessUnlessGranted('ROLE_SUPER_ADMIN');
@@ -122,7 +122,7 @@ class TranslationController extends AbstractController
      * 
      * @Route("/create/{id}", defaults={"id" = null}, name="back_translation_create", methods="GET|POST")
      */
-    public function create(Request $request, $id): Response 
+    public function createTransaltionForm(Request $request, $id): Response 
     {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
         $this->denyAccessUnlessGranted('ROLE_SUPER_ADMIN');
@@ -223,7 +223,7 @@ class TranslationController extends AbstractController
      * 
      * @Route("/generate", name="back_translation_generate_list", methods="GET|POST")
      */
-    public function searchToGenerate()
+    public function searchTranslationsGenerate()
     {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
         $this->denyAccessUnlessGranted('ROLE_SUPER_ADMIN');
@@ -241,11 +241,11 @@ class TranslationController extends AbstractController
     }
     
     /**
-     * Clean Yaml files
+     * List of Yaml translation files and clean up old ones
      * 
      * @Route("/clean", name="back_translation_clean", methods="GET|POST")
      */
-    public function cleanYaml()
+    public function seachTranslationFilesToClean()
     {
         $translationFolder = $this->getParameter('translation_folder');
         $translationFiles = preg_grep('/^([^.])/', scandir($translationFolder));
@@ -343,7 +343,7 @@ class TranslationController extends AbstractController
     }
     
     /**
-     * Generates Yaml
+     * Generate Yaml files
      * 
      * @Route("/generateYaml/{id}", name="back_translation_generate", methods="GET|POST")
      */
@@ -415,7 +415,7 @@ class TranslationController extends AbstractController
     
     
     /**
-     * Permutes property "enabled" to true, to allow YAML generate
+     * Remove old Translations files
      *  
      * @Route("/removeFile/{file}", name="back_translation_remove", methods="GET")
      */
