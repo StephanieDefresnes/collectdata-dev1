@@ -5,6 +5,7 @@
 
 {% block stylesheets %}
     {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('jquery-confirm/css/jquery-confirm.css') }}">
     {{ encore_entry_link_tags('lang_translation_clean_app', null, 'backApp') }}
     {{ encore_entry_link_tags('table_app', null, 'backApp') }}
     {{ encore_entry_link_tags('flp_theme') }}
@@ -39,38 +40,29 @@
                         <table id="dataTable-list" class="table table-sm nowrap">
                             <thead class="bg-gray-600 text-white">
                                 <tr>
-                                    <th class="no-sort" name="check"><div class="form-check pl-1"><input type="checkbox" id="select_all" /></div></th>
                                     <th class="pl-2">{{ 'lang.translation.yaml.clean.table.name_file'|trans() }}</th>
                                     <th class="pl-2 no-sort"></th>
-                                    <th class="d-none"></th>
+                                    <th class="d-none no-sort"></th>
                                 </tr>
                             </thead>
                             <tbody class="bg-white">
                                 {% for file in files %}
                                     <tr>
-                                        <td class="align-middle">
-                                            <div class="form-check pl-1">
-                                                {% if file['old'] == 1 %}
-                                                    <input type="checkbox" />
-                                                {% endif %}
-                                            </div>
-                                        </td>
                                         <td class="px-2 align-middle fileName">
                                             {{ file['file'] }}
                                         </td>
                                         <td class="px-2 align-middle">
                                             <span class="btn btn-outline-primary px-2 showFile"
-                                               data-toggle="tooltip" data-placement="left"
-                                               title="{{ 'action.read'|trans() }}"
-                                               aria-label="{{ 'action.read'|trans() }}">
+                                                  data-toggle="tooltip" data-placement="left"
+                                                  title="{{ 'action.read'|trans() }}"
+                                                  aria-label="{{ 'action.read'|trans() }}">
                                                 <i class="fas fa-eye"></i>
                                             </span>
                                             {% if file['old'] == 1 %}
                                                 <a href="{{ path('back_translation_remove', { 'file': file['file'] }) }}"
-                                                   class="btn btn-outline-danger width-max-40"
-                                                   data-toggle="tooltip" data-placement="left"
-                                                   title="{{ 'action.delete'|trans() }}"
-                                                   aria-label="{{ 'action.delete'|trans() }}">
+                                                   class="btn btn-outline-danger width-max-40 removeFile"
+{#                                                      data-remove="{{ path('back_translation_remove', { 'file': file['file'] }) }}"#}
+                                                      aria-label="{{ 'action.delete'|trans() }}">
                                                     <i class="fas fa-edit"></i>
                                                 </a>
                                             {% endif %}
@@ -112,6 +104,16 @@
 
 {% block javascripts %}
     {{ parent() }}
+    <script src="{{ asset('jquery-confirm/js/jquery-confirm.js') }}"></script>
     {{ encore_entry_script_tags('lang_translation_clean_app', null, 'backApp') }}
     {{ encore_entry_script_tags('table_app', null, 'backApp') }}
+    <script>
+        var translations = {
+            "confirmQuestion" : "{{ 'lang.translation.yaml.clean.confirm.question' | trans }}",
+            "confirmTitle" : "{{ 'lang.translation.yaml.clean.confirm.title' | trans }}",
+            "confirmWarning" : "{{ 'lang.translation.yaml.clean.confirm.warning' | trans }}",
+            "no" : "{{ 'no' | trans }}",
+            "yes" : "{{ 'yes' | trans }}",
+        }
+    </script>
 {% endblock %}

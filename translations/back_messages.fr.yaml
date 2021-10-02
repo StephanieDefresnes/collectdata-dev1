@@ -318,6 +318,10 @@ lang:
                 title: Générer YAML
             clean:
                 btn: Nettoyage YAML
+                confirm:
+                    question: Êtes-vous certain(e) de vouloir supprimer ce fichier ?
+                    title: Suppression de fichier
+                    warning: La suppression
                 flash:
                     error: Une erreur s'est produite lors de la suppression de la traduction
                     success: La traduction a bien été supprimée
