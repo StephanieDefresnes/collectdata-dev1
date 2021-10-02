@@ -26,7 +26,6 @@ $(function() {
             orderable: false,
             targets: 'no-sort'
         }],
-        "order": [[ 1, 'asc' ]],
         "fnDrawCallback": function(oSettings) {
             $('#dataTable-list_filter input').addClass('search')
             
