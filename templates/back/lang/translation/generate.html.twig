@@ -48,7 +48,7 @@
                             </thead>
                             <tbody class="bg-white">
                                 {% for translation in translations %}
-                                    <tr>
+                                    <tr id="{{ translation.id }}">
                                         <td class="px-2 align-middle">
                                             {% if translation.statusId == 3
                                                 and translation.enabled

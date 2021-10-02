@@ -110,7 +110,7 @@
                         <select class="form-control" id="siteEnvironnement">
                             <option>{{ 'action.select'|trans() }}</option>
                             {% for form in translationForms %}
-                                <option value="{{ form.id }}">{{ form.name }}</option>
+                                <option value="{{ form.id }}">#{{ form.id }} - {{ form.name }}</option>
                             {% endfor %}
                         </select>
                     </div>

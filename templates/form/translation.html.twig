@@ -18,7 +18,9 @@
             <div class="col-md-6 col-12 px-1">
                 <div class="form-group mb-2 px-2 pt-1 pb-2 rounded bg-white-50">
                     <div class="d-flex justify-content-start">
-                        <label for="translation_form_fields_value_{{ key }}">{{ field.vars.value.name|trans({}, referent.name) }}</label>
+                        <label for="translation_form_fields_value_{{ key }}">
+                            {{ field.vars.value.name|trans({}, referent.name) }}
+                        </label>
                     </div>
                     {{ form_widget(field.value, {'attr': {'rows': '1', 'class': 'custom-textarea'}} ) }}
                     {{ form_widget(field.type) }}
@@ -28,8 +30,10 @@
             {% else %}
             <div class="col-12 px-0">
                 <div class="form-group row mx-1 mb-2 pt-2 pb-2 rounded bg-white-50">
-                    <div class="d-flex justify-content-start col-md-6 col-12 px-2 pb-2">
-                        <label for="translation_form_fields_value_{{ key }}">{{ field.vars.value.name|trans({}, referent.name)|nl2br }}</label>
+                    <div class="d-flex justify-content-start col-md-6 col-12 p-2">
+                        <label for="translation_form_fields_value_{{ key }}" class="line-11">
+                            {{ field.vars.value.name|trans({}, referent.name)|nl2br }}
+                        </label>
                     </div>
                     <div class="col-md-6 col-12 px-2">
                         {{ form_widget(field.value, {'attr': {'rows': '12'}} ) }}
