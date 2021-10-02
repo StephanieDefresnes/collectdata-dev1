@@ -18,10 +18,6 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Yaml\Yaml;
 use Symfony\Contracts\Translation\TranslatorInterface;
-use Symfony\Component\Serializer\Encoder\JsonEncoder;
-use Symfony\Component\Serializer\Encoder\XmlEncoder;
-use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
-use Symfony\Component\Serializer\Serializer;
 
 /**
  * @Route("/{_locale<%app_locales%>}/back/translation")
@@ -72,10 +68,15 @@ class TranslationController extends AbstractController
         $translationsSite = $this->translationService->getTranslations($langs);
         
         $translationForms = $this->getDoctrine()
-                    ->getRepository(Translation::class)->findBy([
-                        'referent' => 1,
-                        'statusId' => 3,
-                    ]);
+                    ->getRepository(Translation::class)->findBy(
+                        [
+                            'referent' => 1,
+                            'statusId' => 3,
+                        ], [
+                            'name' => 'ASC',
+                            'id' => 'DESC',
+                        ]
+                    );
         
         // Get current user
         $user = $this->security->getUser();
@@ -247,10 +248,21 @@ class TranslationController extends AbstractController
     public function cleanYaml()
     {
         $translationFolder = $this->getParameter('translation_folder');
-        $translationFiles = preg_grep('/^([^.])/', scandir($translationFolder));;
+        $translationFiles = preg_grep('/^([^.])/', scandir($translationFolder));
+        
+        $files = [];
+        foreach($translationFiles as $file) {
+            $strings = explode('.', $file);
+            $old = isset($strings[3]) ? 1 : 0;
+            $files[] = [
+                'file' => $file,
+                'old' => $old,
+                'content' => file_get_contents($this->getParameter('translation_folder').'/'.$file),
+            ];
+        }
         
         return $this->render('back/lang/translation/clean.html.twig', [
-            'translationFiles' =>$translationFiles,
+            'files' =>$files,
         ]);
     }
 
@@ -370,7 +382,7 @@ class TranslationController extends AbstractController
             $dateNow = new \DateTime('now');
             $dateFile = $dateNow->format('Y-m-d_H-i-s');
             if (file_exists($this->getParameter('translation_folder').'/'.$newFile)) {
-                $newFilename = $newFile .'.old_'. $dateFile;
+                $newFilename = $newFile .'.old.'. $dateFile;
                 rename(
                     $this->getParameter('translation_folder').'/'.$newFile,
                     $this->getParameter('translation_folder').'/'.$newFilename
@@ -399,6 +411,31 @@ class TranslationController extends AbstractController
             $this->addFlash('success', $msg);
         }
         return $this->redirectToRoute('back_translation_generate_list');
+    }
+    
+    
+    /**
+     * Permutes property "enabled" to true, to allow YAML generate
+     *  
+     * @Route("/removeFile/{file}", name="back_translation_remove", methods="GET")
+     */
+    public function removeFile($file) {
+        try {
+            unlink($this->getParameter('translation_folder').'/'.$file);
+            
+            $msg = $this->translator
+                    ->trans('lang.translation.yaml.clean.flash.success',[],
+                            'back_messages', $locale = locale_get_default());
+            $this->addFlash('success', $msg);
+            
+        } catch (Exception $e) {
+            $msg = $this->translator
+                    ->trans('lang.translation.yaml.clean.flash.error',[],
+                            'back_messages', $locale = locale_get_default());
+            $this->addFlash('success', $msg);
+        }
+        
+        return $this->redirectToRoute('back_translation_clean');
     }
     
 }

@@ -135,6 +135,11 @@ th.cust-nowrap {
     max-width: 20px;
     white-space: nowrap;
 }
+.bg-black,
+.bg-black pre {
+    background: #000;
+    color: #fff !important;
+}
 
 /*
  * sb admin 2

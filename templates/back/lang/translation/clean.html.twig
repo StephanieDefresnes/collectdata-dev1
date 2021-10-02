@@ -5,6 +5,7 @@
 
 {% block stylesheets %}
     {{ parent() }}
+    {{ encore_entry_link_tags('lang_translation_clean_app', null, 'backApp') }}
     {{ encore_entry_link_tags('table_app', null, 'backApp') }}
     {{ encore_entry_link_tags('flp_theme') }}
  {% endblock %}
@@ -22,7 +23,7 @@
         </div>
         
         <div class="row">
-            <div class="col-lg-6 col-12 mx-auto">
+            <div class="col-lg-8 col-md-10 col-12 mx-auto">
                 <div class="card shadow mb-4">
 
                     <div class="card-header py-3">
@@ -31,7 +32,7 @@
 
                     <div id="list" class="card-body pb-3 back-dataTable">
 
-                    {% if translationFiles is empty %}
+                    {% if files is empty %}
                         {{ 'lang.translation.site.table.empty'|trans() }}
                     {% else %}
 
@@ -41,18 +42,42 @@
                                     <th class="no-sort" name="check"><div class="form-check pl-1"><input type="checkbox" id="select_all" /></div></th>
                                     <th class="pl-2">{{ 'lang.translation.yaml.clean.table.name_file'|trans() }}</th>
                                     <th class="pl-2 no-sort"></th>
+                                    <th class="d-none"></th>
                                 </tr>
                             </thead>
                             <tbody class="bg-white">
-                                {% for file in translationFiles %}
+                                {% for file in files %}
                                     <tr>
                                         <td class="align-middle">
-                                            <div class="form-check pl-1"><input type="checkbox" /></div>
+                                            <div class="form-check pl-1">
+                                                {% if file['old'] == 1 %}
+                                                    <input type="checkbox" />
+                                                {% endif %}
+                                            </div>
                                         </td>
-                                        <td class="px-2 align-middle removeField">
-                                            {{ file }}
+                                        <td class="px-2 align-middle fileName">
+                                            {{ file['file'] }}
                                         </td>
-                                        <td class="px-2 align-middle"></td>
+                                        <td class="px-2 align-middle">
+                                            <span class="btn btn-outline-primary px-2 showFile"
+                                               data-toggle="tooltip" data-placement="left"
+                                               title="{{ 'action.read'|trans() }}"
+                                               aria-label="{{ 'action.read'|trans() }}">
+                                                <i class="fas fa-eye"></i>
+                                            </span>
+                                            {% if file['old'] == 1 %}
+                                                <a href="{{ path('back_translation_remove', { 'file': file['file'] }) }}"
+                                                   class="btn btn-outline-danger width-max-40"
+                                                   data-toggle="tooltip" data-placement="left"
+                                                   title="{{ 'action.delete'|trans() }}"
+                                                   aria-label="{{ 'action.delete'|trans() }}">
+                                                    <i class="fas fa-edit"></i>
+                                                </a>
+                                            {% endif %}
+                                        </td>
+                                        <td class="d-none fileContent">
+                                            {{ file['content'] }}
+                                        </td>
                                     </tr>
                                 {% endfor %}
                             </tbody>
@@ -64,9 +89,29 @@
             </div>
         </div>
     </div>
+                    
+    <div class="modal fade" id="showFile" data-backdrop="static" data-keyboard="false"
+         tabindex="-1" aria-labelledby="showFileLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-scrollable  modal-lg">
+            <div class="modal-content">
+                <div class="modal-header d-flex justify-content-center">
+                    <h5 class="modal-title font-weight-bold text-dark" id="showFileLabel"></h5>
+                </div>
+                <div id="fileContent" class="modal-body bg-black overflow-auto">
+                    ...
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                        {{ 'action.close' | trans() }}
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
 {% endblock %}
 
 {% block javascripts %}
     {{ parent() }}
+    {{ encore_entry_script_tags('lang_translation_clean_app', null, 'backApp') }}
     {{ encore_entry_script_tags('table_app', null, 'backApp') }}
 {% endblock %}
