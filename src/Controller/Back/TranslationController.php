@@ -94,7 +94,7 @@ class TranslationController extends AbstractController
      * 
      * @Route("/forms", name="back_translation_forms", methods="GET|POST")
      */
-    public function seachTransaltionForms(): Response 
+    public function seachTranslationForms(): Response 
     {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
         $this->denyAccessUnlessGranted('ROLE_SUPER_ADMIN');
@@ -122,7 +122,7 @@ class TranslationController extends AbstractController
      * 
      * @Route("/create/{id}", defaults={"id" = null}, name="back_translation_create", methods="GET|POST")
      */
-    public function createTransaltionForm(Request $request, $id): Response 
+    public function createTranslationForm(Request $request, $id): Response 
     {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
         $this->denyAccessUnlessGranted('ROLE_SUPER_ADMIN');
