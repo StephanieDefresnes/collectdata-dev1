@@ -271,7 +271,7 @@ class TranslationController extends AbstractController
      * 
      * @Route("/cloneForm/{id}", name="back_translation_form_clone", methods="GET|POST")
      */
-    public function cloneForm(ParameterBagInterface $parameters, $id): Response 
+    public function cloneTranslationForm(ParameterBagInterface $parameters, $id): Response 
     {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
         $this->denyAccessUnlessGranted('ROLE_SUPER_ADMIN');
