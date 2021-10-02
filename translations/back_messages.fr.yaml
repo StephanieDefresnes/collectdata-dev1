@@ -316,6 +316,17 @@ lang:
                 generate: Générer
                 generated: Généré
                 title: Générer YAML
+            clean:
+                btn: Nettoyage YAML
+                flash:
+                    error: Une erreur s'est produite lors de la suppression de la traduction
+                    success: La traduction a bien été supprimée
+                table:
+                    title: Liste des fichiers de traduction
+                    name_file: Nom des fichiers
+            flash:
+                error: Une erreur s'est produite lors de la génération de la traduction
+                success: La traduction a bien été générée
             table: Liste des traductions à générer
             title: Générateur YAML
 lang_deny: Langue refusée
