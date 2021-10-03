@@ -18,19 +18,35 @@ class EventService {
     }
         
     /**
+     * @return []   Returns event land id
+     *              Use to get not validated Events yet and added by current user
+     */
+    public function getEventLang($event_id)
+    {
+        return $this->em->createQueryBuilder()
+                ->from(Event::class,'e')
+                ->select('l.id landId')
+                ->leftJoin(Lang::class, 'l', 'WITH', 'e.lang = l.id')
+                ->where('e.id = ?1')
+                ->setParameter(1, $event_id)
+                ->getQuery()
+                ->getOneOrNullResult();
+    }
+        
+    /**
      * @return []   Returns an array of Events objects
      *              by lang selected and by user events not validated yet
      */
-    public function getByLangAndUserLang($lang_id)
+    public function getByLangIdAndUserLangId($lang_id)
     {
         $qb = $this->em->createQueryBuilder();
         
-        $eventByLang = $qb->expr()->andX(
+        $eventByLangId = $qb->expr()->andX(
             $qb->expr()->eq('e.lang', '?1'),
             $qb->expr()->eq('e.validated', '?2')
         );
         
-        $eventByUser = $qb->expr()->andX(
+        $eventByUserLandId = $qb->expr()->andX(
             $qb->expr()->eq('e.lang', '?1'),
             $qb->expr()->eq('e.validated', '?3'),
             $qb->expr()->eq('e.userId', '?4')
@@ -38,7 +54,7 @@ class EventService {
         
         $qb->from(Event::class,'e')
             ->select('e')
-            ->andWhere($qb->expr()->orX($eventByLang, $eventByUser))
+            ->andWhere($qb->expr()->orX($eventByLangId, $eventByUserLandId))
             ->setParameters([
                 1 => $lang_id,
                 2 => 1,
@@ -46,6 +62,20 @@ class EventService {
                 4 => $this->security->getUser()->getId(),
             ]);
         return $qb->getQuery()->getResult();
+    }
+        
+    /**
+     * @return []   Returns Category data validated
+     */
+    public function getDataById($event_id)
+    {
+        return $this->em->createQueryBuilder()
+                ->from(Event::class,'e')
+                ->select('e.title, e.validated')
+                ->where('e.id = ?1')
+                ->setParameter(1, $event_id)
+                ->getQuery()
+                ->getOneOrNullResult();
     }
     
 }

@@ -13,10 +13,8 @@ use App\Mailer\Mailer;
 use App\Service\CategoryService;
 use App\Service\EventService;
 use App\Service\SituService;
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -31,19 +29,16 @@ class SituController extends AbstractController
 {
     private $em;
     private $mailer;
-    private $parameters;
     private $security;
     private $translator;
     
     public function __construct(EntityManagerInterface $em,
                                 Mailer $mailer,
-                                ParameterBagInterface $parameters,
                                 Security $security,
                                 TranslatorInterface $translator)
     {
         $this->em = $em;
         $this->mailer = $mailer;
-        $this->parameters = $parameters;
         $this->security = $security;
         $this->translator = $translator;
     }
@@ -91,25 +86,10 @@ class SituController extends AbstractController
         
         // Only user can read not validated situ
         if ($situ->getStatusId() != 3) {
-            
             $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
-            $this->denyAccessUnlessGranted('ROLE_CONTRIBUTOR');
-            
-            // Only author can read refused situ
-            $author = $this->security->getUser();
-            if ($situ->getStatusId() == 4 && !$author->getId() != $situ->getUserId()) {
-                return $this->redirectToRoute('access_denied', [
-                    '_locale' => locale_get_default(),
-                    'd' => '191841'
-                ]);
-            }
-            // None can read deleted situ
-            else if ($situ->getStatusId() == 5) {
-                return $this->redirectToRoute('access_denied', [
-                    '_locale' => locale_get_default(),
-                    'd' => '19184'
-                ]);
-            }
+            // Only Super-admin can read deleted situ
+            if ($situ->getStatusId() == 5)
+                $this->denyAccessUnlessGranted('ROLE_SUPER_ADMIN');
         }
         
         $user = $this->em->getRepository(User::class)
@@ -133,12 +113,16 @@ class SituController extends AbstractController
         // Current user
         $user = $this->security->getUser();
         
-        // Only author can request situ validation 
+        // Only situ author can request situ validation 
         if ($user->getId() != $situ->getUserId()) {
-            return $this->redirectToRoute('access_denied', [
-                '_locale' => locale_get_default(),
-                'd' => '1211'
-            ]);
+            
+            $msg = $this->translator->trans(
+                    'access_deny', [],
+                    'user_messages', $locale = locale_get_default()
+                );
+            $this->addFlash('error', $msg);
+
+            return $this->redirectToRoute('user_situs', ['_locale' => locale_get_default()]);
         }
             
         try {
@@ -154,17 +138,12 @@ class SituController extends AbstractController
                     'user_messages', $locale = locale_get_default()
                 );
             $this->addFlash('success', $msg);
+        
+            return $this->redirectToRoute('user_situs', ['_locale' => locale_get_default()]);
 
         } catch (Exception $e) {
-
-            $msg = $this->translator->trans(
-                'contrib.form.submit.flash.error', [],
-                'user_messages', $locale = locale_get_default()
-            );
-            $this->addFlash('error', $msg.PHP_EOL.$e->getMessage());
+            throw new \Exception('An exception appeared while updating the translation');
         }
-        
-        return $this->redirectToRoute('user_situs', ['_locale' => locale_get_default()]);
     }
     
     /**
@@ -178,14 +157,16 @@ class SituController extends AbstractController
         // Current user
         $user = $this->security->getUser();
         
-        // Only situ can delete situ
+        // Only situ author can delete situ
         if ($user->getId() != $situ->getUserId()) {
-            if ($user->getId() != $situ->getUserId()) {
-                return $this->redirectToRoute('access_denied', [
-                    '_locale' => locale_get_default(),
-                    'd' => '1411'
-                ]);
-            }
+            
+            $msg = $this->translator->trans(
+                    'access_deny', [],
+                    'user_messages', $locale = locale_get_default()
+                );
+            $this->addFlash('error', $msg);
+
+            return $this->redirectToRoute('user_situs', ['_locale' => locale_get_default()]);
         }
             
         try {
@@ -195,7 +176,7 @@ class SituController extends AbstractController
             $this->em->flush();
 
             $msg = $this->translator->trans(
-                    'contrib.delete.success', [],
+                    'contrib.deletion.success', [],
                     'user_messages', $locale = locale_get_default()
                 );
             $this->addFlash('success', $msg);
@@ -203,19 +184,14 @@ class SituController extends AbstractController
             return $this->redirectToRoute('user_situs', ['_locale' => locale_get_default()]);
 
         } catch (Exception $e) {
-
-            $msg = $this->translator->trans(
-                'contrib.delete.error', [],
-                'user_messages', $locale = locale_get_default()
-            );
-            $this->addFlash('error', $msg.PHP_EOL.$e->getMessage());
+            throw new \Exception('An exception appeared while deleting the translation');
         }
     }
     
     /**
      * @Route("/contrib/{id}", defaults={"id" = null}, name="create_situ", methods="GET|POST")
      */
-    public function situEdit($id, Request $request): Response
+    public function situEdit(Request $request, $id): Response
     {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
         $this->denyAccessUnlessGranted('ROLE_CONTRIBUTOR');
@@ -231,20 +207,20 @@ class SituController extends AbstractController
         // Update or Create new Situ
         if ($id) {
             
-            $situ = $this->getDoctrine()->getRepository(Situ::class)->find($id);
+            $situ = $this->getDoctrine()->getRepository(Situ::class)
+                    ->findOneBy(['id' => $id]);
         
-            if (!$situ) {
-                return $this->redirectToRoute('no_found', ['_locale' => locale_get_default()]);
+            // Only situ author can update situ
+            if (!empty($situ) && $user->getId() != $situ->getUserId()) {
+
+                $msg = $this->translator->trans(
+                        'access_deny', [],
+                        'user_messages', $locale = locale_get_default()
+                    );
+                $this->addFlash('error', $msg);
+
+                return $this->redirectToRoute('user_situs', ['_locale' => locale_get_default()]);
             }
-        
-            // Only author can update situ
-            if ($user->getId() != $situ->getUserId()) {
-                return $this->redirectToRoute('access_denied', [
-                    '_locale' => locale_get_default(),
-                    'd' => '19211'
-                ]);
-            }
-            
         } else {
             $situ = new Situ();
         }
@@ -285,7 +261,7 @@ class SituController extends AbstractController
         
         // Form
         $situ = new Situ();
-        $formSitu = $this->createForm(CreateSituFormType::class, $situ);
+        $formSitu = $this->createForm(SituFormType::class, $situ);
         $formSitu->handleRequest($request);
         
         return $this->render('front/situ/translation/index.html.twig', [
@@ -308,9 +284,9 @@ class SituController extends AbstractController
         $user = $this->security->getUser();
         $userId = $user->getId();
         
-        $defaultLang = $this->getDoctrine()->getRepository(Lang::class)->findBy([
-                        'lang' => $this->parameters->get('locale'),
-                    ]);
+        $defaultLang = $this->em->getRepository(Lang::class)->findOneBy(
+            ['englishName' => 'French']
+        );
         
         $userLang = $user->getLangId() == '' ? $defaultLang->getId() : $user->getLangId();
             
@@ -381,11 +357,12 @@ class SituController extends AbstractController
             }
             
             $situ->setDateLastUpdate($dateNow);
-        }
-        
-        $originalSituItems = new ArrayCollection();
-        foreach ($situ->getSituItems() as $item) {
-            $originalSituItems->add($item);
+
+            // Clear original collection
+            foreach ($situ->getSituItems() as $item) {
+                $situ->getSituItems()->removeElement($item);
+                $this->em->remove($item);
+            }
         }
         
         if (!empty($data['translatedSituId'])) {
@@ -414,36 +391,27 @@ class SituController extends AbstractController
         $situ->setCategoryLevel2($categoryLevel2);
         $situ->setStatusId($statusId);
         $this->em->persist($situ);
-        
-        // Check if orgiginal situItems are delete
-        foreach ($originalSituItems as $situItem) {
-            if (!in_array($situItem, $data['situItems'])) {
-                $situ->getSituItems()->removeElement($situItem);
-                $this->em->remove($situItem);
-            }
-        }
-        // Add new or update situItems
-        foreach ($data['situItems'] as $key => $dataItem) {
-            if (false === $situ->getSituItems()->contains($dataItem)) {
-                $situItem = new SituItem();
-            }
+
+        // Add new collection
+        foreach ($data['situItems'] as $key => $d) {
+            $situItem = new SituItem();
             if ($key == 0) $situItem->setScore(0);
-            else $situItem->setScore($dataItem['score']);
-            $situItem->setTitle($dataItem['title']);
-            $situItem->setDescription($dataItem['description']);
+            else $situItem->setScore($d['score']);
+            $situItem->setTitle($d['title']);
+            $situItem->setDescription($d['description']);
             $this->em->persist($situItem);
             $situItem->setSitu($situ);
         }
-    
-        $msgType = empty($data['id']) ? 'success_update' : 'success';
-        
+            
         try {
             $this->em->flush();
 
+            $msgType = empty($data['id']) ? 'success_update' : 'success';
+
             $msg = $this->translator->trans(
-                'contrib.form.'. $msgAction .'.flash.'. $msgType, [],
-                'user_messages', $locale = locale_get_default()
-            );
+                        'contrib.form.'. $msgAction .'.flash.'. $msgType, [],
+                        'user_messages', $locale = locale_get_default()
+                        );
 
             $request->getSession()->getFlashBag()->add('success', $msg);
 
@@ -455,21 +423,7 @@ class SituController extends AbstractController
             ]);
 
         } catch (Exception $e) {
-            
-            $msg = $this->translator->trans(
-                'contrib.form.'. $msgAction .'.flash.error', [],
-                'user_messages', $locale = locale_get_default()
-            );
-            $this->addFlash('error', $msg.PHP_EOL.$e->getMessage());
-            
-            if (empty($data['id'])) {
-                return $this->redirectToRoute('create_situ', ['_locale' => locale_get_default()]);
-            } else {
-                return $this->redirectToRoute('create_situ', [
-                    '_locale' => locale_get_default(),
-                    'id' => $data['id'],
-                ]);
-            }
+            throw new \Exception('An exception appeared while updating the situ');
         }
     }
     
@@ -530,7 +484,7 @@ class SituController extends AbstractController
     public function ajaxGetData(CategoryService $categoryService,
                                 EventService $eventService): JsonResponse
     {
-        $this->denyAccessUnlessGranted('ROLE_CONTRIBUTOR');
+        $this->denyAccessUnlessGranted('ROLE_MODERATOR');
     
         // Get request data
         $request = $this->get('request_stack')->getCurrentRequest();
@@ -538,13 +492,11 @@ class SituController extends AbstractController
         $data = $dataForm['dataForm'];
         
         $event = isset($data['event'])
-                ? $this->em->getRepository(Event::class)->find($data['event']) : '';
+                ? $eventService->getDataById($data['event']) : '';
         $categoryLevel1 = isset($data['categoryLevel1'])
-                ? $this->em->getRepository(Category::class)
-                    ->findBy([ 'event' => $data['categoryLevel1'] ]) : '';
+                ? $categoryService->getDataById($data['categoryLevel1']) : '';
         $categoryLevel2 = isset($data['categoryLevel2'])
-                ? $this->em->getRepository(Category::class)
-                    ->findBy([ 'parent' => $data['categoryLevel2'] ]) : '';
+                ? $categoryService->getDataById($data['categoryLevel2']) : '';
         
         return $this->json([
             'success' => true,

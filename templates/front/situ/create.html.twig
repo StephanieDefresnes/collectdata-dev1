@@ -35,21 +35,23 @@
 
                 <div id="details" class="card-header accordion py-4 pl-4 bg-secondary-80 text-white">
 
-                    <div id="lang" class="formData form-row mt-1 mb-4">
-                        <div class="col-lg-5 col-md-5 mb-md-0 mb-1 pt-md-1">
-                            {{ form_label(form.lang) }}
-                        </div>
-                        <div class="col-lg-4 col-md-4 col-sm-7 col-8">
-                            <div class="form-row">
-                                <div id="form-lang" class="col-md-12">
-                                    {{ form_widget(form.lang) }}
-                                    {{ form_errors(form.lang) }}
+                    {% if langs|length > 1 %}
+                        <div id="lang" class="formData form-row mt-1 mb-4">
+                            <div class="col-lg-5 col-md-5 mb-md-0 mb-1 pt-md-1">
+                                {{ form_label(form.lang) }}
+                            </div>
+                            <div class="col-lg-4 col-md-4 col-sm-7 col-8">
+                                <div class="form-row">
+                                    <div id="form-lang" class="col-md-12">
+                                        {{ form_widget(form.lang) }}
+                                        {{ form_errors(form.lang) }}
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    {% endif %}
 
-                    <div id="event" class="formData form-row mb-4{% if langs|length > 1 %} d-none on-load{% else %} mt-1{% endif %}">
+                    <div id="event" class="formData form-row mb-4 d-none on-load">
                         <div class="col-lg-5 col-md-5 mb-md-0 mb-1 pt-md-1">
                             {{ form_label(form.event) }}
                         </div>

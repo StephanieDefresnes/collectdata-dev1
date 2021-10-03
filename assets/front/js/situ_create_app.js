@@ -42,27 +42,27 @@ function footerHeight() {
  */
 // Init forms
 function initSelectData(dataId) {
-    let select = '<select id="create_situ_form_'+ dataId +'"'
-                    +' name="create_situ_form['+ dataId +']"'
+    let select = '<select id="situ_form_'+ dataId +'"'
+                    +' name="situ_form['+ dataId +']"'
                     +' class="form-control custom-select"></select>'
     return select
 }
 function initCreateData(dataId) {
     let mb = dataId  == 'event' ? ' mb-0' : ''
     let fields =
-        '<div id="create_situ_form_'+ dataId +'">'
+        '<div id="situ_form_'+ dataId +'">'
             +'<div class="form-group mt-1' + mb + '">'
-                +'<label for="create_situ_form_'+ dataId +'_title" class="required">Titre :</label>'
+                +'<label for="situ_form_'+ dataId +'_title" class="required">Titre :</label>'
                 +'<input type="text" id="'+ dataId +'_title"'
-                    +' name="create_situ_form['+ dataId +'][title]" required="required"'
+                    +' name="situ_form['+ dataId +'][title]" required="required"'
                     +' placeholder="'+ translations[dataId +'-titlePlaceholder'] +'" class="form-control">'
             +'</div>'
     if (dataId == 'categoryLevel1' || dataId == 'categoryLevel2') {
         fields +=
             '<div class="mb-0 form-group">'
-                +'<label for="create_situ_form_'+ dataId +'_description" class="required">Description :</label>'
-                +'<textarea id="create_situ_form_'+ dataId +'_description"'
-                    +' name="create_situ_form['+ dataId +'][description]" required="required" rows="3"'
+                +'<label for="situ_form_'+ dataId +'_description" class="required">Description :</label>'
+                +'<textarea id="situ_form_'+ dataId +'_description"'
+                    +' name="situ_form['+ dataId +'][description]" required="required" rows="3"'
                     +' placeholder="'+ translations[dataId +'-descriptionPlaceholder'] +'" class="form-control"></textarea>'
             +'</div>'
     }
@@ -102,11 +102,11 @@ function toggleAddingButton(colClass, event) {
 
 // Add comment to unvalidated user option
 function unvalidatedOption(element) {
-        $(element).find('option').each(function() {
-            if ($(this).hasClass('to-validate')) {
-                $(this).append(' '+ translations['toValidate'])
-            }
-        })
+    $(element).find('option').each(function() {
+        if ($(this).hasClass('to-validate')) {
+            $(this).append(' '+ translations['toValidate'])
+        }
+    })
 }
 
 // Load options select if exist or create new (eventListener)
@@ -137,9 +137,9 @@ function loadOrCreateData($form, data, selectId, nextSelectId) {
             // If data have to be created
             if (!$(nextSelectId).is('select')) {
                 
-                if ($(selectId).attr('id') == 'create_situ_form_lang')
+                if ($(selectId).attr('id') == 'situ_form_lang')
                     toggleAddingButton('.colDataLang', 'hide')
-                else if ($(selectId).attr('id') == 'create_situ_form_event')
+                else if ($(selectId).attr('id') == 'situ_form_event')
                     toggleAddingButton('.colData', 'hide')
                 
                 showField($('#categoryLevel1, #categoryLevel2'), 'd-none') 
@@ -151,9 +151,9 @@ function loadOrCreateData($form, data, selectId, nextSelectId) {
                 initSelect2(nextSelectId)
                 
                 // Show column of adding/remove buttons
-                if ( $(selectId).attr('id') == 'create_situ_form_lang')
+                if ( $(selectId).attr('id') == 'situ_form_lang')
                     toggleAddingButton('.colDataLang', 'show')
-                else if ($(selectId).attr('id') == 'create_situ_form_event')
+                else if ($(selectId).attr('id') == 'situ_form_event')
                     toggleAddingButton('.colData', 'show')
                 else toggleCollapse(nextSelectParent, 'hide')
                 
@@ -227,7 +227,7 @@ function toggleFields(dataEntity) {
         'oldFields': [],
         'newFields': []
     }
-    $('#create_situ_form_'+ dataEntity).select2('destroy');
+    $('#situ_form_'+ dataEntity).select2('destroy');
     objFields['oldFields'].push($('#form-'+ dataEntity).html())
     objFields['newFields'].push(initCreateData(dataEntity))
 
@@ -499,24 +499,24 @@ function addSituItem() {
 function submissionStatus(buttonId) {
     let statusId;
     buttonId == 'save-btn' ? statusId = 1 : statusId = 2
-    $('#create_situ_form_statusId').val(statusId)
+    $('#situ_form_statusId').val(statusId)
 }
 
 // Set data if selected or created
 function setData(entity) {
     let data;
-    if (!$('#create_situ_form_'+entity).is('select')) {
+    if (!$('#situ_form_'+entity).is('select')) {
         if (entity != 'event') {
             data = {
-                'title':        $('input[name="create_situ_form['+ entity +'][title]"]').val(),
-                'description':  $('textarea[name="create_situ_form['+ entity +'][description]"]').val(),
+                'title':        $('input[name="situ_form['+ entity +'][title]"]').val(),
+                'description':  $('textarea[name="situ_form['+ entity +'][description]"]').val(),
             }
         } else
             data = {
-                'title': $('input[name="create_situ_form['+ entity +'][title]"]').val()
+                'title': $('input[name="situ_form['+ entity +'][title]"]').val()
             }
     }
-    else data = $('#create_situ_form_'+ entity).val()
+    else data = $('#situ_form_'+ entity).val()
     
     return data
 }
@@ -554,12 +554,11 @@ $(function() {
     })
     
     // Show collapsed (when update Situ)
-    $('.infoCollapse').each(function() {
-        if ($(this).hasClass('d-none')) $(this).removeClass('d-none')
-    })
-    
-    // User lang or optional user lang empty case
-    if ($('#create_situ_form_lang option').length <= 2) $('#lang').remove()
+    if ($('#situ').attr('data-id') != '') {
+        $('.infoCollapse').each(function() {
+            if ($(this).hasClass('d-none')) $(this).removeClass('d-none')
+        })
+    }
     
     $('.card-header').find('select').each(function() {
         initSelect2($(this))
@@ -594,7 +593,7 @@ $(function() {
     })
     
     // Show fields if no event exist on locale
-    if (!$('#create_situ_form_event').is('select')) {
+    if (!$('#situ_form_event').is('select')) {
         showField($('#categoryLevel1'), 'd-none on-load') 
         showField($('#categoryLevel2'), 'd-none on-load') 
     }
@@ -608,13 +607,13 @@ $(function() {
      * Load events/categories or create them
      */
     // Load data only on select
-    if ($('#create_situ_form_lang').is('select')
-     || $('#create_situ_form_event').is('select')) {
+    if ($('#situ_form_lang').is('select')
+     || $('#situ_form_event').is('select')) {
         
-        $('form').on('change',  '#create_situ_form_lang, '
-                                +'#create_situ_form_event, '
-                                +'#create_situ_form_categoryLevel1, '
-                                +'#create_situ_form_categoryLevel2', function() {
+        $('form').on('change',  '#situ_form_lang, '
+                                +'#situ_form_event, '
+                                +'#situ_form_categoryLevel1, '
+                                +'#situ_form_categoryLevel2', function() {
             
             let divId = $(this).parents('.formData').attr('id')
             if (divId == 'categoryLevel1' || divId == 'categoryLevel2') {
@@ -635,24 +634,23 @@ $(function() {
                     }
                 }
                 
+                // Hide next header forms
+                $(this).parents('.formData').nextAll().addClass('d-none')
+                
                 // Reset selects before loading data
-                if ($(this).attr('id') == 'create_situ_form_lang') {
-                    if ($(this).val() == '') $('#event').addClass('d-none')
-                    $('#categoryLevel1, #categoryLevel2').addClass('d-none')
+                if ($(this).attr('id') == 'situ_form_lang') {
                     $('.formData').each(function(){
-                        $(this).find('.colDataLang')
-                                .html(initSelectData($(this).attr('id')))
-                    })
-                } else if ($(this).attr('id') == 'create_situ_form_event') {
-                    $('#categoryLevel2').addClass('d-none')
+                        $(this).find('.colDataLang').html(initSelectData($(this).attr('id')))
+                    })                  
+                } else if ($(this).attr('id') == 'situ_form_event') {
                     $('.formData').each(function(){
-                        $(this).find('.colData')
-                                .html(initSelectData($(this).attr('id')))
-                    })
-                } else if ($(this).attr('id') == 'create_situ_form_categoryLevel1') {
+                        $(this).find('.colData').html(initSelectData($(this).attr('id')))
+                    })                    
+                } else if ($(this).attr('id') == 'situ_form_categoryLevel1') {                    
                     $(this).parents('.formData').next().find('.colData')
-                        .html(initSelectData('categoryLevel2'))
+                        .html(initSelectData('categoryLevel2'))                
                 } else {
+                    // Show card body on select categoryLevel2
                     if ($('.card-body').hasClass('d-none') && $('.card-footer').hasClass('d-none')) {
                         $('.card-body, .card-footer').removeClass('d-none')
                             .animate({ opacity: 1}, 250)
@@ -664,13 +662,16 @@ $(function() {
         })
         
     } else {
-        // If no optional language neither no eventId, hide add button
         $('.colBtn').each(function(){ $(this).hide() })
-        
+        $('.formData').each(function(){
+            $(this).removeClass('d-none')
+            $(this).find('.pointer').removeClass('pointer')
+            $(this).find('.infoCollapse ').each(function(){ $(this).remove() })
+        })
     }
     
     // Show card-body if create categoryLevel2
-    $('form').on('keyup paste', '#create_situ_form_categoryLevel2_description', function() {
+    $('form').on('keyup paste', '#situ_form_categoryLevel2_description', function() {
         if ($('.card-body').hasClass('d-none') && $('.card-footer').hasClass('d-none')) {
             $('.card-body, .card-footer').removeClass('d-none').animate({ opacity: 1}, 250)
         }
@@ -687,8 +688,7 @@ $(function() {
     // Add SituItem until 4
     $('#add-itemSitu-link').click(function () {
         addSituItem()
-    })
-    
+    })    
     
     /**
      * Submission
@@ -696,7 +696,7 @@ $(function() {
     $('#save-btn, #submit-btn').click(function(){
         
         $('form').find('.form-control').each(function() {
-            if ($(this).attr('id') != 'create_situ_form_situItems_0_score') {
+            if ($(this).attr('id') != 'situ_form_situItems_0_score') {
                 if ($(this).val() == '') {
                     if (!$(this).is('select')) $(this).addClass('empty-value')
                     else {
@@ -736,17 +736,19 @@ $(function() {
 
             submissionStatus($(this).attr('id'))
 
-            lang = $('#create_situ_form_lang').val() == ''
-                    ? $('#situ').attr('data-default')
-                    : $('#create_situ_form_lang').val()
+            if ($('#situ_form_lang').length != '') {
+                lang = $('#situ_form_lang').val() == ''
+                        ? $('#situ').attr('data-default')
+                        : $('#situ_form_lang').val()
+            }
             event = setData('event')
             categoryLevel1 = setData('categoryLevel1')
             categoryLevel2 = setData('categoryLevel2')        
-            title = $('#create_situ_form_title').val()
-            description = $('#create_situ_form_description').val()
-            statusId = $('#create_situ_form_statusId').val()
+            title = $('#situ_form_title').val()
+            description = $('#situ_form_description').val()
+            statusId = $('#situ_form_statusId').val()
             id = $('#situ').attr('data-id')
-            translatedSituId = $('#create_situ_form_translatedSituId').val()
+            translatedSituId = $('#situ_form_translatedSituId').val()
 
             $('#situItems').find('.situItem').each(function() {
                 let scoreItem, titleItem, descItem
@@ -800,7 +802,7 @@ $(function() {
                 .removeClass('d-none').animate({ opacity: 1}, 250)
         addPlaceholderClass('')
     } else {
-        // Init once required
+        // If create init once required
         addSituItem()
     }
     
