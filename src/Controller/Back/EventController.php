@@ -25,9 +25,9 @@ class EventController extends AbstractController
     }
     
     /**
-     * @Route("/list", name="back_events")
+     * @Route("/search", name="back_events")
      */
-    public function index(): Response
+    public function allEvents(): Response
     {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
         

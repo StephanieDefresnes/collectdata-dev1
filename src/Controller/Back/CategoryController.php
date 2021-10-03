@@ -24,9 +24,9 @@ class CategoryController extends AbstractController
     }
     
     /**
-     * @Route("/list", name="back_categories")
+     * @Route("/search", name="back_categories")
      */
-    public function index(): Response
+    public function allCategroies(): Response
     {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
         

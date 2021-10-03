@@ -57,12 +57,12 @@ class UserController extends AbstractController
     /**
      * @Route("/search", name="back_user_search", methods="GET|POST")
      */
-    public function search(Request $request, Session $session)
+    public function allUsers(Request $request, Session $session)
     {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
         $this->denyAccessUnlessGranted('ROLE_MODERATOR');
         
-        $users = $this->userRepository->findAll();
+        $users = $this->em->getRepository(User::class)->findAll();
         $langs = $this->langService->getAll();
         
         $formBatch = $this->createForm(UserBatchType::class, null, [

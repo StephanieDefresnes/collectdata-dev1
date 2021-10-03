@@ -94,8 +94,6 @@ class UserController extends AbstractController
         // Get current user
         $user = $this->security->getUser();
         
-        $entityManager = $this->getDoctrine()->getManager();
-        
         $form = $this->createForm(UserUpdateFormType::class, $user);
         $form->handleRequest($request);
         

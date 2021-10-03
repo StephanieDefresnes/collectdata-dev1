@@ -37,13 +37,13 @@ class SituController extends AbstractController
     }
     
     /**
-     * @Route("/list", name="back_situs_search")
+     * @Route("/search", name="back_situs_search")
      */
-    public function index(): Response
+    public function allSitus(): Response
     {   
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
         
-        $repository = $this->getDoctrine()->getRepository(Situ::class);
+        $repository = $this->em->getRepository(Situ::class);
         $situs = $repository->findAll();
 
         return $this->render('back/situ/search/index.html.twig', [
@@ -54,7 +54,7 @@ class SituController extends AbstractController
     /**
      * @Route("/read/{id}", name="back_situ_read", methods="GET")
      */
-    public function getSitu($id): Response
+    public function read($id): Response
     {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
         
@@ -69,7 +69,7 @@ class SituController extends AbstractController
     /**
      * @Route("/validation", name="back_situs_validation", methods="GET")
      */
-    public function getSitusToValidate()
+    public function situsToValidate()
     {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
         
