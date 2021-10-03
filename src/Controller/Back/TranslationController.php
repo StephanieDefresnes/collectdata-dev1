@@ -67,16 +67,15 @@ class TranslationController extends AbstractController
         }
         $translationsSite = $this->translationService->getTranslations($langs);
         
-        $translationForms = $this->getDoctrine()
-                    ->getRepository(Translation::class)->findBy(
-                        [
-                            'referent' => 1,
-                            'statusId' => 3,
-                        ], [
-                            'name' => 'ASC',
-                            'id' => 'DESC',
-                        ]
-                    );
+        $translationForms = $this->em->getRepository(Translation::class)->findBy(
+            [
+                'referent' => 1,
+                'statusId' => 3,
+            ], [
+                'name' => 'ASC',
+                'id' => 'DESC',
+            ]
+        );
         
         // Get current user
         $user = $this->security->getUser();
@@ -131,8 +130,7 @@ class TranslationController extends AbstractController
                 
         // Update or Create new Situ
         if ($id) {
-            $translation = $this->getDoctrine()
-                    ->getRepository(Translation::class)->find($id);
+            $translation = $this->em->getRepository(Translation::class)->find($id);
             
             if (!$translation) {
                 return $this->redirectToRoute('no_found', ['_locale' => locale_get_default()]);
@@ -228,12 +226,11 @@ class TranslationController extends AbstractController
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
         $this->denyAccessUnlessGranted('ROLE_SUPER_ADMIN');
         
-        $translations = $this->getDoctrine()
-                    ->getRepository(Translation::class)->findBy([
-                        'referent' => 0,
-                        'statusId' => 3,
-                        'enabled' => 1,
-                    ]);
+        $translations = $this->em->getRepository(Translation::class)->findBy([
+            'referent' => 0,
+            'statusId' => 3,
+            'enabled' => 1,
+        ]);
         
         return $this->render('back/lang/translation/generate.html.twig', [
             'translations' =>$translations,
@@ -338,7 +335,7 @@ class TranslationController extends AbstractController
             $permute = $translation->getEnabled() ? false : true;
             $translation->setEnabled($permute);
         }
-        $this->getDoctrine()->getManager()->flush();
+        $this->em->flush();
         return $this->redirectToRoute('back_translation_site');
     }
     
