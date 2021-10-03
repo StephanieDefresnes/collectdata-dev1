@@ -207,7 +207,7 @@ class SituController extends AbstractController
         // Update or Create new Situ
         if ($id) {
             
-            $situ = $this->getDoctrine()->getRepository(Situ::class)
+            $situ = $this->em->getRepository(Situ::class)
                     ->findOneBy(['id' => $id]);
         
             // Only situ author can update situ
@@ -228,7 +228,7 @@ class SituController extends AbstractController
         $form = $this->createForm(SituFormType::class, $situ);
         $form->handleRequest($request);
                 
-        return $this->render('front/situ/create.html.twig', [
+        return $this->render('front/situ/create/index.html.twig', [
             'form' => $form->createView(),
             'langs' => $langs,
             'situ' => $situ,
@@ -297,9 +297,7 @@ class SituController extends AbstractController
         
         $landId = isset($data['lang']) ? $data['lang'] : $userLang;
         
-        $langData = $this->getDoctrine()
-                ->getRepository(Lang::class)
-                ->findOneBy([ 'id' => $landId ]);
+        $langData = $this->em->getRepository(Lang::class)->findOneBy([ 'id' => $landId ]);
         
         if (!$langData->getEnabled()) {
             $msg = $this->translator->trans(
@@ -459,19 +457,19 @@ class SituController extends AbstractController
         } else {
             switch ($entity) {
                 case 'event':
-                    $data = $this->getDoctrine()
-                        ->getRepository(Event::class)
-                        ->findOneBy([ 'id' => $dataEntity ]);
+                    $data = $this->em->getRepository(Event::class)->findOneBy([
+                        'id' => $dataEntity
+                    ]);
                     break;
                 case 'categoryLevel1':
-                    $data = $this->getDoctrine()
-                        ->getRepository(Category::class)
-                        ->findOneBy([ 'id' => $dataEntity ]);
+                    $data = $this->em->getRepository(Category::class)->findOneBy([
+                        'id' => $dataEntity
+                    ]);
                     break;
                 case 'categoryLevel2':
-                    $data = $this->getDoctrine()
-                        ->getRepository(Category::class)
-                        ->findOneBy([ 'id' => $dataEntity ]);
+                    $data = $this->em->getRepository(Category::class)->findOneBy([
+                        'id' => $dataEntity
+                    ]);
                     break;
             }
         }
@@ -524,12 +522,12 @@ class SituController extends AbstractController
             'lang_deny', [],
             'user_messages', $locale = locale_get_default()
             );
-        $situData = $this->getDoctrine()
-                ->getRepository(Situ::class)
-                ->findOneBy([ 'id' => $situId ]);
-        $langData = $this->getDoctrine()
-                ->getRepository(Lang::class)
-                ->findOneBy([ 'id' => $langId ]);
+        $situData = $this->em->getRepository(Situ::class)->findOneBy([
+            'id' => $situId
+        ]);
+        $langData = $this->em->getRepository(Lang::class)->findOneBy([
+            'id' => $langId
+        ]);
         
         // If wanted lang is Lang situ ti translate or wanted lang is not enabled
         if ($langId == $situData->getLang()->getId() || !$langData->getEnabled()) {
