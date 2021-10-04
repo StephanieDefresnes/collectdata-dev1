@@ -3,6 +3,8 @@ button:
     cancel: Annuler
     send: Envoyer
     validate: Valider
+captcha:
+    invalid: Le captcha est invalide. Veuillez réessayer.
 error:
     403: Accès refusé
     404: Cette page n'existe pas

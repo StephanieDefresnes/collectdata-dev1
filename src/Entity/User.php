@@ -117,6 +117,8 @@ class User implements UserInterface
      * @ORM\Column(type="boolean")
      */
     private $isVerified = false;
+    
+    protected $captcha;
 
     public function __construct()
     {
@@ -441,4 +443,15 @@ class User implements UserInterface
 
         return $this;
     }
+    
+    public function getCaptcha()
+    {
+      return $this->captcha;
+    }
+
+    public function setCaptcha($captcha)
+    {
+      $this->captcha = $captcha;
+    }
+    
 }

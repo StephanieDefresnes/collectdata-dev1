@@ -71,4 +71,9 @@
     {{ parent() }}
     {{ encore_entry_script_tags('pw_app', null, 'frontApp') }}
     {{ encore_entry_script_tags('register_app', null, 'frontApp') }}
+    <script>
+        var recaptcha = {'sitekey' : '{{ google_recaptcha_site_key }}'}
+    </script> 
+    <script src="{{ asset('recaptcha/recaptcha.js') }}"></script>
+    <script src="https://www.google.com/recaptcha/api.js?onload=onGoogleReCaptchaApiLoad&render=explicit&hl={{ app.request.locale }}" async defer></script>
 {% endblock %}

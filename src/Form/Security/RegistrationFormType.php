@@ -3,6 +3,7 @@
 namespace App\Form\Security;
 
 use App\Entity\User;
+use App\Form\Security\ReCaptchaType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
@@ -75,6 +76,9 @@ class RegistrationFormType extends AbstractType
                         'message' => 'registration.agree_terms_is_true',
                     ]),
                 ],
+            ])
+            ->add('captcha', ReCaptchaType::class, [
+                'type' => 'invisible' // (invisible, checkbox)
             ])
         ;
     }
