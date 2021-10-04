@@ -1,3 +1,5 @@
+{% trans_default_domain 'messages' %}
+
 {% if app.request.hasPreviousSession %}
     {% set flashbag = app.session.flashbag.all() %}
     {% if flashbag|length %}
