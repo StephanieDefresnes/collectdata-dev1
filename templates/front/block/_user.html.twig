@@ -2,17 +2,63 @@
 
 <ul class="navbar-nav">
 {% if app.user %}
-    <li class="nav-item mx-md-0 mx-sm-4 mx-0 px-md-0 px-md-0 px-sm-2 px-0 dropdown{{ route in ['back_home', 'user_account'] ? ' active' }}">
+    <li class="nav-item mx-md-0 mx-sm-4 mx-0 px-md-0 px-sm-2 px-0 dropdown no-hover">
+        <a class="nav-link line-12 dropdown-toggle" href="#" id="dropdown_alert" 
+           data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <span class="badge badge-light border border-dark rounded-pill">10</span>
+            <i class="fas fa-bell"></i>
+            <span class="{#{% if ...%}#}ml-2 {#{% endif %}#}d-md-none d-inline">
+                {{ 'nav.message.alert.title'|trans() }}
+            </span>
+        </a>
+        <ul class="dropdown-menu dropdown-menu-right pt-md-4 pt-0 border-0" aria-labelledby="dropdown_alert">
+            <li class="dropdown-item bg-dark-95">
+                <a class="text-white" href="">
+                    {{ 'nav.message.alert.contrib'|trans() }}
+                </a>
+            </li>
+            <div class="dropdown-divider m-0"></div>
+            <li class="dropdown-item bg-dark-95">
+                <a href="">
+                    {{ 'nav.message.alert.title_all'|trans() }}
+                </a>
+            </li>
+        </ul>
+    </li>
+    <li class="nav-item mx-md-0 mx-sm-4 mx-0 px-md-0 px-sm-2 px-0 dropdown no-hover">
+        <a class="nav-link line-12 dropdown-toggle" href="#" id="dropdown_envelope" 
+           data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <span class="badge badge-light border border-dark rounded-pill">2</span>
+            <i class="fas fa-envelope"></i>
+            <span class="{#{% if ...%}#}ml-2 {#{% endif %}#}d-md-none d-inline">
+                {{ 'nav.message.envelope.title'|trans() }}
+            </span>
+        </a>
+        <ul class="dropdown-menu dropdown-menu-right pt-md-4 pt-0 border-0" aria-labelledby="dropdown_envelope">
+            <li class="dropdown-item bg-dark-95">
+                <a class="text-white" href="">
+                    {{ 'nav.message.envelope.new'|trans() }}
+                </a>
+            </li>
+            <div class="dropdown-divider m-0"></div>
+            <li class="dropdown-item bg-dark-95">
+                <a href="">
+                    {{ 'nav.message.envelope.title_all'|trans() }}
+                </a>
+            </li>
+        </ul>
+    </li>
+    <li class="nav-item mx-md-0 mx-sm-4 mx-0 px-md-0 px-sm-2 px-0 dropdown{{ route in ['back_home', 'user_account'] ? ' active' }}">
         <a class="nav-link line-12 dropdown-toggle" id="dropdown_account" 
            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             {% if app.user.imageFilename %}
-                <span class="nav-img d-md-inline d-none">
+                <span class="nav-img">
                     <span class="nav-img-circle">
                         <img src="{{ asset('/uploads/img/'~ app.user.imageFilename) }}" alt="">
                     </span>
                 </span>
             {% else %}
-                <span class="d-md-inline d-none">
+                <span class="">
                     <i class="fas fa-user"></i>
                 </span>
             {% endif %}
@@ -42,7 +88,7 @@
         </ul>
     </li>
 {% else %}
-    <li class="nav-item mx-md-0 mx-sm-4 mx-0 px-md-0 px-md-0 px-sm-2 px-0 dropdown {{ route in ['app_login', 'app_register'] ? ' active' }}">
+    <li class="nav-item mx-md-0 mx-sm-4 mx-0 px-md-0 px-sm-2 px-0 dropdown {{ route in ['app_login', 'app_register'] ? ' active' }}">
         <a class="nav-link dropdown-toggle" id="dropdown_account" 
            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             <span class="d-md-inline d-none">

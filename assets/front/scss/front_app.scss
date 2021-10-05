@@ -136,7 +136,7 @@ body {
             & .navbar-nav {
                 & > li {
                     margin: 0 4px;
-                    &:hover {
+                    &:not(.no-hover):hover {
                         & > .dropdown-menu {
                             border-width: 0;
                             &.dropdown-menu-right {
@@ -151,11 +151,17 @@ body {
                     }
                     & > a {
                         cursor: pointer;
+                        & > .badge {
+                            padding: 0.17em 0.4em !important;
+                            position: absolute;
+                            left: 16px;
+                            top: 5px;
+                        }
                     }
                     &.show a::after {
                         border-top: 0;
                         border-right: 0.3em solid transparent;
-                        border-bottom: 0.3em solid;;
+                        border-bottom: 0.3em solid;
                         border-left: 0.3em solid transparent;
                     }
                     & > .dropdown-menu {
@@ -275,13 +281,13 @@ body {
             & .navbar {
                 & .navbar-nav {
                     & > li {
-                        &:hover {
+                        &:not(.no-hover):hover {
                             & > .dropdown-menu {
                                 display: block;
                                 background: transparent;
                             }
                         }
-                        & > .dropdown-toggle {
+                        &:not(.no-hover) > .dropdown-toggle {
                             &:active {
                                 pointer-events: none;
                             }
@@ -384,6 +390,23 @@ body {
                                     border-width: 0;
                                     text-align: center;
                                 }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+@media (max-width: 576px) {
+    body {
+        & > .container-fluid {
+            & .navbar {
+                & .navbar-nav {
+                    & > li {
+                        & > a {
+                            & > .badge {
+                                left: 8px;
                             }
                         }
                     }
@@ -554,7 +577,7 @@ th.cust-nowrap {
     background-color: $danger-light;
 }
 
-// Image
+// User image
 .nav-img {
     margin-left: -3px;
     & > .nav-img-circle {
@@ -562,7 +585,7 @@ th.cust-nowrap {
         height: 24px;
         margin: 0;
         padding: 0;
-        clip-path: ellipse(10px 10px);
+        clip-path: ellipse(9px 9px);
         & > img {
             width: 20px;
             height: auto;
@@ -570,6 +593,12 @@ th.cust-nowrap {
             padding: 0;
             vertical-align: top;
         }
+    }
+}
+@media (max-width: 768px) {
+    .nav-img {
+        margin-left: -5px;
+        margin-right: 1px;
     }
 }
 

@@ -334,6 +334,19 @@ lang:
             table: Liste des traductions à générer
             title: Générateur YAML
 lang_deny: Langue refusée
+message:
+    alert:
+        contrib: La contribution <strong>#%id%</strong> a été soumise.
+        event:  L'événement <strong>#%id%</strong> a été soumis.
+        category:
+            level1: La catégorie <strong>#%id%</strong> a été soumise.
+            level2: La sous-catégorie <strong>#%id%</strong> a été soumise.
+        title: Notification
+        title_all: Voir toutes les notifications
+    envelope:
+        new: Vous avez un message de %sender%.
+        title: Messagerie
+        title_all: Voir tous les messages
 nav:
     account: Compte
     account_logout: Déconnexion

@@ -15,6 +15,19 @@ nav:
         user: Mes contributions
         add: Ajouter une contribution
         translate: Traduire une contribution
+    message:
+        alert:
+            contrib: La contribution <strong>%title%</strong> a été validée.
+            event:  L'événement <strong>%title%</strong> a été validé.
+            category:
+                level1: La catégorie <strong>%title%</strong> a été validée.
+                level2: La sous-catégorie <strong>%title%</strong> a été validée.
+            title: Notification
+            title_all: Voir toutes les notifications
+        envelope:
+            new: Vous avez un message de %sender%.
+            title: Messagerie
+            title_all: Voir tous les messages
     translation:
         contrib: Traduire une contribution
         site: Traduire le site   
