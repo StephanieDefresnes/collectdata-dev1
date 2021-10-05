@@ -1,0 +1,93 @@
+{% extends 'front/layout.html.twig' %}
+{% trans_default_domain 'front_messages' %}
+
+{% block title %}{{ 'contact.title'|trans() }}{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {{ encore_entry_link_tags('home_app', null, 'frontApp') }}
+{% endblock %}
+
+        
+{% block content %}
+    <div class="row">
+
+        <div class="col-lg-8 mx-auto mt-5 p-0">
+            <div class="card my-4 mx-3 bg-none shadow">
+
+                <div class="card-header p-3 bg-dark text-white">
+                    <div class="d-flex justify-content-center">
+                        <h1 class="mb-0 h2">
+                            {{ 'contact.title'|trans() }}
+                        </h1>
+                    </div>
+                </div>
+                        
+                {{ form_start(form) }}
+
+                <div class="card-header py-4 pl-4 bg-secondary-80 text-white">
+                    
+                    <div class="d-flex justify-content-center row mb-3">
+                        <div class="col-md-2 col-12 mt-1">
+                            {{ form_label(form.name) }}
+                            {{ form_errors(form.name) }}
+                        </div>
+                        <div class="col-md-8 col-12">
+                            {{ form_widget(form.name) }}
+                        </div>
+                    </div>
+                    
+                    <div class="d-flex justify-content-center row mb-3">
+                        <div class="col-md-2 col-12 mt-1">
+                            {{ form_label(form.email) }}
+                            {{ form_errors(form.email) }}
+                        </div>
+                        <div class="col-md-8 col-12">
+                            {{ form_widget(form.email) }}
+                        </div>
+                    </div>
+                    
+                    <div class="d-flex justify-content-center row mb-4">
+                        <div class="col-md-2 col-12 mt-1">
+                            {{ form_label(form.subject) }}
+                            {{ form_errors(form.subject) }}
+                        </div>
+                        <div class="col-md-8 col-12">
+                            {{ form_widget(form.subject) }}
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-12">
+                            {{ form_row(form.message) }}
+                        </div>
+                    </div>
+                    
+                </div>
+
+                <div class="card-footer bg-dark-95 py-3">
+                    <div class="d-flex justify-content-end">
+                        <button class="btn btn-light" type="submit">
+                            <i class="far fa-paper-plane"></i>
+                            <span class="px-1">{{ 'btn.send'|trans() }}</span>
+                        </button>
+                    </div>
+                </div>
+                        
+                {{ form_end(form) }}
+                        
+            </div>
+        
+        </div>
+
+    </div>        
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        var recaptcha = {'sitekey' : '{{ google_recaptcha_site_key }}'}
+    </script> 
+    <script src="{{ asset('recaptcha/recaptcha.js') }}"></script>
+    <script src="https://www.google.com/recaptcha/api.js?onload=onGoogleReCaptchaApiLoad&render=explicit&hl={{ app.request.locale }}" async defer></script>
+{% endblock %}

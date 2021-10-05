@@ -22,6 +22,31 @@ nav:
 btn:
     close: Fermer
     contribute: Contribuer
+    send: Envoyer
+contact:
+    title: Contact
+    confirm:
+        title: Message envoyé
+        comment: Merci pour votre message, il a bien été envoyé.<br>Il sera traité dans les plus brefs délais.
+    email: Email
+    form:
+        email:
+            label: "Email :"
+            placeholder: email@example.com
+        message:
+            label: "Message :"
+            placeholder: Votre message en quelques lignes...
+        name:
+            label: "Nom :"
+            placeholder: Votre nom
+        subject:
+            label: "Objet :"
+            placeholder: Objet de votre message
+    mailer:
+        sender: "Expéditeur :"
+        subject: '%website_name% - Vous avez reçu un message'
+        content: Vous avez reçu un nouveau message envoyé depuis le formulaire de contact (%lang%).
+        error: "Une erreur s'est produite lors de l'envoi de votre message : %error%. Veuillez réessayer."
 content:
     banner:
         hello: Bonjour %user% !

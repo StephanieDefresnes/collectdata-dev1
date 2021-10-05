@@ -7,6 +7,7 @@ use App\Entity\Situ;
 use App\Entity\User;
 use App\Service\UserService;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Mime\Email;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Address;
@@ -177,6 +178,57 @@ class Mailer
                 // some error prevented the email sending; display an
                 // error message or try to resend the message
             }
+        }
+    }
+    
+    public function sendEmailContact($contactFormData)
+    {
+        $nameSite = $this->parameters->get('configuration')['name'];
+        $sender = $this->parameters->get('configuration')['from_email'];
+        $toContact = $this->parameters->get('configuration')['to_contact'];
+        
+        $subject = $this->translator->trans(
+            'contact.mailer.subject', [
+                '%website_name%' => $this->parameters->get('configuration')['name'],
+                ],
+            'front_messages', $locale = $this->parameters->get('locale')
+        );
+        
+        $messageContent  = $this->translator->trans(
+            'contact.mailer.content', [
+                '%lang%' => strtoupper(locale_get_default()),
+            ],
+            'front_messages', $locale = $this->parameters->get('locale')
+        );
+        $messageLabel  = $this->translator->trans(
+            'contact.form.message.label', [],
+            'front_messages', $locale = $this->parameters->get('locale')
+        );
+        $senderLabel = $this->translator->trans(
+            'contact.mailer.sender', [],
+            'front_messages', $locale = $this->parameters->get('locale')
+        );
+        $subjectLabel = $this->translator->trans(
+            'contact.form.subject.label', [],
+            'front_messages', $locale = $this->parameters->get('locale')
+        );
+            
+        $email = (new Email())
+            ->from(new Address($sender, $nameSite))
+            ->to(new Address($toContact))
+            ->subject($subject)
+            ->text($messageContent.\PHP_EOL.\PHP_EOL.
+                $senderLabel.' '.$contactFormData['name'].', '.$contactFormData['email'].\PHP_EOL.
+                $subjectLabel.' '.$contactFormData['subject'].\PHP_EOL.
+                $messageLabel.\PHP_EOL.$contactFormData['message']);
+        ;
+
+        try {
+            $this->mailer->send($email);
+        } catch (TransportExceptionInterface $e) {
+            throw $e->getResponse()->getStatusCode();
+            // some error prevented the email sending; display an
+            // error message or try to resend the message
         }
     }
 }

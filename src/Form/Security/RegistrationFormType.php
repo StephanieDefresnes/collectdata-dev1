@@ -36,7 +36,12 @@ class RegistrationFormType extends AbstractType
                 'label' => 'registration.label.name',
                 'label_attr' => [
                     'class' => 'd-flex justify-content-start',
-                ]
+                ],
+                'constraints' => [
+                    new NotBlank([
+                        'message' => 'name_not_blank',
+                    ]),
+                ],
             ])
             ->add('plainPassword', RepeatedType::class, [
                 'type' => PasswordType::class,
@@ -78,7 +83,7 @@ class RegistrationFormType extends AbstractType
                 ],
             ])
             ->add('captcha', ReCaptchaType::class, [
-                'type' => 'invisible' // (invisible, checkbox)
+                'type' => 'invisible'
             ])
         ;
     }

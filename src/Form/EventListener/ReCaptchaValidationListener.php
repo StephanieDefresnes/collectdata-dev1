@@ -26,7 +26,7 @@ class ReCaptchaValidationListener implements EventSubscriberInterface
         ];
     }
 
-    public function onPostSubmit(FormEvent $event, TranslatorInterface $translator)
+    public function onPostSubmit(FormEvent $event)
     {
         $request = Request::createFromGlobals();
 
@@ -34,13 +34,8 @@ class ReCaptchaValidationListener implements EventSubscriberInterface
             ->setExpectedHostname($request->getHost())
             ->verify($request->request->get('g-recaptcha-response'), $request->getClientIp());
         
-        $errorMsg = $translator->trans(
-                    'captcha.invalid', [],
-                    'security', $locale = locale_get_default()
-                ); 
-
         if (!$result->isSuccess()) {
-            $event->getForm()->addError(new FormError($errorMsg));
+            $event->getForm()->addError(new FormError('captcha_invalid'));
         }
     }
 }
