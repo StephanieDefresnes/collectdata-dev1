@@ -55,6 +55,7 @@ class ContactType extends AbstractType
                     'rows' => 6,
                     'placeholder' => 'contact.form.message.placeholder'
                 ],
+                'row_attr' => ['class' => 'mb-0'],
                 'constraints' => [
                     new NotBlank([
                         'message' => 'contact.message_not_blank',

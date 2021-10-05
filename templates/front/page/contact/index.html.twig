@@ -1,6 +1,9 @@
 {% extends 'front/layout.html.twig' %}
 {% trans_default_domain 'front_messages' %}
 
+{% set userName = app.user ? app.user.name : '' %}
+{% set userEmail = app.user ? app.user.email : '' %}
+
 {% block title %}{{ 'contact.title'|trans() }}{% endblock %}
 
 {% block stylesheets %}
@@ -27,23 +30,23 @@
 
                 <div class="card-header py-4 pl-4 bg-secondary-80 text-white">
                     
-                    <div class="d-flex justify-content-center row mb-3">
+                    <div class="d-flex justify-content-center row mb-3 {% if app.user %}d-none{% endif %}">
                         <div class="col-md-2 col-12 mt-1">
                             {{ form_label(form.name) }}
                             {{ form_errors(form.name) }}
                         </div>
                         <div class="col-md-8 col-12">
-                            {{ form_widget(form.name) }}
+                            {{ form_widget(form.name, {value: userName }) }}
                         </div>
                     </div>
                     
-                    <div class="d-flex justify-content-center row mb-3">
+                    <div class="d-flex justify-content-center row mb-3 {% if app.user %}d-none{% endif %}">
                         <div class="col-md-2 col-12 mt-1">
                             {{ form_label(form.email) }}
                             {{ form_errors(form.email) }}
                         </div>
                         <div class="col-md-8 col-12">
-                            {{ form_widget(form.email) }}
+                            {{ form_widget(form.email, {value: userEmail }) }}
                         </div>
                     </div>
                     
