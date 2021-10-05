@@ -1,7 +1,7 @@
 {% extends 'front/layout.html.twig' %}
 {% trans_default_domain 'front_messages' %}
 
-{% set userName = app.user ? app.user.name : '' %}
+{% set userName = app.user ? 'User #'~ app.user.id ~' : '~app.user.name : '' %}
 {% set userEmail = app.user ? app.user.email : '' %}
 
 {% block title %}{{ 'contact.title'|trans() }}{% endblock %}
