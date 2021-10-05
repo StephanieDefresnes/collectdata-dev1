@@ -118,7 +118,7 @@ class TranslationController extends AbstractController
                 $msg = $translator
                         ->trans('translation.form.flash.'.$msgType.'.error', [],
                                 'user_messages', $locale = locale_get_default());
-                $this->addFlash('success', $msg);
+                $this->addFlash('error', $msg);
             }
 
         }

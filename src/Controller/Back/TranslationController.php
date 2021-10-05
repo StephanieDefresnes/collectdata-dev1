@@ -195,7 +195,7 @@ class TranslationController extends AbstractController
                 $msg = $this->translator
                         ->trans('lang.translation.form.flash.'. $type .'.error',[],
                                 'back_messages', $locale = locale_get_default());
-                $this->addFlash('success', $msg);
+                $this->addFlash('error', $msg);
 
                 if ($id) {
                     return $this->redirectToRoute('back_translation_create', [
@@ -405,7 +405,7 @@ class TranslationController extends AbstractController
             $msg = $this->translator
                     ->trans('lang.translation.yaml.flash.error',[],
                             'back_messages', $locale = locale_get_default());
-            $this->addFlash('success', $msg);
+            $this->addFlash('error', $msg);
         }
         return $this->redirectToRoute('back_translation_generate_list');
     }
@@ -429,7 +429,7 @@ class TranslationController extends AbstractController
             $msg = $this->translator
                     ->trans('lang.translation.yaml.clean.flash.error',[],
                             'back_messages', $locale = locale_get_default());
-            $this->addFlash('success', $msg);
+            $this->addFlash('error', $msg);
         }
         
         return $this->redirectToRoute('back_translation_clean');
