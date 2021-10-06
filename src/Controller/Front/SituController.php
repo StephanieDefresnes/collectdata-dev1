@@ -10,11 +10,13 @@ use App\Entity\Lang;
 use App\Entity\User;
 use App\Form\Front\Situ\SituFormType;
 use App\Mailer\Mailer;
+use App\Messenger\Messenger;
 use App\Service\CategoryService;
 use App\Service\EventService;
 use App\Service\SituService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -29,16 +31,22 @@ class SituController extends AbstractController
 {
     private $em;
     private $mailer;
+    private $messenger;
+    private $parameters;
     private $security;
     private $translator;
     
     public function __construct(EntityManagerInterface $em,
                                 Mailer $mailer,
+                                Messenger $messenger,
+                                ParameterBagInterface $parameters,
                                 Security $security,
                                 TranslatorInterface $translator)
     {
         $this->em = $em;
         $this->mailer = $mailer;
+        $this->messenger = $messenger;
+        $this->parameters = $parameters;
         $this->security = $security;
         $this->translator = $translator;
     }
@@ -77,8 +85,7 @@ class SituController extends AbstractController
      */
     public function readSitu($id): Response
     {
-        $situ = $this->em->getRepository(Situ::class)
-                ->findOneBy(['id' => $id]);
+        $situ = $this->em->getRepository(Situ::class)->find($id);
         
         if (!$situ) {
             return $this->redirectToRoute('no_found', ['_locale' => locale_get_default()]);
@@ -92,9 +99,7 @@ class SituController extends AbstractController
                 $this->denyAccessUnlessGranted('ROLE_SUPER_ADMIN');
         }
         
-        $user = $this->em->getRepository(User::class)
-                ->findOneBy(['id' => $situ->getUserId()]);
-        
+        $user = $this->em->getRepository(User::class)->find($situ->getUserId());        
         
         return $this->render('front/situ/read.html.twig', [
             'situ' => $situ,
@@ -131,7 +136,8 @@ class SituController extends AbstractController
             $this->em->persist($situ);
             $this->em->flush();
 
-            $this->mailer->sendModeratorSituValidate($situ);
+//            $this->mailer->sendModeratorSituValidate($situ);
+            $this->messenger->sendModeratorAlert('situ', $situ);
             
             $msg = $this->translator->trans(
                     'contrib.form.submit.flash.success', [],
@@ -197,7 +203,7 @@ class SituController extends AbstractController
         $this->denyAccessUnlessGranted('ROLE_CONTRIBUTOR');
         
         $defaultLang = $this->em->getRepository(Lang::class)
-                ->findOneBy(['englishName' => 'French'])
+                ->findOneBy(['lang' => $this->parameters->get('locale')])
                 ->getId();
         
         // Current user
@@ -207,8 +213,7 @@ class SituController extends AbstractController
         // Update or Create new Situ
         if ($id) {
             
-            $situ = $this->em->getRepository(Situ::class)
-                    ->findOneBy(['id' => $id]);
+            $situ = $this->em->getRepository(Situ::class)->find($id);
         
             // Only situ author can update situ
             if (!empty($situ) && $user->getId() != $situ->getUserId()) {
@@ -245,19 +250,17 @@ class SituController extends AbstractController
         $this->denyAccessUnlessGranted('ROLE_CONTRIBUTOR');
         
         $defaultLang = $this->em->getRepository(Lang::class)
-                ->findOneBy(['englishName' => 'French'])
+                ->findOneBy(['lang' => $this->parameters->get('locale')])
                 ->getId();
         
         // Current user langs
         $langs = $this->security->getUser()->getLangs()->getValues();
         
         // Situ to translate
-        $situData = $this->em->getRepository(Situ::class)
-                ->findOneBy(['id' => $id]);
+        $situData = $this->em->getRepository(Situ::class)->find($id);
         
         // Translation lang
-        $langData = $this->em->getRepository(Lang::class)
-                ->findOneBy(['id' => $langId]);
+        $langData = $this->em->getRepository(Lang::class)->find($langId);
         
         // Form
         $situ = new Situ();
@@ -284,9 +287,8 @@ class SituController extends AbstractController
         $user = $this->security->getUser();
         $userId = $user->getId();
         
-        $defaultLang = $this->em->getRepository(Lang::class)->findOneBy(
-            ['englishName' => 'French']
-        );
+        $defaultLang = $this->em->getRepository(Lang::class)
+                ->findOneBy(['lang' => $this->parameters->get('locale')]);
         
         $userLang = $user->getLangId() == '' ? $defaultLang->getId() : $user->getLangId();
             
@@ -297,7 +299,7 @@ class SituController extends AbstractController
         
         $landId = isset($data['lang']) ? $data['lang'] : $userLang;
         
-        $langData = $this->em->getRepository(Lang::class)->findOneBy([ 'id' => $landId ]);
+        $langData = $this->em->getRepository(Lang::class)->find($landId);
         
         if (!$langData->getEnabled()) {
             $msg = $this->translator->trans(
@@ -413,8 +415,10 @@ class SituController extends AbstractController
 
             $request->getSession()->getFlashBag()->add('success', $msg);
 
-            if ($statusId == 2)
-                $this->mailer->sendModeratorSituValidate($situ);
+            if ($statusId == 2) {
+//                $this->mailer->sendModeratorSituValidate($situ);
+                $this->messenger->sendModeratorAlert('situ', $situ);
+            }
             
             return $this->json([
                 'success' => true,
@@ -457,19 +461,13 @@ class SituController extends AbstractController
         } else {
             switch ($entity) {
                 case 'event':
-                    $data = $this->em->getRepository(Event::class)->findOneBy([
-                        'id' => $dataEntity
-                    ]);
+                    $data = $this->em->getRepository(Event::class)->find($dataEntity);
                     break;
                 case 'categoryLevel1':
-                    $data = $this->em->getRepository(Category::class)->findOneBy([
-                        'id' => $dataEntity
-                    ]);
+                    $data = $this->em->getRepository(Category::class)->find($dataEntity);
                     break;
                 case 'categoryLevel2':
-                    $data = $this->em->getRepository(Category::class)->findOneBy([
-                        'id' => $dataEntity
-                    ]);
+                    $data = $this->em->getRepository(Category::class)->find($dataEntity);
                     break;
             }
         }
@@ -522,12 +520,8 @@ class SituController extends AbstractController
             'lang_deny', [],
             'user_messages', $locale = locale_get_default()
             );
-        $situData = $this->em->getRepository(Situ::class)->findOneBy([
-            'id' => $situId
-        ]);
-        $langData = $this->em->getRepository(Lang::class)->findOneBy([
-            'id' => $langId
-        ]);
+        $situData = $this->em->getRepository(Situ::class)->find($situId);
+        $langData = $this->em->getRepository(Lang::class)->find($langId);
         
         // If wanted lang is Lang situ ti translate or wanted lang is not enabled
         if ($langId == $situData->getLang()->getId() || !$langData->getEnabled()) {

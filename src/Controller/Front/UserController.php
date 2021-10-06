@@ -52,11 +52,8 @@ class UserController extends AbstractController
             $user_lang = 'Français';
             $user_lang_lg = 'fr';
         } else {
-            $lang = $this->getDoctrine()
-                ->getRepository(Lang::class)
-                ->findOneBy([
-                    'id' => $this->getUser()->getLangId()
-                ]);
+            $lang = $this->getDoctrine()->getRepository(Lang::class)
+                    ->find($this->getUser()->getLangId());
             $user_lang = html_entity_decode($lang->getName(), ENT_QUOTES, 'UTF-8');
             $user_lang_lg = $lang->getLang();
         }

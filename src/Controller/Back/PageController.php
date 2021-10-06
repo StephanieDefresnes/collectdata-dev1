@@ -147,8 +147,7 @@ class PageController extends AbstractController
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
         $this->denyAccessUnlessGranted('ROLE_SUPER_ADMIN');        
         
-        $page = $this->getDoctrine()->getRepository(Page::class)
-                ->findOneBy(['id' => $id]);
+        $page = $this->getDoctrine()->getRepository(Page::class)->find($id);
         
         $page->setEnabled(1);
         $this->em->persist($page);
