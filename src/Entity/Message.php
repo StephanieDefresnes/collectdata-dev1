@@ -18,14 +18,14 @@ class Message
     private $id;
 
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="string")
      */
     private $type;
 
     /**
-     * @ORM\Column(type="text", nullable=true)
+     * @ORM\Column(type="string", length=255)
      */
-    private $text;
+    private $channel;
 
     /**
      * @ORM\Column(type="string", length=255)
@@ -33,7 +33,12 @@ class Message
     private $subject;
 
     /**
-     * @ORM\Column(type="integer", options={"default": "-1"})
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $text;
+
+    /**
+     * @ORM\Column(type="integer")
      */
     private $senderUserId;
 
@@ -43,22 +48,27 @@ class Message
     private $recipientUserId;
 
     /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $entity;
+
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $entityId;
+
+    /**
      * @ORM\Column(type="datetime")
      */
     private $dateCreate;
 
     /**
-     * @ORM\Column(type="datetime", nullable=true)
-     */
-    private $dateRead;
-
-    /**
-     * @ORM\Column(type="boolean", options={"default": "0"})
+     * @ORM\Column(type="boolean")
      */
     private $reported;
 
     /**
-     * @ORM\Column(type="boolean", options={"default": "0"})
+     * @ORM\Column(type="boolean")
      */
     private $scanned;
 
@@ -72,26 +82,26 @@ class Message
         return $this->id;
     }
 
-    public function getType(): ?int
+    public function getType(): ?string
     {
         return $this->type;
     }
 
-    public function setType(int $type): self
+    public function setType(string $type): self
     {
         $this->type = $type;
 
         return $this;
     }
 
-    public function getText(): ?string
+    public function getChannel(): ?string
     {
-        return $this->text;
+        return $this->channel;
     }
 
-    public function setText(?string $text): self
+    public function setChannel(?string $channel): self
     {
-        $this->text = $text;
+        $this->channel = $channel;
 
         return $this;
     }
@@ -104,6 +114,18 @@ class Message
     public function setSubject(string $subject): self
     {
         $this->subject = $subject;
+
+        return $this;
+    }
+
+    public function getText(): ?string
+    {
+        return $this->text;
+    }
+
+    public function setText(?string $text): self
+    {
+        $this->text = $text;
 
         return $this;
     }
@@ -132,6 +154,30 @@ class Message
         return $this;
     }
 
+    public function getEntity(): ?string
+    {
+        return $this->entity;
+    }
+
+    public function setEntity(?string $entity): self
+    {
+        $this->entity = $entity;
+
+        return $this;
+    }
+
+    public function getEntityId(): ?int
+    {
+        return $this->entityId;
+    }
+
+    public function setEntityId(?int $entityId): self
+    {
+        $this->entityId = $entityId;
+
+        return $this;
+    }
+
     public function getDateCreate(): ?\DateTimeInterface
     {
         return $this->dateCreate;
@@ -140,18 +186,6 @@ class Message
     public function setDateCreate(\DateTimeInterface $dateCreate): self
     {
         $this->dateCreate = $dateCreate;
-
-        return $this;
-    }
-
-    public function getDateRead(): ?\DateTimeInterface
-    {
-        return $this->dateRead;
-    }
-
-    public function setDateRead(?\DateTimeInterface $dateRead): self
-    {
-        $this->dateRead = $dateRead;
 
         return $this;
     }

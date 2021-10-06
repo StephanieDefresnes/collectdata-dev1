@@ -79,5 +79,5 @@ class UserService {
             ->setParameter(2, $lang);
         
         return $qb->getQuery()->getResult();
-    }    
+    }
 }

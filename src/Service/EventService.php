@@ -21,14 +21,14 @@ class EventService {
      * @return []   Returns event land id
      *              Use to get not validated Events yet and added by current user
      */
-    public function getEventLang($event_id)
+    public function getEventLang($eventId)
     {
         return $this->em->createQueryBuilder()
                 ->from(Event::class,'e')
                 ->select('l.id landId')
                 ->leftJoin(Lang::class, 'l', 'WITH', 'e.lang = l.id')
                 ->where('e.id = ?1')
-                ->setParameter(1, $event_id)
+                ->setParameter(1, $eventId)
                 ->getQuery()
                 ->getOneOrNullResult();
     }
@@ -37,7 +37,7 @@ class EventService {
      * @return []   Returns an array of Events objects
      *              by lang selected and by user events not validated yet
      */
-    public function getByLangIdAndUserLangId($lang_id)
+    public function getByLangIdAndUserLangId($langId)
     {
         $qb = $this->em->createQueryBuilder();
         
@@ -56,7 +56,7 @@ class EventService {
             ->select('e')
             ->andWhere($qb->expr()->orX($eventByLangId, $eventByUserLandId))
             ->setParameters([
-                1 => $lang_id,
+                1 => $langId,
                 2 => 1,
                 3 => 0,
                 4 => $this->security->getUser()->getId(),
@@ -67,7 +67,7 @@ class EventService {
     /**
      * @return []   Returns Category data validated
      */
-    public function getDataById($event_id)
+    public function getDataById($eventId)
     {
         return $this->em->createQueryBuilder()
                 ->from(Event::class,'e')
@@ -76,6 +76,10 @@ class EventService {
                 ->setParameter(1, $event_id)
                 ->getQuery()
                 ->getOneOrNullResult();
+    }
+    
+    public function getEvent($eventId) {
+        return $this->em->getRepository(Event::class)->find($eventId);
     }
     
 }

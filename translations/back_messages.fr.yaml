@@ -341,7 +341,8 @@ message:
         category:
             level1: La catégorie <strong>#%id%</strong> a été soumise.
             level2: La sous-catégorie <strong>#%id%</strong> a été soumise.
-        title: Notification
+        seen: Vu
+        title: Notifications
         title_all: Voir toutes les notifications
     envelope:
         new: Vous avez un message de %sender%.

@@ -1,0 +1,31 @@
+back:
+    alert:
+        event: <strong>%user%</strong> a soumis l'évenement <strong>#%id%</strong>.
+        categoryLevel1: <strong>%user%</strong> a soumis la catégorie <strong>#%id%</strong>.
+        categoryLevel2: <strong>%user%</strong> a soumis la sous-catégorie <strong>#%id%</strong>.
+        situ: <strong>%user%</strong> a soumis la contribution <strong>#%id%</strong>.
+        seen:
+            no: Marquer comme non vu
+            yes: Marquer comme vu
+        table:
+            empty: Aucune notification
+        title: Mes notifications
+    envelope:
+        new: Vous avez un message de %sender%.
+        title: Messagerie
+        title_all: Voir tous les messages
+front:
+    alert:
+        contrib: La contribution <strong>%title%</strong> a été validée.
+        event:  L'événement <strong>%title%</strong> a été validé.
+        category:
+            level1: La catégorie <strong>%title%</strong> a été validée.
+            level2: La sous-catégorie <strong>%title%</strong> a été validée.
+        title: Notification
+        title_all: Voir toutes les notifications
+    envelope:
+        new: Vous avez un message de %sender%.
+        title: Messagerie
+        title_all: Voir tous les messages
+flash:
+    error: Une erreur s'est produite lors le mise à mise à jour de l'alerte.

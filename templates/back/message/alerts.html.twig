@@ -1,20 +1,100 @@
-{% extends 'base.html.twig' %}
+{% trans_default_domain 'message_messages' %}
+{% extends "back/layout.html.twig" %}
 
-{% block title %}Hello MessageController!{% endblock %}
+{% block title %}{{ 'back.alert.title'|trans }}{% endblock %}
 
-{% block body %}
-<style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-</style>
+{% block stylesheets %}
+    {{ parent() }}
+    {{ encore_entry_link_tags('message_app', null, 'backApp') }}
+    {{ encore_entry_link_tags('flp_theme') }}
+ {% endblock %}
 
-<div class="example-wrapper">
-    <h1>Hello {{ controller_name }}! ✅</h1>
+{% block content %}
+    <div id="loader"></div>
+    <div class="container-fluid pt-4">
+        
+        <div class="d-sm-flex justify-content-between mb-4">
+            <h1 class="h3 mb-0 text-gray-800">{{ 'back.alert.title'|trans() }}</h1>
+        </div>
+        
+        <div class="row">
+            <div class="col-12">
+                <div class="card shadow mb-4">
 
-    This friendly message is coming from:
-    <ul>
-        <li>Your controller at <code><a href="{{ 'E:/Developpement/NoCOVIDProject/local/Collectdata-dev2/src/Controller/MessageController.php'|file_link(0) }}">src/Controller/MessageController.php</a></code></li>
-        <li>Your template at <code><a href="{{ 'E:/Developpement/NoCOVIDProject/local/Collectdata-dev2/templates/message/index.html.twig'|file_link(0) }}">templates/message/index.html.twig</a></code></li>
-    </ul>
-</div>
+                    <div id="list" class="card-body pb-3 back-dataTable">
+
+                    {% if alerts is empty %}
+                        {{ 'back.alert.empty'|trans() }}
+                    {% else %}
+                        <table id="dataTable-list" class="table table-sm nowrap">
+                            <thead class="d-none"><tr><th></th><th></th><th></th><th></th><th></th></tr></thead>
+                            <tbody class="bg-white">
+                                {% for alert in alerts %}
+                                    <tr id="{{ alert.id }}" class="">
+                                        <td class="p-2 align-middle">
+                                            <div class="icon-circle bg-{{ alert.channel }} text-white">
+                                                <i class="fas fa-hands"></i>
+                                            </div>
+                                        </td>
+                                        <td class="align-middle p-2">
+                                            {% if alert.entity == 'situ'
+                                                and situ_service.getSitu(alert.entityId).statusId != 1
+                                                and situ_service.getSitu(alert.entityId).statusId != 2 %}
+                                                    <i class="far fa-check-circle text-success"></i>
+                                            {% elseif alert.entity == 'event'
+                                                and event_service.getEvent(alert.entityId).statusId != 1
+                                                and event_service.getEvent(alert.entityId).statusId != 2 %}
+                                                    <i class="far fa-check-circle text-success"></i>
+                                            {% elseif alert.entity == 'category'
+                                                and category_service.getCategory(alert.entityId).statusId != 1
+                                                and category_service.getCategory(alert.entityId).statusId != 2 %}
+                                                <i class="far fa-check-circle text-success"></i>
+                                            {% endif %}
+                                        </td>
+                                        <td class="p-2">{{ alert.subject|raw }}<br>
+                                            <p class="mb-0 small">{{ alert.dateCreate is empty ? ''
+                                                : alert.dateCreate
+                                                    |format_datetime('full', 'short', locale=locale)
+                                                    |capitalize }}</p>
+                                        </td>
+                                        <td class="p-2">{{ alert.text|raw }}</td>
+                                        <td class="p-2">
+                                            <div class="form-group">
+                                                <div class="form-check">
+                                                    <input type="checkbox" id="message_scanned_{{ alert.id }}"
+                                                           name="message_scanned_{{ alert.id }}"
+                                                           class="custom-checkbox form-check-input"
+                                                           value="{{ alert.scanned }}"{% if alert.scanned == 0 %} checked="checked"{% endif %}
+                                                           data-toggle="tooltip" data-placement="left"
+                                                           title="{{ alert.scanned == 0
+                                                                ? 'back.alert.seen.yes'|trans()
+                                                                : 'back.alert.seen.no'|trans() }}"
+                                                           aria-label="{{ alert.scanned == 1
+                                                                ? 'back.alert.seen.yes'|trans()
+                                                                : 'back.alert.seen.no'|trans() }}">
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>            
+                    {% endif %}
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {{ encore_entry_script_tags('message_app', null, 'backApp') }}
+    <script>
+        let translations = {
+            "seenNo" : "{{ 'back.alert.seen.no'|trans }}",
+            "seenYes" : "{{ 'back.alert.seen.yes'|trans }}",
+        }
+    </script>
 {% endblock %}

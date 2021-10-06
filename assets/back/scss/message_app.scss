@@ -1,10 +1,5 @@
-/*
-To change this license header, choose License Headers in Project Properties.
-To change this template file, choose Tools | Templates
-and open the template in the editor.
-*/
-/* 
-    Created on : 5 oct. 2021, 10:55:11
-    Author     : sedsi
-*/
+@import '~datatables.net-bs4/css/dataTables.bootstrap4.css';
 
+.dropdown-item.d-flex.d-none {
+    display: none !important;
+}

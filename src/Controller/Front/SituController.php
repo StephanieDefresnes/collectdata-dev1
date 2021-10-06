@@ -91,12 +91,28 @@ class SituController extends AbstractController
             return $this->redirectToRoute('no_found', ['_locale' => locale_get_default()]);
         }
         
+        // Current user
+        $user = $this->security->getUser();
+        
         // Only user can read not validated situ
         if ($situ->getStatusId() != 3) {
             $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+            
+            // Only Super-admin can read refused situ
+            if ($situ->getStatusId() == 4 && $situ->getUserId() != $user->getId()) {
+                return $this->redirectToRoute('access_denied', [
+                    '_locale' => locale_get_default(),
+                    'code' => '18191',
+                ]);
+            }
+            
             // Only Super-admin can read deleted situ
-            if ($situ->getStatusId() == 5)
-                $this->denyAccessUnlessGranted('ROLE_SUPER_ADMIN');
+            if ($situ->getStatusId() == 5) {
+                return $this->redirectToRoute('access_denied', [
+                    '_locale' => locale_get_default(),
+                    'code' => '18194',
+                ]);
+            }
         }
         
         $user = $this->em->getRepository(User::class)->find($situ->getUserId());        
@@ -120,14 +136,10 @@ class SituController extends AbstractController
         
         // Only situ author can request situ validation 
         if ($user->getId() != $situ->getUserId()) {
-            
-            $msg = $this->translator->trans(
-                    'access_deny', [],
-                    'user_messages', $locale = locale_get_default()
-                );
-            $this->addFlash('error', $msg);
-
-            return $this->redirectToRoute('user_situs', ['_locale' => locale_get_default()]);
+            return $this->redirectToRoute('access_denied', [
+                '_locale' => locale_get_default(),
+                'code' => '22181',
+            ]);
         }
             
         try {
@@ -136,7 +148,7 @@ class SituController extends AbstractController
             $this->em->persist($situ);
             $this->em->flush();
 
-//            $this->mailer->sendModeratorSituValidate($situ);
+            $this->mailer->sendModeratorSituValidate($situ);
             $this->messenger->sendModeratorAlert('situ', $situ);
             
             $msg = $this->translator->trans(
@@ -165,14 +177,10 @@ class SituController extends AbstractController
         
         // Only situ author can delete situ
         if ($user->getId() != $situ->getUserId()) {
-            
-            $msg = $this->translator->trans(
-                    'access_deny', [],
-                    'user_messages', $locale = locale_get_default()
-                );
-            $this->addFlash('error', $msg);
-
-            return $this->redirectToRoute('user_situs', ['_locale' => locale_get_default()]);
+            return $this->redirectToRoute('access_denied', [
+                '_locale' => locale_get_default(),
+                'code' => '4191',
+            ]);
         }
             
         try {
@@ -216,16 +224,18 @@ class SituController extends AbstractController
             $situ = $this->em->getRepository(Situ::class)->find($id);
         
             // Only situ author can update situ
-            if (!empty($situ) && $user->getId() != $situ->getUserId()) {
-
-                $msg = $this->translator->trans(
-                        'access_deny', [],
-                        'user_messages', $locale = locale_get_default()
-                    );
-                $this->addFlash('error', $msg);
-
-                return $this->redirectToRoute('user_situs', ['_locale' => locale_get_default()]);
+            if (!$situ) {
+                return $this->redirectToRoute('no_found', ['_locale' => locale_get_default()]);
             }
+        
+            // Only situ author can update situ
+            if ($situ->getUserId() != $user->getId()) {
+                return $this->redirectToRoute('access_denied', [
+                    '_locale' => locale_get_default(),
+                    'code' => '21191',
+                ]);
+            }
+            
         } else {
             $situ = new Situ();
         }
@@ -416,7 +426,7 @@ class SituController extends AbstractController
             $request->getSession()->getFlashBag()->add('success', $msg);
 
             if ($statusId == 2) {
-//                $this->mailer->sendModeratorSituValidate($situ);
+                $this->mailer->sendModeratorSituValidate($situ);
                 $this->messenger->sendModeratorAlert('situ', $situ);
             }
             

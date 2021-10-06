@@ -106,4 +106,8 @@ class SituService {
         return $qb->getQuery()->getResult();
     }
     
+    public function getSitu($situId) {
+        return $this->em->getRepository(Situ::class)->find($situId);
+    }
+    
 }

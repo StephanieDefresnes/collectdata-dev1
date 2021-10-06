@@ -21,14 +21,14 @@ class CategoryService {
      * @return []   Returns categoryLevel1 land id
      *              Use to get not validated Categories Level1 added by current user
      */
-    public function getLangByCategoryId($category_id)
+    public function getLangByCategoryId($categoryId)
     {
         return $this->em->createQueryBuilder()
                 ->from(Category::class,'c')
                 ->select('l.id landId')
                 ->leftJoin(Lang::class, 'l', 'WITH', 'c.lang = l.id')
                 ->where('c.id = ?1')
-                ->setParameter(1, $category_id)
+                ->setParameter(1, $categoryId)
                 ->getQuery()
                 ->getOneOrNullResult();
     }
@@ -37,7 +37,7 @@ class CategoryService {
      * @return []   Returns an array of Categories Level1 objects
      *              by event selected and by user categories
      */
-    public function getByEventIdAndbyUserEvent($event_id, $lang_id)
+    public function getByEventIdAndbyUserEvent($eventId, $langId)
     {
         $qb = $this->em->createQueryBuilder();
         
@@ -57,11 +57,11 @@ class CategoryService {
             ->select('c')
             ->andWhere($qb->expr()->orX($categoryLevel1ByEventId, $categoryLevel1ByUser))
             ->setParameters([
-                1 => $event_id,
+                1 => $eventId,
                 2 => 1,
                 3 => 0,
                 4 => $this->security->getUser()->getId(),
-                5 => $lang_id
+                5 => $langId
             ]);
         
         return $qb->getQuery()->getResult();
@@ -71,7 +71,7 @@ class CategoryService {
      * @return []   Returns an array of Categories Level2 objects
      *              by Category parent selected and by user categories
      */
-    public function getByParentIdAndUserParentId($category_id, $lang_id)
+    public function getByParentIdAndUserParentId($categoryId, $langId)
     {        
         $qb = $this->em->createQueryBuilder();
         
@@ -91,11 +91,11 @@ class CategoryService {
                 ->select('c')
                 ->andWhere($qb->expr()->orX($categoriesByByParentId, $categoriesByUserParentId))
                 ->setParameters([
-                    1 => $category_id,
+                    1 => $categoryId,
                     2 => 1,
                     3 => 0,
                     4 => $this->security->getUser()->getId(),
-                    5 => $lang_id
+                    5 => $langId
                 ]);
         return $qb->getQuery()->getResult();
     }
@@ -103,14 +103,18 @@ class CategoryService {
     /**
      * @return []   Returns Category data description & validated
      */
-    public function getDataById($category_id)
+    public function getDataById($categoryId)
     {
         return $this->em->createQueryBuilder()
                 ->from(Category::class,'c')
                 ->select('c.title, c.description, c.validated')
                 ->where('c.id = ?1')
-                ->setParameter(1, $category_id)
+                ->setParameter(1, $categoryId)
                 ->getQuery()
                 ->getOneOrNullResult();
+    }
+    
+    public function getCategory($categoryId) {
+        return $this->em->getRepository(Category::class)->find($categoryId);
     }
 }
