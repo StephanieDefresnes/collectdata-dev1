@@ -34,8 +34,7 @@ class LangService {
 
     public function getAll()
     {
-        $repository = $this->em->getRepository(Lang::class);
-        $langs = $repository->findAll();
+        $langs = $this->em->getRepository(Lang::class)->findAll();
         
         $result = [];
         foreach ($langs as $lang) {
