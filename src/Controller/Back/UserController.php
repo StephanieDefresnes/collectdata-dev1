@@ -166,7 +166,10 @@ class UserController extends AbstractController
             if ($user == $noAccess) {
                 if (!$this->container->get('security.authorization_checker')
                         ->isGranted('ROLE_SUPER_ADMIN')) {
-                    return $this->redirectToRoute('access_denied', ['_locale' => locale_get_default()]);
+                    return $this->redirectToRoute('access_denied', [
+                        '_locale' => locale_get_default(),
+                        'code' => 'B211921',
+                    ]);
                 }
             }
         }     
@@ -176,7 +179,10 @@ class UserController extends AbstractController
             if ($user == $noAccess) {
                 if (!$this->container->get('security.authorization_checker')
                         ->isGranted('ROLE_SUPER_ADMIN')) {
-                    return $this->redirectToRoute('access_denied', ['_locale' => locale_get_default()]);
+                    return $this->redirectToRoute('access_denied', [
+                        '_locale' => locale_get_default(),
+                        'code' => 'B21121',
+                    ]);
                 }
             }
         }     
@@ -186,7 +192,10 @@ class UserController extends AbstractController
             if ($user == $noAccess) {
                 if (!$this->container->get('security.authorization_checker')
                         ->isGranted('ROLE_ADMIN')) {
-                    return $this->redirectToRoute('access_denied', ['_locale' => locale_get_default()]);
+                    return $this->redirectToRoute('access_denied', [
+                        '_locale' => locale_get_default(),
+                        'code' => 'B21131',
+                    ]);
                 }
             }
         }

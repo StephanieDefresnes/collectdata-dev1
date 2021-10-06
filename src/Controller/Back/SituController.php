@@ -28,8 +28,8 @@ class SituController extends AbstractController
     private $translator;
     
     public function __construct(EntityManagerInterface $em,
-                                Security $security,
-                                TranslatorInterface $translator)
+                                TranslatorInterface $translator,
+                                Security $security)
     {
         $this->em = $em;
         $this->security = $security;
@@ -58,8 +58,7 @@ class SituController extends AbstractController
     {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
         
-        $repository = $this->em->getRepository(Situ::class);
-        $situ = $repository->findOneBy(['id' => $id]);
+        $situ = $this->em->getRepository(Situ::class)->find($id);
         
         return $this->render('back/situ/read/index.html.twig', [
             'situ' => $situ,
@@ -91,7 +90,7 @@ class SituController extends AbstractController
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
         $this->denyAccessUnlessGranted('ROLE_MODERATOR');
         
-        $situ = $this->em->getRepository(Situ::class)->findOneBy(['id' => $id]);
+        $situ = $this->em->getRepository(Situ::class)->find($id);;
         
         if (!$situ || $situ->getStatusId() != 2) {
             
@@ -114,7 +113,7 @@ class SituController extends AbstractController
             
             if ($situ->getInitialSitu() == 0) {
                 $situInitial = $this->em->getRepository(Situ::class)
-                        ->findOneBy(['id' => $situ->getTranslatedSituId()]);
+                        ->find($situ->getTranslatedSituId());
                 $situsTranslated = $this->em->getRepository(Situ::class)
                         ->findBy([
                             'translatedSituId' => $situ->getTranslatedSituId(),
@@ -130,7 +129,7 @@ class SituController extends AbstractController
             $categoriesLevel2 = $this->em->getRepository(Category::class)
                         ->findBy(['parent' => $situ->getCategoryLevel1()->getId()]);
         
-            $author = $this->em->getRepository(User::class)->findOneBy(['id' => $situ->getUserId()]);
+            $author = $this->em->getRepository(User::class)->find($situ->getUserId());
             $authorLang = $this->em->getRepository(Lang::class)->find($author->getLangId());
         }
         
@@ -162,7 +161,7 @@ class SituController extends AbstractController
         $dataForm = $request->request->all();        
         $data = $dataForm['dataForm'];
         
-        $situ = $this->em->getRepository(Situ::class)->findOneBy(['id' => $data['id']]);
+        $situ = $this->em->getRepository(Situ::class)->find($data['id']);
         
         $situ->setStatusId($data['statusId']);
         
@@ -220,8 +219,7 @@ class SituController extends AbstractController
         if ($entity == 'event') $class = Event::class;
         else $class = Category::class;
         
-        $classId = $this->em->getRepository($class)
-                ->findOneBy(['id' => $id]);
+        $classId = $this->em->getRepository($class)->find($id);
         
         if ($classId->getValidated() == 0 && $validated == 1) {
             $classId->setValidated(1);

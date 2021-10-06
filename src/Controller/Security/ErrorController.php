@@ -33,9 +33,9 @@ class ErrorController extends AbstractController
     }
 
     /**
-     * @Route("/403", name="access_denied", methods="GET|POST")
+     * @Route("/403/{code}", defaults={"code" = null}, name="access_denied", methods="GET|POST")
      */
-    public function accessDenied(EntityManagerInterface $em, Security $security): Response
+    public function accessDenied(EntityManagerInterface $em, Security $security, $code): Response
     {
         if ($this->getUser() !== null) {
             
@@ -45,16 +45,16 @@ class ErrorController extends AbstractController
             $forbiddenAccess = $user->getForbiddenAccess();
             $adminNote = $user->getAdminNote();
             
-            if ($_GET['d']) {
-                $d = $_GET['d'];
-                if ($d == '1211') $msg = 'Validation Contrib author forbidden: ';
-                if ($d == '1411') $msg = 'Delete Contrib author forbidden: ';
-                if ($d == '1918181') $msg = 'Read Contrib refused author forbidden: ';
-                if ($d == '19184') $msg = 'Read Contrib deleted forbidden: ';
-                if ($d == '19211') $msg = 'Update Contrib author forbidden: ';
-                if ($d == 'B122021') $msg = 'Back Lang translation update author forbidden: ';
-                else $msg = 'Forbidden access: ';
-            }
+            if ($code == '18191')           $msg = 'Read Situ refused by no author forbidden: ';
+            elseif ($code == '18194')       $msg = 'Read Situ deleted forbidden: ';
+            elseif ($code == '21191')       $msg = 'Update Situ author forbidden: ';
+            elseif ($code == '21201')       $msg = 'Update Translation site by no author forbidden: ';
+            elseif ($code == '22181')       $msg = 'Validation Situ by no author forbidden: ';
+            elseif ($code == '4191')        $msg = 'Delete Situ by no author forbidden: ';
+            elseif ($code == 'B1118')       $msg = 'Back Access Alert Recipient forbidden: ';
+            elseif ($code == 'B21121')      $msg = 'Back Update Admin by no SuperAdmin forbidden: ';
+            elseif ($code == 'B21131')      $msg = 'Back Update Moderator by no Admin forbidden: ';
+            elseif ($code == 'B211921')     $msg = 'Back Update SuperAdmin by no SuperAdmin forbidden: ';
             else $msg = 'Forbidden access: ';
                 
             $user->setForbiddenAccess(intval($forbiddenAccess)+1);
@@ -65,7 +65,6 @@ class ErrorController extends AbstractController
             if ($user->getForbiddenAccess() == 3) {
                 $user->setEnabled(0);
                 $user->setDateDelete(new \DateTime('now'));
-                $adminNote = $user->getAdminNote();
                 $user->setAdminNote($adminNote.PHP_EOL.'Deleted ForbiddenAccess x 3');
                 $this->em->persist($user);
                 $this->em->flush();
