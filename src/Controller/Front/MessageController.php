@@ -16,5 +16,5 @@ class MessageController extends AbstractController
         return $this->render('front/message/index.html.twig', [
             'controller_name' => 'MessageController',
         ]);
-    }
+    }    
 }
