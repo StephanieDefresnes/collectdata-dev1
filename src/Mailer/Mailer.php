@@ -17,11 +17,11 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class Mailer
 {
-    protected $em;
-    protected $mailer;
-    protected $parameters;
-    protected $router;
-    protected $translator;
+    private $em;
+    private $mailer;
+    private $parameters;
+    private $router;
+    private $translator;
     private $userService;
     
     /**
