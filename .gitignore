@@ -1,4 +1,4 @@
-###> symfony/framework-bundle ###
+git ci###> symfony/framework-bundle ###
 /.env
 /.env.test
 /.env.local
@@ -11,6 +11,7 @@
 /config/packages/mailer.yaml
 /config/packages/notifier.yaml
 /config/secrets/prod/prod.decrypt.private.php
+/controller/Security/ErrorController.php
 /migrations/
 /nbproject/
 /public/bundles/
