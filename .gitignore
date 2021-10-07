@@ -1,4 +1,4 @@
-git ci###> symfony/framework-bundle ###
+###> symfony/framework-bundle ###
 /.env
 /.env.test
 /.env.local
@@ -8,14 +8,10 @@ git ci###> symfony/framework-bundle ###
 /bin/
 /config/services.yaml
 /config/packages/twig.yaml
-/config/packages/mailer.yaml
 /config/secrets/prod/prod.decrypt.private.php
 /migrations/
-/nbproject/
 /public/bundles/
 /tests/
-/src/Controller/Security/ErrorController.php
-/src/DataFixtures/AppFixtures.php
 /var/
 /vendor/
 ###< symfony/framework-bundle ###
@@ -30,10 +26,18 @@ git ci###> symfony/framework-bundle ###
 /node_modules/
 /public/build/
 /public/uploads/
-/translations/
 npm-debug.log
 yarn-error.log
 ###< symfony/webpack-encore-bundle ###
+
+###> FLP ignore ###
+/config/packages/mailer.yaml
+/nbproject/
+/src/Controller/Security/ErrorController.php
+/src/DataFixtures/AppFixtures.php
+/translations/
+###< FLP ignore ###
+
 ###> friendsofphp/php-cs-fixer ###
 /.php-cs-fixer.php
 /.php-cs-fixer.cache
