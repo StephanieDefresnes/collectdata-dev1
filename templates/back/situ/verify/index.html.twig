@@ -7,8 +7,8 @@
 {% block stylesheets %}
     {{ parent() }}
     <link rel="stylesheet" href="{{ asset('toggle-switch/css/toggle-switch.css') }}">
-    {{ encore_entry_link_tags('flp_theme') }}
     {{ encore_entry_link_tags('situ_validation_app', null, 'backApp') }}
+    {{ encore_entry_link_tags('flp_theme') }}
     <style>
         
     </style>
@@ -19,7 +19,7 @@
     
     <div class="container-fluid pt-4">
         
-        <div class="d-sm-flex align-items-center justify-content-between mb-4" translate="no">
+        <div class="d-sm-flex justify-content-between mb-4" translate="no">
             <h1 class="h3 mb-0 text-gray-800">{{ 'contrib.situ.verify.title'|trans() }}</h1>
             <a href="{{ path('back_situs_validation') }}" class="btn btn-secondary mx-2 pt-1">
                 <i class="fas fa-reply"></i> {{ 'action.back'|trans() }}
