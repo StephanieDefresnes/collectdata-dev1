@@ -101,13 +101,13 @@ class CategoryService {
     }
         
     /**
-     * @return []   Returns Category data description & validated
+     * @return []   Returns Category description
      */
-    public function getDataById($categoryId)
+    public function getDescriptionById($categoryId)
     {
         return $this->em->createQueryBuilder()
                 ->from(Category::class,'c')
-                ->select('c.title, c.description, c.validated')
+                ->select('c.description')
                 ->where('c.id = ?1')
                 ->setParameter(1, $categoryId)
                 ->getQuery()

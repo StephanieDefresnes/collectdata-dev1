@@ -81,12 +81,10 @@ class SituController extends AbstractController
     }
     
     /**
-     * @Route("/read/{id}", name="read_situ", methods="GET")
+     * @Route("/read/{situ}", name="read_situ", methods="GET")
      */
-    public function readSitu($id): Response
+    public function readSitu(Situ $situ): Response
     {
-        $situ = $this->em->getRepository(Situ::class)->find($id);
-        
         if (!$situ) {
             return $this->redirectToRoute('no_found', ['_locale' => locale_get_default()]);
         }
@@ -124,7 +122,7 @@ class SituController extends AbstractController
     }
     
     /**
-     * @Route("/validation/{id}", methods="GET|POST")
+     * @Route("/validation/{situ}", name="validation_situ_request", methods="GET|POST")
      */
     function validationSituRequest(Situ $situ): Response
     {
@@ -165,7 +163,7 @@ class SituController extends AbstractController
     }
     
     /**
-     * @Route("/delete/{id}", methods="GET|POST")
+     * @Route("/delete/{situ}", name="delete_situ", methods="GET|POST")
      */
     function deleteSitu(Situ $situ): Response
     {
@@ -190,7 +188,7 @@ class SituController extends AbstractController
             $this->em->flush();
 
             $msg = $this->translator->trans(
-                    'contrib.deletion.success', [],
+                    'contrib.delete.success', [],
                     'user_messages', $locale = locale_get_default()
                 );
             $this->addFlash('success', $msg);
@@ -252,9 +250,9 @@ class SituController extends AbstractController
     }
 
     /**
-     * @Route("/translate/{id}/{langId}", name="translate_situ", methods="GET|POST")
+     * @Route("/translate/{situId}/{langId}", name="translate_situ", methods="GET|POST")
      */
-    public function translateSitu(Request $request, $id, $langId): Response
+    public function translateSitu(Request $request, $situId, $langId): Response
     {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
         $this->denyAccessUnlessGranted('ROLE_CONTRIBUTOR');
@@ -267,7 +265,7 @@ class SituController extends AbstractController
         $langs = $this->security->getUser()->getLangs()->getValues();
         
         // Situ to translate
-        $situData = $this->em->getRepository(Situ::class)->find($id);
+        $situData = $this->em->getRepository(Situ::class)->find($situId);
         
         // Translation lang
         $langData = $this->em->getRepository(Lang::class)->find($langId);
@@ -474,37 +472,37 @@ class SituController extends AbstractController
     }
     
     /**
+     * Load Category description on select with dynamic form events
+     * 
      * @Route("/situ/ajaxGetData", methods="GET|POST")
      */
     public function ajaxGetData(CategoryService $categoryService,
-                                EventService $eventService): JsonResponse
+                                Request $request): JsonResponse
     {
-        $this->denyAccessUnlessGranted('ROLE_MODERATOR');
-    
-        // Get request data
-        $request = $this->get('request_stack')->getCurrentRequest();
-        $dataForm = $request->request->all();
-        $data = $dataForm['dataForm'];
-        
-        $event = isset($data['event'])
-                ? $eventService->getDataById($data['event']) : '';
-        $categoryLevel1 = isset($data['categoryLevel1'])
-                ? $categoryService->getDataById($data['categoryLevel1']) : '';
-        $categoryLevel2 = isset($data['categoryLevel2'])
-                ? $categoryService->getDataById($data['categoryLevel2']) : '';
-        
-        return $this->json([
-            'success' => true,
-            'event' => $event,
-            'categoryLevel1' => $categoryLevel1,
-            'categoryLevel2' => $categoryLevel2,
-        ]);
+        if ($request->isXMLHttpRequest()) {
+            
+            $data = $request->request->get('dataForm');
+            
+            $categoryLevel1 = isset($data['categoryLevel1'])
+                    ? $categoryService->getDescriptionById($data['categoryLevel1']) : '';
+            
+            $categoryLevel2 = isset($data['categoryLevel2'])
+                    ? $categoryService->getDescriptionById($data['categoryLevel2']) : '';
+
+            return $this->json([
+                'success' => true,
+                'categoryLevel1' => $categoryLevel1,
+                'categoryLevel2' => $categoryLevel2,
+            ]);
+        }
     }
     
     /**
+     * Search for any translation in the selected language
+     * 
      * @Route("/situ/ajaxFindTranslation", methods="GET")
      */
-    public function ajaxFindTranslation(SituService $situService,Request $request): JsonResponse
+    public function ajaxFindTranslation(SituService $situService, Request $request)
     {
         $this->denyAccessUnlessGranted('ROLE_CONTRIBUTOR');
         
@@ -514,27 +512,25 @@ class SituController extends AbstractController
         // Lang wanted
         $langId = $request->query->get('langId');
         
-        // Check if lang denied
-        $langDeny = $this->translator->trans(
-            'lang_deny', [],
-            'user_messages', $locale = locale_get_default()
-            );
         $situData = $this->em->getRepository(Situ::class)->find($situId);
         $langData = $this->em->getRepository(Lang::class)->find($langId);
         
-        // If wanted lang is Lang situ ti translate or wanted lang is not enabled
+        // If wanted lang is Lang situ to translate or wanted lang is not enabled
         if ($langId == $situData->getLang()->getId() || !$langData->getEnabled()) {
-            $situTranslated = '';
-            $erroMsg = $langDeny;
+            return new JsonResponse([
+                'success' => false,
+                'redirect' => $this->generateUrl('access_denied', [
+                            '_locale' => locale_get_default(),
+                            'code' => '1912',
+                        ])
+            ]);
         } else {
             $situTranslated = $situService->searchTranslation($situId, $langId);
-            $erroMsg = '';
+            return new JsonResponse([
+                'success'  => true,
+                'situTranslated' => $situTranslated,
+            ]);
         }
-        
-        return $this->json([
-            'situTranslated' => $situTranslated,
-            'error' => $erroMsg,
-        ]);
     }
     
 }

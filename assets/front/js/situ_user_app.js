@@ -13,26 +13,14 @@ function translationRequest(id, langId) {
         method: 'GET',
         data: { id: id, langId: langId},
         success: function(data) {
-            console.log(data)
-            if (!data['error']) {
+            if (data.success) {
                 if ($('#valid').hasClass('createTranslation'))
                     $('#valid').removeClass('createTranslation')
                 if ($('#valid').hasClass('readTranslation'))
                     $('#valid').removeClass('readTranslation')
                 verifyTranslatedSitu(data['situTranslated'])
             } else {
-                let flashMessage =
-                    '<div id="flash_message" class="container">'
-                        +'<div class="alert alert-secondary alert-dismissible px-3 fade show" role="alert">'
-                                +'<span class="sr-only">'+ translations['errorSrOnly'] +'</span>'
-                                +'<span class="icon text-danger"><i class="fas fa-exclamation-circle"></i></span>'
-                                +'<span class="msg">'+ translations['errorLangDeny'] +'</span>'
-                        +'</div>'
-                    +'</div>'
-                $('body > .container-fluid').before(flashMessage)
-                $('#translateModal').modal('hide')
-                window.scrollTo({top: 0, behavior: 'smooth'});
-                $('#flash_message').delay(3000).fadeOut(); 
+                location.href = data.redirect;
             }
         }
     })
@@ -56,6 +44,50 @@ function verifyTranslatedSitu(data) {
     }
     $('#spinner').removeClass('show')
     $('#result').removeClass('d-none')
+}
+
+// jQuery confirm for update & delete situ action
+function confirmActionSitu(action, button) {
+    let situTr = button.parents('tr')
+    let title = button.parents('tr').find('.situ-title').attr('data-original-title')
+
+    let typeColor, btnClassColor, translationTitle, translationContent
+
+    if (action == 'update') {
+        typeColor = 'orange', btnClassColor = 'btn-orange'
+        translationTitle = translations['updateTitle']
+        translationContent = translations['updateQuestion']
+    } else {
+        typeColor = 'red', btnClassColor = 'btn-red'
+        translationTitle = translations['deleteTitle']
+        translationContent = translations['deleteQuestion']
+                + '<p class="mt-3 text-center font-weight-bold">'+ title +'</p>'
+    }
+
+    situTr.addClass('to-confirm')
+    button.confirm({
+        animation: 'scale',
+        closeAnimation: 'scale',
+        animateFromElement: false,
+        columnClass: 'col-xl-6 col-xl-offset-3 col-lg-8 col-lg-offset-2',
+        type: typeColor,
+        typeAnimated: true,
+        title: translationTitle,
+        content: translationContent,
+        buttons: {
+            cancel: {
+                text: translations['no'],
+            },
+            formSubmit: {
+                text: translations['yes'],
+                btnClass: btnClassColor,
+                action: function () {
+                    $('#loader').show()
+                    location.href = this.$target.attr('href');
+                }
+            }
+        },
+    })
 }
 
 $(document).ready(function() {
@@ -105,11 +137,14 @@ $(document).ready(function() {
         $(this).remove()
     })
     
-    // Validation request
-    $('.situValidation').click(function() {
-        $('#loader').show()
-        let situId = $(this).parents('tr').attr('data-id')
-        location.href = '/'+ path['locale'] +'/validation/'+ situId        
+    // Update validated situ
+    $('.updateConfirm').each(function() {
+        confirmActionSitu('update', $(this))
+    })
+    
+    // Delete situ
+    $('.situDelete').each(function() {
+        confirmActionSitu('detele', $(this))
     })
 
     /**
@@ -164,77 +199,6 @@ $(document).ready(function() {
     $('#translateModal .cancel').click(function() {
         $('#translateModal').modal('hide')
         $('#result, #valid').addClass('d-none')
-    })
-    
-    /**
-     * Update situ validated (statusId == 3)
-     */
-    $('.updateConfirm').on('click', function() {
-        let situId = $(this).attr('data-id')
-        $(this).addClass('to-confirm')
-        $.confirm({
-            animation: 'scale',
-            closeAnimation: 'scale',
-            animateFromElement: false,
-            columnClass: 'col-xl-6 col-xl-offset-3 col-lg-8 col-lg-offset-2',
-            type: 'orange',
-            typeAnimated: true,
-            title: translations['updateSituTitle'],
-            content: translations['updateSituQuestion'],
-            buttons: {
-                cancel: {
-                    text: translations['no'],
-                    action: function () {
-                        $(this).removeClass('to-confirm')
-                    }
-                },
-                formSubmit: {
-                    text: translations['yes'],
-                    btnClass: 'btn-orange',
-                    action: function () {
-                        $('#loader').show()
-                        location.href = '/'+ path['locale'] +'/contrib/'+ situId
-                    }
-                }
-            },
-        })
-    })
-    
-    /**
-     * Delete situ
-     */
-    $('.situDelete').on('click', function() {
-        let situTr = $(this).parents('tr')
-        let title = $(this).parents('tr').find('.situ-title').attr('data-original-title')
-        
-        situTr.addClass('to-confirm')
-        $.confirm({
-            animation: 'scale',
-            closeAnimation: 'scale',
-            animateFromElement: false,
-            columnClass: 'col-xl-6 col-xl-offset-3 col-lg-8 col-lg-offset-2',
-            type: 'red',
-            typeAnimated: true,
-            title: translations['deleteTitle'],
-            content: translations['deleteText']
-                    + '<p class="mt-3 text-center font-weight-bold">'+ title +'</p>',
-            buttons: {
-                cancel: {
-                    text: translations['no'],
-                    action: function () {
-                        situTr.removeClass('to-confirm')
-                    }
-                },
-                formSubmit: {
-                    text: translations['yes'],
-                    btnClass: 'btn-red',
-                    action: function () {
-                        $('#loader').show()
-                        location.href = '/'+ path['locale'] +'/delete/'+ situTr.attr('data-id') 
-                    }
-                }
-            },
-        })
     })
     
 });

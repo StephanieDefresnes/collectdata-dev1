@@ -115,23 +115,14 @@
                                 <td class="px-0 first-action"></td>
                             {% else %}
                                 <td class="px-0 first-action">
-                                {% if situ.statusId == 3 %}
-                                    <span data-id="{{ situ.id }}"
-                                       class="btn btn-outline-secondary btn-sm px-1 updateConfirm"
-                                       data-toggle="tooltip" data-placement="left"
-                                       title="{{ 'action.edit'|trans() }}"
-                                       aria-label="{{ 'action.edit'|trans() }}">
-                                        <i class="fas fa-pen"></i>
-                                    </span>
-                                {% else %}
                                     <a href="{{ path('create_situ', { 'id': situ.id }) }}"
-                                       class="btn btn-outline-secondary btn-sm px-1"
+                                       class="{% if situ.statusId == 3 %}updateConfirm {%
+                                                endif %}btn btn-outline-secondary btn-sm px-1"
                                        data-toggle="tooltip" data-placement="left"
                                        title="{{ 'action.edit'|trans() }}"
                                        aria-label="{{ 'action.edit'|trans() }}">
                                         <i class="fas fa-pen"></i>
                                     </a>
-                                {% endif %}
                                 </td>
                             {% endif %}
                             
@@ -139,14 +130,16 @@
                                 <td class="width-max-26 pl-0 pr-2">
                                     {% if situ.initialSitu == 1 %}
                                         <span class="situTranslate btn btn-outline-primary btn-sm px-1"
-                                            data-lang="{{ situ.lang.id }}" data-toggle="tooltip" data-placement="left"
-                                            title="{{ 'action.translate'|trans() }}">
+                                              data-lang="{{ situ.lang.id }}" data-toggle="tooltip" data-placement="left"
+                                              title="{{ 'action.translate'|trans() }}"
+                                              aria-label="{{ 'action.translate'|trans() }}">
                                             <i class="fas fa-globe"></i>
                                         </span>
                                     {% else %}
                                         <span class="btn btn-outline-secondary btn-sm px-1 situ-translation"
-                                            data-toggle="tooltip" data-placement="left"
-                                            title="{{ 'action.translated'|trans() }}">
+                                              data-toggle="tooltip" data-placement="left"
+                                              title="{{ 'action.translated'|trans() }}"
+                                              aria-label="{{ 'action.translated'|trans() }}">
                                             <i class="fas fa-globe"></i>
                                         </span>
                                     {% endif %}
@@ -155,19 +148,21 @@
                             
                             {% if situ.statusId == 1 %}
                                 <td class="width-max-26 px-0">
-                                    <span class="situValidation btn btn-outline-success btn-sm pcx-2"
-                                        data-toggle="tooltip" data-placement="left"
-                                        title="{{ 'action.validation'|trans() }}">
+                                    <a href="{{ path('validation_situ_request', { 'situ': situ.id }) }}"
+                                       class="btn btn-outline-success btn-sm pcx-2"
+                                       data-toggle="tooltip" data-placement="left"
+                                       title="{{ 'action.validation'|trans() }}"
+                                       aria-label="{{ 'action.validation'|trans() }}">
                                         <i class="far fa-paper-plane"></i>
-                                    </span>
+                                    </a>
                                 </td>
                             {% elseif situ.statusId == 2 or situ.statusId == 3 %}
                                 <td class="width-max-26 px-0">
-                                    <a href="{{ path('read_situ', { 'id': situ.id }) }}"
+                                    <a href="{{ path('read_situ', { 'situ': situ.id }) }}"
                                        class="btn btn-outline-success btn-sm px-1"
-                                       data-id="{{ situ.id }}"
                                        data-toggle="tooltip" data-placement="left"
-                                       title="{{ 'action.read'|trans() }}">
+                                       title="{{ 'action.read'|trans() }}"
+                                       aria-label="{{ 'action.read'|trans() }}">
                                         <i class="fas fa-eye"></i>
                                     </a>
                                 </td>
@@ -176,11 +171,13 @@
                             {% endif %}
                             
                             <td class="width-max-45 px-2">
-                                <span class="situDelete btn btn-outline-danger btn-sm"
+                                <a href="{{ path('delete_situ', { 'situ': situ.id }) }}"
+                                   class="situDelete btn btn-outline-danger btn-sm"
                                    data-toggle="tooltip" data-placement="left"
-                                   title="{{ 'action.delete'|trans() }}">
+                                   title="{{ 'action.delete'|trans() }}"
+                                   aria-label="{{ 'action.delete'|trans() }}">
                                     <i class="far fa-trash-alt"></i>
-                                </span>
+                                </a>
                             </td>
                             
                         </tr>
@@ -253,10 +250,10 @@
             "modalBtnRead" : "{{ 'action.read'|trans() }}",
             "modalBtnValid" : "{{ 'action.translate'|trans() }}",
             "deleteTitle" : "{{ 'contrib.delete.title'|trans() }}",
-            "deleteText" : "{{ 'contrib.delete.text'|trans() }}",
+            "deleteQuestion" : "{{ 'contrib.delete.text'|trans() }}",
+            "updateTitle" : "{{ 'contrib.update_validated.title'|trans }}",
+            "updateQuestion" : "{{ 'contrib.update_validated.question'|trans|raw }}",
             "no" : "{{ 'no'|trans }}",
-            "updateSituTitle" : "{{ 'contrib.update_validated.title'|trans }}",
-            "updateSituQuestion" : "{{ 'contrib.update_validated.question'|trans|raw }}",
             "yes" : "{{ 'yes'|trans }}",
         }
     </script>
