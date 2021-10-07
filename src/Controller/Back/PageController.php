@@ -140,14 +140,12 @@ class PageController extends AbstractController
     }
     
     /**
-     * @Route("/content/{id}/validate", name="back_content_validate", methods="GET|POST")
+     * @Route("/content/{page}/validate", name="back_content_validate", methods="GET|POST")
      */
-    public function contentValidate(Request $request, $id): Response
+    public function contentValidate(Request $request, Page $page): Response
     {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
-        $this->denyAccessUnlessGranted('ROLE_SUPER_ADMIN');        
-        
-        $page = $this->getDoctrine()->getRepository(Page::class)->find($id);
+        $this->denyAccessUnlessGranted('ROLE_SUPER_ADMIN');
         
         $page->setEnabled(1);
         $this->em->persist($page);
