@@ -1,7 +1,0 @@
-alert:
-    info: Alert info
-    success: Alert success
-    warning: Alert warning
-    danger: Alert danger
-btn:
-    close: Close

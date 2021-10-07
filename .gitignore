@@ -9,7 +9,6 @@ git ci###> symfony/framework-bundle ###
 /config/services.yaml
 /config/packages/twig.yaml
 /config/packages/mailer.yaml
-/config/packages/notifier.yaml
 /config/secrets/prod/prod.decrypt.private.php
 /migrations/
 /nbproject/
