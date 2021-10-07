@@ -53,7 +53,7 @@
                                             {% if translation.statusId == 3
                                                 and translation.enabled
                                                 and translation.yamlGenerated == false %}
-                                                <a href="{{ path('back_translation_generate', { 'id': translation.id }) }}"
+                                                <a href="{{ path('back_translation_generate', { 'translation': translation.id }) }}"
                                                     class="btn btn-primary py-1" role="button">
                                                     <span>{{ 'lang.translation.yaml.action.generate'|trans }}</span>
                                                 </a>

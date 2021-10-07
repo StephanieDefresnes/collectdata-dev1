@@ -27,6 +27,17 @@ class PageController extends AbstractController
         $this->em = $em;
         $this->translator = $translator;
     }
+    /**
+     * @Route("/404", name="back_not_found")
+     */
+    public function notFoundPage(): Response
+    {
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+        
+        return $this->render('back/page/404.html.twig', [
+            
+        ]);
+    }
     
     /**
      * @Route("/", name="back_home")
@@ -75,6 +86,13 @@ class PageController extends AbstractController
         if ($id) {
             $page = $this->getDoctrine()->getRepository(Page::class)
                     ->find($id);
+            
+            if (!$page) {
+                return $this->redirectToRoute('back_not_found', [
+                    '_locale' => locale_get_default()
+                ]);
+            }
+            
             $langPage = $this->getDoctrine()->getRepository(Lang::class)
                     ->findOneBy(['lang' => $page->getLang()])
                     ->getEnglishName();

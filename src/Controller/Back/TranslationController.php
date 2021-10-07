@@ -133,7 +133,9 @@ class TranslationController extends AbstractController
             $translation = $this->em->getRepository(Translation::class)->find($id);
             
             if (!$translation) {
-                return $this->redirectToRoute('no_found', ['_locale' => locale_get_default()]);
+                return $this->redirectToRoute('back_not_found', [
+                    '_locale' => locale_get_default()
+                ]);
             }
         
             // Only situ author can update situ
@@ -342,14 +344,12 @@ class TranslationController extends AbstractController
     /**
      * Generate Yaml files
      * 
-     * @Route("/generateYaml/{id}", name="back_translation_generate", methods="GET|POST")
+     * @Route("/generateYaml/{translation}", name="back_translation_generate", methods="GET|POST")
      */
-    public function generateYaml($id): Response
+    public function generateYaml(Translation $translationd): Response
     {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
         $this->denyAccessUnlessGranted('ROLE_SUPER_ADMIN');
-        
-        $translation = $this->em->getRepository(Translation::class)->find($id);
         
         $newFile = $translation->getName().'.'.$translation->getLang().'.test.yaml';
         

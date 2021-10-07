@@ -52,6 +52,12 @@ class MessageController extends AbstractController
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
         
         $alert = $this->em->getRepository(Message::class)->find($id);
+            
+        if (!$alert) {
+            return $this->redirectToRoute('back_not_found', [
+                '_locale' => locale_get_default()
+            ]);
+        }
         
         // Current user
         $user = $this->security->getUser();
@@ -71,7 +77,7 @@ class MessageController extends AbstractController
             
             if ($alert->getEntity() == 'situ') {
                 return $this->redirectToRoute('back_situ_verify', [
-                        'id' => $alert->getEntityId(), '_locale' => locale_get_default()
+                        'situ' => $alert->getEntityId(), '_locale' => locale_get_default()
                     ]);
             } elseif ($alert->getEntity() == 'event') {
                 // TODO

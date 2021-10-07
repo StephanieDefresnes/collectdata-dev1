@@ -88,16 +88,21 @@ class SituController extends AbstractController
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
         $this->denyAccessUnlessGranted('ROLE_MODERATOR');
         
-        if (!$situ || $situ->getStatusId() != 2) {
+        if (!$situ) {
+            return $this->redirectToRoute('back_not_found', [
+                '_locale' => locale_get_default()
+            ]);
+        } else if ($situ->getStatusId() != 2) {
             
             $msg = $this->translator->trans(
-                    'contrib.situ.verify.error',['%id%' => $id],
+                    'contrib.situ.verify.error',['%id%' => $situ->getId()],
                     'back_messages', $locale = locale_get_default()
                 );
             $this->addFlash('error', $msg);
             
-            return $this->redirectToRoute('back_situs_validation', [
-                '_locale' => locale_get_default()
+            return $this->redirectToRoute('back_situ_read', [
+                '_locale' => locale_get_default(),
+                'situ' => $situ->getId(),
             ]);
             
         } else {        
@@ -247,7 +252,6 @@ class SituController extends AbstractController
         }
             
         try {
-            
             $this->em->remove($situ);
             $this->em->flush();
 
