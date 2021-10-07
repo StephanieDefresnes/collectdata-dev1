@@ -136,7 +136,16 @@
 /*
  * datatables
  */
-table.dataTable { margin: 0 !important; }
+table.dataTable { 
+    margin: 0 !important;
+    & .no-sort {
+        cursor: default !important;
+        &::before,
+        &::after {
+            display: none !important;
+        }
+    }
+}
 #search {
     & > .dataTables_filter {
         position: relative;
