@@ -11,11 +11,11 @@ git ci###> symfony/framework-bundle ###
 /config/packages/mailer.yaml
 /config/packages/notifier.yaml
 /config/secrets/prod/prod.decrypt.private.php
-/controller/Security/ErrorController.php
 /migrations/
 /nbproject/
 /public/bundles/
 /tests/
+/src/Controller/Security/ErrorController.php
 /src/DataFixtures/AppFixtures.php
 /var/
 /vendor/
