@@ -92,6 +92,7 @@ Encore
     .addEntry('lang_translation_site_create_app', './assets/back/js/lang_translation_site_create_app.js')
     .addEntry('message_app', './assets/back/js/message_app.js')
     .addEntry('page_edit_app', './assets/back/js/page_edit_app.js')
+    .addEntry('situ_read_app', './assets/back/js/situ_read_app.js')
     .addEntry('situ_validation_app', './assets/back/js/situ_validation_app.js')
     .addEntry('table_app', './assets/back/js/table_app.js')
     .addEntry('user_read_app', './assets/back/js/user_read_app.js')

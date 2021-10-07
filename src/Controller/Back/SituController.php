@@ -52,13 +52,11 @@ class SituController extends AbstractController
     }
     
     /**
-     * @Route("/read/{id}", name="back_situ_read", methods="GET")
+     * @Route("/read/{situ}", name="back_situ_read", methods="GET")
      */
-    public function read($id): Response
+    public function read(Situ $situ): Response
     {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
-        
-        $situ = $this->em->getRepository(Situ::class)->find($id);
         
         return $this->render('back/situ/read/index.html.twig', [
             'situ' => $situ,
@@ -81,16 +79,14 @@ class SituController extends AbstractController
     }
     
     /**
-     * @Route("/verify/{id}", name="back_situ_verify", methods="GET|POST")
+     * @Route("/verify/{situ}", name="back_situ_verify", methods="GET|POST")
      */
     public function verifySitu( Request $request,
                                 LangService $langService,
-                                $id): Response
+                                Situ $situ): Response
     {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
         $this->denyAccessUnlessGranted('ROLE_MODERATOR');
-        
-        $situ = $this->em->getRepository(Situ::class)->find($id);;
         
         if (!$situ || $situ->getStatusId() != 2) {
             
@@ -232,6 +228,49 @@ class SituController extends AbstractController
             $request->getSession()->getFlashBag()->add('success', $msg);
             
             return 'validated';
+        }
+    }
+    
+    /**
+     * @Route("/removeSitu/{situ}", name="back_situ_remove", methods="GET|POST")
+     */
+    function removeDefinitelySitu(Situ $situ)
+    {
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+        
+        if ($situ->getStatusId() != 5) {
+            return $this->redirectToRoute('access_denied', [
+                '_locale' => locale_get_default(),
+                'code' => 'B1918',
+            ]);
+        }
+            
+        try {
+            
+            $this->em->remove($situ);
+            $this->em->flush();
+
+            $msg = $this->translator->trans(
+                    'contrib.deletion.success', [],
+                    'user_messages', $locale = locale_get_default()
+                );
+            $this->addFlash('success', $msg);
+
+            return $this->redirectToRoute('back_situs_search', ['_locale' => locale_get_default()]);
+
+        } catch (Exception $e) {
+
+            $msg = $this->translator->trans(
+                    'contrib.deletion.success', [],
+                    'user_messages', $locale = locale_get_default()
+                );
+            $this->addFlash('success', $msg);
+
+            return $this->redirectToRoute('back_situ_read', [
+                '_locale' => locale_get_default(),
+                'id' => $situ->getId(),
+            ]);
         }
     }
 }

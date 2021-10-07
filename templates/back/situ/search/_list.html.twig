@@ -34,7 +34,7 @@
                 <tr>
                     <td class="px-2 align-middle">
                         {% if situ.statusId == 2 %}
-                            <a href="{{ path('back_situ_verify', { 'id': situ.id }) }}"
+                            <a href="{{ path('back_situ_verify', { 'situ': situ.id }) }}"
                                class="btn btn-outline-warning pcx-2 py-1"
                                data-id="{{ situ.id }}" data-action=""
                                data-toggle="tooltip" data-placement="left"
@@ -42,22 +42,13 @@
                                 <i class="far fa-paper-plane"></i>
                             </a>                            
                         {% else %}
-                            <a href="{{ path('back_situ_read', { 'id': situ.id }) }}"
+                            <a href="{{ path('back_situ_read', { 'situ': situ.id }) }}"
                                class="btn {%if situ.statusId == 4 or  situ.statusId == 5 %}btn-outline-danger{% else %}btn-outline-primary{% endif %} px-2 py-1"
                                data-id="{{ situ.id }}" data-action=""
                                data-toggle="tooltip" data-placement="left"
                                title="{{ 'action.read'|trans() }}">
                                 <i class="fas fa-eye"></i>
                             </a>
-                            {% if situ.statusId == 5 %}
-                                <a href=""
-                                   class="btn btn-danger px-2 py-1"
-                                   data-id="{{ situ.id }}" data-action=""
-                                   data-toggle="tooltip" data-placement="left"
-                                   title="{{ 'action.delete_definitively'|trans() }}">
-                                    <i class="far fa-trash-alt"></i>
-                                </a>                            
-                            {% endif %}
                         {% endif %}
                         
                     </td>
