@@ -30,7 +30,7 @@ git ci###> symfony/framework-bundle ###
 /node_modules/
 /public/build/
 /public/uploads/
-/translations/.gitignore
+/translations/
 npm-debug.log
 yarn-error.log
 ###< symfony/webpack-encore-bundle ###
