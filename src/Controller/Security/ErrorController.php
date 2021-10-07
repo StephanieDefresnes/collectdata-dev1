@@ -47,6 +47,7 @@ class ErrorController extends AbstractController
             
             if ($code == '18191')           $msg = 'Read Situ refused by no author forbidden: ';
             elseif ($code == '18194')       $msg = 'Read Situ deleted forbidden: ';
+            elseif ($code == '1912')        $msg = 'Situ Lang forbidden: ';
             elseif ($code == '21191')       $msg = 'Update Situ author forbidden: ';
             elseif ($code == '21201')       $msg = 'Update Translation site by no author forbidden: ';
             elseif ($code == '22181')       $msg = 'Validation Situ by no author forbidden: ';
@@ -65,7 +66,7 @@ class ErrorController extends AbstractController
             if ($user->getForbiddenAccess() == 3) {
                 $user->setEnabled(0);
                 $user->setDateDelete(new \DateTime('now'));
-                $user->setAdminNote($adminNote.PHP_EOL.'Deleted ForbiddenAccess x 3');
+                $user->setAdminNote($adminNote.PHP_EOL.'Disabled: ForbiddenAccess x 3');
                 $this->em->persist($user);
                 $this->em->flush();
             }

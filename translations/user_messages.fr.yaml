@@ -116,7 +116,7 @@ contrib:
             flash:
                 success: La situation a bien été enregistrée
                 success_update: Les modifications ont bien été enregistrées
-                error: Une erreur s'est produite lors de l'enregistrement de la situation
+                error: Une erreur s'est produite lors de l'enregistrement de la situation.
         situ:
             h1: Ajouter une situation à risque
             h1_update: Modifier une situation à risque
@@ -130,7 +130,7 @@ contrib:
             flash:
                 success: La situation a bien été soumise
                 success_update: Les modifications ont bien été soumises
-                error: 'Une erreur s''est produite lors de la soumission de la situation:'
+                error: Une erreur s'est produite lors de la soumission de la situation.
         to: À
         to_validate: ( validation en cours )
     situ:

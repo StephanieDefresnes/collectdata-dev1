@@ -527,18 +527,11 @@ function createOrUpdateSitu(dataForm) {
         url: "/"+ path['locale'] +"/situ/ajaxCreate",
         method: 'POST',
         data: {dataForm},
-        success: function(data) {
+        success: function() {
             location.href = '/'+ path["locale"] +'/my-contribs'
         },
         error: function() {
-            let alert = '<div id="flash_message" class="container" translate="no">'
-                +'<div class="alert alert-secondary alert-dismissible px-3 fade show" role="alert">'
-                    +'<span class="sr-only">'+ translations["srOnly-error"] +'</span>'
-                        +'<span class="icon text-danger"><i class="fas fa-exclamation-circle"></i></span>'
-                    +'<span class="msg">'+ translations["flashError"] +'</span>'
-                +'</div>'
-            +'</div>'
-            $('.cb-slideshow').after(alert)
+            location.reload();
         }
     })
 }

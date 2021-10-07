@@ -287,9 +287,12 @@ class SituController extends AbstractController
     }
     
     /**
+     * Situ creation by ajax because of alternative of create event & category
+     * instead of choose them with dynamic form events
+     * 
      * @Route("/situ/ajaxCreate", methods="GET|POST")
      */
-    public function ajaxCreate(): JsonResponse
+    public function ajaxCreate(Request $request)
     {
         $this->denyAccessUnlessGranted('ROLE_CONTRIBUTOR');
             
@@ -302,140 +305,126 @@ class SituController extends AbstractController
         
         $userLang = $user->getLangId() == '' ? $defaultLang->getId() : $user->getLangId();
             
-        // Get request data
-        $request = $this->get('request_stack')->getCurrentRequest();
-        $dataForm = $request->request->all();        
-        $data = $dataForm['dataForm'];
-        
-        $landId = isset($data['lang']) ? $data['lang'] : $userLang;
-        
-        $langData = $this->em->getRepository(Lang::class)->find($landId);
-        
-        if (!$langData->getEnabled()) {
-            $msg = $this->translator->trans(
-                'lang_deny', [],
-                'user_messages', $locale = locale_get_default()
-                );
-            $request->getSession()->getFlashBag()->add('error', $msg);
-
-            return $this->json([
-                'success' => false,
-                'redirection' => $this->redirectToRoute('user_situs', [
-                    'id' => $userId, '_locale' => locale_get_default()
-                ]),
-            ]);  
-        }
-
-        $eventData = $this->createOrChooseData(
-                $data['event'], 'event', $langData, '', $userId
-        );
-        $categoryLevel1 = $this->createOrChooseData(
-                $data['categoryLevel1'], 'categoryLevel1', $langData,
-                $eventData, $userId
-        );
-        $categoryLevel2 = $this->createOrChooseData(
-                $data['categoryLevel2'], 'categoryLevel2', $langData,
-                $categoryLevel1, $userId
-        );
-
-        $statusId = $data['statusId'];
-        $dateNow = new \DateTime('now');
-
-        // Update or create Situ
-        if (empty($data['id'])) {
-            $situ = new Situ();
-            $situ->setDateCreation($dateNow);
-            $situ->setUserId($userId); 
-        } else {
-            $situ = $this->em->getRepository(Situ::class)->find($data['id']);
+        // Get request data        
+        if ($request->isXMLHttpRequest()) {
             
-            // Only situ author can update situ
-            if ($userId != $situ->getUserId()) {
+            $data = $request->request->get('dataForm');
+        
+            $landId = isset($data['lang']) ? $data['lang'] : $userLang;
 
+            $langData = $this->em->getRepository(Lang::class)->find($landId);
+
+            if (!$langData->getEnabled()) {
+                return $this->redirectToRoute('access_denied', [
+                    '_locale' => locale_get_default(),
+                    'code' => '1912',
+                ]);      
+            }
+
+            $eventData = $this->createOrChooseData(
+                    $data['event'], 'event', $langData, '', $userId
+            );
+            $categoryLevel1 = $this->createOrChooseData(
+                    $data['categoryLevel1'], 'categoryLevel1', $langData,
+                    $eventData, $userId
+            );
+            $categoryLevel2 = $this->createOrChooseData(
+                    $data['categoryLevel2'], 'categoryLevel2', $langData,
+                    $categoryLevel1, $userId
+            );
+
+            $statusId = $data['statusId'];
+            $dateNow = new \DateTime('now');
+
+            // Update or create Situ
+            if (empty($data['id'])) {
+                $situ = new Situ();
+                $situ->setDateCreation($dateNow);
+                $situ->setUserId($userId); 
+            } else {
+                $situ = $this->em->getRepository(Situ::class)->find($data['id']);
+
+                // Only situ author can update situ
+                if ($userId != $situ->getUserId()) {
+                    return $this->redirectToRoute('access_denied', [
+                        '_locale' => locale_get_default(),
+                        'code' => '21191',
+                    ]);              
+                }
+
+                $situ->setDateLastUpdate($dateNow);
+
+                // Clear original collection
+                foreach ($situ->getSituItems() as $item) {
+                    $situ->getSituItems()->removeElement($item);
+                    $this->em->remove($item);
+                }
+            }
+
+            if (!empty($data['translatedSituId'])) {
+                $situ->setInitialSitu(false);
+                $situ->setTranslatedSituId($data['translatedSituId']);
+            } else {
+                $situ->setInitialSitu(true);
+            }
+
+            $situ->setTitle($data['title']);
+            $situ->setDescription($data['description']);
+
+            // Depending on the button save (val = 1) or submit (val = 2) clicked
+            if ($statusId == 2) {
+                $situ->setDateSubmission($dateNow);
+                $msgAction = 'submit';
+            } else {
+                $situ->setDateSubmission(null);
+                $msgAction = 'save';
+            }
+
+            $situ->setDateValidation(null); 
+            $situ->setLang($langData);
+            $situ->setEvent($eventData);
+            $situ->setCategoryLevel1($categoryLevel1);
+            $situ->setCategoryLevel2($categoryLevel2);
+            $situ->setStatusId($statusId);
+            $this->em->persist($situ);
+
+            // Add new collection
+            foreach ($data['situItems'] as $key => $dataItem) {
+                $situItem = new SituItem();
+                if ($key == 0) $situItem->setScore(0);
+                else $situItem->setScore($dataItem['score']);
+                $situItem->setTitle($dataItem['title']);
+                $situItem->setDescription($dataItem['description']);
+                $this->em->persist($situItem);
+                $situItem->setSitu($situ);
+            }
+
+            try {
+                $this->em->flush();
+                
+                $msgType = empty($data['id']) ? 'success' : 'success_update';
                 $msg = $this->translator->trans(
-                    'access_deny', [],
-                    'user_messages', $locale = locale_get_default()
-                    );
+                            'contrib.form.'. $msgAction .'.flash.'. $msgType, [],
+                            'user_messages', $locale = locale_get_default()
+                            );
+                $request->getSession()->getFlashBag()->add('success', $msg);
+
+                if ($statusId == 2) {
+                    $this->mailer->sendModeratorSituValidate($situ);
+                    $this->messenger->sendModeratorAlert('situ', $situ);
+                }
+
+                return $this->json(['success' => true]);
+
+            } catch (Exception $e) {
+                $msg = $this->translator->trans(
+                            'contrib.form.'. $msgAction .'.flash.error', [],
+                            'user_messages', $locale = locale_get_default()
+                            );
                 $request->getSession()->getFlashBag()->add('error', $msg);
                 
-                return $this->json([
-                    'success' => false,
-                    'redirection' => $this->redirectToRoute('user_situs', [
-                        'id' => $userId, '_locale' => locale_get_default()
-                    ]),
-                ]);                
+                return $this->json(['success' => false]);
             }
-            
-            $situ->setDateLastUpdate($dateNow);
-
-            // Clear original collection
-            foreach ($situ->getSituItems() as $item) {
-                $situ->getSituItems()->removeElement($item);
-                $this->em->remove($item);
-            }
-        }
-        
-        if (!empty($data['translatedSituId'])) {
-            $situ->setInitialSitu(false);
-            $situ->setTranslatedSituId($data['translatedSituId']);
-        } else {
-            $situ->setInitialSitu(true);
-        }
-
-        $situ->setTitle($data['title']);
-        $situ->setDescription($data['description']);
-
-        // Depending on the button save (val = 1) or submit (val = 2) clicked
-        if ($statusId == 2) {
-            $situ->setDateSubmission($dateNow);
-            $msgAction = 'submit';
-        } else {
-            $situ->setDateSubmission(null);
-            $msgAction = 'save';
-        }
-        
-        $situ->setDateValidation(null); 
-        $situ->setLang($langData);
-        $situ->setEvent($eventData);
-        $situ->setCategoryLevel1($categoryLevel1);
-        $situ->setCategoryLevel2($categoryLevel2);
-        $situ->setStatusId($statusId);
-        $this->em->persist($situ);
-
-        // Add new collection
-        foreach ($data['situItems'] as $key => $d) {
-            $situItem = new SituItem();
-            if ($key == 0) $situItem->setScore(0);
-            else $situItem->setScore($d['score']);
-            $situItem->setTitle($d['title']);
-            $situItem->setDescription($d['description']);
-            $this->em->persist($situItem);
-            $situItem->setSitu($situ);
-        }
-            
-        try {
-            $this->em->flush();
-
-            $msgType = empty($data['id']) ? 'success_update' : 'success';
-
-            $msg = $this->translator->trans(
-                        'contrib.form.'. $msgAction .'.flash.'. $msgType, [],
-                        'user_messages', $locale = locale_get_default()
-                        );
-
-            $request->getSession()->getFlashBag()->add('success', $msg);
-
-            if ($statusId == 2) {
-                $this->mailer->sendModeratorSituValidate($situ);
-                $this->messenger->sendModeratorAlert('situ', $situ);
-            }
-            
-            return $this->json([
-                'success' => true,
-            ]);
-
-        } catch (Exception $e) {
-            throw new \Exception('An exception appeared while updating the situ');
         }
     }
     

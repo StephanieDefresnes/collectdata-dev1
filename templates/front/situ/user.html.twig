@@ -111,7 +111,7 @@
                                 {% endif %}
                             </td>
                             
-                            {% if situ.statusId == 4 and situ.initialSitu ==  0 %}
+                            {% if situ.statusId == 2 or (situ.statusId == 4 and situ.initialSitu ==  0) %}
                                 <td class="px-0 first-action"></td>
                             {% else %}
                                 <td class="px-0 first-action">
@@ -250,8 +250,6 @@
     <script>
         let path = { "locale" : "{{ locale }}" }
         let translations = {
-            "errorLangDeny" : "{{ 'lang_deny'|trans }}",
-            "errorSrOnly" : "{{ 'contrib.form.sr_only.error'|trans }}",
             "modalBtnRead" : "{{ 'action.read'|trans() }}",
             "modalBtnValid" : "{{ 'action.translate'|trans() }}",
             "deleteTitle" : "{{ 'contrib.delete.title'|trans() }}",
