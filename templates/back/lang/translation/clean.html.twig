@@ -13,7 +13,7 @@
 
 
 {% block content %}
-{#    <div id="loader"></div>#}
+    <div id="loader"></div>
     <div class="container-fluid pt-4">
         
         <div class="d-sm-flex justify-content-between mb-4">
@@ -61,7 +61,6 @@
                                             {% if file['old'] == 1 %}
                                                 <a href="{{ path('back_translation_remove', { 'file': file['file'] }) }}"
                                                    class="btn btn-outline-danger width-max-40 removeFile"
-{#                                                      data-remove="{{ path('back_translation_remove', { 'file': file['file'] }) }}"#}
                                                       aria-label="{{ 'action.delete'|trans() }}">
                                                     <i class="fas fa-edit"></i>
                                                 </a>
