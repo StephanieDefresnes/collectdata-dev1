@@ -9,25 +9,25 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
 class MessageController extends AbstractController
-{
+{    
     /**
      * @Route("/message/ajaxPermuteScanned", methods="GET|POST")
      */
-    public function ajaxPermuteScanned(EntityManagerInterface $em, Request $request)
+    public function ajaxPermuteScanned(Request $request, EntityManagerInterface $em)
     {
         if ($request->isXMLHttpRequest()) {
             
             $id = $request->request->get('id');
-            $message = $this->em->getRepository(Message::class)->find($id);
+            $message = $em->getRepository(Message::class)->find($id);
             
             if ($message->getScanned() == true) $message->setScanned(false);
             else $message->setScanned(true);
 
             $em->persist($message);
-
+            
             try {
                 $em->flush();
-                return $this->json(['success' => true]);
+                return $this->json(['success' => true, 'message' => $message]);
             } catch (Exception $ex) {
                 $msg = $this->translator
                         ->trans('flash.error', [],

@@ -3,3 +3,6 @@
 .dropdown-item.d-flex.d-none {
     display: none !important;
 }
+input[type="checkbox"].custom-checkbox:checked {
+    background-color: #4e73df !important;
+}

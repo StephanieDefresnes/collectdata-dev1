@@ -1,5 +1,6 @@
 {% trans_default_domain 'message_messages' %}
 {% extends "back/layout.html.twig" %}
+{% set locale = app.request.locale %}
 
 {% block title %}{{ 'back.alert.title'|trans }}{% endblock %}
 
@@ -67,11 +68,11 @@
                                                            value="{{ alert.scanned }}"{% if alert.scanned == 0 %} checked="checked"{% endif %}
                                                            data-toggle="tooltip" data-placement="left"
                                                            title="{{ alert.scanned == 0
-                                                                ? 'back.alert.seen.yes'|trans()
-                                                                : 'back.alert.seen.no'|trans() }}"
+                                                                ? 'read.yes'|trans()
+                                                                : 'read.no'|trans() }}"
                                                            aria-label="{{ alert.scanned == 1
-                                                                ? 'back.alert.seen.yes'|trans()
-                                                                : 'back.alert.seen.no'|trans() }}">
+                                                                ? 'read.yes'|trans()
+                                                                : 'read.no'|trans() }}">
                                                 </div>
                                             </div>
                                         </td>
@@ -92,9 +93,10 @@
     {{ parent() }}
     {{ encore_entry_script_tags('message_app', null, 'backApp') }}
     <script>
+        let path = { "locale" : "{{ locale }}" }
         let translations = {
-            "seenNo" : "{{ 'back.alert.read.no'|trans }}",
-            "seenYes" : "{{ 'back.alert.read.yes'|trans }}",
+            "readNo" : "{{ 'read.no'|trans }}",
+            "readYes" : "{{ 'read.yes'|trans }}",
         }
     </script>
 {% endblock %}

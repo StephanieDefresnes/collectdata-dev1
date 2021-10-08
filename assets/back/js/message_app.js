@@ -2,9 +2,28 @@
 import '../scss/message_app.scss';
 
 // js
-require('datatables.net/js/jquery.dataTables.min.js');
-require('datatables.net-bs4/js/dataTables.bootstrap4.min.js');
+require('datatables.net/js/jquery.dataTables.min.js')
+require('datatables.net-bs4/js/dataTables.bootstrap4.min.js')
 const lang = require('../../datatables.json')
+
+function addUnreadAlert(message) {
+    const date = new Date(message['dateCreate'])
+    let item = '<a class="dropdown-item d-flex align-items-center" '
+                +'href="/fr/back/follow-alert/'+ message['id'] +'" '
+                +'id="'+ message['id'] +'">'
+                    +'<div class="mr-3 position-relative">'
+                        +'<div class="icon-circle bg-primary text-white">'
+                            +'<i class="fas fa-hands"></i>'+'</div>'
+                    +'</div>'
+                    +'<div>'
+                        +'<div class="small text-gray-500">'
+                            + new Intl.DateTimeFormat(path['locale'],{dateStyle:'full',timeStyle:'short'}).format(date)   
+                        +'</div>'
+                        + message['subject']
+                    +'</div>'
+                +'</a>'
+    return item
+}
 
 // Search if translations exist
 function permuteScanned(id) {
@@ -12,8 +31,15 @@ function permuteScanned(id) {
         url: "/message/ajaxPermuteScanned",
         method: 'POST',
         data: { id: id },
-        error: function() {
-            location.reload();
+        success: function(data) {
+            if (data.success) {
+                let message = data['message']
+                if (!message['scanned']) {
+                    $('#alerts_dropdown a:last').before(addUnreadAlert(message))
+                }
+            } else {
+                location.reload();
+            }
         }
     })
 }
@@ -35,13 +61,12 @@ $(function() {
                 +'<"table-responsive border border-top-0"t>'
                 +'<"d-flex justify-content-end"<"#pagination.col-md-6 mt-3"p>>',
         'order': [[ 0, 'desc' ]],
-        "fnDrawCallback": function(oSettings) {
+        'fnDrawCallback': function(oSettings) {
             $('#dataTable-list_filter input').addClass('search')
             
             // Hide length select & pagination if only one page
             if ($('#dataTable-list').dataTable().fnSettings().fnRecordsTotal() <= 10) {
-               $('#pagination .dataTables_paginate').hide()
-            
+                $('#pagination .dataTables_paginate').hide()
             }
             $('#loader').hide()
         }
@@ -68,8 +93,8 @@ $(function() {
         let countAlert = $('#countAlert').text()
         let newTitle,newCountAlert
         
-        if (this.checked) {            
-            newTitle = translations['seenNo']
+        if (this.checked) {
+            newTitle = translations['readNo']
             
             // Update navbar alert dropdown
             newCountAlert = parseInt(countAlert) + 1;
@@ -81,9 +106,8 @@ $(function() {
                 if ($(this).attr('id') == id && $(this).hasClass('d-none'))
                     $(this).removeClass('d-none')
             })
-            
         } else {
-            newTitle = translations['seenYes']
+            newTitle = translations['readYes']
             
             // Update navbar alert dropdown
             newCountAlert = parseInt(countAlert) - 1;
@@ -92,7 +116,7 @@ $(function() {
             
             $('#alerts_dropdown').find('.dropdown-item').each(function(){
                 if ($(this).attr('id') == id)
-                    $(this).addClass('d-none')
+                    $(this).remove()
             })
         }
         
@@ -103,7 +127,6 @@ $(function() {
         
         // Update navbar alert badge
         $('#countAlert').text(newCountAlert)
-        
         
     });
     
