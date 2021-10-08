@@ -1,5 +1,6 @@
 {% trans_default_domain 'back_messages' %}
 {% extends "back/layout.html.twig" %}
+{% set locale = app.request.locale %}
 
 {% block title %}{{ 'contrib.situ.read.title'|trans() }}{% endblock %}
 
@@ -58,17 +59,19 @@
                                     </span>
                                 </h6>
                             </div>
-                            <div class="col-md-7 mct-1px">
-                                <div class="row ggt-row float-right">
-                                    <div class="col-auto px-1 mt-1"><i class="fas fa-globe-americas"></i></div>
-                                    <div class="col-auto px-0">
-                                        <div id="GGT"></div>
-                                    </div>
-                                    <div id="resetGGT" class="col-auto p-1 btn d-none">
-                                        <i class="far fa-times-circle"></i>
+                            {% if locale != situ.lang.lang %}
+                                <div class="col-md-auto mct-1px">
+                                    <div class="row ggt-row float-right">
+                                        <div class="col-auto px-1 mt-1"><i class="fas fa-globe-americas"></i></div>
+                                        <div class="col-auto px-0">
+                                            <div id="GGT"></div>
+                                        </div>
+                                        <div id="resetGGT" class="col-auto p-1 btn d-none">
+                                            <i class="far fa-times-circle"></i>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
+                            {% endif %}
                         </div>
                     </div>
 
@@ -127,7 +130,7 @@
                             <div class="col-md-8 first-letter">
                                 {{ situ.event.title }}
                                 {% if situ.event.validated == 0 %}
-                                    <span class="pl-0 pr-3">
+                                    <span class="pl-0 pr-3" translate="no">
                                         {{ 'contrib.situ.verify.data.to_validate' | trans }}
                                     </span>
                                 {% endif %}
@@ -146,7 +149,7 @@
                                               data-target="#collapseCatLv1" aria-expanded="false" aria-controls="collapseCatLv1">
                                             {{ situ.categoryLevel1.title }}
                                             {% if situ.categoryLevel1.validated == 0 %}
-                                                {{ 'contrib.situ.verify.data.to_validate' | trans }}
+                                                <span translate="no">{{ 'contrib.situ.verify.data.to_validate' | trans }}</span>
                                             {% endif %}
                                             <small class="align-text-bottom"><i class="fas fa-question-circle"></i></small>
                                         </span>
@@ -169,7 +172,7 @@
                                               data-target="#collapseCatLv2" aria-expanded="false" aria-controls="collapseCatLv2">
                                             {{ situ.categoryLevel2.title }}
                                             {% if situ.categoryLevel2.validated == 0 %}
-                                                {{ 'contrib.situ.verify.data.to_validate' | trans }}
+                                                <span translate="no">{{ 'contrib.situ.verify.data.to_validate' | trans }}</span>
                                             {% endif %}
                                             <small class="align-text-bottom"><i class="fas fa-question-circle"></i></small>
                                         </span>

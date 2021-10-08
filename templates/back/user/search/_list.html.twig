@@ -20,7 +20,7 @@
                 <tr>
                     {% if is_granted("ROLE_SUPER_ADMIN") %}
                         {% set col_count = col_count + 1 %}
-                        <th name="check"><div class="form-check pl-1"><input type="checkbox" id="select_all" /></div></th>
+                        <th class="no-sort" name="check"><div class="form-check pl-1"><input type="checkbox" id="select_all" /></div></th>
                     {% endif %}
                     <th class="pl-2" nowrap>{{ 'label.name'|trans() }}</th>
                     <th class="pl-2" nowrap>{{ 'label.email'|trans() }}</th>
