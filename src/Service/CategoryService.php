@@ -114,6 +114,9 @@ class CategoryService {
                 ->getOneOrNullResult();
     }
     
+    /**
+     * Called in twig
+     */
     public function getCategory($categoryId) {
         return $this->em->getRepository(Category::class)->find($categoryId);
     }

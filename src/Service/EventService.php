@@ -78,6 +78,9 @@ class EventService {
                 ->getOneOrNullResult();
     }
     
+    /**
+     * Called in twig
+     */
     public function getEvent($eventId) {
         return $this->em->getRepository(Event::class)->find($eventId);
     }
