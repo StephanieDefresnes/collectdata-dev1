@@ -40,12 +40,12 @@ class Event
     private $lang;
 
     /**
-     * @ORM\OneToMany(targetEntity=Category::class, mappedBy="event")
+     * @ORM\OneToMany(targetEntity=Category::class, mappedBy="event", fetch="EAGER")
      */
     private $categories;
 
     /**
-    * @ORM\OneToMany(targetEntity=Situ::class, cascade={"persist"}, mappedBy="event")
+    * @ORM\OneToMany(targetEntity=Situ::class, cascade={"persist"}, mappedBy="event", fetch="EAGER")
     */
     protected $situs;
 
@@ -101,7 +101,7 @@ class Event
         return $this;
     }
 
-    public function getLang(): ?int
+    public function getLang(): ?Lang
     {
         return $this->lang;
     }

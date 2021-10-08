@@ -46,7 +46,7 @@ class SituController extends AbstractController
         $repository = $this->em->getRepository(Situ::class);
         $situs = $repository->findAll();
 
-        return $this->render('back/situ/search/index.html.twig', [
+        return $this->render('back/situ/search.html.twig', [
             'situs' => $situs,
         ]);
     }
@@ -58,7 +58,7 @@ class SituController extends AbstractController
     {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
         
-        return $this->render('back/situ/read/index.html.twig', [
+        return $this->render('back/situ/read.html.twig', [
             'situ' => $situ,
         ]);
     }
@@ -73,7 +73,7 @@ class SituController extends AbstractController
         $repository = $this->em->getRepository(Situ::class);
         $situs = $repository->findBy(['statusId' => 2]);
         
-        return $this->render('back/situ/validation/index.html.twig', [
+        return $this->render('back/situ/validation.html.twig', [
             'situs' => $situs,
         ]);
     }

@@ -27,7 +27,7 @@ class LangController extends AbstractController
         
         $langs = $langService->getAll();
         
-        return $this->render('back/lang/search/index.html.twig', [
+        return $this->render('back/lang/search.html.twig', [
             'langs' => $langs,
         ]);
     }

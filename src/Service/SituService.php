@@ -106,8 +106,15 @@ class SituService {
         return $qb->getQuery()->getResult();
     }
     
+    /**
+     * Called in twig
+     */
     public function getSitu($situId) {
         return $this->em->getRepository(Situ::class)->find($situId);
+    }
+    public function getTranslations($situId) {
+        return $this->em->getRepository(Situ::class)
+                ->findby(['translatedSituId' => $situId]);
     }
     
 }

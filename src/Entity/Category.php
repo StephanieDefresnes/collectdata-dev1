@@ -61,17 +61,17 @@ class Category
     private $parent;
 
     /**
-     * @ORM\OneToMany(targetEntity=Category::class, cascade={"persist"}, mappedBy="parentId")
+     * @ORM\OneToMany(targetEntity=Category::class, cascade={"persist"}, mappedBy="parent", fetch="EAGER")
      */
     private $parents;
 
     /**
-     * @ORM\OneToMany(targetEntity=Situ::class, cascade={"persist"}, mappedBy="categoryLevel1")
+     * @ORM\OneToMany(targetEntity=Situ::class, cascade={"persist"}, mappedBy="categoryLevel1", fetch="EAGER")
      */
     private $situs1;
 
     /**
-     * @ORM\OneToMany(targetEntity=Situ::class, cascade={"persist"}, mappedBy="categoryLevel2")
+     * @ORM\OneToMany(targetEntity=Situ::class, cascade={"persist"}, mappedBy="categoryLevel2", fetch="EAGER")
      */
     private $situs2;
 

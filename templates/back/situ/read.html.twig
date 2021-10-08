@@ -13,7 +13,7 @@
 {% block content %}
     <div class="container-fluid pt-4">
         
-        <div class="row d-sm-flex justify-content-between mb-4">
+        <div class="row d-sm-flex justify-content-between mb-4" translate="no">
             <div class="col-md-6">
                 <h1 class="h3 mb-0 text-gray-800">{{ 'contrib.situ.read.title'|trans() }}</h1>
             </div>
@@ -24,10 +24,10 @@
                         {{ 'action.delete_definitively'|trans() }}
                     </a>
                 {% endif %}
-                <a href="{{ path('back_situs_validation') }}"
+                <a href="{{ path('back_situs_search') }}"
                    class="btn btn-secondary mx-2 pt-1">
                     <i class="fas fa-reply"></i>
-                    {{ 'action.back'|trans() }}
+                    {{ 'action.back_list'|trans() }}
                 </a>
             </div>
         </div>
@@ -74,23 +74,6 @@
 
                     <div class="card-body p-4">
 
-                        {% if situ.initialSitu == 0 %}
-                            <div class="row mb-3" translate="no">
-                                <div class="col-md-4 font-weight-bold">
-                                    {{ 'contrib.situ.verify.data.translated' | trans }}
-                                </div>
-                                <div class="col-md-8 first-letter">
-                                    <span id="initial-id" class="id">{{ situ.translatedSituId }}</span>
-                                    <a href="{{ path('back_situ_read', { 'situ': situ.translatedSituId }) }}"
-                                       class="mx-2" target="_blank"
-                                       data-toggle="tooltip" data-placement="right"
-                                       title="{{ 'action.read'|trans() }}">
-                                        <i class="fas fa-eye"></i>
-                                    </a>
-                                </div>
-                            </div>
-                        {% endif %}
-
                         <div class="row mb-3" translate="no">
                             <div class="col-md-4 font-weight-bold">
                                 {{ 'label_dp.lang'|trans() }}
@@ -99,6 +82,43 @@
                                 {{ situ.lang.englishName }}
                             </div>
                         </div>
+
+                        {% if situ.initialSitu == 0 %}
+                            <div class="row mb-3" translate="no">
+                                <div class="col-md-4 font-weight-bold">
+                                    {{ 'contrib.situ.verify.data.translated' | trans }}
+                                </div>
+                                <div class="col-md-8 first-letter">
+                                    <span id="initial-id" class="id">{{ situ.translatedSituId }}</span>
+                                    <a href="{{ path('back_situ_read', { 'situ': situ.translatedSituId }) }}"
+                                       target="_blank"
+                                       data-toggle="tooltip" data-placement="right"
+                                       title="{{ 'action.read'|trans() }}">
+                                        <i class="fas fa-eye"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        {% else %}
+                            {% set translations = situ_service.getTranslations(situ.id) %}
+                            {% if translations %}
+                                <div class="row mb-3" translate="no">
+                                    <div class="col-md-4 font-weight-bold">
+                                        {{ 'label_dp.translation_s' | trans }}
+                                    </div>
+                                    <div class="col-md-8 first-letter">
+                                        {% for translation in translations %}
+                                            <span class="id">{{ translation.id }}</span>
+                                            <a href="{{ path('back_situ_read', { 'situ': translation.id }) }}"
+                                               data-toggle="tooltip" data-placement="right"
+                                               title="{{ 'action.read'|trans() }}">
+                                                <i class="fas fa-eye"></i>
+                                            </a>
+                                            {% if not loop.last %} - {% endif %}
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            {% endif %}
+                        {% endif %}
 
                         <div class="row mb-3">
                             <div class="col-md-4 font-weight-bold" translate="no">

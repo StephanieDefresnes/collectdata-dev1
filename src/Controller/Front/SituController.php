@@ -12,7 +12,6 @@ use App\Form\Front\Situ\SituFormType;
 use App\Mailer\Mailer;
 use App\Messenger\Messenger;
 use App\Service\CategoryService;
-use App\Service\EventService;
 use App\Service\SituService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -67,6 +66,7 @@ class SituController extends AbstractController
     public function getUserSitus()
     {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+        $this->denyAccessUnlessGranted('ROLE_CONTRIBUTOR');
         
         $user = $this->security->getUser();
         $userLangs = $user->getLangs();
@@ -104,7 +104,7 @@ class SituController extends AbstractController
                 ]);
             }
             
-            // Only Super-admin can read deleted situ
+            // Only Super-admin can read deleted situ by back office
             if ($situ->getStatusId() == 5) {
                 return $this->redirectToRoute('access_denied', [
                     '_locale' => locale_get_default(),
