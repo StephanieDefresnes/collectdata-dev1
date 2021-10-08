@@ -1,0 +1,209 @@
+{% trans_default_domain 'back_messages' %}
+{% extends "back/layout.html.twig" %}
+{% set locale = app.request.locale %}
+
+{% block title %}{{ event.title }}{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {{ encore_entry_link_tags('event_read_app', null, 'backApp') }}
+    {{ encore_entry_link_tags('flp_theme') }}
+ {% endblock %}
+
+
+{% block content %}
+    <div class="container-fluid pt-4">
+        
+        <div class="d-sm-flex align-items-center justify-content-between mb-4">
+            <h1 class="h3 mb-0 text-gray-800 ">
+                <span class="text-capitalize">{{ event.title }}</span>
+                <img src="{{ asset('img/flag/'~ event.lang.lang ~'.jpg') }}"
+                     alt="{{ event.lang.lang }}" class="translation-flag mx-1 border">
+            </h1>
+        </div>
+
+        <div class="col-lg-10 mx-auto mb-4">
+            <div class="card shadow">
+
+                <div id="translator" class="card-header py-1">
+                    <div class="row d-flex justify-content-between" translate="no">
+                        <div class="col-md-5">
+                            <h6 class="mt-2 font-weight-bold text-primary">
+                                {{ 'contrib.event.read.title'|trans() }}
+                            </h6>
+                        </div>
+                        {% if locale != event.lang.lang %}
+                            <div class="col-md-auto mct-1px">
+                                <div class="row ggt-row">
+                                    <div class="col-auto px-1 mt-1"><i class="fas fa-globe-americas"></i></div>
+                                    <div class="col-auto px-0">
+                                        <div id="GGT"></div>
+                                    </div>
+                                    <div id="resetGGT" class="col-auto p-1 btn d-none">
+                                        <i class="far fa-times-circle"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="card-body pb-3">
+                    
+                    <div class="row mb-3" translate="no">
+                        <div class="col-auto{% if event.validated == false %} mt-1{% endif %}">
+                            {{ 'label_dp.enabled'|trans() }}
+                        </div>
+                        <div id="enable-row" class="col-auto">
+                            {% if event.validated %}
+                                {{ 'yes' | trans }}
+                            {% else %}
+                                <span id="enableEvent" class="btn btn-primary py-1"
+                                      data-id="{{ event.id }}">
+                                    {{ 'action.enable'|trans()}}
+                            {% endif %}
+                        </div>
+                    </div>
+                    
+                    <div class="row mb-2">
+                        <div class="col-md-6 mb-2">
+                            
+                            <div class="d-flex justify-content-start" translate="no">
+                                <div class="pointer collapsed" data-toggle="collapse" data-target="#collapseCategories"
+                                 aria-expanded="false" aria-controls="collapseCategories">
+                                    {{ 'contrib.categoryLevel1.count_dp'|trans() }}
+                                    <span class="mx-1">{{ event.categories|length }}</span>
+                                    <span class="more"></span>
+                                </div>
+                            </div>
+                            
+                            <div id="collapseCategories" class="mt-3 small infoCollapse collapse"
+                                aria-labelledby="collapseCategories">
+
+                                <div id="categories" class="back-dataTable">
+                                    <table id="dataTableCategories" class="table table-sm mb-0 nowrap">
+                                        <thead class="bg-gray-600 text-white" translate="no">
+                                            <tr>
+                                                <th class="pl-2">#ID</th>
+                                                <th class="pl-2">{{ 'label.title'|trans() }}</th>
+                                                <th class="pl-2">{{ 'action.validated'|trans() }}</th>
+                                                <th class="pl-2">{{ 'label.subcategories'|trans() }}</th>  
+                                                <th class="no-sort"></th>              
+                                            </tr>
+                                        </thead>
+                                        <tbody class="bg-white">
+                                            {% for category in event.categories %}
+                                            <tr>
+                                                <td class="px-2 align-middle">{{ category.id }}</td>
+                                                <td class="px-2 align-middle text-capitalize">{{ category.title|u.truncate(20, '...') }}</td>
+                                                <td class="px-2 align-middle" translate="no">
+                                                    {{ category.validated ? 'yes'|trans() : 'no'|trans() }}
+                                                </td>
+                                                <td class="px-2 align-middle">
+                                                    {{ category.parents|length }}
+                                                </td>
+                                                <td class="width-max-26">
+                                                    <a href="{#{{ path('back_event_read', { 'event': event.id }) }}#}"
+                                                       class="btn btn-outline-primary py-0 px-1"
+                                                       title="{{ 'action.read'|trans() }}">
+                                                        <i class="fas fa-eye"></i>
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                                        
+                        </div>
+                                        
+                        <div class="col-md-6 mb-2">
+                            
+                            <div class="d-flex justify-content-start" translate="no">
+                                <div class="pointer collapsed" data-toggle="collapse" data-target="#collapseSitus"
+                                     aria-expanded="false" aria-controls="collapseSitus">
+                                    {{ 'contrib.situ.count_dp'|trans() }}
+                                    <span class="mx-1">{{ event.situs|length  }}</span>
+                                    <span class="more"></span>
+                                </div>
+                            </div>
+                            
+                            <div id="collapseSitus" class="mt-3 small infoCollapse collapse"
+                                aria-labelledby="collapseSitus">
+
+                                <div id="situs" class="back-dataTable">
+                                    <table id="dataTableSitus" class="table table-sm mb-0 nowrap">
+                                        <thead class="bg-gray-600 text-white" translate="no">
+                                            <tr>
+                                                <th class="pl-2">#ID</th>
+                                                <th class="pl-2">{{ 'label.title'|trans() }}</th>
+                                                <th class="pl-2">{{ 'label.status'|trans() }}</th>
+                                                <th class="pl-2">{{ 'label.categories'|trans() }}</th>  
+                                                <th class="pl-2">{{ 'label.subcategories'|trans() }}</th>  
+                                                <th class="no-sort"></th>              
+                                            </tr>
+                                        </thead>
+                                        <tbody class="bg-white">
+                                            {% for situ in event.situs %}
+                                            <tr>
+                                                <td class="px-2 align-middle">{{ situ.id }}</td>
+                                                <td class="px-2 align-middle text-capitalize">{{ situ.title|u.truncate(20, '...') }}</td>
+                                                <td class="px-2 align-middle" translate="no">
+                                                    {% if situ.statusId == 1 %}
+                                                        {{ 'status.writing'|trans() }}
+                                                    {% elseif situ.statusId == 2 %}
+                                                        {{ 'status.validation'|trans() }}
+                                                    {% elseif situ.statusId == 3 %}
+                                                        {{ 'status.validated'|trans() }}
+                                                    {% elseif situ.statusId == 4 %}
+                                                        {% if situ.initialSitu ==  0 %}
+                                                            {{ 'status.translation_refused'|trans() }}
+                                                        {% else %}
+                                                            {{ 'status.refused'|trans() }}
+                                                        {% endif %}
+                                                    {% endif %}
+                                                </td>
+                                                <td class="px-2 align-middle text-capitalize">{{ situ.categoryLevel1.title|u.truncate(20, '...') }}</td>
+                                                <td class="px-2 align-middle text-capitalize">{{ situ.categoryLevel2.title|u.truncate(20, '...') }}</td>
+                                                <td class="width-max-26">
+                                                    <a href="{{ path('back_situ_read', { 'situ': situ.id }) }}"
+                                                       class="btn btn-outline-primary py-0 px-1"
+                                                       title="{{ 'action.read'|trans() }}">
+                                                        <i class="fas fa-eye"></i>
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                                        
+                        </div>
+                    </div>
+                
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {{ encore_entry_script_tags('event_read_app', null, 'backApp') }}
+    <script>
+        var path = {
+            "locale" : "{{ locale }}",
+        }
+        var translation = {
+            "yes" : "{{ 'yes' | trans }}",
+        }
+        function googleTranslateElementInit() { 
+            new google.translate.TranslateElement({pageLanguage: '{{ event.lang.lang }}'},'GGT')
+        }
+    </script> 
+    <script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+{% endblock %}

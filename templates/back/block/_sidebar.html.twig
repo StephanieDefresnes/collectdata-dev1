@@ -115,7 +115,7 @@
                                     'back_situ_read',
                                     'back_situ_verify',
                                     'back_situs_validation',
-                                    'back_events',
+                                    'back_event_search',
                                     'back_categories'] ? ' active' }}">
         <a class="nav-link collapsed pb-1" href="#" data-toggle="collapse" data-target="#collapseContrib"
             aria-expanded="true" aria-controls="collapseContrib">
@@ -127,7 +127,8 @@
                                                         'back_situ_read',
                                                         'back_situ_verify',
                                                         'back_situs_validation',
-                                                        'back_events',
+                                                        'back_event_search',
+                                                        'back_event_read',
                                                         'back_categories'] ? ' show' }}"
              aria-labelledby="headingContrib" data-parent="#accordionSidebar">
             
@@ -142,9 +143,11 @@
                    href="{{ path('back_situs_search') }}">
                     {{ 'label.search'|trans() }}
                 </a>
-                <a class="collapse-item{{ route == 'back_events' ? ' active' }}"
-                   href="{{ path('back_events') }}">
-                    {{ 'label.event'|trans() }}
+                <a class="collapse-item{{ route in [
+                                            'back_event_search',
+                                            'back_event_read'] ? ' active' }}"
+                   href="{{ path('back_event_search') }}">
+                    {{ 'label.events'|trans() }}
                 </a>
                 <a class="collapse-item{{ route == 'back_categories' ? ' active' }}"
                    href="{{ path('back_categories') }}">

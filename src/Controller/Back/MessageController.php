@@ -80,10 +80,9 @@ class MessageController extends AbstractController
                         'situ' => $alert->getEntityId(), '_locale' => locale_get_default()
                     ]);
             } elseif ($alert->getEntity() == 'event') {
-                // TODO
-//                return $this->redirectToRoute('back_event_read', [
-//                        'id' => $alert->getEntityId(), '_locale' => locale_get_default()
-//                    ]);
+                return $this->redirectToRoute('back_event_read', [
+                        'event' => $alert->getEntityId(), '_locale' => locale_get_default()
+                    ]);
             } elseif ($alert->getEntity() == 'categoryLevel1') {
                 // TODO
 //                return $this->redirectToRoute('back_categoryLevel1_read', [

@@ -1,0 +1,41 @@
+@import '~datatables.net-bs4/css/dataTables.bootstrap4.css';
+
+.more {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    background-image: url('~@fortawesome/fontawesome-free/svgs/solid/caret-up.svg') !important;
+    background-position: right center !important;
+    background-repeat: no-repeat;
+    background-size: 10px;
+    opacity: 0.5;
+}
+.collapsed {
+    & .more {
+        background-image: url('~@fortawesome/fontawesome-free/svgs/solid/caret-down.svg') !important;            
+    }           
+}
+table.dataTable > tbody > tr {
+    height: 36px !important;
+}
+
+// GG Translate
+#page-top {
+    top: 0 !important;
+}
+.skiptranslate {
+    color: #fff !important;
+    font-size: 0 !important;
+    & iframe,
+    & span {
+        display: none !important;
+    }
+    & select {
+        background: #fff !important;
+        color: #858796 !important;
+        font-size: 14px !important;
+        border: 1px solid #bbb;
+        border-radius: 3px;
+        padding: 4px;
+    }
+}

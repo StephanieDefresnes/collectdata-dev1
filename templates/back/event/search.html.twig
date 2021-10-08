@@ -1,0 +1,87 @@
+{% trans_default_domain 'back_messages' %}
+{% extends "back/layout.html.twig" %}
+{% set locale = app.request.locale %}
+
+{% block title %}{{ 'contrib.event.title'|trans() }}{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {{ encore_entry_link_tags('table_app', null, 'backApp') }}
+    {{ encore_entry_link_tags('flp_theme') }}
+ {% endblock %}
+
+
+{% block content %}
+    <div class="container-fluid pt-4">
+        
+        <div class="d-sm-flex align-items-center justify-content-between mb-4">
+            <h1 class="h3 mb-0 text-gray-800">{{ 'label.contributions'|trans() }}</h1>
+        </div>
+
+        <div class="col-lg-10 offset-lg-1 col-12 offset-0 px-0">
+            <div class="card shadow mb-4">
+
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">{{ 'contrib.event.title'|trans() }}</h6>
+                </div>
+
+                <div id="list" class="card-body pb-3 back-dataTable">
+
+                    <table id="dataTable-list" class="table table-sm mb-0 nowrap">
+                        <thead class="bg-gray-600 text-white">
+                            <tr>
+                                <th class="pl-2">#ID</th>
+                                <th class="pl-2">{{ 'label.title'|trans() }}</th>
+                                <th class="pl-2">{{ 'label.lang'|trans() }}</th>
+                                <th class="pl-2">{{ 'label.enabled'|trans() }}</th>
+                                <th class="pl-2">{{ 'label.categories'|trans() }}</th>
+                                <th class="pl-2">{{ 'label.contributions'|trans() }}</th> 
+                                <th class="no-sort"></th>              
+                            </tr>
+                        </thead>
+                        <tbody class="bg-white">
+                            {% for event in events %}
+                            <tr>
+                                <td class="px-2 align-middle">{{ event.id }}</td>
+                                <td class="px-2 align-middle text-capitalize">{{ event.title }}</td>
+                                <td class="px-2 align-middle">
+                                    {{ event.lang.englishName }}
+                                </td>
+                                <td class="px-2 align-middle">
+                                    {{ event.validated ? 'yes'|trans() : 'no'|trans() }}
+                                </td>
+                                <td class="px-2 align-middle">
+                                    {{ event.categories|length }}
+                                </td>
+                                <td class="px-2 align-middle">
+                                    {{ event.situs|length }}
+                                </td>
+                                <td class="px-2 width-max-26">
+                                    <a href="{{ path('back_event_read', { 'event': event.id }) }}"
+                                       class="btn btn-outline-primary"
+                                       title="{{ 'action.read'|trans() }}">
+                                        <i class="fas fa-eye"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {{ encore_entry_script_tags('table_app', null, 'backApp') }}
+    <script>
+        var translation = {
+            "yes" : "{{ 'yes' | trans }}",
+        }
+    </script>
+{% endblock %}
