@@ -56,7 +56,7 @@ function resetFilter(table) {
     })
 }
 
-// Search if translations exist
+// Enable event
 function ajaxEnable(id) {
     $.ajax({
         url: '/'+ path["locale"] +'/back/event/ajaxEnable',
