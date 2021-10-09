@@ -41,6 +41,16 @@ class Lang
     private $enabled;
 
     /**
+    * @ORM\OneToMany(targetEntity=User::class, mappedBy="lang")
+    */
+    protected $langUsers;
+
+    /**
+     * @ORM\ManyToMany(targetEntity=User::class, inversedBy="langs")
+    */
+    protected $users;
+
+    /**
     * @ORM\OneToMany(targetEntity=Event::class, cascade={"persist"}, mappedBy="lang")
     */
     protected $events;
@@ -57,6 +67,8 @@ class Lang
 
     public function __construct()
     {
+        $this->langUsers = new ArrayCollection();
+        $this->users = new ArrayCollection();
         $this->events = new ArrayCollection();
         $this->categories = new ArrayCollection();
         $this->situs = new ArrayCollection();
@@ -120,6 +132,22 @@ class Lang
         $this->enabled = $enabled;
 
         return $this;
+    }
+
+    /**
+     * @return Collection|User[]
+     */
+    public function getLangUsers(): ?Collection
+    {
+        return $this->langUsers;
+    }
+    
+    /**
+     * @return Collection|User[]
+     */
+    public function getUsers(): Collection
+    {
+        return $this->users;
     }
 
     /**

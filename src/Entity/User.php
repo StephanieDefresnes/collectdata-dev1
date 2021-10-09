@@ -2,7 +2,9 @@
 
 namespace App\Entity;
 
-use App\Entity\Lang;
+use App\Entity\Category;
+use App\Entity\Event;
+use App\Entity\Situ;
 use App\Entity\UserFile;
 use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -87,9 +89,9 @@ class User implements UserInterface
     private $adminNote;
 
     /**
-     * @ORM\Column(type="integer", nullable=true)
+     * @ORM\ManyToOne(targetEntity="App\Entity\Lang", inversedBy="langUsers")
      */
-    private $langId;
+    private $lang;
 
     /**
      * @ORM\Column(type="boolean", nullable=true)
@@ -103,9 +105,8 @@ class User implements UserInterface
     protected $contributorLangs;
 
     /**
-    * @ORM\ManyToMany(targetEntity=Lang::class)
-    * @ORM\JoinTable(name="user_langs")
-    */
+     * @ORM\ManyToMany(targetEntity=Lang::class, inversedBy="users")
+     */
     protected $langs;
 
     /**
@@ -119,9 +120,19 @@ class User implements UserInterface
     private $isVerified = false;
 
     /**
-    * @ORM\OneToMany(targetEntity=Situ::class, cascade={"persist"}, mappedBy="user", fetch="EAGER")
+    * @ORM\OneToMany(targetEntity=Situ::class, cascade={"persist"}, mappedBy="user")
     */
     protected $situs;
+
+    /**
+    * @ORM\OneToMany(targetEntity=Event::class, cascade={"persist"}, mappedBy="user")
+    */
+    protected $events;
+
+    /**
+    * @ORM\OneToMany(targetEntity=Category::class, cascade={"persist"}, mappedBy="user")
+    */
+    protected $categories;
     
     protected $captcha;
 
@@ -130,6 +141,8 @@ class User implements UserInterface
         $this->langs = new ArrayCollection();
         $this->contributorLangs = new ArrayCollection();
         $this->situs = new ArrayCollection();
+        $this->events = new ArrayCollection();
+        $this->categories = new ArrayCollection();
     }
 
     public function __toString()
@@ -350,14 +363,14 @@ class User implements UserInterface
         return $this;
     }
 
-    public function getLangId(): ?int
+    public function getLang(): ?Lang
     {
-        return $this->langId;
+        return $this->lang;
     }
 
-    public function setLangId(?int $langId): self
+    public function setLang(?Lang $lang): self
     {
-        $this->langId = $langId;
+        $this->lang = $lang;
 
         return $this;
     }
@@ -485,6 +498,66 @@ class User implements UserInterface
             // set the owning side to null (unless already changed)
             if ($situ->getUser() === $this) {
                 $situ->setUser(null);
+            }
+        }
+        return $this;
+    }
+    
+    /**
+     * @return Collection|Event[]
+     */
+    public function getEvents(): Collection
+    {
+        return $this->events;
+    }
+     
+    public function addEvent(Event $event): self
+    {
+        if (!$this->events->contains($event)) {
+            $this->events[] = $event;
+            $event->setUser($this);
+        }
+        
+        return $this;
+    }
+
+    public function removeEvent(Event $event): self
+    {
+        if ($this->events->contains($event)) {
+            $this->events->removeElement($event);
+            // set the owning side to null (unless already changed)
+            if ($event->getUser() === $this) {
+                $event->setUser(null);
+            }
+        }
+        return $this;
+    }
+    
+    /**
+     * @return Collection|Category[]
+     */
+    public function getCategories(): Collection
+    {
+        return $this->categories;
+    }
+     
+    public function addCategory(Category $category): self
+    {
+        if (!$this->categories->contains($category)) {
+            $this->categories[] = $category;
+            $category->setUser($this);
+        }
+        
+        return $this;
+    }
+
+    public function removeCategory(Category $category): self
+    {
+        if ($this->categories->contains($category)) {
+            $this->categories->removeElement($category);
+            // set the owning side to null (unless already changed)
+            if ($category->getUser() === $this) {
+                $category->setUser(null);
             }
         }
         return $this;

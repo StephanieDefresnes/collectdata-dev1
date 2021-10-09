@@ -11,6 +11,7 @@
 {% endblock %}
     
 {% block content %}
+    <div id="loader"></div>
 
     <div class="row">
         <div class="col-lg-7 mx-auto mt-5">
@@ -75,27 +76,17 @@
                             </div>
                         </div>
 
-                        <div id="langId" class="row mt-3 mb-4">
+                        <div id="lang" class="row mt-3 mb-4">
                             <div class="col-sm-4 pt-2">
-                                {{ form_label(form.langId) }}
+                                {{ form_label(form.lang) }}
                             </div>
-                            <div class="col-md-4 col-sm-8">
-                                <select class="form-control select-single" 
-                                        id="select_user_langId">
-                                    <option value="" data-id=""
-                                            class="text-black-50"{% if user.langId == '' %} selected{% endif %}>
-                                        {{ 'account.lang.default'|trans() }}</option>
-                                    {% for lang in langs %}
-                                        <option value="{{ lang.id }}" data-id="{{ lang.id }}"
-                                                {% if user.langId == lang.id %} selected{% endif %}>
-                                            {{ lang.name }}</option>
-                                    {% endfor %}
-                                </select>
-                            </div>
-                            {{ form_row(form.langId) }}
+                            <div class="col-sm-8 text-capitalize">
+                                {{ form_widget(form.lang) }}
+                                {{ form_errors(form.lang) }}
+                           </div>
                         </div>
 
-                        <div class="row mt-3 mb-5">
+                        <div id="langs" class="row mt-3 mb-5">
                             <div class="col-sm-4 pt-2">
                                 {{ form_label(form.langs) }}
                             </div>
@@ -144,11 +135,14 @@
     {{ parent() }}
     {{ encore_entry_script_tags('user_update_app', null, 'frontApp') }}
     <script>
-        var translations = {
+        let path = {
+            "locale" : "{{ locale }}",
+        }
+        let translations = {
             "single-searchLang" : "{{ 'account.lang.default' | trans }}",
             "multiple-search" : "{{ 'multiple_search' | trans }}",
         }
-        var img = {
+        let img = {
             "default" : "{{ asset('/img/unknown.jpg') }}",
         }
     </script>

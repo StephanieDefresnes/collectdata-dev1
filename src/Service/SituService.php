@@ -19,19 +19,6 @@ class SituService {
         $this->em = $em;
     }
     
-    public function countSitusByUser($userId)
-    {
-        $query = $this->em->createQueryBuilder()
-            ->from(Situ::class,'situ')
-            ->andWhere('situ.user = ?1')
-            ->andWhere('situ.statusId = ?2')
-            ->setParameter(1, $userId)
-            ->setParameter(2, 3)
-            ->select('count(situ.id)');
-        
-        return $situs = $query->getQuery()->getSingleScalarResult();
-    }
-    
     public function countSitusByLangByUser($userId)
     {
         $query = $this->em->createQueryBuilder()
@@ -43,34 +30,6 @@ class SituService {
             ->groupBy('lang.id')
             ->andWhere('situ.user = ?1')
             ->andWhere('situ.statusId = ?2')
-            ->setParameter(1, $user)
-            ->setParameter(2, 3);
-        
-        $situs = $situs = $query->getQuery()->getScalarResult();
-        
-        $result = [];
-        foreach ($situs as $situ) {
-            $result[] = [ 
-                'situs' => $situ['situs'],
-                'translatedSituId' => $situ['translatedSituId'],
-                'langName' => html_entity_decode($situ['langName'], ENT_QUOTES, 'UTF-8'),
-            ];
-        }
-        
-        return $result;
-    }
-    
-    public function countSitusTranslatedByLangByUser($userId)
-    {
-        $query = $this->em->createQueryBuilder()
-            ->from(Situ::class,'situ')
-            ->select('  count(situ.id)  situs, 
-                        lang.name       langName')
-            ->leftJoin(Lang::class, 'lang', 'WITH', 'situ.lang=lang.id')
-            ->groupBy('lang.id')
-            ->andWhere('situ.user = ?1')
-            ->andWhere('situ.statusId = ?2')
-            ->andWhere('situ.translatedSituId IS NOT NULL')
             ->setParameter(1, $userId)
             ->setParameter(2, 3);
         
@@ -80,6 +39,7 @@ class SituService {
         foreach ($situs as $situ) {
             $result[] = [ 
                 'situs' => $situ['situs'],
+                'translatedSituId' => $situ['translatedSituId'],
                 'langName' => html_entity_decode($situ['langName'], ENT_QUOTES, 'UTF-8'),
             ];
         }
@@ -109,9 +69,11 @@ class SituService {
     /**
      * Called in twig
      */
+    // Get status on alerts
     public function getSitu($situId) {
         return $this->em->getRepository(Situ::class)->find($situId);
     }
+    // Get translations read situ
     public function getTranslations($situId) {
         return $this->em->getRepository(Situ::class)
                 ->findby(['translatedSituId' => $situId]);

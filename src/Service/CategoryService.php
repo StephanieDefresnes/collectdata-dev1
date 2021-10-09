@@ -49,7 +49,7 @@ class CategoryService {
         $categoryLevel1ByUser = $qb->expr()->andX(
             $qb->expr()->eq('c.event', '?1'),
             $qb->expr()->eq('c.validated', '?3'),
-            $qb->expr()->eq('c.userId', '?4'),
+            $qb->expr()->eq('c.user', '?4'),
             $qb->expr()->eq('c.lang', '?5')
         );
         
@@ -75,7 +75,7 @@ class CategoryService {
     {        
         $qb = $this->em->createQueryBuilder();
         
-        $categoriesByByParentId = $qb->expr()->andX(
+        $categoriesByParentId = $qb->expr()->andX(
             $qb->expr()->eq('c.parent', '?1'),
             $qb->expr()->eq('c.validated', '?2')
         );
@@ -83,13 +83,13 @@ class CategoryService {
         $categoriesByUserParentId = $qb->expr()->andX(
             $qb->expr()->eq('c.parent', '?1'),
             $qb->expr()->eq('c.validated', '?3'),
-            $qb->expr()->eq('c.userId', '?4'),
+            $qb->expr()->eq('c.user', '?4'),
             $qb->expr()->eq('c.lang', '?5')
         );
         
         $qb->from(Category::class,'c')
                 ->select('c')
-                ->andWhere($qb->expr()->orX($categoriesByByParentId, $categoriesByUserParentId))
+                ->andWhere($qb->expr()->orX($categoriesByParentId, $categoriesByUserParentId))
                 ->setParameters([
                     1 => $categoryId,
                     2 => 1,

@@ -49,7 +49,7 @@ class EventService {
         $eventByUserLandId = $qb->expr()->andX(
             $qb->expr()->eq('e.lang', '?1'),
             $qb->expr()->eq('e.validated', '?3'),
-            $qb->expr()->eq('e.userId', '?4')
+            $qb->expr()->eq('e.user', '?4')
         );
         
         $qb->from(Event::class,'e')

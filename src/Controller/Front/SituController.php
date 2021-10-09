@@ -194,7 +194,7 @@ class SituController extends AbstractController
     /**
      * @Route("/contrib/{id}", defaults={"id" = null}, name="create_situ", methods="GET|POST")
      */
-    public function situEdit(Request $request, $id): Response
+    public function createSitu(Request $request, $id): Response
     {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
         $this->denyAccessUnlessGranted('ROLE_CONTRIBUTOR');
@@ -218,7 +218,7 @@ class SituController extends AbstractController
             }
         
             // Only situ author can update situ
-            if ($situ->getUser() != $user->getId()) {
+            if ($situ->getUser() != $user) {
                 return $this->redirectToRoute('access_denied', [
                     '_locale' => locale_get_default(),
                     'code' => '21191',
@@ -287,7 +287,6 @@ class SituController extends AbstractController
             
         // Get current user
         $user = $this->security->getUser();
-        $userId = $user->getId();
         
         $defaultLang = $this->em->getRepository(Lang::class)
                 ->findOneBy(['lang' => $this->parameters->get('locale')]);
@@ -311,15 +310,15 @@ class SituController extends AbstractController
             }
 
             $eventData = $this->createOrChooseData(
-                    $data['event'], 'event', $langData, '', $userId
+                    $data['event'], 'event', $langData, '', $user
             );
             $categoryLevel1 = $this->createOrChooseData(
                     $data['categoryLevel1'], 'categoryLevel1', $langData,
-                    $eventData, $userId
+                    $eventData, $user
             );
             $categoryLevel2 = $this->createOrChooseData(
                     $data['categoryLevel2'], 'categoryLevel2', $langData,
-                    $categoryLevel1, $userId
+                    $categoryLevel1, $user
             );
 
             $statusId = $data['statusId'];
@@ -329,12 +328,12 @@ class SituController extends AbstractController
             if (empty($data['id'])) {
                 $situ = new Situ();
                 $situ->setDateCreation($dateNow);
-                $situ->setUser($userId); 
+                $situ->setUser($user); 
             } else {
                 $situ = $this->em->getRepository(Situ::class)->find($data['id']);
 
                 // Only situ author can update situ
-                if ($userId != $situ->getUser()) {
+                if ($user != $situ->getUser()) {
                     return $this->redirectToRoute('access_denied', [
                         '_locale' => locale_get_default(),
                         'code' => '21191',
@@ -410,7 +409,7 @@ class SituController extends AbstractController
                             'contrib.form.'. $msgAction .'.flash.error', [],
                             'user_messages', $locale = locale_get_default()
                             );
-                $request->getSession()->getFlashBag()->add('error', $msg);
+                $this->addFlash('error', $msg);
                 
                 return $this->json(['success' => false]);
             }
@@ -421,7 +420,7 @@ class SituController extends AbstractController
      * Load data depending on selection or creation
      * Used by ajaxSitu()
      */
-    public function createOrChooseData($dataEntity, $entity, $lang, $parent, $userId)
+    public function createOrChooseData($dataEntity, $entity, $lang, $parent, $user)
     {        
         if (is_array($dataEntity)) {
             switch ($entity) {
@@ -442,7 +441,7 @@ class SituController extends AbstractController
                     break;
             }
             $data->setTitle($dataEntity['title']);
-            $data->setUser($userId);
+            $data->setUser($user);
             $data->setValidated(0);
             $data->setLang($lang);
             $this->em->persist($data);

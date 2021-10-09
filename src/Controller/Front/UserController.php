@@ -47,35 +47,13 @@ class UserController extends AbstractController
         // Get current user
         $user = $this->security->getUser();
         
-        // Get user Language
-        if (!$user->getLangId()) {
-            $user_lang = 'Français';
-            $user_lang_lg = 'fr';
-        } else {
-            $lang = $this->getDoctrine()->getRepository(Lang::class)
-                    ->find($this->getUser()->getLangId());
-            $user_lang = html_entity_decode($lang->getName(), ENT_QUOTES, 'UTF-8');
-            $user_lang_lg = $lang->getLang();
-        }
-        
-        // Get Contribs count
-        $situs = $this->situService->countSitusByUser($this->getUser()->getId());
-        
         // Get Contribs count by lang
         $situsLangs = $this->situService
                 ->countSitusByLangByUser($this->getUser()->getId());
         
-        // Get Contribs translated count
-        $situsTranslated = $this->situService
-                ->countSitusTranslatedByLangByUser($this->getUser()->getId());
-        
         return $this->render('front/user/account/profile/index.html.twig', [
             'user' => $user,
-            'user_lang' => $user_lang,
-            'user_lang_lg' => $user_lang_lg,
-            'situs' => $situs,
             'situsLangs' => $situsLangs,
-            'situsTranslated' => $situsTranslated,
         ]);
     }
 
@@ -97,17 +75,7 @@ class UserController extends AbstractController
         // User image
         $currentImage = $this->getUser()->getImageFilename();
         
-        // Optional lang choices
-        $langs = $this->langService->getLangsEnabledOrNot(1);
-        
-        // Translation contrib choices
-        $contribLangs = $this->langService->getLangsEnabledOrNot(0);
-        
         if ($form->isSubmitted() && $form->isValid()) {
-            
-            $langid = $form['langId']->getData();
-            $userLang = $em->getRepository(Lang::class)->find($langid);
-            $user->addLang($userLang);
             
             // Avatar
             $newImage = $form->get('imageFilename')->getData();
@@ -150,13 +118,10 @@ class UserController extends AbstractController
             }
             
             // Switch locale
-            $request_lang_id = $request->request->get('user_update_form')['langId'];
-            if ($request_lang_id == null) {
-                $user_lang = $this->getParameter('locale');
-            } else {
-                $lang = $em->getRepository(Lang::class)->find($request_lang_id);
-                $user_lang = $lang->getLang();
-            }
+            $requestLang = $request->request->get('user_update_form')['lang'];
+            
+            $lang = $em->getRepository(Lang::class)->find($requestLang);
+            $userLang = $lang->getLang();
             
             try {
                 $em->flush();
@@ -167,12 +132,12 @@ class UserController extends AbstractController
 
                 $msg = $this->translator->trans(
                     'account.update.flash.success', [],
-                    'user_messages', $locale = $user_lang
+                    'user_messages', $locale = $userLang
                     );
                 $this->addFlash('success', $msg);
 
                 return $this->redirectToRoute('user_account', [
-                    '_locale' => $user_lang
+                    '_locale' => $userLang
                 ]);
                         
             } catch (Exception $e) {
@@ -184,7 +149,7 @@ class UserController extends AbstractController
                 $this->addFlash('error', $msg.PHP_EOL.$e->getMessage());
 
                 return $this->redirectToRoute('user_update', [
-                    '_locale' => $user_lang
+                    '_locale' => $userLang
                 ]);
             }
             
@@ -192,8 +157,19 @@ class UserController extends AbstractController
         
         return $this->render('front/user/account/update.html.twig', [
             'user' => $user,
-            'langs' => $langs,
             'form' => $form->createView(),
+        ]);
+    }
+    
+
+    /**
+     * @Route("/ajaxLangEnabled", methods="GET|POST")
+     */
+    public function ajaxLangEnabled()
+    {
+        return $this->json([
+            'success' => true,
+            'langs' => $this->langService->getLangsEnabledOrNot(1)
         ]);
     }
     

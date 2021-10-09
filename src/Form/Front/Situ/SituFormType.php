@@ -48,8 +48,8 @@ class SituFormType extends AbstractType
         $user = $this->security->getUser();
         
         // Get User current lang
-        $usertLang = $this->langRepository->find($user->getLangId());
-        $GLOBALS['usertLangId'] = $user->getLangId();
+        $usertLang = $this->langRepository->find($user->getLang());
+        $GLOBALS['usertLangId'] = $user->getLang();
         
         // Get Events by locale and by user events
         $GLOBALS['events'] = $this->eventService->getByLangIdAndUserLangId($usertLang);
