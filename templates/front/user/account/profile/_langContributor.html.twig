@@ -1,12 +1,12 @@
 {% trans_default_domain 'user_messages' %}
 
-<div id="form-translation" class="mt-4"
+<div id="form-translation" class="mb-3"
      data-translation="{{ user.contributorLangs|length }}">
 {% if user.langContributor and user.contributorLangs %}
     <div class="row">
         <div class="col-lg-5 mb-3 text-secondary">
             <hr class="d-lg-none d-block mt-1 mb-3">
-            <p>{{ 'account.translator.file.title'|trans() }}</p>
+            <p>{{ 'account.translator.title'|trans() }}</p>
         </div>
         <div id="form-userFiles" class="col-lg-7">
             <p class="mb-0">
@@ -20,7 +20,7 @@
             </p>
             <ul id="contributorLangs" class="pl-0 line-11">
                 {% for lang in user.contributorLangs %}
-                    <li data-id="{{ lang.id }}" class="d-inline text-capitalize decode">{{ lang.name }}{% if not loop.last %}, {% endif %}</li>
+                    <li data-id="{{ lang.id }}" class="d-inline text-capitalize">{{ lang.name|raw }}{% if not loop.last %}, {% endif %}</li>
                 {% endfor %}
             </ul>
         </div>

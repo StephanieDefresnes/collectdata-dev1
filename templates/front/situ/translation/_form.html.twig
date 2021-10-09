@@ -7,7 +7,7 @@
             <div class="d-flex justify-content-center">
                 <h5 class="mb-2 pb-1">
                     {{ 'contrib.form.to'|trans() }}
-                    <span id="translateTo"></span>
+                    <span class="text-capitalize">{{ lang.name|raw }}</span>
                     <img src="{{ asset('img/flag/'~ lang.lang ~'.jpg') }}"
                          alt="{{ lang.lang }}" class="translation-flag mx-1 border">
                 </h5>

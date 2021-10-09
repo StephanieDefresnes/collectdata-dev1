@@ -7,6 +7,7 @@ use App\Entity\Lang;
 use App\Service\LangService;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
@@ -21,14 +22,18 @@ use Doctrine\ORM\EntityManagerInterface;
 class UserUpdateFormType extends AbstractType
 {
     private $em;
+    private $langService;
 
-    public function __construct(EntityManagerInterface $em,LangService $langService)
+    public function __construct(EntityManagerInterface $em, LangService $langService)
     {
         $this->em = $em;
+        $this->langService = $langService;
     }
     
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $langs = $this->em->getRepository(Lang::class)->findBy(['enabled' => 1]);
+        
         $builder
             ->add('imageFilename', FileType::class, [
                 'label' => 'account.image.label',
@@ -60,25 +65,33 @@ class UserUpdateFormType extends AbstractType
                     ]),
                 ],
             ])
-            ->add('langId', HiddenType::class, [
+            ->add('lang', ChoiceType::class, [
+                'required' => false,
                 'label' => 'label_dp.lang',
+                'choices' => $langs,
+                'choice_label' => function ($lang) {
+                    return html_entity_decode($lang->getName(), ENT_QUOTES, 'UTF-8');
+                },
+                'choice_value' => function (?Lang $lang) {
+                    return $lang ? $lang->getId() : '';
+                },
+                'attr' => [
+                    'class' => 'select-single',
+                    'data-val' => '',
+                ],
             ])
             ->add('langs', EntityType::class, [
                 'required' => false,
                 'class' => Lang::class,
                 'label' => 'account.lang.option',
                 'multiple' => true,
-                'choice_label' => 'name',
-                'choices' => $langs = $this->em->getRepository(Lang::class)->findBy(['enabled' => 1]),
-                'attr' => [
-                    'class' => 'select-multiple'
-                ],
-                'choice_attr' => function($choice, $key, $value) {
-                    return [
-                        'class' => 'decode',
-                        'data-id' => $value,
-                    ];
+                'choices' => $langs,
+                'choice_label' => function ($lang) {
+                    return html_entity_decode($lang->getName(), ENT_QUOTES, 'UTF-8');
                 },
+                'attr' => [
+                    'class' => 'form-control select-multiple'
+                ],
             ])
             ->add('langContributor', CheckboxType::class, [
                 'required' => false,
@@ -93,14 +106,13 @@ class UserUpdateFormType extends AbstractType
                 'class' => Lang::class,
                 'label' => 'account.translator.translate',
                 'multiple' => true,
-                'choice_label' => 'name',
-                'choices' => $langs = $this->em->getRepository(Lang::class)->findBy(['enabled' => 0]),
+                'choices' => $this->em->getRepository(Lang::class)->findBy(['enabled' => 0]),
+                'choice_label' => function ($lang) {
+                    return html_entity_decode($lang->getName(), ENT_QUOTES, 'UTF-8');
+                },
                 'attr' => [
                     'class' => 'form-control select-multiple'
                 ],
-                'choice_attr' => function($choice, $key, $value) {
-                    return ['class' => 'decode'];
-                },
             ])
         ;
     }

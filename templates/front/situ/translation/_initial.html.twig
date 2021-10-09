@@ -6,7 +6,7 @@
         <div class="d-flex justify-content-center">
             <h5 class="mb-2 pb-1">
                 {{ 'contrib.form.from'|trans() }}
-                <span class="decode">{{ situ.lang.name }}</span>
+                <span class="text-capitalize">{{ situ.lang.name|raw }}</span>
                 <img src="{{ asset('img/flag/'~ situ.lang.lang ~'.jpg') }}"
                      alt="{{ situ.lang.lang }}" class="translation-flag mx-1 border">
             </h5>

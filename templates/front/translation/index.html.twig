@@ -34,7 +34,7 @@
                                     <th class="px-3">{{ 'translation.table.environment'|trans() }}</th>
                                     <th class="px-3">{{ 'status.date_creation'|trans() }}</th>
                                     {% for lang in app.user.contributorLangs %}
-                                        <th class="px-3 text-center decode">{{ lang.name }}</th>
+                                        <th class="px-3 text-center">{{ lang.name|raw }}</th>
                                     {% endfor %}
                                     <th></th>
                                 </tr>

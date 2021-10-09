@@ -55,29 +55,33 @@
                         </span>                                
                      </div>
 
-                    {% if user.langs %}
+                    
                     <div class="row mb-lg-2 mb-3">
                         <span class="col-lg-5 text-secondary">
-                            {% if user.langs|length > 1 %}
+                            {% if user.langs|length > 0 %}
                                 {{ 'label_dp.lang_s'|trans() }}
                             {% else %}
                                 {{ 'label_dp.lang'|trans() }}
                             {% endif %}
                         </span>
-                        <span class="col-md-7 first-letter list-inline">
-                            {% for lang in user.langs %}
-                            <span class="text-capitalize decode">{{ lang.name }}</span>
-                            {% endfor %}
+                        <span class="col-md-7 list-inline text-capitalize">
+                            {{ user.lang.name|raw }}{% if user.langs|length > 0 %},
+                                {% for lang in user.langs %}
+                                <span class="text-capitalize">
+                                    {{ lang.name|raw }}
+                                </span>
+                                {% endfor %}
+                            {% endif %}
                         </span>                                
                     </div>
-                    {% endif %}
+                    
 
-                    <div class="row mb-lg-2 mb-3">
+                    <div class="row mb-3">
                         <span class="col-lg-5 text-secondary">
                             {% if user.roles|length > 2 %}
-                                {{ 'status.title_s'|trans() }}
+                                {{ 'status.title_dp_s'|trans() }}
                             {% else %}
-                                {{ 'status.title'|trans() }}
+                                {{ 'status.title_dp'|trans() }}
                             {% endif %}
                         </span>
                         <span class="col-lg-7 line-11">
@@ -99,6 +103,7 @@
                     </div>
 
                     {{ include('front/user/account/profile/_contribs.html.twig') }}
+                    {{ include('front/user/account/profile/_langContributor.html.twig') }}
 
                 </div>
 

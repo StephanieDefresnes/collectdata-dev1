@@ -24,12 +24,6 @@ $(document).ready(function(){
         }
     })
     
-    
-    // UTF8 decode
-    $('body').find('.decode').each(function(){
-        $(this).html($(this).html($(this).html()).text()).text()
-    })
-    
     // Bootstrap tooltip
     $('body').find('[data-toggle="tooltip"]').tooltip()
     

@@ -16,11 +16,6 @@ $(document).ready(function(){
     $(window).resize(function () {
         if ($(window).width() >= 768) $('.sidebar .nav-item.active .collapse').collapse('show');
     });
-        
-    // UTF8 decode
-    $('body').find('.decode').each(function(){
-        $(this).html($(this).html($(this).html()).text()).text()
-    })
     
     // Bootstrap tooltip
     $('body').find('[data-toggle="tooltip"]').tooltip()

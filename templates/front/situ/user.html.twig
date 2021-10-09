@@ -58,12 +58,12 @@
                             
                             <td class="d-none">{{ situ.id }}</td>
                             
-                            <th class="first-letter pt-3 situ-title"
+                            <th class="text-capitalize pt-3 situ-title"
                                 scope="row" data-toggle="tooltip" data-placement="right" title="{{ situ.title }}">
                                 {{ situ.title|u.truncate(20, '...') }}
                             </th>
                             
-                            <td class="first-letter pt-3"
+                            <td class="text-capitalize pt-3"
                                 data-toggle="tooltip" data-placement="right" title="{{ situ.description }}">
                                 {{ situ.description|u.truncate(20, '...') }}
                             </td>
@@ -73,23 +73,23 @@
                                 {{ situ.dateCreation|format_datetime('short', 'none', locale=locale) }}
                             </td>
                             
-                            <td class="first-letter pt-3"
+                            <td class="text-capitalize pt-3"
                                 data-toggle="tooltip" data-placement="right" title="{{ situ.event.title }}">
                                 {{ situ.event.title|u.truncate(20, '...') }}
                             </td>
                             
-                            <td class="first-letter pt-3"
+                            <td class="text-capitalize pt-3"
                                 data-toggle="tooltip" data-placement="right" title="{{ situ.categoryLevel1.title }}">
                                 {{ situ.categoryLevel1.title|u.truncate(20, '...') }}
                             </td>
                             
-                            <td class="first-letter pt-3"
+                            <td class="text-capitalize pt-3"
                                 data-toggle="tooltip" data-placement="right" title="{{ situ.categoryLevel2.title }}">
                                 {{ situ.categoryLevel2.title|u.truncate(20, '...') }}
                             </td>
                             
                             <td class="pt-3">
-                                <span class="decode first-letter">{{ situ.lang.name }}</span>
+                                <span class="text-capitalize">{{ situ.lang.name|raw }}</span>
                                 {% if situ.initialSitu == 0 %}
                                     <span class="small"><i class="fas fa-globe "></i></span>
                                 {% endif %}
@@ -202,16 +202,16 @@
                     </div>
                     <div class="modal-body text-secondary pb-4">
                         <p class="mb-1">{{ 'contrib.translation.modal.text'|trans() }}</p>
-                        <p data-id="" class="situ-title text-center font-weight-bold first-letter"></p>
+                        <p data-id="" class="situ-title text-center font-weight-bold text-capitalize"></p>
                         <div class="row mt-4 mb-2">
-                            <div class="col-md-6 offset-md-3">
+                            <div class="col-md-6 offset-md-3 text-capitalize">
                                 <select id="translateLangs" class="form-control">
                                     <option value="" class="d-none">
                                         {{ 'multiple_search'|trans() }}
                                     </option>
                                     {% for lang in app.user.langs %}
-                                        <option class="decode" value="{{ lang.id }}">
-                                            {{ lang.name }}
+                                        <option value="{{ lang.id }}">
+                                            {{ lang.name|raw }}
                                         </option>
                                     {% endfor %}
                                 </select>

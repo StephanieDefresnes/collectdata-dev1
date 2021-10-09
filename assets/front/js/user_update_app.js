@@ -4,14 +4,55 @@ import 'select2/src/scss/core.scss';
 
 require('select2')
 
-// js
-$(function() {
-    
-    // Init select2 to multpiple
-    $('.select-multiple').select2({
+function setMultiSelect(select) {
+    select.select2({
         placeholder: translations['multiple-search'],
         allowClear: true,
         width: 'resolve'
+    })
+}
+
+function removeLangtoOptions(value) {
+    $('#user_update_form_langs').find('option').each(function(){
+        if ($(this).val() == value) $(this).remove()
+    })
+}
+    
+// Replace new current lang by old into optional langs
+function unSelectLocal(previousValue, newValue) {
+    // Get enabled langs
+    $.ajax({
+        url: '/'+ path["locale"] +'/ajaxLangEnabled',
+        method: 'POST',
+        success: function(data) {
+
+            // Destroy langs select2
+            $('#user_update_form_langs').select2('destroy')
+
+            // Remove new current lang into langs choices
+            removeLangtoOptions(newValue)
+
+            // Add previous current lang into langs choices
+            let langs = data['langs']
+            for (var i = 0; i < langs.length; i++) {
+                if (langs[i]['id'] == previousValue) {
+                    let option = '<option value="'+ langs[i]['id'] +'">'+ langs[i]['name'] +'</option>'
+                    $('#user_update_form_langs').append(option)
+                }
+            }
+
+            // Set langs select2
+            setMultiSelect($('#user_update_form_langs'))
+        }
+    })
+}
+
+// js
+$(function() {
+    
+    // Init select2 to multiple
+    $.when(setMultiSelect($('.select-multiple'))).done(function() {
+        $('#loader').hide()
     })
     
     // Init select2 to single
@@ -20,97 +61,36 @@ $(function() {
         width: 'resolve'
     });
 
-    // Remove User lang form Oprional langs
-    $('#user_update_form_langs').find('option').each(function(){
-        if ($(this).val() == '' 
-         || $(this).val() == $('#select_user_langId').find("option:selected").val()) {
-            $(this).remove()
-        }
+    // Remove User current lang form optional langs
+    removeLangtoOptions($('#user_update_form_lang').val())
+        
+    /*
+     * Toggle optional langs depending on user locale
+     */
+    // Save value before change
+    $('#select2-user_update_form_lang-container').on('click', function () {
+        $('#user_update_form_lang').attr('data-val',$('#user_update_form_lang').val())
     })
     
-    // Unselect optional lang if is locale
-    function unSelectLocal(newLangName) {
-        $('body').find('.select2-selection__choice').each(function(){
+    $('#user_update_form_lang').change(function() {
+        let newLangName = $('#select2-user_update_form_lang-container').attr('title')
+        
+        $('#select2-user_update_form_langs-container').find('li').each(function(){
             if ($(this).attr('title') == newLangName) $(this).find('button').click()
-            $('#select_user_langId').focus()
         })
-    }
-        
-    // Toggle optional langs depending on user locale
-    var previousLangName,previousLangID;
-    $('#select_user_langId').on('focusin', function () {
-        
-        // Get locale before change
-        previousLangName = $(this).find('option:selected').text()
-        previousLangID = $(this).find('option:selected').attr('value');
-        
-    }).change(function() {
-        
-        var previousLang = '<option value ="'+previousLangID+'" '
-                +'data-id ="'+previousLangID+'">'+previousLangName+'</option>'
-        
-        // Get locale after change
-        var newLangName = $(this).find('option:selected').text()
-        var newLangID = $(this).val();
-        
-        // Set new locale user
-        $('#user_update_form_langId').val(newLangID);
-        
-        if ((previousLangID == 47 && newLangID == '')
-         || (previousLangID == '' && newLangID == 47)) {
-            // If previous fr or default and new default or fr
-            // Remove or unselect 47 from optional langs
-            unSelectLocal('français')
-            $('#user_update_form_langs option').each(function(){
-                if ($(this).attr('data-id') == 47) {
-                    $(this).remove()
-                }
-            })
-        } else if ((previousLangID == '' || previousLangID == 47)
-                && (newLangID != '' || newLangID != 47)) {
-            // If previous fr or default and new not default nor fr
-            // Unselect new from optional langs
-            // Add 47 and remove new from optional langs
-            unSelectLocal(newLangName)
-            $('#user_update_form_langs')
-                    .prepend('<option value ="47" data-id ="47">français</option>')
-                    .find('option').each(function(){
-                        if ($(this).attr('data-id') == newLangID) {
-                            $(this).remove()
-                        }
-                    })
-        } else if ((previousLangID != '' || previousLangID != 47)
-              && (newLangID == '' || newLangID == 47) ){
-            // If previous not fr nor default and new default or fr
-            // Unselect fr from optional langs
-            // Add previous and remove fr from optional langs
-            unSelectLocal(newLangName)
-            $('#user_update_form_langs').prepend(previousLang)
-                    .find('option').each(function(){
-                        if ($(this).attr('data-id') == 47) {
-                            $(this).remove()
-                        }
-                    })
-        } else {
-            // Unselect and remove new from optional langs
-            // Add previous into optional langs
-            unSelectLocal(newLangName)
-            $('#user_update_form_langs').prepend(previousLang)
-                    .find('option').each(function(){
-                        if ($(this).attr('data-id') == newLangID) {
-                            $(this).remove()
-                        }
-                    })
-        }
+        unSelectLocal($(this).attr('data-val'),$(this).val())
+        $('#user_update_form_langs').select2('close')
+        $(this).blur()
     });
 
-    // Toggle contributorLangs
+    /*
+     * Toggle contributorLangs
+     */
     if ($('#user_update_form_langContributor').is(':checked')) {
         $('#contributorLangs').removeClass('d-none').css('opacity', 1)
     } else {
         $('#contributorLangs').addClass('d-none').css('opacity', 0)
     }
-    
     $('#user_update_form_langContributor').bind('click', function() {
         if ($(this).is(':checked') && $('#contributorLangs').hasClass('d-none')) {
             $('#contributorLangs').removeClass('d-none').animate({opacity: 1},250)
@@ -119,6 +99,9 @@ $(function() {
         }  
     })
     
+    /*
+     * Avatar
+     */
     // Add avatar
     $('.img-circle').click(function() {
         $('.custom-file-input').click()
@@ -138,7 +121,7 @@ $(function() {
         }
     })
     
-    // TODO in ajax    
+    // Change avatar, toggle anonymous/file user   
     $('.unupload-img').click(function() {
         $(this).addClass('d-none')
         if (!$(this).hasClass('no-img')) $('.delete-img').removeClass('d-none')

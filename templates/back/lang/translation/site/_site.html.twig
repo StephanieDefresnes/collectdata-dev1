@@ -123,7 +123,7 @@
                         <select class="form-control" id="siteLang">
                             <option>{{ 'action.select'|trans() }}</option>
                             {% for lang in user.langs %}
-                                <option value="{{ lang.id }}" class="decode">{{ lang.name }}</option>
+                                <option value="{{ lang.id }}">{{ lang.name|raw }}</option>
                             {% endfor %}
                         </select>
                     </div>

@@ -1,85 +1,46 @@
 {% trans_default_domain 'user_messages' %}
+{% set countSitus = 0 %}
+{% for situ in app.user.situs %}
+    {% if situ.statusId == 3 %}
+        {% set countSitus = countSitus + 1 %}
+    {% endif %}
+{% endfor %}
 
-<div class="row mb-lg-2 mb-3">
+
+
+<div class="row mb-3">
     <div class="col-lg-5 text-secondary">
         {{ 'account.contribs.title'|trans() }}
     </div>
     <div class="col-lg-7">
-        <div class="mb-4">
-            <p class="mb-0">
-            {% if situs ==  0 %}
-                {{ 'account.contribs.empty'|trans() }}
-            {% elseif situs == 1 %}
-                {{ situs }} {{ 'account.contribs.count'|trans() }}
-            {% else %}
-                {{ situs }} {{ 'account.contribs.count_s'|trans() }}
-            {% endif %}
-            </p>
-            {% if situsLangs|length > 1 %}
-                {% for situ in situsLangs %}
-                    {% if situ.translatedSituId == '' %}
-                    <p class="mb-0 row">
-                        <span class="col-4">
-                            <span class="text-secondary text-capitalize">{{ situ.langName }} :</span>
-                        </span>
-                        <span class="col-7">
-                            {{ situ.situs }}
-                            {% if situ.situs  == 1 %}
-                                {{ 'account.contribs.count'|trans() }}
-                            {% else %}
-                                {{ 'account.contribs.count_s'|trans() }}
-                            {% endif %}
-                        </span>
-                    </p>
-                    {% endif %}
-                {% endfor %}
-            {% endif %}
-            
-            {% if situsTranslated %}
-                
-                <p class="mt-2 mb-0 text-secondary">
-                    {% if situsTranslated|length == 1 %}
-                        {{ 'label_dp.translation'|trans() }}
+        <p class="mb-1">
+        {% if countSitus ==  0 %}
+            {{ 'account.contribs.empty'|trans() }}
+        {% else %}
+            {{ countSitus }}
+            {{ countSitus == 1
+                    ? 'account.contribs.count'|trans()
+                    : 'account.contribs.count_s'|trans() }}
+        {% endif %}
+        </p>
+
+        {% if situsLangs|length > 1 %}
+            {% for lang in situsLangs %}
+            <p class="mb-0 row">
+                <span class="col-4">
+                    <span class="text-secondary text-capitalize">{{ lang.langName }} :</span>
+                </span>
+                <span class="col-7">
+                    {{ lang.situs }}
+                    {% if lang.situs  == 1 %}
+                        {{ 'account.contribs.count'|trans() }}
                     {% else %}
-                        {{ 'label_dp.translation_s'|trans() }}
+                        {{ 'account.contribs.count_s'|trans() }}
                     {% endif %}
-                </p>
-                
-                {% for situ in situsTranslated %}
-                    <p class="mb-0 row">
-                        <span class="col-4">
-                            <span class="text-secondary text-capitalize">{{ situ.langName }} :</span>
-                        </span>
-                        <span class="col-7">
-                            {{ situ.situs }}
-                            {% if situ.situs  == 1 %}
-                                {{ 'account.contribs.count'|trans() }}
-                            {% else %}
-                                {{ 'account.contribs.count_s'|trans() }}
-                            {% endif %}
-                        </span>
-                    </p>
-                {% endfor %}
-            {% endif %}
-            
-        </div>
-        
-        {% if user.langContributor and user.contributorLangs|length > 0 %}
-            <p class="mb-0">
-                <span class="d-inline text-secondary">
-                {% if user.contributorLangs|length == 1 %}
-                    {{ 'account.translator.choice'|trans() }}
-                {% else %}
-                    {{ 'account.translator.choice_s'|trans() }}
-                {% endif %}
                 </span>
             </p>
-            <ul id="contributorLangs" class="pl-0">
-            {% for lang in user.contributorLangs %}
-                <li data-id="{{ lang.id }}" class="d-inline text-capitalize decode">{{ lang.name }}{% if not loop.last %}, {% endif %}</li>
             {% endfor %}
-            </ul>
         {% endif %}
-        
+
     </div>                                
 </div>
