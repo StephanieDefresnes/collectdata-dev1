@@ -80,7 +80,7 @@ function changeEvent(selectId) {
 }
 
 // Show field with effect on action change
-function showField(id, classes) {
+function removeClass(id, classes) {
     if (id.hasClass(classes))
         id.removeClass(classes).children().animate({ opacity: 1}, 250)
 }
@@ -142,8 +142,8 @@ function loadOrCreateData($form, data, selectId, nextSelectId) {
                 else if ($(selectId).attr('id') == 'situ_form_event')
                     toggleAddingButton('.colData', 'hide')
                 
-                showField($('#categoryLevel1, #categoryLevel2'), 'd-none') 
-                showField($('#categoryLevel1, #categoryLevel2'), 'on-load')
+                removeClass($('#categoryLevel1, #categoryLevel2'), 'd-none') 
+                removeClass($('#categoryLevel1, #categoryLevel2'), 'on-load')
                 
             } else {
             // If options select exist
@@ -406,6 +406,10 @@ function checkScores(newValue, oldValue) {
 
 // Check selected SituItems when updating Situ
 function updateSitu() {
+
+    // Show all card sections
+    $('#event, #categoryLevel1, #categoryLevel2, .card-body, .card-footer')
+            .removeClass('d-none').animate({ opacity: 1}, 250)
     
     // Hide header loader
     $('.formData').each(function() {
@@ -428,6 +432,7 @@ function updateSitu() {
             values.push($(this).val())
         })
         
+        // Check SituItems scores
         collectionHolder.find('select').each(function() {
             $(this).addClass('selection-on')
             
@@ -441,14 +446,22 @@ function updateSitu() {
                 else if ($(this).val() == '')
                     $(this).text(translations['scoreLabelAlt'])
             })
-
+            
+            // Allow updating placeholder on change
+            togglePlaceholder($(this), $(this).val())
+        })
+        
+        // Add class to SituItems scores
+        addPlaceholderClass('')
+        
+        // Allow management SituItems score changes
+        newScore()
+        
+        // Allow remove SituItems
+        $('.removeSituItem').each(function() {
+            removeSituItem($(this))
         })
     }
-    
-    // Allow remove SituItems
-    $('.removeSituItem').each(function() {
-        removeSituItem($(this))
-    })
     
     // Add button display
     if (collectionHolder.find('.situItem').length == 4) $('#add-situItem').hide()
@@ -588,11 +601,6 @@ $(function() {
     
     $('#loader').hide()
     
-    // When update Situ
-    if ($('#situ').attr('data-id') != '') {
-        updateSitu()
-    }
-    
     $('.card-header').find('select').each(function() {
         unvalidatedOption(this)
         initSelect2($(this))
@@ -601,13 +609,16 @@ $(function() {
                 .addClass('selection-on')
     })
     
-    // Show fields if no event exist on locale
-    if (!$('#situ_form_event').is('select')) {
-        showField($('#categoryLevel1'), 'd-none on-load') 
-        showField($('#categoryLevel2'), 'd-none on-load') 
+    // When update Situ
+    if ($('#situ').attr('data-id') != '') {
+        updateSitu()
+    }
+    // Create SituItem once required
+    else {
+        addSituItem()
     }
     
-    // Hide adding data button if data must have to be created (choices empty)
+    // Hide adding events/categories button if must have to be created (choices empty)
     $('.colDataLang').each(function(){
         if (!$(this).children().is('select')) $(this).next().find('.btnAdd').hide()
     })
@@ -673,10 +684,12 @@ $(function() {
     } else {
         $('.colBtn').each(function(){ $(this).hide() })
         $('.formData').each(function(){
-            $(this).removeClass('d-none')
             $(this).find('.pointer').removeClass('pointer')
             $(this).find('.infoCollapse ').each(function(){ $(this).remove() })
         })
+        removeClass($('#event'), 'd-none on-load') 
+        removeClass($('#categoryLevel1'), 'd-none on-load') 
+        removeClass($('#categoryLevel2'), 'd-none on-load') 
     }
     
     // Show card-body if create categoryLevel2
@@ -686,7 +699,7 @@ $(function() {
         }
     })
     
-    // Toogle Add / Select data
+    // Add or Select Event & Categories
     $('form').on('click', '#add-event-btn, #add-categoryLevel1-btn, '+
             '#add-categoryLevel2-btn', function() {
         let objFields = toggleFields($(this).attr('data-id'))
@@ -802,17 +815,5 @@ $(function() {
             $('#form-error').css('opacity', 0).empty().append(error).animate({ opacity: 1}, 250)
         }
     })
-    
-    /**
-     * Update situ
-     */
-    if ($('#situ').attr('data-id') != '') {
-        $('#event, #categoryLevel1, #categoryLevel2, .card-body, .card-footer')
-                .removeClass('d-none').animate({ opacity: 1}, 250)
-        addPlaceholderClass('')
-    } else {
-        // If create init once required
-        addSituItem()
-    }
     
 })
