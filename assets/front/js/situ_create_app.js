@@ -404,6 +404,56 @@ function checkScores(newValue, oldValue) {
     })
 }
 
+// Check selected SituItems when updating Situ
+function updateSitu() {
+    
+    // Hide header loader
+    $('.formData').each(function() {
+        if ($(this).hasClass('on-load') && $(this).find('select').val() != '')
+            $(this).removeClass('on-load')
+    })
+    
+    // Show collapsed
+    if ($('#situ').attr('data-id') != '') {
+        $('.infoCollapse').each(function() {
+            if ($(this).hasClass('d-none')) $(this).removeClass('d-none')
+        })
+    }
+    
+    // Check SituItems
+    if (collectionHolder.find('.situItem').length > 1) {
+        let values = []
+        
+        collectionHolder.find('select').each(function() {
+            values.push($(this).val())
+        })
+        
+        collectionHolder.find('select').each(function() {
+            $(this).addClass('selection-on')
+            
+            let value = $(this).val()
+            
+            $(this).find('option').each(function() {
+                if ($(this).val() == value)
+                    $(this).addClass('selected')
+                else if (values.includes($(this).val()))
+                    $(this).addClass('bg-readonly').prop('disabled', true)
+                else if ($(this).val() == '')
+                    $(this).text(translations['scoreLabelAlt'])
+            })
+
+        })
+    }
+    
+    // Allow remove SituItems
+    $('.removeSituItem').each(function() {
+        removeSituItem($(this))
+    })
+    
+    // Add button display
+    if (collectionHolder.find('.situItem').length == 4) $('#add-situItem').hide()
+}
+
 // Delete situItem with confirm alert
 function removeSituItem(button) {
     let divItem = button.parents('.situItem')
@@ -527,11 +577,9 @@ function createOrUpdateSitu(dataForm) {
         url: "/"+ path['locale'] +"/situ/ajaxCreate",
         method: 'POST',
         data: {dataForm},
-        success: function() {
-            location.href = '/'+ path["locale"] +'/my-contribs'
-        },
-        error: function() {
-            location.reload();
+        success: function(data) {
+            if (data.success) location.href = '/'+ path["locale"] +'/my-contribs'
+            else location.reload()
         }
     })
 }
@@ -540,49 +588,17 @@ $(function() {
     
     $('#loader').hide()
     
-    // Hide header loader (when update Situ)
-    $('.formData').each(function() {
-        if ($(this).hasClass('on-load') && $(this).find('select').val() != '')
-            $(this).removeClass('on-load')
-    })
-    
-    // Show collapsed (when update Situ)
+    // When update Situ
     if ($('#situ').attr('data-id') != '') {
-        $('.infoCollapse').each(function() {
-            if ($(this).hasClass('d-none')) $(this).removeClass('d-none')
-        })
+        updateSitu()
     }
     
     $('.card-header').find('select').each(function() {
+        unvalidatedOption(this)
         initSelect2($(this))
-        // When update situ
+        // When update Situ
         $(this).parent().find('.select2-selection__rendered')
                 .addClass('selection-on')
-    })
-    
-    // When update situ
-    collectionHolder.find('select').each(function() {
-        $(this).addClass('selection-on')
-        let value = $(this).val()
-        $(this).find('option').each(function() {
-            if ($(this).val() != value && $(this).val() != '')
-                $(this).addClass('bg-readonly').prop('disabled', true)
-            else if ($(this).val() == '')
-                $(this).text(translations['scoreLabelAlt'])
-            else if ($(this).val() == value)
-                $(this).addClass('selected')
-        })
-    })
-    if (collectionHolder.find('.situItem').length == 4) $('#add-situItem').hide()
-    
-    // Remove SituItem from existing collection (when update Situ)
-    $('.removeSituItem').each(function() {
-        removeSituItem($(this))
-    })
-
-    // Load translation if need
-    $('body').find('select').each(function() {
-        unvalidatedOption(this)
     })
     
     // Show fields if no event exist on locale
