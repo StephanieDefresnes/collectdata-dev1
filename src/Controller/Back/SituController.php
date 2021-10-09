@@ -130,7 +130,7 @@ class SituController extends AbstractController
             $categoriesLevel2 = $this->em->getRepository(Category::class)
                         ->findBy(['parent' => $situ->getCategoryLevel1()->getId()]);
         
-            $author = $this->em->getRepository(User::class)->find($situ->getUserId());
+            $author = $this->em->getRepository(User::class)->find($situ->getUser());
             $authorLang = $this->em->getRepository(Lang::class)->find($author->getLangId());
         }
         

@@ -23,7 +23,7 @@ class SituService {
     {
         $query = $this->em->createQueryBuilder()
             ->from(Situ::class,'situ')
-            ->andWhere('situ.userId = ?1')
+            ->andWhere('situ.user = ?1')
             ->andWhere('situ.statusId = ?2')
             ->setParameter(1, $userId)
             ->setParameter(2, 3)
@@ -41,9 +41,9 @@ class SituService {
                         lang.name               langName')
             ->leftJoin(Lang::class, 'lang', 'WITH', 'situ.lang=lang.id')
             ->groupBy('lang.id')
-            ->andWhere('situ.userId = ?1')
+            ->andWhere('situ.user = ?1')
             ->andWhere('situ.statusId = ?2')
-            ->setParameter(1, $userId)
+            ->setParameter(1, $user)
             ->setParameter(2, 3);
         
         $situs = $situs = $query->getQuery()->getScalarResult();
@@ -68,7 +68,7 @@ class SituService {
                         lang.name       langName')
             ->leftJoin(Lang::class, 'lang', 'WITH', 'situ.lang=lang.id')
             ->groupBy('lang.id')
-            ->andWhere('situ.userId = ?1')
+            ->andWhere('situ.user = ?1')
             ->andWhere('situ.statusId = ?2')
             ->andWhere('situ.translatedSituId IS NOT NULL')
             ->setParameter(1, $userId)

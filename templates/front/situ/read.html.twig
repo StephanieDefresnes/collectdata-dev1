@@ -23,10 +23,10 @@
                     {% elseif situ.statusId == 2 %}
                         {{ 'status.validation'|trans() }}
                     {% elseif situ.statusId == 4 and situ.initialSitu == 1
-                            and app.user.id == situ.userId %}
+                            and app.user.id == situ.user.id %}
                         {{ 'status.refused'|trans() }}
                     {% elseif situ.statusId == 4 and situ.initialSitu == 0
-                            and app.user.id == situ.userId %}
+                            and app.user.id == situ.user.id %}
                         {{ 'status.translation_refused'|trans() }}
                     {% elseif situ.statusId == 5 %}
                         {{ 'status.deleted'|trans() }}
@@ -100,7 +100,7 @@
                             {{ situItem.description|capitalize }}
                         </div>
                         {% endif %}
-                        {% if (app.user.id == situ.userId or is_granted('ROLE_MODERATOR')) and situItem.score != 0 %}
+                        {% if (app.user.id == situ.user.id or is_granted('ROLE_MODERATOR')) and situItem.score != 0 %}
                             <div class="d-flex justify-content-start h5 mt-4 mb-2 text-info font-weight-bold">
                             {% if situItem.score == 1 %}
                                 <span class="text-info">{{ 'contrib.form.item.score.info'|trans()~' :' }}</span>
@@ -122,7 +122,7 @@
 
             </div>
                 
-            {% if app.user.id == situ.userId %}
+            {% if app.user.id == situ.user.id %}
                 <div class="d-flex justify-content-end">
                     <a href="{{ path('create_situ', { 'id': situ.id }) }}" class="btn btn-secondary px-4 py-2">
                         {{ 'action.edit'|trans() }}

@@ -59,9 +59,9 @@ class Situ
     private $dateDeletion;
 
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="situs", fetch="EAGER")
      */
-    private $userId;
+    private $user;
 
     /**
      * @ORM\Column(type="integer")
@@ -209,14 +209,14 @@ class Situ
         return $this;
     }
 
-    public function getUserId(): ?int
+    public function getUser(): ?User
     {
-        return $this->userId;
+        return $this->user;
     }
 
-    public function setUserId(int $userId): self
+    public function setUser(?User $user): self
     {
-        $this->userId = $userId;
+        $this->user = $user;
 
         return $this;
     }

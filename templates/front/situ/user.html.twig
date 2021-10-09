@@ -26,9 +26,9 @@
     {% endblock %}
 
     <div class="card card bg-secondary-50">
-        <div id="situs" class="card-body text-white front-dataTable" data-empty="{{ situs is empty ? 'yes' }}">
+        <div id="situs" class="card-body text-white front-dataTable" data-empty="{{ app.user.situs is empty ? 'yes' }}">
 
-            {% if situs is empty %}
+            {% if app.user.situs is empty %}
             <div class="mb-5 p-3 bg-white-70 text-secondary">
                 {{ 'account.contribs.empty'|trans() }}
             </div>
@@ -48,11 +48,11 @@
                         <th class="cust-nowrap p-2 no-sort">{{ 'action.actions'|trans() }}</th>
                         <th class="no-sort"></th>
                         <th class="no-sort"></th>
-                        {% if userLangs|length > 1 %}<th class="no-sort"></th>{% endif %}
+                        {% if app.user.langs|length > 1 %}<th class="no-sort"></th>{% endif %}
                     </tr>
                 </thead>
                 <tbody class="small bg-white-80">
-                {% for situ in situs %}
+                {% for situ in app.user.situs %}
                     {% if situ.statusId != 5 %}
                         <tr data-id="{{ situ.id }}">
                             
@@ -126,7 +126,7 @@
                                 </td>
                             {% endif %}
                             
-                            {% if userLangs|length > 1 %}
+                            {% if app.user.langs|length > 1 %}
                                 <td class="width-max-26 pl-0 pr-2">
                                     {% if situ.initialSitu == 1 %}
                                         <span class="situTranslate btn btn-outline-primary btn-sm px-1"
@@ -190,7 +190,7 @@
         </div>
     </div>
 
-    {% if userLangs|length > 1 %}
+    {% if app.user.langs|length > 1 %}
         <div class="modal fade" id="translateModal" data-backdrop="static" data-keyboard="false"
              tabindex="-1" aria-labelledby="translateModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered">
@@ -209,9 +209,9 @@
                                     <option value="" class="d-none">
                                         {{ 'multiple_search'|trans() }}
                                     </option>
-                                    {% for userLang in userLangs%}
-                                        <option class="decode" value="{{ userLang.id }}">
-                                            {{ userLang.name }}
+                                    {% for lang in app.user.langs %}
+                                        <option class="decode" value="{{ lang.id }}">
+                                            {{ lang.name }}
                                         </option>
                                     {% endfor %}
                                 </select>

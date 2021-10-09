@@ -117,6 +117,11 @@ class User implements UserInterface
      * @ORM\Column(type="boolean")
      */
     private $isVerified = false;
+
+    /**
+    * @ORM\OneToMany(targetEntity=Situ::class, cascade={"persist"}, mappedBy="user", fetch="EAGER")
+    */
+    protected $situs;
     
     protected $captcha;
 
@@ -124,6 +129,7 @@ class User implements UserInterface
     {
         $this->langs = new ArrayCollection();
         $this->contributorLangs = new ArrayCollection();
+        $this->situs = new ArrayCollection();
     }
 
     public function __toString()
@@ -452,6 +458,36 @@ class User implements UserInterface
     public function setCaptcha($captcha)
     {
       $this->captcha = $captcha;
+    }
+    
+    /**
+     * @return Collection|Situ[]
+     */
+    public function getSitus(): Collection
+    {
+        return $this->situs;
+    }
+     
+    public function addSitu(Situ $situ): self
+    {
+        if (!$this->situs->contains($situ)) {
+            $this->situs[] = $situ;
+            $situ->setUser($this);
+        }
+        
+        return $this;
+    }
+
+    public function removeSitu(Situ $situ): self
+    {
+        if ($this->situs->contains($situ)) {
+            $this->situs->removeElement($situ);
+            // set the owning side to null (unless already changed)
+            if ($situ->getUser() === $this) {
+                $situ->setUser(null);
+            }
+        }
+        return $this;
     }
     
 }

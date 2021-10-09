@@ -68,16 +68,7 @@ class SituController extends AbstractController
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
         $this->denyAccessUnlessGranted('ROLE_CONTRIBUTOR');
         
-        $user = $this->security->getUser();
-        $userLangs = $user->getLangs();
-        
-        $situs = $this->em->getRepository(Situ::class)
-                ->findBy(['userId' => $user->getId()]);
-        
-        return $this->render('front/situ/user.html.twig', [
-            'situs' => $situs,
-            'userLangs' => $userLangs,
-        ]);
+        return $this->render('front/situ/user.html.twig');
     }
     
     /**
@@ -97,7 +88,7 @@ class SituController extends AbstractController
             $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
             
             // Only Super-admin can read refused situ
-            if ($situ->getStatusId() == 4 && $situ->getUserId() != $user->getId()) {
+            if ($situ->getStatusId() == 4 && $situ->getUser() != $user->getId()) {
                 return $this->redirectToRoute('access_denied', [
                     '_locale' => locale_get_default(),
                     'code' => '18191',
@@ -113,7 +104,7 @@ class SituController extends AbstractController
             }
         }
         
-        $user = $this->em->getRepository(User::class)->find($situ->getUserId());        
+        $user = $this->em->getRepository(User::class)->find($situ->getUser());        
         
         return $this->render('front/situ/read.html.twig', [
             'situ' => $situ,
@@ -133,7 +124,7 @@ class SituController extends AbstractController
         $user = $this->security->getUser();
         
         // Only situ author can request situ validation 
-        if ($user->getId() != $situ->getUserId()) {
+        if ($user->getId() != $situ->getUser()) {
             return $this->redirectToRoute('access_denied', [
                 '_locale' => locale_get_default(),
                 'code' => '22181',
@@ -174,7 +165,7 @@ class SituController extends AbstractController
         $user = $this->security->getUser();
         
         // Only situ author can delete situ
-        if ($user->getId() != $situ->getUserId()) {
+        if ($user->getId() != $situ->getUser()) {
             return $this->redirectToRoute('access_denied', [
                 '_locale' => locale_get_default(),
                 'code' => '4191',
@@ -227,7 +218,7 @@ class SituController extends AbstractController
             }
         
             // Only situ author can update situ
-            if ($situ->getUserId() != $user->getId()) {
+            if ($situ->getUser() != $user->getId()) {
                 return $this->redirectToRoute('access_denied', [
                     '_locale' => locale_get_default(),
                     'code' => '21191',
@@ -338,12 +329,12 @@ class SituController extends AbstractController
             if (empty($data['id'])) {
                 $situ = new Situ();
                 $situ->setDateCreation($dateNow);
-                $situ->setUserId($userId); 
+                $situ->setUser($userId); 
             } else {
                 $situ = $this->em->getRepository(Situ::class)->find($data['id']);
 
                 // Only situ author can update situ
-                if ($userId != $situ->getUserId()) {
+                if ($userId != $situ->getUser()) {
                     return $this->redirectToRoute('access_denied', [
                         '_locale' => locale_get_default(),
                         'code' => '21191',
@@ -451,7 +442,7 @@ class SituController extends AbstractController
                     break;
             }
             $data->setTitle($dataEntity['title']);
-            $data->setUserId($userId);
+            $data->setUser($userId);
             $data->setValidated(0);
             $data->setLang($lang);
             $this->em->persist($data);
