@@ -291,7 +291,7 @@ class SituController extends AbstractController
         $defaultLang = $this->em->getRepository(Lang::class)
                 ->findOneBy(['lang' => $this->parameters->get('locale')]);
         
-        $userLang = $user->getLangId() == '' ? $defaultLang->getId() : $user->getLangId();
+        $userLang = $user->getLang() == '' ? $defaultLang->getId() : $user->getLang();
             
         // Get request data        
         if ($request->isXMLHttpRequest()) {
