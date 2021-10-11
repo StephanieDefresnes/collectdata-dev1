@@ -75,30 +75,16 @@ class SituController extends AbstractController
      */
     public function readSitu(Situ $situ): Response
     {
-        if (!$situ) {
-            return $this->redirectToRoute('no_found', ['_locale' => locale_get_default()]);
-        }
+        $notFoundRoute = $this->redirectToRoute('no_found', ['_locale' => locale_get_default()]);
         
-        // Current user
-        $user = $this->security->getUser();
+        if (!$situ) return $notFoundRoute;
         
         // Only user can read a contribution requested to validate (with preview mode)
         if ($situ->getStatusId() == 2 && isset($_GET['preview'])) {
-            if (!$user) {
-                return $this->redirectToRoute('access_denied', [
-                    '_locale' => locale_get_default(),
-                    'code' => '181922',
-                ]);
-            }
+            if (!$this->security->getUser()) return $notFoundRoute;
         }
         // None can read a contribution except validated
-        else if ($situ->getStatusId() != 3) {
-            return $this->redirectToRoute('access_denied', [
-                '_locale' => locale_get_default(),
-                'code' => '1819',
-            ]);
-        }
-        
+        else if ($situ->getStatusId() != 3) return $notFoundRoute;
         
         return $this->render('front/situ/read.html.twig', [
             'situ' => $situ,
@@ -123,11 +109,12 @@ class SituController extends AbstractController
                 'code' => '22181',
             ]);
         }
+        
+        $situ->setDateSubmission(new \DateTime('now'));
+        $situ->setStatusId(2);
+        $this->em->persist($situ);
             
         try {
-            $situ->setDateSubmission(new \DateTime('now'));
-            $situ->setStatusId(2);
-            $this->em->persist($situ);
             $this->em->flush();
 
             $this->mailer->sendModeratorSituValidate($situ);
@@ -169,10 +156,11 @@ class SituController extends AbstractController
             ]);
         }
             
+        $situ->setDateDeletion(new \DateTime('now'));
+        $situ->setStatusId(5);
+        $this->em->persist($situ);
+        
         try {
-            $situ->setDateDeletion(new \DateTime('now'));
-            $situ->setStatusId(5);
-            $this->em->persist($situ);
             $this->em->flush();
 
             $msg = $this->translator->trans(
@@ -222,7 +210,8 @@ class SituController extends AbstractController
             }
         
             // Only situ author can update situ
-            if ($situ->getUser() != $user) {
+            if (($situ->getStatusId() == 1 || $situ->getStatusId() == 3)
+                    && $situ->getUser() != $user) {
                 return $this->redirectToRoute('access_denied', [
                     '_locale' => locale_get_default(),
                     'code' => '21191',
