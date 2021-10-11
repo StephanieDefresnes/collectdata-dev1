@@ -7,9 +7,9 @@
 {% block stylesheets %}
     {{ parent() }}
     <link rel="stylesheet" href="{{ asset('jquery-confirm/css/jquery-confirm.css') }}">
-    {{ encore_entry_link_tags('flp_theme') }}
     {{ encore_entry_link_tags('situ_create_app', null, 'frontApp') }}
     {{ encore_entry_link_tags('situ_translation_app', null, 'frontApp') }}
+    {{ encore_entry_link_tags('app') }}
 {% endblock %}
 
 {% block content %}

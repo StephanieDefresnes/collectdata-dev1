@@ -9,8 +9,8 @@
 {% block stylesheets %}
     {{ parent() }}
     <link rel="stylesheet" href="{{ asset('jquery-confirm/css/jquery-confirm.css') }}">
-    {{ encore_entry_link_tags('flp_theme') }}
     {{ encore_entry_link_tags('page_edit_app', null, 'backApp') }}
+    {{ encore_entry_link_tags('app') }}
 {% endblock %}
 
 {% block content %}
