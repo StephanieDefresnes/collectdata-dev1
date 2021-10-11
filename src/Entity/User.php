@@ -133,6 +133,11 @@ class User implements UserInterface
     * @ORM\OneToMany(targetEntity=Category::class, cascade={"persist"}, mappedBy="user")
     */
     protected $categories;
+
+    /**
+    * @ORM\OneToMany(targetEntity=Translation::class, cascade={"persist"}, mappedBy="user")
+    */
+    protected $translations;
     
     protected $captcha;
 
@@ -558,6 +563,36 @@ class User implements UserInterface
             // set the owning side to null (unless already changed)
             if ($category->getUser() === $this) {
                 $category->setUser(null);
+            }
+        }
+        return $this;
+    }
+    
+    /**
+     * @return Collection|Translation[]
+     */
+    public function getTranslations(): Collection
+    {
+        return $this->categories;
+    }
+     
+    public function addTranslation(Translation $translation): self
+    {
+        if (!$this->translations->contains($translation)) {
+            $this->translations[] = $translation;
+            $translation->setUser($this);
+        }
+        
+        return $this;
+    }
+
+    public function removeTranslation(Translation $translation): self
+    {
+        if ($this->translations->contains($translation)) {
+            $this->translations->removeElement($translation);
+            // set the owning side to null (unless already changed)
+            if ($translation->getUser() === $this) {
+                $translation->setUser(null);
             }
         }
         return $this;

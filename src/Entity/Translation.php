@@ -37,14 +37,9 @@ class Translation
     private $referentId;
 
     /**
-     * @ORM\Column(type="string", length=2, nullable=true)
+     * @ORM\ManyToOne(targetEntity="App\Entity\Lang", inversedBy="translations", fetch="EAGER")
      */
     private $lang;
-
-    /**
-     * @ORM\Column(type="integer", nullable=true)
-     */
-    private $langId;
 
     /**
      * @ORM\Column(type="integer")
@@ -67,9 +62,9 @@ class Translation
     private $dateStatus;
 
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="translations", fetch="EAGER")
      */
-    private $userId;
+    private $user;
 
     /**
      * @ORM\OneToMany(
@@ -143,26 +138,14 @@ class Translation
         return $this;
     }
 
-    public function getLang(): ?string
+    public function getLang(): ?Lang
     {
         return $this->lang;
     }
 
-    public function setLang($lang): self
+    public function setLang(?Lang $lang): self
     {
         $this->lang = $lang;
-
-        return $this;
-    }
-
-    public function getLangId(): ?int
-    {
-        return $this->langId;
-    }
-
-    public function setLangId($langId): self
-    {
-        $this->langId = $langId;
 
         return $this;
     }
@@ -215,14 +198,14 @@ class Translation
         return $this;
     }
 
-    public function getUserId(): ?int
+    public function getUser(): ?User
     {
-        return $this->userId;
+        return $this->user;
     }
 
-    public function setUserId(int $userId): self
+    public function setUser(?User $user): self
     {
-        $this->userId = $userId;
+        $this->user = $user;
 
         return $this;
     }

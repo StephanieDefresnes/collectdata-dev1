@@ -65,6 +65,11 @@ class Lang
     */
     protected $situs;
 
+    /**
+    * @ORM\OneToMany(targetEntity=Translation::class, cascade={"persist"}, mappedBy="lang")
+    */
+    protected $translations;
+
     public function __construct()
     {
         $this->langUsers = new ArrayCollection();
@@ -235,6 +240,36 @@ class Lang
             // set the owning side to null (unless already changed)
             if ($situ->getLang() === $this) {
                 $situ->setLang(null);
+            }
+        }
+        return $this;
+    }
+
+    /**
+     * @return Collection|Translation[]
+     */
+    public function getTranslations(): ?Collection
+    {
+        return $this->situs;
+    }
+     
+    public function addTranslation(Translation $translation): self
+    {
+        if (!$this->translations->contains($translation)) {
+            $this->translations[] = $translation;
+            $translation->setLang($this);
+        }
+        
+        return $this;
+    }
+
+    public function removeTranslation(Translation $translation): self
+    {
+        if ($this->translations->contains($translation)) {
+            $this->translations->removeElement($translation);
+            // set the owning side to null (unless already changed)
+            if ($translation->getLang() === $this) {
+                $translation->setLang(null);
             }
         }
         return $this;
