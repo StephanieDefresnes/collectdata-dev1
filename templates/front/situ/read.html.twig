@@ -100,34 +100,38 @@
                             {{ situItem.description|capitalize }}
                         </div>
                         {% endif %}
-                        {% if (app.user.id == situ.user.id or is_granted('ROLE_MODERATOR')) and situItem.score != 0 %}
-                            <div class="d-flex justify-content-start h5 mt-4 mb-2 text-info font-weight-bold">
-                            {% if situItem.score == 1 %}
-                                <span class="text-info">{{ 'contrib.form.item.score.info'|trans()~' :' }}</span>
-                            {% elseif situItem.score == 2 %}
-                                <span class="text-warning">{{ 'contrib.form.item.score.warning'|trans()~' :' }}</span>
-                            {% elseif situItem.score == 3 %}
-                                <span class="text-danger">{{ 'contrib.form.item.score.danger'|trans()~' :' }}</span>
+                        {% if app.user %}
+                            {% if (app.user.id == situ.user.id or is_granted('ROLE_MODERATOR')) and situItem.score != 0 %}
+                                <div class="d-flex justify-content-start h5 mt-4 mb-2 text-info font-weight-bold">
+                                {% if situItem.score == 1 %}
+                                    <span class="text-info">{{ 'contrib.form.item.score.info'|trans()~' :' }}</span>
+                                {% elseif situItem.score == 2 %}
+                                    <span class="text-warning">{{ 'contrib.form.item.score.warning'|trans()~' :' }}</span>
+                                {% elseif situItem.score == 3 %}
+                                    <span class="text-danger">{{ 'contrib.form.item.score.danger'|trans()~' :' }}</span>
+                                {% endif %}
+                                </div>
+                                <div class="d-flex justify-content-start mb-2 font-weight-bold">
+                                    {{ situItem.title|capitalize }}
+                                </div>
+                                <div class="d-flex justify-content-start pb-3">
+                                    {{ situItem.description|capitalize }}
+                                </div>
                             {% endif %}
-                            </div>
-                            <div class="d-flex justify-content-start mb-2 font-weight-bold">
-                                {{ situItem.title|capitalize }}
-                            </div>
-                            <div class="d-flex justify-content-start pb-3">
-                                {{ situItem.description|capitalize }}
-                            </div>
                         {% endif %}
                     {% endfor %}
                 </div>
 
             </div>
                 
-            {% if app.user.id == situ.user.id %}
-                <div class="d-flex justify-content-end">
-                    <a href="{{ path('create_situ', { 'id': situ.id }) }}" class="btn btn-secondary px-4 py-2">
-                        {{ 'action.edit'|trans() }}
-                    </a>
-                </div>
+            {% if app.user %}
+                {% if app.user.id == situ.user.id %}
+                    <div class="d-flex justify-content-end">
+                        <a href="{{ path('create_situ', { 'id': situ.id }) }}" class="btn btn-secondary px-4 py-2">
+                            {{ 'action.edit'|trans() }}
+                        </a>
+                    </div>
+                {% endif %}
             {% endif %}
             
         </div>
