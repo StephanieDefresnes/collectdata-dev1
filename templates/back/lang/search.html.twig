@@ -32,7 +32,7 @@
                             <tr>
                                 <th>{{ 'lang.search.list.lang'|trans() }}</th>
                                 <th>{{ 'lang.search.list.name'|trans() }}</th>
-                                <th>{{ 'lang.search.list.english_name'|trans() }}</th>
+                                <th>{{ 'lang.search.list.englishName'|trans() }}</th>
                                 <th class="no-sort">{{ 'action.action'|trans() }}</th>              
                             </tr>
                         </thead>
@@ -41,7 +41,7 @@
                             <tr data-id="{{ lang.id }}">
                                 <td>{{ lang.lang }}</td>
                                 <td class="text-capitalize">{{ lang.name }}</td>
-                                <td>{{ lang.english_name }}</td>
+                                <td>{{ lang.englishName }}</td>
                                 <td>
                                     {% if lang.lang == locale %}
                                         {{ 'lang.default'|trans() }}
