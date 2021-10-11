@@ -7,7 +7,6 @@ use App\Entity\SituItem;
 use App\Entity\Category;
 use App\Entity\Event;
 use App\Entity\Lang;
-use App\Entity\User;
 use App\Form\Front\Situ\SituFormType;
 use App\Mailer\Mailer;
 use App\Messenger\Messenger;

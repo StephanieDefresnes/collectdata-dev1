@@ -3,7 +3,6 @@
 namespace App\Controller\Back;
 
 use App\Entity\User;
-use App\Repository\UserRepository;
 use App\Form\Back\User\UserBatchType;
 use App\Form\Back\User\UserInvitationFormType;
 use App\Form\Back\User\UserUpdateFromType;
@@ -34,7 +33,6 @@ class UserController extends AbstractController
     private $situService;
     private $translator;
     private $userManager;
-    private $userRepository;
     private $userService;
     
     public function __construct(EntityManagerInterface $em,
@@ -42,7 +40,6 @@ class UserController extends AbstractController
                                 SituService $situService,
                                 TranslatorInterface $translator,
                                 UserManager $userManager,
-                                UserRepository $userRepository,
                                 UserService $userService)
     {
         $this->em = $em;
@@ -50,7 +47,6 @@ class UserController extends AbstractController
         $this->situService = $situService;
         $this->translator = $translator;
         $this->userManager = $userManager;
-        $this->userRepository = $userRepository;
         $this->userService = $userService;
     }
 
