@@ -109,7 +109,7 @@ class PageController extends AbstractController
         $form = $this->createForm(PageFormType::class, $page);
         $form->handleRequest($request);
         
-        if ($form->isSubmitted()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             
             foreach ($originalContents as $content) {
                 if (false === $page->getPageContents()->contains($content)) {
@@ -120,10 +120,10 @@ class PageController extends AbstractController
             
             $msgType = $form->get('enabled')->getData() == 0
                     ? 'save' : 'submit';
-            
-            if ($form->isValid()) {
                 
-                $this->em->persist($page);
+            $this->em->persist($page);
+            
+            try {
                 $this->em->flush();
 
                 $msg = $this->translator
@@ -131,21 +131,17 @@ class PageController extends AbstractController
                                 'back_messages', $locale = locale_get_default());
                 $this->addFlash('success', $msg);
 
-            } else {
-                $msg = $this->translator
-                        ->trans('content.form.'.$msgType.'.flash.error', [],
-                                'back_messages', $locale = locale_get_default());
-                $this->addFlash('error', $msg);
-            }
-            
-            if ($msgType == 'save') {
-                return $this->redirectToRoute('back_content_edit', [
-                    'id' => $page->getId(), '_locale' => locale_get_default()
-                ]);
-            } else {
-                return $this->redirectToRoute('back_content_search', [
-                    '_locale' => locale_get_default()
-                ]);
+                if ($msgType == 'save') {
+                    return $this->redirectToRoute('back_content_edit', [
+                        'id' => $page->getId(), '_locale' => locale_get_default()
+                    ]);
+                } else {
+                    return $this->redirectToRoute('back_content_search', [
+                        '_locale' => locale_get_default()
+                    ]);
+                }
+            } catch (\Doctrine\DBAL\DBALException $e) {
+                $this->addFlash('warning', $e->getMessage());
             }
         }
         

@@ -140,7 +140,7 @@ class UserController extends AbstractController
                     '_locale' => $userLang
                 ]);
                         
-            } catch (Exception $e) {
+            } catch (\Doctrine\DBAL\DBALException $e) {
 
                 $msg = $this->translator->trans(
                     'account.update.flash.error', [],

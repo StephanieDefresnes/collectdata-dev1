@@ -83,32 +83,26 @@ class SituController extends AbstractController
         // Current user
         $user = $this->security->getUser();
         
-        // Only user can read not validated situ
-        if ($situ->getStatusId() != 3) {
-            $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
-            
-            // Only Super-admin can read refused situ
-            if ($situ->getStatusId() == 4 && $situ->getUser() != $user->getId()) {
+        // Only user can read a contribution requested to validate (with preview mode)
+        if ($situ->getStatusId() == 2 && isset($_GET['preview'])) {
+            if (!$user) {
                 return $this->redirectToRoute('access_denied', [
                     '_locale' => locale_get_default(),
-                    'code' => '18191',
-                ]);
-            }
-            
-            // Only Super-admin can read deleted situ by back office
-            if ($situ->getStatusId() == 5) {
-                return $this->redirectToRoute('access_denied', [
-                    '_locale' => locale_get_default(),
-                    'code' => '18194',
+                    'code' => '181922',
                 ]);
             }
         }
+        // None can read a contribution except validated
+        else if ($situ->getStatusId() != 3) {
+            return $this->redirectToRoute('access_denied', [
+                '_locale' => locale_get_default(),
+                'code' => '1819',
+            ]);
+        }
         
-        $user = $this->em->getRepository(User::class)->find($situ->getUser());        
         
         return $this->render('front/situ/read.html.twig', [
             'situ' => $situ,
-            'user' => $user,
         ]);
     }
     
@@ -145,12 +139,16 @@ class SituController extends AbstractController
                     'user_messages', $locale = locale_get_default()
                 );
             $this->addFlash('success', $msg);
-        
-            return $this->redirectToRoute('user_situs', ['_locale' => locale_get_default()]);
-
-        } catch (Exception $e) {
-            throw new \Exception('An exception appeared while updating the translation');
+            
+        } catch (\Doctrine\DBAL\DBALException $e) {
+            
+            $msg = $this->translator->trans(
+                    'contrib.form.submit.flash.error', [],
+                    'user_messages', $locale = locale_get_default()
+                );
+            $this->addFlash('warning', $msg.PHP_EOL.$e->getMessage());
         }
+        return $this->redirectToRoute('user_situs', ['_locale' => locale_get_default()]);
     }
     
     /**
@@ -186,9 +184,16 @@ class SituController extends AbstractController
 
             return $this->redirectToRoute('user_situs', ['_locale' => locale_get_default()]);
 
-        } catch (Exception $e) {
-            throw new \Exception('An exception appeared while deleting the translation');
+        } catch (\Doctrine\DBAL\DBALException $e) {
+            
+            $msg = $this->translator->trans(
+                    'contrib.delete.error', [],
+                    'user_messages', $locale = locale_get_default()
+                );
+            $this->addFlash('warning', $msg.PHP_EOL.$e->getMessage());
         }
+        
+        return $this->redirectToRoute('user_situs', ['_locale' => locale_get_default()]);
     }
     
     /**
@@ -404,12 +409,12 @@ class SituController extends AbstractController
 
                 return $this->json(['success' => true]);
 
-            } catch (Exception $e) {
+            } catch (\Doctrine\DBAL\DBALException $e) {
                 $msg = $this->translator->trans(
                             'contrib.form.'. $msgAction .'.flash.error', [],
                             'user_messages', $locale = locale_get_default()
                             );
-                $this->addFlash('error', $msg);
+                $this->addFlash('error', $msg.PHP_EOL.$e->getMessage());
                 
                 return $this->json(['success' => false]);
             }

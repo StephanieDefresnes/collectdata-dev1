@@ -188,8 +188,6 @@ class SituController extends AbstractController
             
             // notification refuse (message)
         }
-     
-//        dd($data);
             
         try {
             $this->em->flush();
@@ -209,12 +207,13 @@ class SituController extends AbstractController
                         ['_locale' => locale_get_default()]),
             ]);
 
-        } catch (Exception $e) {
-            throw new \Exception('An exception appeared while updating the situ');
+        } catch (\Doctrine\DBAL\DBALException $e) {
+            $this->addFlash('warning', $e->getMessage());
         }
     }    
     
-    public function checkValidation($entity, $id, $validated) {
+    public function checkValidation($entity, $id, $validated)
+    {
         $request = $this->get('request_stack')->getCurrentRequest();
         
         if ($entity == 'event') $class = Event::class;
@@ -222,17 +221,24 @@ class SituController extends AbstractController
         
         $classId = $this->em->getRepository($class)->find($id);
         
-        if ($classId->getValidated() == 0 && $validated == 1) {
-            $classId->setValidated(1);
-            $this->em->flush();
-
-            $msg = $this->translator->trans(
-                        'contrib.'. $entity .'.validation.flash.success', [],
-                        'back_messages', $locale = locale_get_default()
-                        );
-            $request->getSession()->getFlashBag()->add('success', $msg);
+        if ($classId->getValidated() == false && $validated == 1) {
+            $classId->setValidated(true);
             
-            return 'validated';
+            try {
+                $this->em->flush();
+
+                $msg = $this->translator->trans(
+                            'contrib.'. $entity .'.validation.flash.success', [],
+                            'back_messages', $locale = locale_get_default()
+                            );
+                $request->getSession()->getFlashBag()->add('success', $msg);
+                
+                return 'validated';
+                
+            } catch (\Doctrine\DBAL\DBALException $e) {
+                return $e->getMessage();
+            }
+            
         }
     }
     
@@ -263,18 +269,8 @@ class SituController extends AbstractController
 
             return $this->redirectToRoute('back_situs_search', ['_locale' => locale_get_default()]);
 
-        } catch (Exception $e) {
-
-            $msg = $this->translator->trans(
-                    'contrib.deletion.success', [],
-                    'user_messages', $locale = locale_get_default()
-                );
-            $this->addFlash('success', $msg);
-
-            return $this->redirectToRoute('back_situ_read', [
-                '_locale' => locale_get_default(),
-                'id' => $situ->getId(),
-            ]);
+        } catch (\Doctrine\DBAL\DBALException $e) {
+            $this->addFlash('warning', $e->getMessage());
         }
     }
 }

@@ -45,7 +45,11 @@ class LangController extends AbstractController
             $permute = $lang->getEnabled() ? false : true;
             $lang->setEnabled($permute);
         }
-        $this->getDoctrine()->getManager()->flush();
+        try {
+            $this->getDoctrine()->getManager()->flush();
+        } catch (\Doctrine\DBAL\DBALException $e) {
+            $this->addFlash('warning', $e->getMessage());
+        }
         return $this->redirectToRoute('back_lang_search');
     }
 }

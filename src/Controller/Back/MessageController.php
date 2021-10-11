@@ -47,7 +47,7 @@ class MessageController extends AbstractController
     /**
      * @Route("/follow-alert/{id}", name="follow_alert")
      */
-    public function followAlertLink($id) {
+    public function followAlert($id) {
         
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
         
@@ -94,8 +94,8 @@ class MessageController extends AbstractController
 //                        'id' => $alert->getEntityId(), '_locale' => locale_get_default()
 //                    ]);
             }
-        } catch (Exception $e) {
-            throw new \Exception('An exception appeared while getting alert');
+        } catch (\Doctrine\DBAL\DBALException $e) {
+            $this->addFlash('warning', $e->getMessage());
         }
         
     }

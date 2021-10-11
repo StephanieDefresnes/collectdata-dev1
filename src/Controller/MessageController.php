@@ -28,12 +28,15 @@ class MessageController extends AbstractController
             try {
                 $em->flush();
                 return $this->json(['success' => true, 'message' => $message]);
-            } catch (Exception $ex) {
-                $msg = $this->translator
-                        ->trans('flash.error', [],
-                                'message_messages', $locale = locale_get_default());
-                $this->addFlash('error', $msg);
-                return $this->json(['success' => false, 'message' => $message->getScanned()]);
+            } catch (\Doctrine\DBAL\DBALException $e) {
+                
+                $msg = $this->translator->trans(
+                    'flash.error', [],
+                    'message_messages', $locale = locale_get_default()
+                );
+                $this->addFlash('warning', $msg.PHP_EOL.$e->getMessage());
+                
+                return $this->json(['success' => false]);
             }
         }
     }
