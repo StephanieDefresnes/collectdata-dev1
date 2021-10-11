@@ -35,6 +35,15 @@ yarn-error.log
 /nbproject/
 /src/Controller/Security/ErrorController.php
 /src/DataFixtures/AppFixtures.php
+/src/Controller/TranslationController.php
+/src/Controller/Back/TranslationController.php
+/src/Controller/Front/TranslationController.php
+/src/Form/Translation/
+/src/Form/Back/Translation/
+/src/Service/TranslationService.php
+/templates/back/lang/translation/
+/templates/form/translation.html.twig
+/templates/front/translation/
 /translations/
 ###< FLP ignore ###
 
