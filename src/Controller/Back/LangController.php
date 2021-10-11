@@ -2,13 +2,15 @@
 
 namespace App\Controller\Back;
 
-use App\Manager\LangManager;
+use App\Entity\Lang;
 use App\Service\LangService;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * @Route("/{_locale<%app_locales%>}/back/lang")
@@ -23,7 +25,6 @@ class LangController extends AbstractController
                             Session $session)
     {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
-        $this->denyAccessUnlessGranted('ROLE_ADMIN');
         
         $langs = $langService->getAll();
         
@@ -33,20 +34,32 @@ class LangController extends AbstractController
     }
     
     /**
-     * @Route("/permute/enabled", name="back_lang_permute_enabled", methods="GET")
+     * @Route("/permute/enabled/{id}", name="back_lang_permute_enabled", methods="GET|POST")
      */
-    public function permuteEnabled(LangManager $langManager, Request $request): Response
+    public function permuteEnabled( EntityManagerInterface $em,
+                                    TranslatorInterface $translatorInterface,
+                                    Request $request, $id): Response
     {    
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
-        $this->denyAccessUnlessGranted('ROLE_ADMIN');
-        
-        $langs = $langManager->getLangs();
-        foreach ($langs as $lang) {
-            $permute = $lang->getEnabled() ? false : true;
-            $lang->setEnabled($permute);
+            
+        $lang = $em->getRepository(Lang::class)->find($id);
+
+        if ($lang->getEnabled() == true) {
+            $lang->setEnabled(false);
+            $action = 'disable';
+        } else {
+            $lang->setEnabled(true);
+            $action = 'enable';
         }
+        
         try {
-            $this->getDoctrine()->getManager()->flush();
+            $em->flush();
+
+            $msg = $translatorInterface
+                    ->trans('lang.form.success.'. $action, [],
+                            'back_messages', $locale = locale_get_default());
+            $this->addFlash('success', $msg);
+            
         } catch (\Doctrine\DBAL\DBALException $e) {
             $this->addFlash('warning', $e->getMessage());
         }

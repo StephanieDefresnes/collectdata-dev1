@@ -39,14 +39,14 @@
                         <tbody class="bg-white">
                             {% for lang in langs %}
                             <tr data-id="{{ lang.id }}">
-                                <td>{{ lang.lang }}</td>
-                                <td class="text-capitalize">{{ lang.name }}</td>
-                                <td>{{ lang.englishName }}</td>
-                                <td>
+                                <td class="align-middle">{{ lang.lang }}</td>
+                                <td class="align-middle text-capitalize">{{ lang.name }}</td>
+                                <td class="align-middle">{{ lang.englishName }}</td>
+                                <td class="align-middle">
                                     {% if lang.lang == locale %}
                                         {{ 'lang.default'|trans() }}
                                     {% else %}
-                                        <a href="{{ path('back_lang_permute_enabled', { 'ids': {0: lang.id} }) }}" role="button"
+                                        <a href="{{ path('back_lang_permute_enabled', { 'id': lang.id }) }}"
                                             class="btn btn-primary enablable{{ lang.enabled ? ' active' : '' }}"
                                             aria-pressed="{{ lang.enabled ? 'true' : 'false' }}">
                                             <span>{{ lang.enabled ? 'action.disable'|trans : 'action.enable'|trans }}</span>

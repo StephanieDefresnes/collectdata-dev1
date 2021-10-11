@@ -42,7 +42,8 @@ security:
         ROLE_SUPER_ADMIN:       [ ROLE_ADMIN, ROLE_ALLOWED_TO_SWITCH ]
     access_control:
         - { path: ^/%app_locales%, roles: PUBLIC_ACCESS }
-        - { path: ^/%app_locales%/back/translation, roles: ROLE_SUPER_ADMIN }
         - { path: ^/%app_locales%/back, roles: ROLE_SUPER_ADMIN }
         - { path: ^/%app_locales%/back, roles: ROLE_ADMIN }
         - { path: ^/%app_locales%/back, roles: ROLE_MODERATOR }
+        - { path: ^/%app_locales%/back/lang, roles: ROLE_SUPER_ADMIN }
+        - { path: ^/%app_locales%/back/translation, roles: ROLE_SUPER_ADMIN }
