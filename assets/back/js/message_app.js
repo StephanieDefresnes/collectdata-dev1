@@ -25,7 +25,7 @@ function addUnreadAlert(message) {
     return item
 }
 
-// Search if translations exist
+// Search if alter exist
 function permuteScanned(id) {
     $.ajax({
         url: "/message/ajaxPermuteScanned",
