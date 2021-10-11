@@ -10,6 +10,12 @@
 // global
 @import "../../scss/_variables";
 
+// custom font
+@font-face{
+    font-family : 'Righteous';
+    src : url('../fonts/Righteous-Regular.ttf') format('truetype');
+}
+
 // Custom scrollbar
 *::-webkit-scrollbar {
   width: 16px;
@@ -55,6 +61,11 @@ footer {
     background: -webkit-linear-gradient(top,  rgba(52,58,64,0.7) 0%,rgba(52,58,64,0.9) 20%,rgba(52,58,64,1) 60%,rgba(52,58,64,1) 100%); /* Chrome10-25,Safari5.1-6 */
     background: linear-gradient(to bottom,  rgba(52,58,64,0.7) 0%,rgba(52,58,64,0.9) 20%,rgba(52,58,64,1) 60%,rgba(52,58,64,1) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
     filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#b3343a40', endColorstr='#343a40',GradientType=0 ); /* IE6-9 */
+}
+
+.oops {
+    font-family: 'Righteous';
+    font-size: 8rem;
 }
 
 a:focus,
