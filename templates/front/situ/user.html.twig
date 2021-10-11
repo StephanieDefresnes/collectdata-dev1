@@ -158,11 +158,17 @@
                                 </td>
                             {% elseif situ.statusId == 2 or situ.statusId == 3 %}
                                 <td class="width-max-26 px-0">
-                                    <a href="{{ path('read_situ', { 'situ': situ.id }) }}"
-                                       class="btn btn-outline-success btn-sm px-1"
+                                    <a href="{{ path('read_situ', { 'situ': situ.id }) ~'?preview' }}"
+                                       class="btn {{ situ.statusId == 3
+                                                    ? 'btn-outline-success'
+                                                    : 'btn-outline-secondary' }} btn-sm px-1"
                                        data-toggle="tooltip" data-placement="left"
-                                       title="{{ 'action.read'|trans() }}"
-                                       aria-label="{{ 'action.read'|trans() }}">
+                                       title="{{ situ.statusId == 3
+                                                    ? 'action.read'|trans() 
+                                                    : 'action.preview'|trans() }}"
+                                       aria-label="{{ situ.statusId == 3
+                                                    ? 'action.read'|trans() 
+                                                    : 'action.preview'|trans() }}"">
                                         <i class="fas fa-eye"></i>
                                     </a>
                                 </td>

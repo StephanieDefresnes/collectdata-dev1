@@ -191,7 +191,7 @@ $(document).ready(function() {
                     +'/translate/'+ $('#translateModal .situ-title').attr('data-id')
                     +'/'+ $('#translateLangs').val();            
         } else {
-            location.href = '/'+ path['locale'] +'/read/'+ $(this).attr('data-id');
+            location.href = '/'+ path['locale'] +'/read/'+ $(this).attr('data-id') +'?preview';
         }
     })
     
