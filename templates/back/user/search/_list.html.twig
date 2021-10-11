@@ -81,14 +81,7 @@
                         {% endif %}
                     </td>
                     <td class="px-2">
-                        {% for lang in langs %}
-                            {% if lang.id == user.langId %}
-                                {{ lang.englishName }}
-                            {% endif %}
-                        {% endfor %}
-                        {% if user.langId == '' %}
-                            {{ 'label.default'|trans() }}
-                        {% endif %}
+                        {{ user.lang.englishName }}
                     </td>
                     <td class="px-2">
                         {% if not user.hasRole("ROLE_SUPER_ADMIN")
