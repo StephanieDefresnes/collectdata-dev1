@@ -59,7 +59,6 @@ class UserController extends AbstractController
         $this->denyAccessUnlessGranted('ROLE_MODERATOR');
         
         $users = $this->em->getRepository(User::class)->findAll();
-        $langs = $this->langService->getAll();
         
         $formBatch = $this->createForm(UserBatchType::class, null, [
             'action' => $this->generateUrl('back_user_search'),
@@ -73,7 +72,6 @@ class UserController extends AbstractController
         
         return $this->render('back/user/search/index.html.twig', [
             'users' => $users,
-            'langs' => $langs,
             'form_batch' => $formBatch->createView(),
             'form_delete' => $this->createFormBuilder()->getForm()->createView(),
         ]);
