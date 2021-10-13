@@ -75,7 +75,7 @@ class SituController extends AbstractController
      */
     public function readSitu(Situ $situ): Response
     {
-        $notFoundRoute = $this->redirectToRoute('no_found', ['_locale' => locale_get_default()]);
+        $notFoundRoute = $this->redirectToRoute('not_found', ['_locale' => locale_get_default()]);
         
         if (!$situ) return $notFoundRoute;
         
@@ -207,7 +207,7 @@ class SituController extends AbstractController
         
             // Only situ author can update situ
             if (!$situ) {
-                return $this->redirectToRoute('no_found', ['_locale' => locale_get_default()]);
+                return $this->redirectToRoute('not_found', ['_locale' => locale_get_default()]);
             }
             
             // If validation requested return to preview
