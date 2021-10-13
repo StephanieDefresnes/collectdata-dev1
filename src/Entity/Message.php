@@ -99,7 +99,7 @@ class Message
         return $this->channel;
     }
 
-    public function setChannel(?string $channel): self
+    public function setChannel(string $channel): self
     {
         $this->channel = $channel;
 

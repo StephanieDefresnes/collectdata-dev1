@@ -89,7 +89,7 @@ class User implements UserInterface
     private $adminNote;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Lang", inversedBy="langUsers")
+     * @ORM\ManyToOne(targetEntity=Lang::class, inversedBy="langUsers")
      */
     private $lang;
 
