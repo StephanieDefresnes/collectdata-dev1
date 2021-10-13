@@ -26,90 +26,18 @@
         </a>
     </li>
 
-    <!-- Divider -->
     <hr class="sidebar-divider mb-1">
-
-    <!-- Nav Items - Pages Collapse Menu -->
-    {% if is_granted("ROLE_ADMIN") %}
+    
+    {% if is_granted("ROLE_SUPER_ADMIN") %}
     <li class="nav-item{{ route in [
-                            'back_lang_search',
-                            'back_translation_site',
-                            'back_translation_create'] ?' active' }}">
-        <a class="nav-link collapsed pb-1" href="#" data-toggle="collapse" data-target="#collapseLang"
-            aria-expanded="true" aria-controls="collapseLang">
-            <i class="fas fa-globe"></i>
-            <span>{{ 'label.langs'|trans() }}</span>
+                            'back_content_search',
+                            'back_content_edit'] ? ' active' }}">
+        <a class="nav-link pb-1" href="{{ path('back_content_search') }}">
+            <i class="fas fa-edit"></i>
+            <span>{{ 'action.content'|trans() }}</span>
         </a>
-        <div id="collapseLang" class="collapse{{ route in [
-                                                    'back_lang_search',
-                                                    'back_translation_site',
-                                                    'back_translation_situ_create',
-                                                    'back_translation_forms',
-                                                    'back_translation_create',
-                                                    'back_translation_generate_list',
-                                                    'back_translation_clean'] ? ' show' }}"
-             aria-labelledby="headingLang" data-parent="#accordionSidebar">
-            <div class="bg-white mb-1 py-2 collapse-inner rounded">
-                <a class="collapse-item{{ route == 'back_lang_search' ? ' active' }}"
-                   href="{{ path('back_lang_search') }}">
-                    {{ 'label.search'|trans() }}
-                </a>
-                <a class="collapse-item{{ route in [
-                                            'back_translation_site',
-                                            'back_translation_situ_create'] ? ' active' }}"
-                   href="{{ path('back_translation_site') }}">
-                    {{ 'lang.translation.title'|trans() }}
-                </a>
-                {% if is_granted('ROLE_SUPER_ADMIN')  %}
-                <a class="collapse-item{{ route in [
-                                            'back_translation_forms',
-                                            'back_translation_create'] ? ' active' }}"
-                   href="{{ path('back_translation_forms') }}">
-                    {{ 'lang.translation.form.title'|trans() }}
-                </a>
-                <a class="collapse-item{{ route in [
-                                            'back_translation_generate_list',
-                                            'back_translation_clean'] ? ' active' }}"
-                   href="{{ path('back_translation_generate_list') }}">
-                    {{ 'lang.translation.yaml.title'|trans() }}
-                </a>
-                {% endif %}
-            </div>
-        </div>
     </li>
     {% endif %}
-    
-    {% if is_granted("ROLE_MODERATOR") %}
-    <li class="nav-item{{ route in [
-                            'back_user_search',
-                            'back_user_create',
-                            'back_user_read',
-                            'back_user_update'] ? ' active' }}">
-        <a class="nav-link collapsed pb-1" href="#" data-toggle="collapse" data-target="#collapseUser"
-            aria-expanded="true" aria-controls="collapseUser">
-            <i class="fas fa-users"></i>
-            <span>{{ 'label.users'|trans() }}</span>
-        </a>
-        <div id="collapseUser" class="collapse{{ route in [
-                                                    'back_user_search',
-                                                    'back_user_create',
-                                                    'back_user_read',
-                                                    'back_user_update'] ? ' show' }}"
-             aria-labelledby="headingUser" data-parent="#accordionSidebar">
-            <div class="bg-white mb-1 py-2 collapse-inner rounded">
-                <a class="collapse-item{{ route == 'back_user_search' ? ' active' }}"
-                   href="{{ path('back_user_search') }}">
-                    {{ 'label.search'|trans() }}
-                </a>
-                {% if can_create %}
-                    <a class="collapse-item{{ route == 'back_user_create' ? ' active' }}"
-                       href="{{ path('back_user_create') }}">
-                        {{ 'action.invite'|trans() }}
-                    </a>
-                {% endif %}
-            </div>
-        </div>
-    </li>
     
     <li class="nav-item{{ route in ['back_situs_search',
                                     'back_situ_read',
@@ -157,18 +85,65 @@
                 
         </div>
     </li>
-    {% endif %}
-    
-    {% if is_granted("ROLE_SUPER_ADMIN") %}
+
+    {% if is_granted("ROLE_ADMIN") %}
     <li class="nav-item{{ route in [
-                            'back_content_search',
-                            'back_content_edit'] ? ' active' }}">
-        <a class="nav-link pb-1" href="{{ path('back_content_search') }}">
-            <i class="fas fa-edit"></i>
-            <span>{{ 'action.content'|trans() }}</span>
+                            'back_lang_search',
+                            'back_translation_site',
+                            'back_translation_create'] ?' active' }}">
+        <a class="nav-link collapsed pb-1" href="#" data-toggle="collapse" data-target="#collapseLang"
+            aria-expanded="true" aria-controls="collapseLang">
+            <i class="fas fa-globe"></i>
+            <span>{{ 'label.langs'|trans() }}</span>
         </a>
+        <div id="collapseLang" class="collapse{{ route in [
+                                                    'back_lang_search',
+                                                    'back_translation_site',
+                                                    'back_translation_situ_create',
+                                                    'back_translation_forms',
+                                                    'back_translation_create',
+                                                    'back_translation_generate_list',
+                                                    'back_translation_clean'] ? ' show' }}"
+             aria-labelledby="headingLang" data-parent="#accordionSidebar">
+            <div class="bg-white mb-1 py-2 collapse-inner rounded">
+                <a class="collapse-item{{ route == 'back_lang_search' ? ' active' }}"
+                   href="{{ path('back_lang_search') }}">
+                    {{ 'label.search'|trans() }}
+                </a>
+                {% if is_granted('ROLE_SUPER_ADMIN')  %}
+                <a class="collapse-item{{ route in [
+                                            'back_translation_forms',
+                                            'back_translation_create'] ? ' active' }}"
+                   href="{{ path('back_translation_forms') }}">
+                    {{ 'lang.translation.form.title'|trans() }}
+                </a>
+                <a class="collapse-item{{ route in [
+                                            'back_translation_site',
+                                            'back_translation_situ_create'] ? ' active' }}"
+                   href="{{ path('back_translation_site') }}">
+                    {{ 'lang.translation.title'|trans() }}
+                </a>
+                <a class="collapse-item{{ route in [
+                                            'back_translation_generate_list',
+                                            'back_translation_clean'] ? ' active' }}"
+                   href="{{ path('back_translation_generate_list') }}">
+                    {{ 'lang.translation.yaml.title'|trans() }}
+                </a>
+                {% endif %}
+            </div>
+        </div>
     </li>
     {% endif %}
+    
+    <li class="nav-item{{ route in [
+                            'back_user_search',
+                            'back_user_read',
+                            'back_user_update'] ? ' active' }}">
+        <a class="nav-link pb-1" href="{{ path('back_user_search') }}">
+            <i class="fas fa-users"></i>
+            <span>{{ 'label.users'|trans() }}</span>
+        </a>
+    </li>
     
     <!-- Divider -->
     <hr class="sidebar-divider d-none d-md-block mt-3">
