@@ -2,9 +2,6 @@
 
 namespace App\Manager;
 
-use App\Entity\User;
-use App\Form\Back\User\UserType;
-use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Form\Exception\LogicException;
 use Symfony\Component\Form\FormInterface;
@@ -68,30 +65,6 @@ class UserManager
     }
     
     /**
-     * Configure the filter form
-     * 
-     *  Set the filter's default fields, save and retrieve the last searche in session.
-     *  
-     * @param FormInterface $form
-     * @return \Symfony\Component\Form\FormInterface
-     */
-    public function configFormFilter(FormInterface $form)
-    {
-        $request = $this->requestStack->getCurrentRequest();
-        $this->session->set('back_user_page');
-        if($request->isMethod('POST') && $request->query->get('back_user_search')) {
-            $form->submit($request->query->get('back_user_search'));
-        } elseif(!$form->getData()) {
-            $form->setData($this->getDefaultFormSearchData());
-        }
-        if ($form->isSubmitted() && $form->isValid()) {
-            $this->session->set('back_user_search', $form->get('search')->getData());
-            $this->session->set('back_user_role', $form->get('role')->getData());
-        }
-        return $form;
-    }
-    
-    /**
      * Get the default data from the filter form
      * 
      *  Get saved data in session or default filter form.
@@ -103,7 +76,6 @@ class UserManager
         return [ 
             'search' => $this->session->get('back_user_search', null),
             'role' => $this->session->get('back_user_role', null),
-//            'number_by_page' => $this->session->get('back_user_number_by_page', self::NUMBER_BY_PAGE),
         ];
     }
 
@@ -162,7 +134,7 @@ class UserManager
     public function validationDelete($users)
     {
         foreach($users as $user) {
-            if ($user->hasRole("ROLE_SUPER_ADMIN")) {
+            if ($user->hasRole('ROLE_SUPER_ADMIN')) {
                 return $this->translator->trans('user.error.cannot_delete_super_admin', [], 'back_messages');
             }
         }
@@ -172,7 +144,7 @@ class UserManager
     public function validationPermuteEnabled($users)
     {
         foreach($users as $user) {
-            if ($user->hasRole("ROLE_SUPER_ADMIN")) {
+            if ($user->hasRole('ROLE_SUPER_ADMIN')) {
                 return $this->translator->trans('user.error.cannot_permute_enabled_super_admin', [], 'back_messages');
             }
         }
