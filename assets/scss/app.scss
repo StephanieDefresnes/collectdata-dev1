@@ -149,6 +149,11 @@ table.dataTable {
             display: none !important;
         }
     }
+    & .check {
+        & > .form-group {
+            margin-bottom: 0 !important;
+        }
+    }
 }
 .dataTables_filter {
     position: relative;
