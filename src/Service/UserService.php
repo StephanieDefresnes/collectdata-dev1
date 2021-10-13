@@ -13,6 +13,19 @@ class UserService {
     {
         $this->em = $em;
     }
+    /**
+     * @return user array expect negative #id (anonymous)
+     */
+    public function getUsers()
+    {
+        $query = $this->em->createQueryBuilder()
+            ->from(User::class,'u')
+            ->select('u')
+            ->andWhere('u.id > ?1')
+            ->setParameter(1, 0);
+        
+        return $query->getQuery()->getResult();
+    }
     
     public function getRole($role)
     {
