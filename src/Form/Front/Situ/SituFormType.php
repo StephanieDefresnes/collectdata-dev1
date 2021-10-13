@@ -48,11 +48,10 @@ class SituFormType extends AbstractType
         $user = $this->security->getUser();
         
         // Get User current lang
-        $usertLang = $this->langRepository->find($user->getLang());
-        $GLOBALS['usertLangId'] = $user->getLang();
+        $userLocale = $this->langRepository->find($user->getLang());
         
         // Get Events by locale and by user events
-        $GLOBALS['events'] = $this->eventService->getByLangIdAndUserLangId($usertLang);
+        $GLOBALS['events'] = $this->eventService->getByLangIdAndUserLangId($userLocale);
         
         /**
          * If no optional language neither event,
@@ -88,25 +87,27 @@ class SituFormType extends AbstractType
             // Get User langs
             $userLangs = $user->getLangs();
             
-            // Build choices with current and optional user land
-            $builder->add('lang', EntityType::class, [
-                'class' => 'App\Entity\Lang',
-                'required' => false,
-                'label' => 'contrib.form.lang.label',
-                'choice_label' => function($lang, $key, $value) {
-                    return html_entity_decode($lang->getName());
-                },
-                'placeholder' => 'label.lang_placeholder',
-                'query_builder' => function (EntityRepository $er) use ($userLangs) {
-                        return $er->createQueryBuilder('lang')
-                                ->where('lang.id IN (:array)')
-                                ->setParameters(['array' => $userLangs]);
-                },
-                'row_attr' => ['class' => ''],
-                'choice_attr' => function($choice, $key, $value) {
-                    return ['class' => 'first-letter text-dark'];
-                },
-            ]);
+            if (count($userLangs) > 1) {
+                // Build choices with current and optional user land
+                $builder->add('lang', EntityType::class, [
+                    'class' => 'App\Entity\Lang',
+                    'required' => false,
+                    'label' => 'contrib.form.lang.label',
+                    'choice_label' => function($lang, $key, $value) {
+                        return html_entity_decode($lang->getName());
+                    },
+                    'placeholder' => 'label.lang_placeholder',
+                    'query_builder' => function (EntityRepository $er) use ($userLangs) {
+                            return $er->createQueryBuilder('lang')
+                                    ->where('lang.id IN (:array)')
+                                    ->setParameters(['array' => $userLangs]);
+                    },
+                    'row_attr' => ['class' => ''],
+                    'choice_attr' => function($choice, $key, $value) {
+                        return ['class' => 'first-letter text-dark'];
+                    },
+                ]);
+            }
                 
             $formModifierEvent = function (FormInterface $form, $lang_id) {
                 

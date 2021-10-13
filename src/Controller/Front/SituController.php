@@ -103,7 +103,7 @@ class SituController extends AbstractController
         $user = $this->security->getUser();
         
         // Only situ author can request situ validation 
-        if ($user->getId() != $situ->getUser()) {
+        if ($user != $situ->getUser()) {
             return $this->redirectToRoute('access_denied', [
                 '_locale' => locale_get_default(),
                 'code' => '22181',
@@ -191,6 +191,7 @@ class SituController extends AbstractController
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
         $this->denyAccessUnlessGranted('ROLE_CONTRIBUTOR');
         
+        
         $defaultLang = $this->em->getRepository(Lang::class)
                 ->findOneBy(['lang' => $this->parameters->get('locale')])
                 ->getId();
@@ -207,6 +208,15 @@ class SituController extends AbstractController
             // Only situ author can update situ
             if (!$situ) {
                 return $this->redirectToRoute('no_found', ['_locale' => locale_get_default()]);
+            }
+            
+            // If validation requested return to preview
+            if ($situ->getStatusId() == 2) {
+                return $this->redirectToRoute('read_situ', [
+                    '_locale' => locale_get_default(),
+                    'situ' => $situ->getId(),
+                    'preview' => ''
+                ]);
             }
         
             // Only situ author can update situ
@@ -284,7 +294,7 @@ class SituController extends AbstractController
         $defaultLang = $this->em->getRepository(Lang::class)
                 ->findOneBy(['lang' => $this->parameters->get('locale')]);
         
-        $userLang = $user->getLang() == '' ? $defaultLang->getId() : $user->getLang();
+        $userLang = $user->getLang();
             
         // Get request data        
         if ($request->isXMLHttpRequest()) {
@@ -382,18 +392,22 @@ class SituController extends AbstractController
 
             try {
                 $this->em->flush();
-                
-                $msgType = empty($data['id']) ? 'success' : 'success_update';
-                $msg = $this->translator->trans(
-                            'contrib.form.'. $msgAction .'.flash.'. $msgType, [],
-                            'user_messages', $locale = locale_get_default()
-                            );
-                $request->getSession()->getFlashBag()->add('success', $msg);
 
                 if ($statusId == 2) {
                     $this->mailer->sendModeratorSituValidate($situ);
                     $this->messenger->sendModeratorAlert('situ', $situ);
+                
+                    $msg = $this->translator->trans(
+                                'contrib.form.'. $msgAction .'.flash.success', [],
+                                'user_messages', $locale = locale_get_default()
+                                );
+                } else {
+                    $msg = $this->translator->trans(
+                                'contrib.form.'. $msgAction .'.flash.success_update', [],
+                                'user_messages', $locale = locale_get_default()
+                                );
                 }
+                $request->getSession()->getFlashBag()->add('success', $msg);
 
                 return $this->json(['success' => true]);
 

@@ -758,11 +758,10 @@ $(function() {
 
             submissionStatus($(this).attr('id'))
 
-            if ($('#situ_form_lang').length != '') {
-                lang = $('#situ_form_lang').val() == ''
-                        ? $('#situ').attr('data-default')
-                        : $('#situ_form_lang').val()
-            }
+            lang = $('#lang').length == 0
+                    ? $('#situ').attr('data-default')
+                    : $('#situ_form_lang').val()
+                    
             event = setData('event')
             categoryLevel1 = setData('categoryLevel1')
             categoryLevel2 = setData('categoryLevel2')        

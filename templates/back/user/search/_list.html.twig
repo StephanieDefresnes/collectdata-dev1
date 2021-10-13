@@ -41,8 +41,8 @@
             {% for child in form_batch.users %}
                 {% set user = form_batch.users.vars.choices[child.vars.value].data %}
                 <tr>
-                    {% if is_granted("ROLE_SUPER_ADMIN") %}
-                        <td class="px-2 ckeck">
+                    {% if is_granted("ROLE_ADMIN") %}
+                        <td class="px-2 check">
                             {{ form_row(child, { 'attr': { 'class': 'select'} }) }}
                         </td>
                     {% endif %}
@@ -170,7 +170,7 @@
                     <div class="col mt-2">
                         <div class="row">
                             <div class="col-12 text-xs font-weight-bold text-primary text-uppercase mb-1">
-                                {{ 'user.search.actions'|trans() }}</div>
+                                {{ 'action.batch'|trans() }}</div>
                             <div class="col-xl-4 col-lg-5 col-md-6 col-sm-6 col-7">
                                 {{ form_row(form_batch.action) }}
                             </div>

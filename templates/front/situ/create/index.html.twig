@@ -51,7 +51,7 @@
                         </div>
                     {% endif %}
 
-                    <div id="event" class="formData form-row mb-4 d-none on-load">
+                    <div id="event" class="formData form-row mb-4{{ langs|length != 1 ? ' d-none on-load'}}">
                         <div class="col-lg-5 col-md-5 mb-md-0 mb-1 pt-md-1">
                             {{ form_label(form.event) }}
                         </div>

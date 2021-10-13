@@ -65,13 +65,11 @@
                             {% endif %}
                         </span>
                         <span class="col-md-7 list-inline text-capitalize">
-                            {{ user.lang.name|raw }}{% if user.langs|length > 0 %},
-                                {% for lang in user.langs %}
-                                <span class="text-capitalize">
-                                    {{ lang.name|raw }}
-                                </span>
-                                {% endfor %}
-                            {% endif %}
+                            {% for lang in user.langs %}
+                            <span class="text-capitalize">
+                                {{ lang.name|raw }}
+                            </span>
+                            {% endfor %}
                         </span>                                
                     </div>
                     
@@ -85,7 +83,6 @@
                             {% endif %}
                         </span>
                         <span class="col-lg-7 line-11">
-                            {% set roles =  user.roles %}
                             {% set newRoles = [] %}
                             {% for role in user.roles %}
                                 {% if role != 'ROLE_USER' %}
