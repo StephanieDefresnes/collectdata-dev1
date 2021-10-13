@@ -41,7 +41,7 @@ class Messenger {
         
         $moderators = $this->userService->getRoleByLang('MODERATOR', $data->getLang());
         
-        $author = $this->userService->getUser($data->getUserId());
+        $author = $this->em->getRepository(User::class)->find($data->getUser()->getId());
 
         if (!$moderators) {
             $moderators = $this->userService->getRole('SUPER_ADMIN');
@@ -49,7 +49,7 @@ class Messenger {
         
         foreach ($moderators as $moderator) {
 
-            $moderatorLang = $this->em->getRepository(Lang::class)->find($moderator->getLangId());
+            $moderatorLang = $this->em->getRepository(Lang::class)->find($moderator->getLang());
 
             $subject = $this->translator->trans(
                 'back.alert.'.$entity, [
@@ -61,6 +61,7 @@ class Messenger {
             );
 
             $message = new Message();
+            $message->setChannel('primary');
             $message->setType('alert');
             $message->setSubject($subject);
             $message->setSenderUserId(intval('-1'));
@@ -73,8 +74,8 @@ class Messenger {
 
             try {
                 $this->em->flush();
-            } catch (Exception $e) {
-                throw new \Exception('An exception appeared while sending alert to moderator');
+            } catch (\Doctrine\DBAL\DBALException $e) {
+                throw new \Exception($e->getMessage());
             }
         }
         

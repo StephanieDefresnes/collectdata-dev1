@@ -95,7 +95,7 @@ class Mailer
         if ($moderators) {
             foreach ($moderators as $moderator) {
                 
-                $moderatorLang = $this->em->getRepository(Lang::class)->find($moderator->getLangId());
+                $moderatorLang = $this->em->getRepository(Lang::class)->find($moderator->getLang());
             
                 $subject = $this->translator->trans(
                     'situ.validate.email.subject', [
@@ -109,7 +109,7 @@ class Mailer
                     'back_situ_verify',
                     [
                         '_locale' => $moderatorLang->getLang(),
-                        'id' => $situ->getId(),
+                        'situ' => $situ->getId(),
                     ],
                     UrlGeneratorInterface::ABSOLUTE_URL
                 );
