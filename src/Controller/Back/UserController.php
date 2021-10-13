@@ -4,8 +4,7 @@ namespace App\Controller\Back;
 
 use App\Entity\User;
 use App\Form\Back\User\UserBatchType;
-use App\Form\Back\User\UserInvitationFormType;
-use App\Form\Back\User\UserUpdateFromType;
+use App\Form\Back\User\UserUpdateFormType;
 use App\Mailer\Mailer;
 use App\Manager\UserManager;
 use App\Service\LangService;
@@ -21,6 +20,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use Symfony\Component\Security\Core\Security;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
@@ -71,60 +71,8 @@ class UserController extends AbstractController
         }
         
         return $this->render('back/user/search/index.html.twig', [
-            'users' => $users,
             'form_batch' => $formBatch->createView(),
             'form_delete' => $this->createFormBuilder()->getForm()->createView(),
-        ]);
-    }
-
-    /**
-     * @Route("/create", name="back_user_create", methods="GET|POST")
-     */
-    public function create(Request $request, UserPasswordEncoderInterface $passwordEncoder, Mailer $mailer): Response
-    {
-        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
-        $this->denyAccessUnlessGranted('ROLE_MODERATOR');
-        
-        $user = new User();
-        
-        $role = '';
-        if ($this->container->get('security.authorization_checker')
-                ->isGranted('ROLE_SUPER_ADMIN')) {
-            $role = 'super-admin';
-        } else if ($this->container->get('security.authorization_checker')
-                ->isGranted('ROLE_ADMIN')) {
-            $role = 'admin';
-        }
-        
-        $form = $this->createForm(UserInvitationFormType::class, $user, ['role' => $role]);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $password = bin2hex(random_bytes(4));
-            $user->setPassword(
-                $passwordEncoder->encodePassword(
-                    $user,
-                    $password
-                )
-            );
-
-            $user->setEnabled(false);
-            $user->setConfirmationToken(random_bytes(24));
-            
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($user);
-            $em->flush();
-            
-            $mailer->sendInvitation($user, $password);
-            
-            $msg = $this->translator->trans('user.create.flash.success', [ '%identifier%' => $user, ], 'back_messages');
-            $this->addFlash('success', $msg);
-            return $this->redirectToRoute('back_user_search');
-        }
-
-        return $this->render('back/user/create.html.twig', [
-            'user' => $user,
-            'form' => $form->createView(),
         ]);
     }
 
@@ -136,11 +84,9 @@ class UserController extends AbstractController
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
         $this->denyAccessUnlessGranted('ROLE_MODERATOR');
         
-        $situs = $this->situService->countSitusByUser($user->getId());
-        
         return $this->render('back/user/read.html.twig', [
             'user' => $user,
-            'situs' => $situs,
+            'situs' => count($user->getSitus()),
             'form_delete' => $this->createFormBuilder()->getForm()->createView(),
         ]);
     }
@@ -148,50 +94,43 @@ class UserController extends AbstractController
     /**
      * @Route("/update/{id}", name="back_user_update", methods="GET|POST")
      */
-    public function updateSuper(Request $request, User $user): Response
+    public function updateSuper(Request $request,
+                                Security $security,
+                                User $user): Response
     {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
         $this->denyAccessUnlessGranted('ROLE_MODERATOR');
         
-        // Access denied > add adminNote & logout
-        // Deny SUPER_ADMIN access to ADMIN
-        $noSuperAccess = $this->userService->getRole('SUPER_ADMIN');
-        foreach($noSuperAccess as $noAccess) {
-            if ($user == $noAccess) {
-                if (!$this->container->get('security.authorization_checker')
-                        ->isGranted('ROLE_SUPER_ADMIN')) {
-                    return $this->redirectToRoute('access_denied', [
-                        '_locale' => locale_get_default(),
-                        'code' => 'B211921',
-                    ]);
-                }
-            }
-        }     
-        // Deny ADMIN access to ADMIN
-        $noAdminAccess = $this->userService->getRole('ADMIN');
-        foreach($noAdminAccess as $noAccess) {
-            if ($user == $noAccess) {
-                if (!$this->container->get('security.authorization_checker')
-                        ->isGranted('ROLE_SUPER_ADMIN')) {
-                    return $this->redirectToRoute('access_denied', [
-                        '_locale' => locale_get_default(),
-                        'code' => 'B21121',
-                    ]);
-                }
-            }
-        }     
-        // Deny MODERATOR access to MODERATOR
-        $noModeratornAccess = $this->userService->getRole('MODERATOR');
-        foreach($noModeratornAccess as $noAccess) {
-            if ($user == $noAccess) {
-                if (!$this->container->get('security.authorization_checker')
-                        ->isGranted('ROLE_ADMIN')) {
-                    return $this->redirectToRoute('access_denied', [
-                        '_locale' => locale_get_default(),
-                        'code' => 'B21131',
-                    ]);
-                }
-            }
+        // Deny SUPER_ADMIN access except SUPER_ADMIN #1
+        if ($user->hasRole('ROLE_SUPER_ADMIN')
+                && !$this->container->get('security.authorization_checker')
+                        ->isGranted('ROLE_SUPER_ADMIN')
+                && $security->getUser()->getId() != 1) {
+            
+            return $this->redirectToRoute('access_denied', [
+                '_locale' => locale_get_default(),
+                'code' => 'B211921',
+            ]);
+        }
+        // Deny ADMIN access except SUPER_ADMIN
+        if ($user->hasRole('ADMIN') &&
+                !$this->container->get('security.authorization_checker')
+                    ->isGranted('ROLE_SUPER_ADMIN')) {
+            
+            return $this->redirectToRoute('access_denied', [
+                '_locale' => locale_get_default(),
+                'code' => 'B21121',
+            ]);
+        }
+        // Deny MODERATOR access except ADMIN
+        if ($user->hasRole('ROLE_MODERATOR') &&
+                !$this->container->get('security.authorization_checker')
+                    ->isGranted('ROLE_ADMIN')) {
+            
+            return $this->redirectToRoute('access_denied', [
+                '_locale' => locale_get_default(),
+                'code' => 'B21131',
+            ]);
         }
         
         // Form depending on user role
@@ -204,7 +143,7 @@ class UserController extends AbstractController
             $role = 'admin';
         }
         
-        $form = $this->createForm(UserUpdateFromType::class, $user, ['role' => $role]);
+        $form = $this->createForm(UserUpdateFormType::class, $user, ['role' => $role]);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -241,13 +180,31 @@ class UserController extends AbstractController
         
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
             foreach($users as $user) { 
-                $em->remove($user);
+                // Deny ADMIN access except SUPER_ADMIN
+                if ($user->hasRole('ADMIN') &&
+                        !$this->container->get('security.authorization_checker')
+                            ->isGranted('ROLE_SUPER_ADMIN')) {
+                    return $this->redirectToRoute('access_denied', [
+                        '_locale' => locale_get_default(),
+                        'code' => 'B4121',
+                    ]);
+                }
+                // Deny MODERATOR access except ADMIN
+                if ($user->hasRole('ROLE_MODERATOR') &&
+                        !$this->container->get('security.authorization_checker')
+                            ->isGranted('ROLE_ADMIN')) {
+                    return $this->redirectToRoute('access_denied', [
+                        '_locale' => locale_get_default(),
+                        'code' => 'B4131',
+                    ]);
+                }
+                $this->em->remove($user);
             }
             try {
-                $em->flush();
-                $this->addFlash('success', $this->translator->trans('user.delete.flash.success', [], 'back_messages'));
+                $this->em->flush();
+                $this->addFlash('success', $this->translator
+                        ->trans('user.delete.flash.success', [], 'back_messages'));
             } catch (\Doctrine\DBAL\DBALException $e) {
                 $this->addFlash('warning', $e->getMessage());
             }
@@ -267,35 +224,37 @@ class UserController extends AbstractController
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
         $this->denyAccessUnlessGranted('ROLE_MODERATOR');
         
-        // Deny SUPER_ADMIN access to ADMIN
-        $noSuperAccess = $this->userService->getRole('SUPER_ADMIN');
-        foreach($noSuperAccess as $noUser) {
-            if ($user == $noUser) {
-                $this->denyAccessUnlessGranted('ROLE_SUPER_ADMIN');
-            }
-        }     
-        // Deny ADMIN access to ADMIN
-        $noAdminAccess = $this->userService->getRole('ADMIN');
-        foreach($noAdminAccess as $noUser) {
-            if ($user == $noUser) {
-                $this->denyAccessUnlessGranted('ROLE_SUPER_ADMIN');
-            }
-        }     
-        // Deny MODERATOR access to MODERATOR
-        $noModeratornAccess = $this->userService->getRole('ROLE_MODERATOR');
-        foreach($noModeratornAccess as $noUser) {
-            if ($user == $noUser) {
-                $this->denyAccessUnlessGranted('ROLE_ADMIN');
-            }
-        }
-        
         $users = $this->userManager->getUsers();
         
         foreach ($users as $user) {
+            
+            // Deny ADMIN access except SUPER_ADMIN
+            if ($user->hasRole('ADMIN') &&
+                    !$this->container->get('security.authorization_checker')
+                        ->isGranted('ROLE_SUPER_ADMIN')) {
+                return $this->redirectToRoute('access_denied', [
+                    '_locale' => locale_get_default(),
+                    'code' => 'B16121',
+                ]);
+            }
+            // Deny MODERATOR access except ADMIN
+            if ($user->hasRole('ROLE_MODERATOR') &&
+                    !$this->container->get('security.authorization_checker')
+                        ->isGranted('ROLE_ADMIN')) {
+                return $this->redirectToRoute('access_denied', [
+                    '_locale' => locale_get_default(),
+                    'code' => 'B16131',
+                ]);
+            }
+            
             $permute = $user->getEnabled() ? false : true;
             $user->setEnabled($permute);
         }
-        $this->getDoctrine()->getManager()->flush();
+        try {
+            $this->em->flush();
+        } catch (\Doctrine\DBAL\DBALException $e) {
+            $this->addFlash('warning', $e->getMessage());
+        }
         return $this->redirectToRoute('back_user_search');
     }
 }
