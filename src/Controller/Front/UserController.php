@@ -121,35 +121,41 @@ class UserController extends AbstractController
             $requestLang = $request->request->get('user_update_form')['lang'];
             
             $lang = $em->getRepository(Lang::class)->find($requestLang);
-            $userLang = $lang->getLang();
+            
+            // Duplicate user current lang into langs
+            if (false === $user->getLangs()->contains($lang)) {
+                $user->addLang($lang);
+            }
+            if ($user->getLang() != $lang) {
+                $user->removeLang($user->getLang());
+            }
+            
+            $user->setUpdated();
             
             try {
-                $em->flush();
-
-                $user->setUpdated();
 
                 $em->flush();
 
                 $msg = $this->translator->trans(
                     'account.update.flash.success', [],
-                    'user_messages', $locale = $userLang
+                    'user_messages', $locale = $lang->getLang()
                     );
                 $this->addFlash('success', $msg);
 
                 return $this->redirectToRoute('user_account', [
-                    '_locale' => $userLang
+                    '_locale' => $lang->getLang()
                 ]);
                         
             } catch (\Doctrine\DBAL\DBALException $e) {
-
+                
                 $msg = $this->translator->trans(
                     'account.update.flash.error', [],
                     'user_messages', $locale = locale_get_default()
                 );
-                $this->addFlash('error', $msg.PHP_EOL.$e->getMessage());
-
+                $this->addFlash('error', $msg);
+                
                 return $this->redirectToRoute('user_update', [
-                    '_locale' => $userLang
+                    '_locale' => $lang->getLang()
                 ]);
             }
             

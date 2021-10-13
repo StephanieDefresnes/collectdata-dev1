@@ -85,7 +85,9 @@ class RegistrationController extends AbstractController
             $lang = $this->em->getRepository(Lang::class)->findOneBy(
                 ['lang' => locale_get_default()]
             );
-            $user->setLangId($lang->getId());
+            $user->setLang($lang);
+            // Duplicate user current lang into langs
+            $user->addLang($lang);
 
             $this->entityManager->persist($user);
             
