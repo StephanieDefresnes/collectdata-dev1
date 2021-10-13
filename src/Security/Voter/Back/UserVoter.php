@@ -33,8 +33,6 @@ class UserVoter extends Voter
     protected function supports($attribute, $subject)
     {        
         return in_array($attribute, [
-            self::SEARCH,
-            self::CREATE,
             self::READ,
             self::UPDATE,
             self::DELETE,
@@ -52,11 +50,6 @@ class UserVoter extends Voter
 
         // ... (check conditions and return true to grant permission) ...
         switch ($attribute) {
-            case self::SEARCH:
-                return $this->canSearch($user);
-//                return $this->canSearch($subject, $user);
-            case self::CREATE:
-                return $this->canCreate($user);
             case self::READ:
                 return $this->canRead($subject, $user);
             case self::UPDATE:
@@ -67,23 +60,6 @@ class UserVoter extends Voter
                 return $this->canPermuteEnabled($subject, $user);
         }
         throw new \LogicException('This code should not be reached!');
-    }
-    
-//    private function canSearch(array $data, User $user)
-    private function canSearch(User $user)
-    {
-        if (!$this->security->isGranted('ROLE_ADMIN')) {
-            return false;
-        }
-        return true;
-    }
-
-    private function canCreate(User $user)
-    {
-        if (!$this->security->isGranted('ROLE_ADMIN')) {
-            return false;
-        }
-        return true;
     }
 
     private function canRead(User $subject, User $user)

@@ -3,10 +3,6 @@
 namespace App\Service;
 
 use App\Entity\Situ;
-use App\Entity\SituItem;
-use App\Entity\Event;
-use App\Entity\Category;
-use App\Entity\Status;
 use App\Entity\Lang;
 use Doctrine\ORM\EntityManagerInterface;
 
