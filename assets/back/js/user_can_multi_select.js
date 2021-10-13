@@ -1,9 +1,6 @@
 $(function(){
     
     // Entries selection
-    $('#check_all').click(function(){
-        $('input:checkbox').not(this).prop('checked', this.checked);
-    });
     $('#select_all').change(function() {
         if (this.checked) {
             $(".select").each(function() {
@@ -24,7 +21,7 @@ $(function(){
     $('.form-check-input').change(function() {
         if (this.checked && $('#userActions').hasClass('d-none')) {
             $('#userActions').removeClass('d-none').animate({opacity: 1}, 450)
-        } else if (!this.checked && !$('#user-actions').hasClass('d-none')) {
+        } else if (!this.checked && !$('#userActions').hasClass('d-none')) {
             var check = 0;
             $(".select").each(function() {
                 if (this.checked) check += 1
