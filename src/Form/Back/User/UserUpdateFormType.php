@@ -8,9 +8,16 @@ use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Security\Core\Security;
 
 class UserUpdateFormType extends AbstractType
 {
+    private $security;
+    
+    public function __construct(Security $security)
+    {
+        $this->security = $security;
+    }
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $choices = [];
@@ -19,11 +26,20 @@ class UserUpdateFormType extends AbstractType
         $role = $options['role'];
         switch ($role) {
             case 'super-admin':
-                $choices = [
-                    'user.role.admin' => 'ROLE_ADMIN',
-                    'user.role.moderator' => 'ROLE_MODERATOR',
-                    'user.role.contributor' => 'ROLE_CONTRIBUTOR',
-                ];
+                if ($this->security->getUser()->getId() == 1) {
+                    $choices = [
+                        'user.role.super_admin' => 'ROLE_SUPER_ADMIN',
+                        'user.role.admin' => 'ROLE_ADMIN',
+                        'user.role.moderator' => 'ROLE_MODERATOR',
+                        'user.role.contributor' => 'ROLE_CONTRIBUTOR',
+                    ];
+                } else {
+                    $choices = [
+                        'user.role.admin' => 'ROLE_ADMIN',
+                        'user.role.moderator' => 'ROLE_MODERATOR',
+                        'user.role.contributor' => 'ROLE_CONTRIBUTOR',
+                    ];
+                }
                 $bsClass = '';
                 break;
             case 'admin':
