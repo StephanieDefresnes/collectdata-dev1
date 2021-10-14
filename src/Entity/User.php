@@ -140,16 +140,16 @@ class User implements UserInterface
     private $translations;
 
     /**
-     * @ORM\OneToMany(targetEntity=Message::class, mappedBy="senderUser")
-     */
-    private $senders;
-
-    /**
      * @ORM\OneToMany(targetEntity=Message::class, mappedBy="recipientUser")
      */
     private $recipients;
     
     protected $captcha;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Message::class, mappedBy="senderUser", orphanRemoval=true)
+     */
+    private $senders;
 
     public function __construct()
     {
@@ -479,6 +479,16 @@ class User implements UserInterface
         return $this;
     }
     
+    public function getCaptcha()
+    {
+      return $this->captcha;
+    }
+
+    public function setCaptcha($captcha)
+    {
+      $this->captcha = $captcha;
+    }
+    
     /**
      * @return Collection|Situ[]
      */
@@ -658,15 +668,5 @@ class User implements UserInterface
 
         return $this;
     }
-    
-    public function getCaptcha()
-    {
-      return $this->captcha;
-    }
-
-    public function setCaptcha($captcha)
-    {
-      $this->captcha = $captcha;
-    }
-    
+   
 }
