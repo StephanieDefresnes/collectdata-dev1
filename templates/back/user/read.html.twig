@@ -1,72 +1,74 @@
 {% trans_default_domain 'back_messages' %}
 {% extends "back/layout.html.twig" %}
+        
+{% set can_delete = false %}
+{% if (not user.hasRole("ROLE_SUPER_ADMIN") or user.id != 1)
+    and (   is_granted("ROLE_SUPER_ADMIN")
+        or  (is_granted("ROLE_ADMIN") and not user.hasRole("ROLE_ADMIN")
+            and (user.hasRole("ROLE_MODERATOR") or user.hasRole("ROLE_CONTRIBUTOR")))) %}
+    {% set can_delete = true %}{% endif %}
+        
+{% set can_read = false %}
+{% if not user.hasRole("ROLE_SUPER_ADMIN") %}
+    {% if (is_granted("ROLE_SUPER_ADMIN"))
+        or (is_granted("ROLE_ADMIN") and not user.hasRole("ROLE_ADMIN")
+            and (user.hasRole("ROLE_USER") and user.hasRole("ROLE_MODERATOR")))
+        or (is_granted("ROLE_MODERATOR") and not user.hasRole("ROLE_ADMIN")
+            and not user.hasRole("ROLE_MODERATOR") and user.hasRole("ROLE_USER")) %}
+    {% set can_read = true %}{% endif %}{% endif %}
 
-{% set can_update = true %}
-{% set can_delete = true %}
+{% set can_update = false %}
+{% if not user.hasRole("ROLE_SUPER_ADMIN") and is_granted("ROLE_SUPER_ADMIN") 
+    or (not user.hasRole("ROLE_SUPER_ADMIN")
+        and (
+            ( is_granted("ROLE_ADMIN")
+                and not is_granted("ROLE_SUPER_ADMIN")
+                and not user.hasRole("ROLE_ADMIN") )
+            or ( is_granted("ROLE_MODERATOR")
+                and not is_granted("ROLE_SUPER_ADMIN")
+                and not is_granted("ROLE_ADMIN")
+                and not user.hasRole("ROLE_ADMIN")
+                and not user.hasRole("ROLE_MODERATOR") ) ) ) %}
+    {% set can_update = true %}{% endif %}
 
-{% block title %}{{ 'user.read'|trans() }}{% endblock %}
+{% block title %}{{ 'user.read.title'|trans() }}{% endblock %}
 
 {% block stylesheets %}
     {{ parent() }}
-    {{ encore_entry_link_tags('user_read_app', null, 'backApp') }}
- {% endblock %}
+    {% if can_delete %}
+        <link rel="stylesheet" href="{{ asset('jquery-confirm/css/jquery-confirm.css') }}">
+    {% endif %}
+{% endblock %}
  
 {% block content %}
-{% if can_delete %}
-    <div id="delete" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 id="modal_title" class="modal-title">{{ 'user.delete.modal_title'|trans() }}</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="X">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div id="modal_body" class="modal-body">
-                    <h6 id="modal_body_title"></h6>
-                    <div class="alert alert-warning">
-                        <strong>{{ 'action.warning'|trans() }}</strong>
-                    </div>
-                </div>
-                <div id="modal_footer" class="modal-footer">
-                    {{ form_start(form_delete, {'attr': {'id': 'form_back_user_delete' }}) }}
-                        <button type="submit" class="btn btn-danger">{{ 'action.delete'|trans() }}</button>
-                    {{ form_end(form_delete) }}
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">{{ 'button.cancel'|trans() }}</button>
-                </div>
-            </div>
-        </div>
-    </div>
-{% endif %}
-
     <div class="container-fluid pt-4">
         <div class="row">
             <div class="col-sm-6">
-                <h1 class="h3">{{ 'user.read'|trans({ '%identifier%': user }) }}</h1>
+                <h1 class="h3">{{ 'user.read.title'|trans() }}</h1>
             </div>
             <div class="col-sm-6 text-right">
                 <p>
                     <a href="{{ path('back_user_search') }}" class="btn btn-primary" role="button">
                         <i class="fas fa-reply"></i> {{ 'action.back'|trans() }}
                     </a>
-                    {% if can_update and not user.hasRole("ROLE_SUPER_ADMIN")  
-                        and (   is_granted("ROLE_SUPER_ADMIN")
-                            or  (is_granted("ROLE_ADMIN") and not user.hasRole("ROLE_ADMIN")
-                                and (user.hasRole("ROLE_MODERATOR") or user.hasRole("ROLE_CONTRIBUTOR")))
-                            or (is_granted("ROLE_MODERATOR") and not user.hasRole("ROLE_MODERATOR")
-                                and not user.hasRole("ROLE_ADMIN") and user.hasRole("ROLE_CONTRIBUTOR"))) %}
-                        <a href="{{ path('back_user_update', {'id': user.id}) }}" title="{{ 'action.edit'|trans() }}"
-                            class="btn btn-warning" data-toggle="tooltip" data-placement="bottom" aria-label="{{ 'action.edit'|trans() }}" role="button">
+                    {% if can_update %}
+                        <a href="{{ path('back_user_update', {'id': user.id}) }}"
+                           class="btn btn-warning width-max-40"
+                           data-toggle="tooltip" data-placement="bottom"
+                           title="{{ 'action.edit'|trans() }}"
+                           aria-label="{{ 'action.edit'|trans() }}" role="button">
                             <i class="fas fa-edit"></i>
                         </a>
                     {% endif %}
-                    {% if can_delete and not user.hasRole("ROLE_SUPER_ADMIN") and is_granted("ROLE_SUPER_ADMIN") %}
-                        <a href="#" class="btn btn-danger btn-delete" data-toggle="tooltip" data-placement="bottom" data-toggle="modal" data-target="#delete"
-                            data-title="{{ user }}" role="button" 
-                            data-path="{{ path('back_user_delete', { 'ids': {0: user.id} }) }}"
-                            title="{{ 'action.delete'|trans() }}" aria-label="{{ 'action.delete'|trans() }}">
+                    {% if can_delete %}
+                        <span class="btn btn-danger userDelete"
+                           data-url="{{ path('back_user_delete', { 'ids': {0: user.id} }) }}"
+                           data-user="{{ user.name }}"
+                           data-toggle="tooltip" data-placement="bottom"
+                           title="{{ 'action.delete'|trans() }}"
+                           aria-label="{{ 'action.delete'|trans() }}">
                             <i class="fas fa-times"></i>
-                        </a>
+                        </span>
                     {% endif %}
                 </p>
             </div>
@@ -75,68 +77,80 @@
         <div class="col-lg-10 offset-lg-1 col-12 offset-0 px-0">
             <div class="card shadow mb-4">
                 <div class="card-header py-3">
-                    <h6 class="m-0 font-weight-bold text-primary">{{ 'action.read_title'|trans() }}</h2></h6>
+                    <h6 class="m-0 font-weight-bold text-primary">{{ 'action.read_title'|trans() }}</h6>
                 </div>
                 <div class="card-body">
                         <div class="user-field pb-3 row">
-                            <strong class="col-sm-4">{{ 'label_dp.name'|trans() }}</strong>
-                            <span class="col-sm-8">{{ user.name }}</span>
+                            <strong class="col-sm-4 line-11">{{ 'label_dp.name'|trans() }}</strong>
+                            <span class="col-sm-8 line-12">{{ user.name }}</span>
                         </div>
                         <div class="user-field pb-3 row">
-                            <strong class="col-sm-4">{{ 'label_dp.email'|trans() }}</strong>
-                            <span class="col-sm-8"><a href="mailto:{{ user.email }}">{{ user.email }}</a></span>
+                            <strong class="col-sm-4 line-11">{{ 'label_dp.email'|trans() }}</strong>
+                            <span class="col-sm-8 line-12"><a href="mailto:{{ user.email }}">{{ user.email }}</a></span>
                         </div>
                         <div class="user-field pb-3 row">
-                            <strong class="col-sm-4">{{ 'label_dp.enabled'|trans() }}</strong>
-                            <span class="col-sm-8">{{ user.enabled ? 'yes'|trans : 'no'|trans }}</span>
+                            <strong class="col-sm-4 line-11">{{ 'label_dp.enabled'|trans() }}</strong>
+                            <span class="col-sm-8 line-12">{{ user.enabled ? 'yes'|trans : 'no'|trans }}</span>
                         </div>
                         <div class="user-field pb-3 row">
-                            <strong class="col-sm-4">{{ 'label_dp.roles'|trans() }}</strong>
-                            <span class="col-sm-8">
-                            {% set rolesLength = user.roles|length %}
-                            {% for role in user.roles %}
-                                {% if role == 'ROLE_CONTRIBUTOR' %}{{ 'user.role.contributor'|trans() }}
-                                {% elseif role == 'ROLE_MODERATOR' %}{{ 'user.role.moderator'|trans() }}
-                                {% elseif role == 'ROLE_ADMIN' %}{{ 'user.role.admin'|trans() }}
-                                {% elseif role == 'ROLE_SUPER_ADMIN' %}{{ 'user.role.super_admin'|trans() }}{% endif %}
-                                {% if rolesLength > 2 %}{% if not loop.last and loop.first%} - {% endif %}{% endif %}
-                            {% endfor %}
-                            {% if user.langContributor %}
-                                - {{ 'user.role.translator'|trans() }}
-                            {% endif %}
+                            <strong class="col-sm-4 line-11">{{ 'label_dp.roles'|trans() }}</strong>
+                            <span class="col-sm-8 line-12">
+                                {% set newRoles = [] %}
+                                {% for role in user.roles %}
+                                    {% if role != 'ROLE_USER' %}
+                                        {% if role == 'ROLE_CONTRIBUTOR' %}{% set newRoles = newRoles|merge(['account.roles.contributor'|trans()]) %}
+                                        {% elseif role == 'ROLE_MODERATOR' %}{% set newRoles = newRoles|merge(['account.roles.moderator'|trans()]) %}
+                                        {% elseif role == 'ROLE_ADMIN' %}{% set newRoles = newRoles|merge(['account.roles.admin'|trans()]) %}
+                                        {% elseif role == 'ROLE_SUPER_ADMIN' %}{% set newRoles = newRoles|merge(['account.roles.super_admin'|trans()]) %}{% endif %}
+                                    {% endif %}
+                                {% endfor %}
+                                {{ newRoles|join(' - ') }}
+                                {% if user.langContributor %}
+                                    - {{ 'account.translator.status'|trans() }}
+                                {% endif %}
                             </span>
                         </div>
                         <div class="user-field pb-3 row">
-                            <strong class="col-sm-4">{{ 'label_dp.date_create'|trans() }}</strong>
-                            <span class="col-sm-8">{{ user.dateCreate ? user.dateCreate|format_datetime : '' }}</span>
+                            <strong class="col-sm-4 line-11">{{ 'label_dp.date_create'|trans() }}</strong>
+                            <span class="col-sm-8 line-12">{{ user.dateCreate ? user.dateCreate|format_datetime : '' }}</span>
                         </div>
                         {% if user.dateLastLogin %}
                             <div class="user-field pb-3 row">
-                                <strong class="col-sm-4">{{ 'label_dp.date_login'|trans() }}</strong>
-                                <span class="col-sm-8">{{ user.dateLastLogin ? user.dateLastLogin|format_datetime : '' }}</span>
+                                <strong class="col-sm-4 line-11">{{ 'label_dp.date_login'|trans() }}</strong>
+                                <span class="col-sm-8 line-12">{{ user.dateLastLogin ? user.dateLastLogin|format_datetime : '' }}</span>
                             </div>
                         {% endif %}
                         {% if user.dateUpdate %}
                             <div class="user-field pb-3 row">
-                                <strong class="col-sm-4">{{ 'label_dp.date_update'|trans() }}</strong>
+                                <strong class="col-sm-4 line-11">{{ 'label_dp.date_update'|trans() }}</strong>
                                 <span class="col-sm-8">{{ user.dateUpdate ? user.dateUpdate|format_datetime : '' }}</span>
                             </div>
                         {% endif %}
                         <div class="user-field pb-3 row">
-                            <strong class="col-sm-4">{{ 'user.read.contribs.title'|trans() }}</strong>
-                            <span class="col-sm-8">
+                            <strong class="col-sm-4 line-11">{{ 'contrib.situ.count_dp'|trans() }}</strong>
+                            <span class="col-sm-8 line-12">
                                 {% if situs ==  0 %}{{ 'user.read.contribs.empty'|trans() }}
                                 {% elseif situs == 1 %} {{ situs }} {{ 'user.read.contribs.count'|trans() }}
                                 {% else %}{{ situs }} {{ 'user.read.contribs.count_s'|trans() }}{% endif %}
                             </span>
                         </div>
-                        {% if user.forbiddenAccess >= 1 %}
-                        <div class="user-field pb-3 row">
-                            <strong class="col-sm-4">{{ 'user.read.forbidden_acces.label'|trans() }}</strong>
-                            <span class="col-sm-8">
-                                {{ user.forbiddenAccess }}
-                            </span>
-                        </div>
+                        {% if can_read %}
+                            {% if user.forbiddenAccess %}
+                                <div class="user-field pb-3 row">
+                                    <strong class="col-sm-4 line-11">{{ 'user.read.forbidden_acces.label'|trans() }}</strong>
+                                    <span class="col-sm-8 line-12">
+                                        {{ user.forbiddenAccess }}
+                                    </span>
+                                </div>
+                            {% endif %}
+                            {% if user.adminNote %}
+                                <div class="user-field pb-3 row">
+                                    <strong class="col-sm-4 line-11">{{ 'label_dp.note'|trans() }}</strong>
+                                    <span class="col-sm-8 line-11">
+                                        {{ user.adminNote|nl2br }}
+                                    </span>
+                                </div>
+                            {% endif %}
                         {% endif %}
                 </div>
             </div>        
@@ -147,11 +161,16 @@
 {% block javascripts %}
     {{ parent() }}
     {% if can_delete %}
+        <script src="{{ asset('jquery-confirm/js/jquery-confirm.js') }}"></script>
+        {{ encore_entry_script_tags('user_can_delete', null, 'backApp') }}
         <script>
             var translations = {
-               "deleteConfirm" : "{{ 'delete.confirm'|trans }}",
+               "confirm" : "{{ 'user.delete.confirm'|trans }}",
+               "user" : "{{ 'user.delete.title'|trans }}",
+               "warning" : "{{ 'user.delete.warning'|trans }}",
+               "no" : "{{ 'no'|trans }}",
+               "yes" : "{{ 'yes'|trans }}",
             }
         </script>
-        {{ encore_entry_script_tags('user_read_app', null, 'backApp') }}
     {% endif %}
 {% endblock %}
