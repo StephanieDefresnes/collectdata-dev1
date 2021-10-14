@@ -26,7 +26,8 @@ $(function() {
             orderable: false,
             targets: 'no-sort'
         }],
-        "fnDrawCallback": function(oSettings) {
+        'order': [[ 1, 'desc' ]],
+        'fnDrawCallback': function(oSettings) {
             $('#dataTable-list_filter input').addClass('search')
             
             // Hide length select & pagination if only one page

@@ -12,16 +12,11 @@ use App\Service\SituService;
 use App\Service\UserService;
 use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
-use Symfony\Component\Form\FormEvent;
-use Symfony\Component\Form\FormEvents;
-use Symfony\Component\Form\FormError;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Session;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
@@ -124,7 +119,7 @@ class UserController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $this->em->flush();
-            $msg = $this->translator->trans('user.update.flash.success', [], 'back_messages');
+            $msg = $this->translator->trans('user.update.flash.success.', [], 'back_messages');
             $this->addFlash('success', $msg);
             return $this->redirectToRoute('back_user_search');
         }
@@ -143,36 +138,70 @@ class UserController extends AbstractController
     {    
         $users = $this->userManager->getUsers();
         
-        $formBuilder = $this->createFormBuilder();
-        $formBuilder->addEventListener(FormEvents::POST_SUBMIT, function (FormEvent $event) use ($users) {
-            $result = $this->userManager->validationDelete($users);
-            if (true !== $result) {
-                return $this->redirectToRoute('access_denied', [
-                    '_locale' => locale_get_default(),
-                    'code' => $result,
-                ]);
-            }
-        });
-        $form = $formBuilder->getForm();
-        
-        $form->handleRequest($request);
-        if ($form->isSubmitted() && $form->isValid()) {
-            foreach($users as $user) {
-                $this->em->remove($user);
-            }
-            try {
-                $this->em->flush();
-                $this->addFlash('success', $this->translator
-                        ->trans('user.delete.flash.success', [], 'back_messages'));
-            } catch (\Doctrine\DBAL\DBALException $e) {
-                $this->addFlash('warning', $e->getMessage());
-            }
-            return $this->redirectToRoute('back_user_search');
+        $result = $this->userManager->validationPermuteEnabled($users);
+        if (true !== $result) {
+            return $this->redirectToRoute('access_denied', [
+                '_locale' => locale_get_default(),
+                'code' => $result,
+            ]);
         }
-        return $this->render('back/user/delete.html.twig', [
-            'users' => $users,
-            'form' => $form->createView(),
-        ]);
+        
+        $anonymous = $this->em->getRepository(User::class)->find(intval('-99'));
+        
+        foreach ($users as $user) {
+            
+            // If get situs, set them to anonymous
+            if($user->getSitus()) {
+                foreach ($user->getSitus() as $situ) {
+                    $situ->setUser($anonymous);
+                }
+            }
+            // If get events, set them to anonymous
+            if($user->getEvents()) {
+                foreach ($user->getEvents() as $event) {
+                    $event->setUser($anonymous);
+                }
+            }
+            // If get categories, set them to anonymous
+            if($user->getCategories()) {
+                foreach ($user->getCategories() as $category) {
+                    $category->setUser($anonymous);
+                }
+            }
+            // If get translations, set them to anonymous
+            if($user->getTranslations()) {
+                foreach ($user->getTranslations() as $translation) {
+                    $translation->setUser($anonymous);
+                }
+            }
+            // If recevied messages, set them to anonymous
+            if($user->getRecipients()) {
+                foreach ($user->getSenders() as $message) {
+                    $message->setRecipientUser($anonymous);
+                }
+            }
+            // If sent messages, removed by orphanRemoval
+             
+            // If get image, remove it
+            if($user->getImageFilename()) {
+                unlink($this->getParameter('user_img').'/'.$user->getImageFilename());
+            }
+            
+            $this->em->remove($user);
+        }
+        
+        if (count($users) > 1) $type = 'users';
+        else $type = 'user';
+            
+        try {
+            $this->em->flush();
+            $msg = $this->translator
+                    ->trans('user.delete.flash.success.'. $type, [], 'back_messages');
+            $this->addFlash('success', $msg);
+        } catch (\Doctrine\DBAL\DBALException $e) {
+            $this->addFlash('warning', $e->getMessage());
+        }
+        return $this->redirectToRoute('back_user_search');
     }
     
     /**
@@ -190,14 +219,23 @@ class UserController extends AbstractController
                 'code' => $result,
             ]);
         }
-        
+        $permute = '';
         foreach ($users as $user) {
             $permute = $user->getEnabled() ? false : true;
             $user->setEnabled($permute);
         }
         
+        if (count($users) > 1) $type = 'users';
+        else {
+            if ($permute) $type = 'user_disabled';
+            else $type = 'user_enabled';
+        }
+        
         try {
             $this->em->flush();
+            $msg = $this->translator
+                    ->trans('user.update.flash.success.'. $type, [], 'back_messages');
+            $this->addFlash('success', $msg);
         } catch (\Doctrine\DBAL\DBALException $e) {
             $this->addFlash('warning', $e->getMessage());
         }
