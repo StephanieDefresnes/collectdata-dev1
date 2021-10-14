@@ -52,7 +52,7 @@ class PageController extends AbstractController
     }
     
     /**
-     * @Route("/contents", name="back_content_search", methods="GET")
+     * @Route("/content/all", name="back_content_search", methods="GET")
      */
     public function contentList(): Response
     {
