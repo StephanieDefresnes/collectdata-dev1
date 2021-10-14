@@ -21,7 +21,7 @@
                 </div>
                 <div class="col-md-8 first-letter">
                     <span id="initial-id" class="id">{{ situ.translatedSituId }}</span>
-                    <a href="{{ path('back_situ_read', { 'situ': situ.translatedSituId }) }}"
+                    <a href="{{ path('back_situ_read', { 'id': situ.translatedSituId }) }}"
                        class="mx-2" target="_blank"
                        data-toggle="tooltip" data-placement="right"
                        title="{{ 'action.read'|trans() }}">

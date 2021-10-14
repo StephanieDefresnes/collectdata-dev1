@@ -93,7 +93,7 @@
                                 </div>
                                 <div class="col-md-8 first-letter">
                                     <span id="initial-id" class="id">{{ situ.translatedSituId }}</span>
-                                    <a href="{{ path('back_situ_read', { 'situ': situ.translatedSituId }) }}"
+                                    <a href="{{ path('back_situ_read', { 'id': situ.translatedSituId }) }}"
                                        target="_blank"
                                        data-toggle="tooltip" data-placement="right"
                                        title="{{ 'action.read'|trans() }}">
@@ -111,7 +111,7 @@
                                     <div class="col-md-8 first-letter">
                                         {% for translation in translations %}
                                             <span class="id">{{ translation.id }}</span>
-                                            <a href="{{ path('back_situ_read', { 'situ': translation.id }) }}"
+                                            <a href="{{ path('back_situ_read', { 'id': translation.id }) }}"
                                                data-toggle="tooltip" data-placement="right"
                                                title="{{ 'action.read'|trans() }}">
                                                 <i class="fas fa-eye"></i>

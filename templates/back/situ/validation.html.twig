@@ -50,7 +50,7 @@
                         {% for situ in situs %}
                         <tr>
                             <td class="px-2 align-middle">
-                                <a href="{{ path('back_situ_verify', { 'situ': situ.id }) }}"
+                                <a href="{{ path('back_situ_verify', { 'id': situ.id }) }}"
                                    role="button" class="btn btn-outline-warning pcx-2 py-1"
                                    data-id="{{ situ.id }}" data-action=""
                                    data-toggle="tooltip" data-placement="left"

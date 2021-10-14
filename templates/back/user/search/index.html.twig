@@ -2,12 +2,6 @@
 {% extends "back/layout.html.twig" %}
 
 {% set locale = app.request.locale %}
-{% set can_create = true %}
-{% set can_read = true %}
-{% set can_update = true %}
-{% set can_delete = true %}
-{% set can_filter = true %}
-{% set can_multi_select = true %}
 
 {% block title %}{{ 'label.users'|trans() }}{% endblock %}
 
@@ -15,11 +9,14 @@
     {{ parent() }}
     {{ encore_entry_link_tags('table_app', null, 'backApp') }}
     {{ encore_entry_link_tags('app') }}
+    {% if is_granted("ROLE_ADMIN") %}
+        <link rel="stylesheet" href="{{ asset('jquery-confirm/css/jquery-confirm.css') }}">
+    {% endif %}
  {% endblock %}
 
 {% block content %}
     <div id="loader"></div>
-{% if can_delete %}
+{% if is_granted("ROLE_SUPER_ADMIN") %}
     <div id="delete" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
@@ -45,6 +42,7 @@
         </div>
     </div>
 {% endif %}
+
     <div class="container-fluid pt-4">
         
         <div class="d-sm-flex align-items-center justify-content-between mb-4">
@@ -58,19 +56,26 @@
 
 {% block javascripts %}
     {{ parent() }}
-    {{ encore_entry_script_tags('table_app', null, 'backApp') }}
+    {{ encore_entry_script_tags('user_search_app', null, 'backApp') }}
 
-    {% if can_delete %}
-        {{ encore_entry_script_tags('user_can_delete', null, 'backApp') }}
-    {% endif %}
-
-    {% if can_multi_select %}
+    {% if is_granted("ROLE_ADMIN") %}
+        <script src="{{ asset('jquery-confirm/js/jquery-confirm.js') }}"></script>
         {{ encore_entry_script_tags('user_can_multi_select', null, 'backApp') }}
+        {{ encore_entry_script_tags('user_can_delete', null, 'backApp') }}
+        <script>
+            var translations = {
+               "confirm" : "{{ 'user.delete.confirm'|trans }}",
+               "confirms" : "{{ 'user.delete.confirm_s'|trans }}",
+               "user" : "{{ 'user.delete.title'|trans }}",
+               "users" : "{{ 'user.delete.title_s'|trans }}",
+               "warning" : "{{ 'user.delete.warning'|trans }}",
+               "no" : "{{ 'no'|trans }}",
+               "yes" : "{{ 'yes'|trans }}",
+            }
+        </script>
     {% endif %}
-<script>
-    var translations = {
-       "deleteConfirm" : "{{ 'delete.confirm'|trans }}",
-    }
-</script>
+
+    {% if is_granted("ROLE_ADMIN") %}
+    {% endif %}
 
 {% endblock %}

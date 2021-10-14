@@ -10,6 +10,7 @@ use App\Entity\User;
 use App\Form\Back\Situ\VerifySituFormType;
 use App\Service\LangService;
 use Doctrine\ORM\EntityManagerInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -19,6 +20,7 @@ use Symfony\Component\Security\Core\Security;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
+ * @IsGranted("IS_AUTHENTICATED_FULLY")
  * @Route("/{_locale<%app_locales%>}/back/situ")
  */
 class SituController extends AbstractController
@@ -41,10 +43,8 @@ class SituController extends AbstractController
      */
     public function allSitus(): Response
     {   
-        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
-        
-        $repository = $this->em->getRepository(Situ::class);
-        $situs = $repository->findAll();
+        $situs = $this->em->getRepository(Situ::class)
+                    ->findAll();
 
         return $this->render('back/situ/search.html.twig', [
             'situs' => $situs,
@@ -52,11 +52,17 @@ class SituController extends AbstractController
     }
     
     /**
-     * @Route("/read/{situ}", name="back_situ_read", methods="GET")
+     * @Route("/read/{id}", name="back_situ_read", methods="GET")
      */
-    public function read(Situ $situ): Response
+    public function read($id): Response
     {
-        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+        $situ = $this->em->getRepository(Situ::class)->find($id);
+        
+        if (!$situ) {
+            return $this->redirectToRoute('back_not_found', [
+                '_locale' => locale_get_default()
+            ]);
+        }
         
         return $this->render('back/situ/read.html.twig', [
             'situ' => $situ,
@@ -68,10 +74,8 @@ class SituController extends AbstractController
      */
     public function situsToValidate()
     {
-        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
-        
-        $repository = $this->em->getRepository(Situ::class);
-        $situs = $repository->findBy(['statusId' => 2]);
+        $situs = $this->em->getRepository(Situ::class)
+                    ->findBy(['statusId' => 2]);
         
         return $this->render('back/situ/validation.html.twig', [
             'situs' => $situs,
@@ -79,14 +83,13 @@ class SituController extends AbstractController
     }
     
     /**
-     * @Route("/verify/{situ}", name="back_situ_verify", methods="GET|POST")
+     * @Route("/verify/{id}", name="back_situ_verify", methods="GET|POST")
      */
     public function verifySitu( Request $request,
                                 LangService $langService,
-                                Situ $situ): Response
+                                $id): Response
     {
-        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
-        $this->denyAccessUnlessGranted('ROLE_MODERATOR');
+        $situ = $this->em->getRepository(Situ::class)->find($id);
         
         if (!$situ) {
             return $this->redirectToRoute('back_not_found', [
@@ -106,9 +109,6 @@ class SituController extends AbstractController
             ]);
             
         } else {        
-            $events = '';
-            $categoriesLevel1 = '';
-            $categoriesLevel2 = '';
             $situInitial = '';
             $situsTranslated = '';
             
@@ -155,8 +155,6 @@ class SituController extends AbstractController
      */
     public function ajaxValidation(): JsonResponse
     {
-        $this->denyAccessUnlessGranted('ROLE_MODERATOR');
-            
         // Get request data
         $request = $this->get('request_stack')->getCurrentRequest();
         $dataForm = $request->request->all();        
@@ -247,9 +245,6 @@ class SituController extends AbstractController
      */
     function removeDefinitelySitu(Situ $situ)
     {
-        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
-        $this->denyAccessUnlessGranted('ROLE_ADMIN');
-        
         if ($situ->getStatusId() != 5) {
             return $this->redirectToRoute('access_denied', [
                 '_locale' => locale_get_default(),

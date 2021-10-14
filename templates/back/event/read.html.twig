@@ -167,7 +167,7 @@
                                                 <td class="px-2 align-middle text-capitalize">{{ situ.categoryLevel1.title|u.truncate(20, '...') }}</td>
                                                 <td class="px-2 align-middle text-capitalize">{{ situ.categoryLevel2.title|u.truncate(20, '...') }}</td>
                                                 <td class="width-max-26">
-                                                    <a href="{{ path('back_situ_read', { 'situ': situ.id }) }}"
+                                                    <a href="{{ path('back_situ_read', { 'id': situ.id }) }}"
                                                        class="btn btn-outline-primary py-0 px-1"
                                                        title="{{ 'action.read'|trans() }}">
                                                         <i class="fas fa-eye"></i>
