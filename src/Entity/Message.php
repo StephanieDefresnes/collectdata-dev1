@@ -28,6 +28,18 @@ class Message
     private $channel;
 
     /**
+     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="senders")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $senderUser;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="recipients")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $recipientUser;
+
+    /**
      * @ORM\Column(type="string", length=255)
      */
     private $subject;
@@ -36,16 +48,6 @@ class Message
      * @ORM\Column(type="text", nullable=true)
      */
     private $text;
-
-    /**
-     * @ORM\Column(type="integer")
-     */
-    private $senderUserId;
-
-    /**
-     * @ORM\Column(type="integer")
-     */
-    private $recipientUserId;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
@@ -106,6 +108,30 @@ class Message
         return $this;
     }
 
+    public function getSenderUser(): ?User
+    {
+        return $this->senderUser;
+    }
+
+    public function setSenderUser(?User $senderUser): self
+    {
+        $this->senderUser = $senderUser;
+
+        return $this;
+    }
+
+    public function getRecipientUser(): ?User
+    {
+        return $this->recipientUser;
+    }
+
+    public function setRecipientUser(?User $recipientUser): self
+    {
+        $this->recipientUser = $recipientUser;
+
+        return $this;
+    }
+
     public function getSubject(): ?string
     {
         return $this->subject;
@@ -126,30 +152,6 @@ class Message
     public function setText(?string $text): self
     {
         $this->text = $text;
-
-        return $this;
-    }
-
-    public function getSenderUserId(): ?int
-    {
-        return $this->senderUserId;
-    }
-
-    public function setSenderUserId(int $senderUserId): self
-    {
-        $this->senderUserId = $senderUserId;
-
-        return $this;
-    }
-
-    public function getRecipientUserId(): ?int
-    {
-        return $this->recipientUserId;
-    }
-
-    public function setRecipientUserId(int $recipientUserId): self
-    {
-        $this->recipientUserId = $recipientUserId;
 
         return $this;
     }

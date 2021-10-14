@@ -20,7 +20,7 @@ class MessageService {
             ->from(Message::class,'m')
             ->select('m')
             ->andWhere('m.scanned = ?1')
-            ->andWhere('m.recipientUserId = ?2')
+            ->andWhere('m.recipientUser = ?2')
             ->setParameter(1, 0)
             ->setParameter(2, $userId)
             ->addOrderBy('m.dateCreate', 'DESC')

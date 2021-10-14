@@ -122,22 +122,32 @@ class User implements UserInterface
     /**
     * @ORM\OneToMany(targetEntity=Situ::class, cascade={"persist"}, mappedBy="user")
     */
-    protected $situs;
+    private $situs;
 
     /**
     * @ORM\OneToMany(targetEntity=Event::class, cascade={"persist"}, mappedBy="user")
     */
-    protected $events;
+    private $events;
 
     /**
     * @ORM\OneToMany(targetEntity=Category::class, cascade={"persist"}, mappedBy="user")
     */
-    protected $categories;
+    private $categories;
 
     /**
     * @ORM\OneToMany(targetEntity=Translation::class, cascade={"persist"}, mappedBy="user")
     */
-    protected $translations;
+    private $translations;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Message::class, mappedBy="senderUser")
+     */
+    private $senders;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Message::class, mappedBy="recipientUser")
+     */
+    private $recipients;
     
     protected $captcha;
 
@@ -148,6 +158,8 @@ class User implements UserInterface
         $this->situs = new ArrayCollection();
         $this->events = new ArrayCollection();
         $this->categories = new ArrayCollection();
+        $this->senders = new ArrayCollection();
+        $this->recipients = new ArrayCollection();
     }
 
     public function __toString()
@@ -161,7 +173,6 @@ class User implements UserInterface
     public function setCreated()
     {
         $this->setDateCreate(new \DateTime());
-        $this->setDateUpdate(new \DateTime());
     }
 
     /**
@@ -595,6 +606,66 @@ class User implements UserInterface
                 $translation->setUser(null);
             }
         }
+        return $this;
+    }
+
+    /**
+     * @return Collection|Message[]
+     */
+    public function getSenders(): Collection
+    {
+        return $this->senders;
+    }
+
+    public function addSender(Message $sender): self
+    {
+        if (!$this->senders->contains($sender)) {
+            $this->senders[] = $sender;
+            $sender->setSenderUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSender(Message $sender): self
+    {
+        if ($this->senders->removeElement($sender)) {
+            // set the owning side to null (unless already changed)
+            if ($sender->getSenderUser() === $this) {
+                $sender->setSenderUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Message[]
+     */
+    public function getRecipients(): Collection
+    {
+        return $this->recipients;
+    }
+
+    public function addRecipient(Message $recipient): self
+    {
+        if (!$this->recipients->contains($recipient)) {
+            $this->recipients[] = $recipient;
+            $recipient->setRecipientUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeRecipient(Message $recipient): self
+    {
+        if ($this->recipients->removeElement($recipient)) {
+            // set the owning side to null (unless already changed)
+            if ($recipient->getRecipientUser() === $this) {
+                $recipient->setRecipientUser(null);
+            }
+        }
+
         return $this;
     }
     

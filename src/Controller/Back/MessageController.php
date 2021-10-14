@@ -36,7 +36,7 @@ class MessageController extends AbstractController
         
         $alerts = $this->em->getRepository(Message::class)->findBy([
             'type' => 'alert',
-            'recipientUserId' => $user->getId(),
+            'recipientUser' => $user,
         ]);
         
         return $this->render('back/message/alerts.html.twig', [

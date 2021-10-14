@@ -44,7 +44,7 @@ class Messenger {
         $author = $this->em->getRepository(User::class)->find($data->getUser()->getId());
 
         if (!$moderators) {
-            $moderators = $this->userService->getRole('SUPER_ADMIN');
+            $moderators = $this->em->getRepository(User::class)->findBy(['id' => intval('-1')]);
         }
         
         foreach ($moderators as $moderator) {
@@ -64,8 +64,8 @@ class Messenger {
             $message->setChannel('primary');
             $message->setType('alert');
             $message->setSubject($subject);
-            $message->setSenderUserId(intval('-1'));
-            $message->setRecipientUserId($moderator->getId());
+            $message->setSenderUser($moderator);
+            $message->setRecipientUser($moderator);
             $message->setEntity($entity);
             $message->setEntityId($data->getId());
             $message->setReported(false);
