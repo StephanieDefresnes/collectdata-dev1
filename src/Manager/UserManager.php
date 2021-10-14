@@ -2,6 +2,7 @@
 
 namespace App\Manager;
 
+use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Form\Exception\LogicException;
 use Symfony\Component\Form\FormInterface;
@@ -11,57 +12,33 @@ use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\Exception\InvalidParameterException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Contracts\Translation\TranslatorInterface;
+use Symfony\Component\Security\Core\Security;
 
 /**
  * 
  */
 class UserManager
 {
-    const NUMBER_BY_PAGE = 15;
-    
-    /**
-     * @var RequestStack 
-     */
-    private $requestStack;
-    
-    /**
-     * @var SessionInterface
-     */
-    private $session;
-    
-    /**
-     * @var EntityManagerInterface
-     */
     private $em;
-    
-    /**
-     * @var UrlGeneratorInterface 
-     */
+    private $requestStack;
+    private $security;
+    private $session;
+    private $translator;
     private $urlGenerator;
     
-    /**
-     * @var TranslatorInterface
-     */
-    private $translator;
-    
-    /** 
-     * @param RequestStack $requestStack
-     * @param SessionInterface $session
-     * @param EntityManagerInterface $em
-     * @param UrlGeneratorInterface $urlGenerator
-     * @param TranslatorInterface $translator
-     */
-    public function __construct(RequestStack $requestStack,
-        SessionInterface $session,
-        EntityManagerInterface $em,
-        UrlGeneratorInterface $urlGenerator,
-        TranslatorInterface $translator
-    ) {
-        $this->requestStack = $requestStack;
-        $this->session = $session;
+    public function __construct(EntityManagerInterface $em,
+                                RequestStack $requestStack,
+                                Security $security,
+                                SessionInterface $session,
+                                TranslatorInterface $translator,
+                                UrlGeneratorInterface $urlGenerator)
+    {
         $this->em = $em;
-        $this->urlGenerator = $urlGenerator;
+        $this->requestStack = $requestStack;
+        $this->security = $security;
+        $this->session = $session;
         $this->translator = $translator;
+        $this->urlGenerator = $urlGenerator;
     }
     
     /**
@@ -77,27 +54,6 @@ class UserManager
             'search' => $this->session->get('back_user_search', null),
             'role' => $this->session->get('back_user_role', null),
         ];
-    }
-
-    /**
-     * Get query data
-     * 
-     *  Transform filter form data into an array compatible with url parameters.
-     *  The returned array must be merged with the parameters of the route.
-     * @param array $data
-     * @return array
-     */
-    public function getQueryData(array $data)
-    {
-        $queryData['filter'] = [];
-        foreach ($data as $key => $value) {
-            if (null === $value) {
-                $queryData['filter'][$key] = '';
-            } else {
-                $queryData['filter'][$key] = $value;
-            }
-        }
-        return $queryData;
     }
     
     /**
@@ -134,8 +90,23 @@ class UserManager
     public function validationDelete($users)
     {
         foreach($users as $user) {
-            if ($user->hasRole('ROLE_SUPER_ADMIN')) {
-                return $this->translator->trans('user.error.cannot_delete_super_admin', [], 'back_messages');
+            // Deny SUPER_ADMIN access except SUPER_ADMIN #1
+            if ($user->hasRole('ROLE_SUPER_ADMIN')
+                    && !$this->security->isGranted('ROLE_SUPER_ADMIN')
+                    && $this->security->getUser()->getId() != 1) {
+                return 'B211921';
+            }
+
+            // Deny ADMIN access except SUPER_ADMIN
+            if ($user->hasRole('ADMIN') &&
+                    !$this->security->isGranted('ROLE_SUPER_ADMIN')) {
+                return 'B21121';
+            }
+
+            // Deny MODERATOR access except ADMIN
+            if ($user->hasRole('ROLE_MODERATOR') &&
+                    !$this->security->isGranted('ROLE_ADMIN')) {
+                return 'B21131';
             }
         }
         return true;
@@ -144,22 +115,51 @@ class UserManager
     public function validationPermuteEnabled($users)
     {
         foreach($users as $user) {
-            if ($user->hasRole('ROLE_SUPER_ADMIN')) {
-                return $this->translator->trans('user.error.cannot_permute_enabled_super_admin', [], 'back_messages');
+            // Deny SUPER_ADMIN access except SUPER_ADMIN #1
+            if ($user->hasRole('ROLE_SUPER_ADMIN')
+                    && !$this->security->isGranted('ROLE_SUPER_ADMIN')
+                    && $this->security->getUser()->getId() != 1) {
+                return 'B161921';
+            }
+
+            // Deny ADMIN access except SUPER_ADMIN
+            if ($user->hasRole('ADMIN') &&
+                    !$this->security->isGranted('ROLE_SUPER_ADMIN')) {
+                return 'B16121';
+            }
+
+            // Deny MODERATOR access except ADMIN
+            if ($user->hasRole('ROLE_MODERATOR') &&
+                    !$this->security->isGranted('ROLE_ADMIN')) {
+                return 'B16131';
             }
         }
         return true;
     }
     
-    /**
-     * Dispatch the multiple selection form
-     *
-     *  This method is called after the validation of the multiple selection form.
-     *  Different actions can be performed on the list of entities.
-     *  If the result returned is a string (url) the controller redirects to this page else if the result returned is false the controller does nothing.
-     * @param FormInterface $form
-     * @return boolean|string
-     */
+    public function validationUpdate($user)
+    {
+        // Deny SUPER_ADMIN access except SUPER_ADMIN #1
+        if ($user->hasRole('ROLE_SUPER_ADMIN')
+                && !$this->security->isGranted('ROLE_SUPER_ADMIN')
+                && $this->security->getUser()->getId() != 1) {
+            return 'B211921';
+        }
+        
+        // Deny ADMIN access except SUPER_ADMIN
+        if ($user->hasRole('ADMIN') &&
+                !$this->security->isGranted('ROLE_SUPER_ADMIN')) {
+            return 'B21121';
+        }
+        
+        // Deny MODERATOR access except ADMIN
+        if ($user->hasRole('ROLE_MODERATOR') &&
+                !$this->security->isGranted('ROLE_ADMIN')) {
+            return 'B21131';
+        }
+        return true;
+    }
+    
     public function dispatchBatchForm(FormInterface $form)
     {
         $users = $form->get('users')->getData();
@@ -173,14 +173,6 @@ class UserManager
         return false;
     }
     
-    /**
-     * Get ids
-     * 
-     *  Transform entities list into an array compatible with url parameters.
-     *  The returned array must be merged with the parameters of the route.
-     *  
-     * @param array $users     * @return array
-     */
     private function getIds($users)
     {
         $ids = [];
@@ -203,7 +195,7 @@ class UserManager
         $request = $this->requestStack->getCurrentRequest();
         $ids = $request->query->get('ids', null);
         if (!is_array($ids)) { throw new InvalidParameterException(); }
-        $users = $this->em->getRepository('App\Entity\User')->findById($ids);
+        $users = $this->em->getRepository(User::class)->findById($ids);
         if (count($ids) !== count($users)) { throw new NotFoundHttpException(); }
         return $users;
     }
