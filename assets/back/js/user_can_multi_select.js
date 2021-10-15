@@ -42,7 +42,7 @@ $(function(){
     // Entries selection
     $('#select_all').change(function() {
         if (this.checked) {
-            $(".select").each(function() {
+            $('.select').each(function() {
                 this.checked=true;
             });
             // Show actions row
