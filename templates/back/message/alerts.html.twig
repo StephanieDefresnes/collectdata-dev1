@@ -1,4 +1,4 @@
-{% trans_default_domain 'message_messages' %}
+{% trans_default_domain 'messenger_messages' %}
 {% extends "back/layout.html.twig" %}
 {% set locale = app.request.locale %}
 
@@ -27,7 +27,7 @@
                     {% if alerts is empty %}
                         {{ 'back.alert.table.empty'|trans() }}
                     {% else %}
-                        <table id="dataTable-list" class="table table-sm nowrap">
+                        <table id="dataTable-list" class="table table-sm text-nowrap">
                             <thead class="d-none"><tr><th></th><th></th><th></th><th></th><th></th></tr></thead>
                             <tbody class="bg-white">
                                 {% for alert in alerts %}
