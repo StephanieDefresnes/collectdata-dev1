@@ -32,7 +32,7 @@ class MessageController extends AbstractController
                 
                 $msg = $this->translator->trans(
                     'flash.error', [],
-                    'message_messages', $locale = locale_get_default()
+                    'messenger_messages', $locale = locale_get_default()
                 );
                 $this->addFlash('warning', $msg.PHP_EOL.$e->getMessage());
                 

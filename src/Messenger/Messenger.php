@@ -56,7 +56,7 @@ class Messenger {
                     '%user%' => $author->getName(),
                     '%id%' => $data->getId(),
                 ],
-                'message_messages',
+                'messenger_messages',
                 $locale = $moderatorLang->getLang()
             );
 
