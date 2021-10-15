@@ -64,6 +64,13 @@ footer {
 .d-flex.d-none {
     display: none !important;
 }
+form {
+    & > .alert {
+        & .form-error-message {
+            padding: 0 6px;
+        }
+    }
+}
 
 // Custom styles
 #accordionSidebar {
@@ -109,6 +116,9 @@ label {
 .line-11 {
     line-height: 1.1;
 }
+.line-12 {
+    line-height: 1.2;
+}
 .pointer {
     cursor: pointer !important;
 }
@@ -136,6 +146,9 @@ label {
 }
 .width-max-45 {
     max-width: 45px;
+}
+.width-max-72 {
+    max-width: 72px;
 }
 th.cust-nowrap {
     max-width: 20px;
