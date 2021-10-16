@@ -107,10 +107,6 @@
             </div>
                         
             <div class="d-flex justify-content-end row px-2">
-                {#<a href="{{ path('app_reset_password', { 'id': app.user.id }) }}"
-                   class="btn btn-secondary mx-2 px-4 py-2">
-                    {{ 'account.reset_password'|trans }}
-                </a>#}
                 <a href="{{ path('user_update') }}"
                    class="btn btn-secondary mx-2 px-4 py-2">
                     {{ 'account.update.title'|trans }}
