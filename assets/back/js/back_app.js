@@ -18,7 +18,7 @@ $(document).ready(function(){
     });
     
     // Bootstrap tooltip
-    $('body').find('[data-toggle="tooltip"]').tooltip()
+    $('body').find('[data-toggle="tooltip"]').tooltip({trigger: 'hover'})
     
     // Flash message display
     $('body').find('#hideFlash').click(function() {
