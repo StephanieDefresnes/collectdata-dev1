@@ -59,6 +59,11 @@ class User implements UserInterface
     private $name;
 
     /**
+     * @ORM\Column(type="string", length=255, unique=true, nullable=true)
+     */
+    private $slug;
+
+    /**
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $imageFilename;
@@ -107,7 +112,7 @@ class User implements UserInterface
     /**
      * @ORM\ManyToMany(targetEntity=Lang::class, inversedBy="users")
      */
-    protected $langs;
+    private $langs;
 
     /**
      * @ORM\Column(type="integer", nullable=true)
@@ -303,6 +308,18 @@ class User implements UserInterface
     public function setName(?string $name): self
     {
         $this->name = $name;
+
+        return $this;
+    }
+
+    public function getSlug(): ?string
+    {
+        return $this->slug;
+    }
+
+    public function setSlug(string $slug): self
+    {
+        $this->slug = $slug;
 
         return $this;
     }

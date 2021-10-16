@@ -17,6 +17,7 @@ use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Address;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use Symfony\Component\String\Slugger\AsciiSlugger;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use SymfonyCasts\Bundle\VerifyEmail\Exception\VerifyEmailExceptionInterface;
 use SymfonyCasts\Bundle\VerifyEmail\VerifyEmailHelperInterface;
@@ -81,6 +82,9 @@ class RegistrationController extends AbstractController
             $user->setIsVerified(false);
             $user->setRoles(array('ROLE_CONTRIBUTOR'));
             $user->setDateCreate(new \DateTime());
+            
+            $slugger = new AsciiSlugger();
+            $user->setSlug($slugger->slug($form->get('name')->getData()));
             
             $lang = $this->em->getRepository(Lang::class)->findOneBy(
                 ['lang' => locale_get_default()]

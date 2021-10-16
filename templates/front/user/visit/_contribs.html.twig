@@ -1,0 +1,46 @@
+{% trans_default_domain 'user_messages' %}
+{% set countSitus = 0 %}
+{% for situ in user.situs %}
+    {% if situ.statusId == 3 %}
+        {% set countSitus = countSitus + 1 %}
+    {% endif %}
+{% endfor %}
+
+
+
+<div class="row mb-3">
+    <div class="col-lg-5 text-secondary">
+        {{ 'account.contribs.title'|trans }}
+    </div>
+    <div class="col-lg-7">
+        <p class="mb-1">
+        {% if countSitus ==  0 %}
+            {{ 'account.contribs.empty'|trans }}
+        {% else %}
+            {{ countSitus }}
+            {{ countSitus == 1
+                    ? 'label.contrib'|trans
+                    : 'label.contribs'|trans }}
+        {% endif %}
+        </p>
+
+        {% if situsLangs|length > 1 %}
+            {% for lang in situsLangs %}
+            <p class="mb-0 row">
+                <span class="col-4">
+                    <span class="text-secondary text-capitalize">{{ lang.langName }} :</span>
+                </span>
+                <span class="col-7">
+                    {{ lang.situs }}
+                    {% if lang.situs  == 1 %}
+                        {{ 'label.contrib'|trans }}
+                    {% else %}
+                        {{ 'label.contribs'|trans }}
+                    {% endif %}
+                </span>
+            </p>
+            {% endfor %}
+        {% endif %}
+
+    </div>                                
+</div>

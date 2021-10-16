@@ -1,0 +1,112 @@
+{% extends 'front/layout.html.twig' %}
+{% trans_default_domain 'user_messages' %}
+{% set locale = app.request.locale %}
+
+{% block title %}{{ user.name }}{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {{ encore_entry_link_tags('user_account_app', null, 'frontApp') }}
+{% endblock %}
+
+{% block content %}
+
+    <div class="row mt-3 pt-5">
+
+        <div class="col-md-8 mx-auto p-0">
+            <div class="card mb-4 bg-light-50">
+
+                <div class="card-header bg-dark-50">
+                    <div class="row{% if user.imageFilename %} mx-0{% endif %}">
+                        {% if user.imageFilename %}
+                        <div class="img-circle col-auto">
+                            <img src="{{ asset('/uploads/img/'~ user.imageFilename) }}" 
+                                data-toggle="tooltip" data-placement="right"
+                                id="defaultImg" alt="">
+                        </div>
+                        {% endif %}
+                        <div class="col-auto">
+                            <h5 class="text-white text-uppercase mb-0{% if user.imageFilename %} mt-4 pt-1{% endif %}">
+                                {{ user.name }}
+                            </h5>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card-body bg-white-70">
+
+                    <div class="row mb-lg-2 mb-3">
+                        <span class="col-lg-5 text-secondary">{{ 'account.date_create'|trans }}</span>
+                        <span class="col-lg-7 first-letter">
+                            {{ user.dateCreate|format_datetime('full', 'none', locale=locale) }}
+                        </span>                                
+                     </div>
+
+                    
+                    <div class="row mb-lg-2 mb-3">
+                        <span class="col-lg-5 text-secondary">
+                            {% if user.langs|length > 0 %}
+                                {{ 'label_dp.lang_s'|trans }}
+                            {% else %}
+                                {{ 'label_dp.lang'|trans }}
+                            {% endif %}
+                        </span>
+                        <span class="col-md-7 list-inline text-capitalize">
+                            {% for lang in user.langs %}
+                            <span class="text-capitalize">
+                                {{ lang.name|raw }}
+                            </span>
+                            {% endfor %}
+                        </span>                                
+                    </div>
+                    
+
+                    <div class="row mb-3">
+                        <span class="col-lg-5 text-secondary">
+                            {% if user.roles|length > 2 %}
+                                {{ 'status.title_dp_s'|trans }}
+                            {% else %}
+                                {{ 'status.title_dp'|trans }}
+                            {% endif %}
+                        </span>
+                        <span class="col-lg-7 line-12">
+                            {% set newRoles = [] %}
+                            {% for role in user.roles %}
+                                {% if role != 'ROLE_USER' %}
+                                    {% if role == 'ROLE_CONTRIBUTOR' %}{% set newRoles = newRoles|merge(['account.roles.contributor'|trans]) %}
+                                    {% elseif role == 'ROLE_MODERATOR' %}{% set newRoles = newRoles|merge(['account.roles.moderator'|trans]) %}
+                                    {% elseif role == 'ROLE_ADMIN' %}{% set newRoles = newRoles|merge(['account.roles.admin'|trans]) %}
+                                    {% elseif role == 'ROLE_SUPER_ADMIN' %}{% set newRoles = newRoles|merge(['account.roles.super_admin'|trans]) %}{% endif %}
+                                {% endif %}
+                            {% endfor %}
+                            {{ newRoles|join(' - ') }}
+                            {% if user.langContributor %}
+                                - {{ 'account.translator.status'|trans }}
+                            {% endif %}
+                        </span>                                
+                    </div>
+
+                    {{ include('front/user/visit/_contribs.html.twig') }}
+                    {{ include('front/user/visit/_langContributor.html.twig') }}
+                    {{ include('front/user/visit/_contact.html.twig') }}
+
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+            
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {{ encore_entry_script_tags('user_account_app', null, 'frontApp') }}
+    {% if app.user %}
+        <script>
+            var recaptcha = {'sitekey' : '{{ google_recaptcha_site_key }}'}
+        </script> 
+        <script src="{{ asset('recaptcha/recaptcha.js') }}"></script>
+        <script src="https://www.google.com/recaptcha/api.js?onload=onGoogleReCaptchaApiLoad&render=explicit&hl={{ app.request.locale }}" async defer></script>
+    {% endif %}
+{% endblock %}
