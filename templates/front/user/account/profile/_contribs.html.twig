@@ -10,17 +10,17 @@
 
 <div class="row mb-3">
     <div class="col-lg-5 text-secondary">
-        {{ 'account.contribs.title'|trans() }}
+        {{ 'account.contribs.title'|trans }}
     </div>
     <div class="col-lg-7">
         <p class="mb-1">
         {% if countSitus ==  0 %}
-            {{ 'account.contribs.empty'|trans() }}
+            {{ 'account.contribs.empty'|trans }}
         {% else %}
             {{ countSitus }}
             {{ countSitus == 1
-                    ? 'account.contribs.count'|trans()
-                    : 'account.contribs.count_s'|trans() }}
+                    ? 'account.contribs.count'|trans
+                    : 'account.contribs.count_s'|trans }}
         {% endif %}
         </p>
 
@@ -33,9 +33,9 @@
                 <span class="col-7">
                     {{ lang.situs }}
                     {% if lang.situs  == 1 %}
-                        {{ 'account.contribs.count'|trans() }}
+                        {{ 'account.contribs.count'|trans }}
                     {% else %}
-                        {{ 'account.contribs.count_s'|trans() }}
+                        {{ 'account.contribs.count_s'|trans }}
                     {% endif %}
                 </span>
             </p>

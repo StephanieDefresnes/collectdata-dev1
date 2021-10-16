@@ -6,7 +6,7 @@
         <div class="card-header p-3 bg-dark text-white">
             <div class="d-flex justify-content-center">
                 <h5 class="mb-2 pb-1">
-                    {{ 'contrib.form.to'|trans() }}
+                    {{ 'contrib.form.to'|trans }}
                     <span class="text-capitalize">{{ lang.name|raw }}</span>
                     <img src="{{ asset('img/flag/'~ lang.lang ~'.jpg') }}"
                          alt="{{ lang.lang }}" class="translation-flag mx-1 border">
@@ -66,7 +66,7 @@
                         <div id="collapseOne" class="pt-2 small infoCollapse collapse d-none"
                             aria-labelledby="headingOne" data-parent="#details">
                             <div class="d-block font-weight-bold">
-                                {{ 'label_dp.description'|trans() }}
+                                {{ 'label_dp.description'|trans }}
                             </div>
                             <div class="mt-1 px-3 line-11 first-letter description"></div>
                         </div>
@@ -98,7 +98,7 @@
                         <div id="collapseTwo" class="pt-2 small infoCollapse d-none collapse"
                             aria-labelledby="headingTwo" data-parent="#details">
                             <div class="d-block font-weight-bold">
-                                {{ 'label_dp.description'|trans() }}
+                                {{ 'label_dp.description'|trans }}
                             </div>
                             <div class="mt-1 px-3 line-11 first-letter description"></div>
                         </div>
@@ -110,14 +110,14 @@
         </div>
 
         <div class="card-body px-4 pt-4 pb-0 bg-white-80">
-            <h2 class="h5 font-weight-normal title-success">{{ 'contrib.form.situ.label'|trans() }}</h2>
+            <h2 class="h5 font-weight-normal title-success">{{ 'contrib.form.situ.label'|trans }}</h2>
             
             {{ form_row(form.title) }}
             {{ form_row(form.description) }} 
             
             <div id="form-items" class="form-row">
                             
-                <h2 class="h5 font-weight-normal my-2">{{ 'contrib.form.item.label'|trans() }}</h2>
+                <h2 class="h5 font-weight-normal my-2">{{ 'contrib.form.item.label'|trans }}</h2>
 
                 <div id="situItems" class="list-group list-group-flush col-12 px-0"
                     data-prototype="{{ form_widget(form.situItems.vars.prototype)|e('html_attr') }}"
@@ -133,7 +133,7 @@
                     <div id="add-itemSitu-link" class="col-md-6 offset-md-3 mb-3 pb-3 text-center text-decoration-none"
                         data-list-selector="#situItems">
                         <i class="fas fa-plus-circle"></i>
-                        <span class="text-muted">{{ 'contrib.form.item.add_item.btn'|trans() }}</span>
+                        <span class="text-muted">{{ 'contrib.form.item.add_item.btn'|trans }}</span>
                     </div>
                 </div>
             </div>
@@ -147,10 +147,10 @@
         <div class="card-footer bg-light text-right">
             <div class="d-flex justify-content-center">
                 <div id="save-btn" class="btn btn-outline-primary px-3 mx-2">
-                    {{ 'action.save'|trans() }}
+                    {{ 'action.save'|trans }}
                 </div>
                 <div id="submit-btn" class="btn btn-primary px-4 mx-2">
-                    {{ 'action.submit'|trans() }}
+                    {{ 'action.submit'|trans }}
                 </div>
             </div>
         </div>

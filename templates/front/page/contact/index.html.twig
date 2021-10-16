@@ -4,7 +4,7 @@
 {% set userName = app.user ? 'User #'~ app.user.id ~' : '~app.user.name : '' %}
 {% set userEmail = app.user ? app.user.email : '' %}
 
-{% block title %}{{ 'contact.title'|trans() }}{% endblock %}
+{% block title %}{{ 'contact.title'|trans }}{% endblock %}
 
 {% block stylesheets %}
     {{ parent() }}
@@ -21,7 +21,7 @@
                 <div class="card-header p-3 bg-dark text-white">
                     <div class="d-flex justify-content-center">
                         <h1 class="mb-0 h2">
-                            {{ 'contact.title'|trans() }}
+                            {{ 'contact.title'|trans }}
                         </h1>
                     </div>
                 </div>
@@ -72,7 +72,7 @@
                     <div class="d-flex justify-content-end">
                         <button class="btn btn-light" type="submit">
                             <i class="far fa-paper-plane"></i>
-                            <span class="px-1">{{ 'btn.send'|trans() }}</span>
+                            <span class="px-1">{{ 'btn.send'|trans }}</span>
                         </button>
                     </div>
                 </div>

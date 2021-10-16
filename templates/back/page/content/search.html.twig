@@ -2,7 +2,7 @@
 {% extends "back/layout.html.twig" %}
 {#{% set locale = app.request.locale %}#}
 
-{% block title %}{{ 'content.list.table.title'|trans() }}{% endblock %}
+{% block title %}{{ 'content.list.table.title'|trans }}{% endblock %}
 
 {% block stylesheets %}
     {{ parent() }}
@@ -15,10 +15,10 @@
     <div class="container-fluid pt-4">
         
         <div class="d-sm-flex align-items-center justify-content-between mb-4">
-            <h1 class="h3 mb-0 text-gray-800">{{ 'content.list.title'|trans() }}</h1>
+            <h1 class="h3 mb-0 text-gray-800">{{ 'content.list.title'|trans }}</h1>
             <a href="{{ path('back_content_edit') }}" class="btn btn-primary mx-2 pt-1">
                 <i class="fas fa-plus-circle"></i>
-                {{ 'content.form.title'|trans() }}
+                {{ 'content.form.title'|trans }}
             </a>
         </div>
         
@@ -26,25 +26,25 @@
 
             <div class="card-header py-3">
                 <h6 class="m-0 font-weight-bold text-primary">
-                    {{ 'content.list.table.title'|trans() }}
+                    {{ 'content.list.table.title'|trans }}
                 </h6>
             </div>
 
             <div id="list" class="card-body pb-3 back-dataTable">
 
                 {% if pages is empty %}
-                    {{ 'content.list.table.empty'|trans() }}
+                    {{ 'content.list.table.empty'|trans }}
                 {% else %}
 
                 <table id="dataTable-list" class="table table-sm text-nowrap">
                     <thead class="bg-gray-600 text-white">
                         <tr>
-                            <th class="px-2 no-sort">{{ 'action.action'|trans() }}</th>
-                            <th class="px-2">{{ 'label.enabled'|trans() }}</th>
-                            <th class="px-2">{{ 'label.lang'|trans() }}</th>
-                            <th class="px-2">{{ 'label.type'|trans() }}</th>
-                            <th class="px-2">{{ 'label.title'|trans() }}</th>
-                            <th class="px-2">{{ 'label.slug'|trans() }}</th>
+                            <th class="px-2 no-sort">{{ 'action.action'|trans }}</th>
+                            <th class="px-2">{{ 'label.enabled'|trans }}</th>
+                            <th class="px-2">{{ 'label.lang'|trans }}</th>
+                            <th class="px-2">{{ 'label.type'|trans }}</th>
+                            <th class="px-2">{{ 'label.title'|trans }}</th>
+                            <th class="px-2">{{ 'label.slug'|trans }}</th>
                         </tr>
                     </thead>
                     <tbody class="bg-white">
@@ -55,7 +55,7 @@
                                    role="button" class="btn btn-outline-primary px-2 py-1"
                                    data-id="{{ page.id }}" data-action=""
                                    data-toggle="tooltip" data-placement="left"
-                                   title="{{ 'action.edit'|trans() }}">
+                                   title="{{ 'action.edit'|trans }}">
                                     <i class="fas fa-edit"></i>
                                 </a>    
                                 {% if page.enabled == 0 %}
@@ -63,26 +63,26 @@
                                        role="button" class="btn btn-outline-warning pcx-2 py-1"
                                        data-id="{{ page.id }}" data-action=""
                                        data-toggle="tooltip" data-placement="left"
-                                       title="{{ 'action.validate'|trans() }}">
+                                       title="{{ 'action.validate'|trans }}">
                                         <i class="far fa-paper-plane"></i>
                                     </a>                             
                                 {% endif %}
                             </td>
                             <td class="px-2">
-                                {{ page.enabled == 0 ? 'no'|trans() : 'yes'|trans() }}
+                                {{ page.enabled == 0 ? 'no'|trans : 'yes'|trans }}
                             </td>
                             <td class="px-2 text-uppercase">
                                 {{ page.lang }}
                             </td>
                             <td class="px-2">
                                 {% if page.type == 'home' %}
-                                    {{ 'content.form.page.type.choice.home'|trans() }}
+                                    {{ 'content.form.page.type.choice.home'|trans }}
                                 {% elseif page.type == 'legal' %}
-                                    {{ 'content.form.page.type.choice.legal'|trans() }}
+                                    {{ 'content.form.page.type.choice.legal'|trans }}
                                 {% elseif page.type == 'cgu' %}
-                                    {{ 'content.form.page.type.choice.cgu'|trans() }}
+                                    {{ 'content.form.page.type.choice.cgu'|trans }}
                                 {% else %}
-                                    {{ 'content.form.page.type.choice.page'|trans() }}
+                                    {{ 'content.form.page.type.choice.page'|trans }}
                                 {% endif %}
                             </td>
                             <td class="px-2">

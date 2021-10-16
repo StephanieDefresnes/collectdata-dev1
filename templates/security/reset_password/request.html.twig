@@ -1,7 +1,7 @@
 {% trans_default_domain 'security' %}
 {% extends 'front/layout.html.twig' %}
 
-{% block title %}{{ 'reset_password.request'|trans() }}{% endblock %}
+{% block title %}{{ 'reset_password.request'|trans }}{% endblock %}
 
 {% block content %}
     
@@ -13,9 +13,9 @@
         <div class="card mt-5 mb-4 px-3 py-2 bg-white-80">            
             <div class="card-body">
                 
-                <h1 class="h3 mb-3 font-weight-normal">{{ 'reset_password.request'|trans() }}</h1>
+                <h1 class="h3 mb-3 font-weight-normal">{{ 'reset_password.request'|trans }}</h1>
                 
-                <p class="small">{{ 'reset_password.descritpion'|trans() }}</p>
+                <p class="small">{{ 'reset_password.descritpion'|trans }}</p>
 
                 {{ form_start(requestForm) }}
                 
@@ -24,10 +24,10 @@
                     <div class="text-center mt-4 pt-2">
                         <a href="{{ path('app_login') }}"
                            class="btn btn-light px-4 mx-2">
-                            {{ 'button.cancel'|trans() }}
+                            {{ 'button.cancel'|trans }}
                         </a>
                         <button class="btn btn-secondary px-4 mx-2">
-                            {{ 'button.send'|trans() }}
+                            {{ 'button.send'|trans }}
                         </button>
                     </div>
                     

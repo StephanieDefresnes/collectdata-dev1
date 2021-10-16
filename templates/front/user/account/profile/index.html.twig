@@ -2,7 +2,7 @@
 {% trans_default_domain 'user_messages' %}
 {% set locale = app.request.locale %}
 
-{% block title %}{{ 'label.account_profile'|trans() }}{% endblock %}
+{% block title %}{{ 'label.account_profile'|trans }}{% endblock %}
 
 {% block stylesheets %}
     {{ parent() }}
@@ -14,7 +14,7 @@
     {% block banner%}
     <div class="mt-3 mb-5 pt-5">
         <h1 class="h3 text-white">
-            {{ 'label.account_profile'|trans() }}
+            {{ 'label.account_profile'|trans }}
         </h1>
     </div>
     {% endblock %}
@@ -44,12 +44,12 @@
                 <div class="card-body bg-white-70">
 
                     <div class="row mb-lg-2 mb-3">
-                        <span class="col-lg-5 text-secondary">{{ 'label_dp.email'|trans() }}</span>
+                        <span class="col-lg-5 text-secondary">{{ 'label_dp.email'|trans }}</span>
                         <span class="col-lg-7">{{ user.email }}</span>                                
                     </div>
 
                     <div class="row mb-lg-2 mb-3">
-                        <span class="col-lg-5 text-secondary">{{ 'account.date_create'|trans() }}</span>
+                        <span class="col-lg-5 text-secondary">{{ 'account.date_create'|trans }}</span>
                         <span class="col-lg-7 first-letter">
                             {{ user.dateCreate|format_datetime('full', 'short', locale=locale) }}
                         </span>                                
@@ -59,9 +59,9 @@
                     <div class="row mb-lg-2 mb-3">
                         <span class="col-lg-5 text-secondary">
                             {% if user.langs|length > 0 %}
-                                {{ 'label_dp.lang_s'|trans() }}
+                                {{ 'label_dp.lang_s'|trans }}
                             {% else %}
-                                {{ 'label_dp.lang'|trans() }}
+                                {{ 'label_dp.lang'|trans }}
                             {% endif %}
                         </span>
                         <span class="col-md-7 list-inline text-capitalize">
@@ -77,24 +77,24 @@
                     <div class="row mb-3">
                         <span class="col-lg-5 text-secondary">
                             {% if user.roles|length > 2 %}
-                                {{ 'status.title_dp_s'|trans() }}
+                                {{ 'status.title_dp_s'|trans }}
                             {% else %}
-                                {{ 'status.title_dp'|trans() }}
+                                {{ 'status.title_dp'|trans }}
                             {% endif %}
                         </span>
                         <span class="col-lg-7 line-11">
                             {% set newRoles = [] %}
                             {% for role in user.roles %}
                                 {% if role != 'ROLE_USER' %}
-                                    {% if role == 'ROLE_CONTRIBUTOR' %}{% set newRoles = newRoles|merge(['account.roles.contributor'|trans()]) %}
-                                    {% elseif role == 'ROLE_MODERATOR' %}{% set newRoles = newRoles|merge(['account.roles.moderator'|trans()]) %}
-                                    {% elseif role == 'ROLE_ADMIN' %}{% set newRoles = newRoles|merge(['account.roles.admin'|trans()]) %}
-                                    {% elseif role == 'ROLE_SUPER_ADMIN' %}{% set newRoles = newRoles|merge(['account.roles.super_admin'|trans()]) %}{% endif %}
+                                    {% if role == 'ROLE_CONTRIBUTOR' %}{% set newRoles = newRoles|merge(['account.roles.contributor'|trans]) %}
+                                    {% elseif role == 'ROLE_MODERATOR' %}{% set newRoles = newRoles|merge(['account.roles.moderator'|trans]) %}
+                                    {% elseif role == 'ROLE_ADMIN' %}{% set newRoles = newRoles|merge(['account.roles.admin'|trans]) %}
+                                    {% elseif role == 'ROLE_SUPER_ADMIN' %}{% set newRoles = newRoles|merge(['account.roles.super_admin'|trans]) %}{% endif %}
                                 {% endif %}
                             {% endfor %}
                             {{ newRoles|join(' - ') }}
                             {% if user.langContributor %}
-                                - {{ 'account.translator.status'|trans() }}
+                                - {{ 'account.translator.status'|trans }}
                             {% endif %}
                         </span>                                
                     </div>
@@ -109,11 +109,11 @@
             <div class="d-flex justify-content-end row px-2">
                 {#<a href="{{ path('app_reset_password', { 'id': app.user.id }) }}"
                    class="btn btn-secondary mx-2 px-4 py-2">
-                    {{ 'account.reset_password'|trans() }}
+                    {{ 'account.reset_password'|trans }}
                 </a>#}
                 <a href="{{ path('user_update') }}"
                    class="btn btn-secondary mx-2 px-4 py-2">
-                    {{ 'account.update.title'|trans() }}
+                    {{ 'account.update.title'|trans }}
                 </a>
             </div>
 
@@ -126,7 +126,7 @@
     {{ parent() }}
     <script>
     var translations = {
-       "file-placeholder" : "{{ 'account.translator.file.modal.file.placeholder' | trans }}",
+       "file-placeholder" : "{{ 'account.translator.file.modal.file.placeholder'|trans }}",
     }
     </script>
     {{ encore_entry_script_tags('user_account_app', null, 'frontApp') }}

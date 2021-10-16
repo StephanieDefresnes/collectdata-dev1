@@ -1,7 +1,7 @@
 {% trans_default_domain 'security' %}
 {% extends 'front/layout.html.twig' %}
 
-{% block title %}{{ 'login.title'|trans() }}{% endblock %}
+{% block title %}{{ 'login.title'|trans }}{% endblock %}
 
 {% block content %}
     
@@ -19,19 +19,19 @@
                 <form method="post">
                     {% if app.user %}
                         <div class="mb-3">
-                            {{ 'login.message.logged_as'|trans({ '%user%': app.user }) }}, <a href="{{ path('app_logout') }}">{{ 'login.link.logout'|trans() }}</a>
+                            {{ 'login.message.logged_as'|trans({ '%user%': app.user }) }}, <a href="{{ path('app_logout') }}">{{ 'login.link.logout'|trans }}</a>
                         </div>
                     {% else %}
-                        <h1 class="h3 mb-3 font-weight-normal d-flex justify-content-start">{{ 'login.title'|trans() }}</h1>
+                        <h1 class="h3 mb-3 font-weight-normal d-flex justify-content-start">{{ 'login.title'|trans }}</h1>
                         <div class="form-group">
-                            <label for="inputEmail" class="d-flex justify-content-start required">{{ 'label.email'|trans() }}</label>
+                            <label for="inputEmail" class="d-flex justify-content-start required">{{ 'label.email'|trans }}</label>
                             <input type="email" value="{{ last_username }}" name="email" id="inputEmail" class="form-control mb-2" placeholder="email@example.com" required autofocus>
                         </div>
                         <div class="form-group">
-                            <label for="inputPassword" class="d-flex justify-content-start required">{{ 'login.label.password'|trans() }}</label>
+                            <label for="inputPassword" class="d-flex justify-content-start required">{{ 'login.label.password'|trans }}</label>
                             <div class="input-group togglePassword">
                                 <input type="password" name="password"
-                                       aria-label="{{ 'login.label.password'|trans() }}" aria-describedby="basic-addon"
+                                       aria-label="{{ 'login.label.password'|trans }}" aria-describedby="basic-addon"
                                        id="inputPassword" class="form-control"
                                        placeholder="●●●●●●" required>
                                 <div class="input-group-append">
@@ -44,22 +44,22 @@
                         <div class="form-group d-flex justify-content-start">
                             <div class="checkbox mb-3">
                                 <label>
-                                    <input type="checkbox" name="_remember_me"> {{ 'login.label.remember_me'|trans() }}
+                                    <input type="checkbox" name="_remember_me"> {{ 'login.label.remember_me'|trans }}
                                 </label>
                             </div>
                         </div>
                         <div class="form-group text-center mb-4">
                             <button class="btn btn-secondary px-5" type="submit">
-                                {{ 'login.btn.submit'|trans() }}
+                                {{ 'login.btn.submit'|trans }}
                             </button>
                         </div>
                         <hr>
                         <div class="row">
                             <div class="col-sm-6">
-                                <a href="{{ path('app_forgot_password_request') }}" class="btn btn-default btn-block btn-sm">{{ 'login.link.forget_password'|trans() }}</a>
+                                <a href="{{ path('app_forgot_password_request') }}" class="btn btn-default btn-block btn-sm">{{ 'login.link.forget_password'|trans }}</a>
                             </div>
                             <div class="col-sm-6">
-                                <a href="{{ path('app_register')}}" class="btn btn-default btn-block btn-sm"><i class="fas fa-user"></i> {{ 'login.link.registration'|trans() }}</a>
+                                <a href="{{ path('app_register')}}" class="btn btn-default btn-block btn-sm"><i class="fas fa-user"></i> {{ 'login.link.registration'|trans }}</a>
                             </div>
                         </div>
                     {% endif %}

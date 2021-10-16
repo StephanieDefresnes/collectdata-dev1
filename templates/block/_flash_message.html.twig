@@ -7,7 +7,7 @@
             {% for type, messages in flashbag %}
                 {% for message in messages %}
                     <div class="alert alert-secondary alert-dismissible px-3 fade show" role="alert">
-                        <span class="sr-only">{{ ('alert.' ~ type)|trans() }} : </span>
+                        <span class="sr-only">{{ ('alert.' ~ type)|trans }} : </span>
                         {% if type == 'error' %}
                             <span class="icon text-danger"><i class="fas fa-exclamation-circle"></i></span>
                         {% else %}

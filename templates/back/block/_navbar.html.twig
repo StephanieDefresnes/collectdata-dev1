@@ -35,7 +35,7 @@
                 aria-labelledby="alertsDropdown" id="alerts_dropdown">
                 
                 <h6 class="dropdown-header">
-                    {{ 'message.alert.title'|trans() }}
+                    {{ 'message.alert.title'|trans }}
                 </h6>
                 
                 {% for alert in alerts %}
@@ -71,7 +71,7 @@
                 
                 <a href="{{ path('back_user_alerts') }}"
                    class="dropdown-item text-center small text-gray-500">
-                    {{ 'message.alert.title_all'|trans() }}
+                    {{ 'message.alert.title_all'|trans }}
                 </a>
                 
             </div>
@@ -90,7 +90,7 @@
             <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in"
                 aria-labelledby="messagesDropdown">
                 <h6 class="dropdown-header">
-                    {{ 'message.envelope.title'|trans() }}
+                    {{ 'message.envelope.title'|trans }}
                 </h6>
                 <a class="dropdown-item d-flex align-items-center" href="#">
                     <div class="dropdown-list-image mr-3">
@@ -115,7 +115,7 @@
                     </div>
                 </a>
                 <a class="dropdown-item text-center small text-gray-500" href="#">
-                    {{ 'message.envelope.title_all'|trans() }}
+                    {{ 'message.envelope.title_all'|trans }}
                 </a>
             </div>
         </li>
@@ -139,16 +139,16 @@
                 aria-labelledby="userDropdown">
                 <a class="dropdown-item" href="{{ path('front_home') }}">
                     <i class="fas fa-house-user fa-sm fa-fw mr-2 text-gray-400"></i>
-                    {{ 'nav.front'|trans() }}
+                    {{ 'nav.front'|trans }}
                 </a>
                 <a class="dropdown-item" href="{{ path('user_account') }}">
                     <i class="fas fa-user-cog fa-sm fa-fw mr-2 text-gray-400"></i>
-                    {{ 'nav.account_profile'|trans() }}
+                    {{ 'nav.account_profile'|trans }}
                 </a>
                 <div class="dropdown-divider"></div>
                 <a class="dropdown-item" href="{{ path('app_logout') }}">
                     <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
-                    {{ 'nav.account_logout'|trans() }}
+                    {{ 'nav.account_logout'|trans }}
                 </a>
             </div>
         </li>

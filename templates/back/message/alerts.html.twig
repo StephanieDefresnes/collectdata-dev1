@@ -15,7 +15,7 @@
     <div class="container-fluid pt-4">
         
         <div class="d-sm-flex justify-content-between mb-4">
-            <h1 class="h3 mb-0 text-gray-800">{{ 'back.alert.title'|trans() }}</h1>
+            <h1 class="h3 mb-0 text-gray-800">{{ 'back.alert.title'|trans }}</h1>
         </div>
         
         <div class="row">
@@ -25,7 +25,7 @@
                     <div id="list" class="card-body pb-3 back-dataTable">
 
                     {% if alerts is empty %}
-                        {{ 'back.alert.table.empty'|trans() }}
+                        {{ 'back.alert.table.empty'|trans }}
                     {% else %}
                         <table id="dataTable-list" class="table table-sm text-nowrap">
                             <thead class="d-none"><tr><th></th><th></th><th></th><th></th><th></th></tr></thead>
@@ -68,11 +68,11 @@
                                                            value="{{ alert.scanned }}"{% if alert.scanned == 0 %} checked="checked"{% endif %}
                                                            data-toggle="tooltip" data-placement="left"
                                                            title="{{ alert.scanned == 0
-                                                                ? 'read.yes'|trans()
-                                                                : 'read.no'|trans() }}"
+                                                                ? 'read.yes'|trans
+                                                                : 'read.no'|trans }}"
                                                            aria-label="{{ alert.scanned == 1
-                                                                ? 'read.yes'|trans()
-                                                                : 'read.no'|trans() }}">
+                                                                ? 'read.yes'|trans
+                                                                : 'read.no'|trans }}">
                                                 </div>
                                             </div>
                                         </td>

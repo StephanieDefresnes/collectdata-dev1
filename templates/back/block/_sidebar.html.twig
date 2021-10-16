@@ -22,7 +22,7 @@
     <li class="nav-item{{ route == 'back_home' ? ' active' }}">
         <a class="nav-link dashboard" href="{{ path('back_home') }}">
             <i class="fas fa-fw fa-tachometer-alt"></i>
-            <span>{{ 'label.dashboard'|trans() }}</span>
+            <span>{{ 'label.dashboard'|trans }}</span>
         </a>
     </li>
 
@@ -34,7 +34,7 @@
                             'back_content_edit'] ? ' active' }}">
         <a class="nav-link pb-1" href="{{ path('back_content_search') }}">
             <i class="fas fa-edit"></i>
-            <span>{{ 'action.content'|trans() }}</span>
+            <span>{{ 'action.content'|trans }}</span>
         </a>
     </li>
     {% endif %}
@@ -48,7 +48,7 @@
         <a class="nav-link collapsed pb-1" href="#" data-toggle="collapse" data-target="#collapseContrib"
             aria-expanded="true" aria-controls="collapseContrib">
             <i class="fas fa-list-ul"></i>
-            <span>{{ 'label.contributions'|trans() }}</span>
+            <span>{{ 'label.contributions'|trans }}</span>
         </a>
         <div id="collapseContrib" class="collapse{{ route in [
                                                         'back_situs_search',
@@ -65,21 +65,21 @@
                                             'back_situs_validation',
                                             'back_situ_verify'] ? ' active' }}"
                    href="{{ path('back_situs_validation') }}">
-                    {{ 'action.validation'|trans() }}
+                    {{ 'action.validation'|trans }}
                 </a>
                 <a class="collapse-item{{ route == 'back_situs_search' ? ' active' }}"
                    href="{{ path('back_situs_search') }}">
-                    {{ 'label.search'|trans() }}
+                    {{ 'label.search'|trans }}
                 </a>
                 <a class="collapse-item{{ route in [
                                             'back_event_search',
                                             'back_event_read'] ? ' active' }}"
                    href="{{ path('back_event_search') }}">
-                    {{ 'label.events'|trans() }}
+                    {{ 'label.events'|trans }}
                 </a>
                 <a class="collapse-item{{ route == 'back_categories' ? ' active' }}"
                    href="{{ path('back_categories') }}">
-                    {{ 'label.categories'|trans() }}
+                    {{ 'label.categories'|trans }}
                 </a>
             </div>
                 
@@ -94,7 +94,7 @@
         <a class="nav-link collapsed pb-1" href="#" data-toggle="collapse" data-target="#collapseLang"
             aria-expanded="true" aria-controls="collapseLang">
             <i class="fas fa-globe"></i>
-            <span>{{ 'label.langs'|trans() }}</span>
+            <span>{{ 'label.langs'|trans }}</span>
         </a>
         <div id="collapseLang" class="collapse{{ route in [
                                                     'back_lang_search',
@@ -108,26 +108,26 @@
             <div class="bg-white mb-1 py-2 collapse-inner rounded">
                 <a class="collapse-item{{ route == 'back_lang_search' ? ' active' }}"
                    href="{{ path('back_lang_search') }}">
-                    {{ 'label.search'|trans() }}
+                    {{ 'label.search'|trans }}
                 </a>
                 {% if is_granted('ROLE_SUPER_ADMIN')  %}
                 <a class="collapse-item{{ route in [
                                             'back_translation_forms',
                                             'back_translation_create'] ? ' active' }}"
                    href="{{ path('back_translation_forms') }}">
-                    {{ 'lang.translation.form.title'|trans() }}
+                    {{ 'lang.translation.form.title'|trans }}
                 </a>
                 <a class="collapse-item{{ route in [
                                             'back_translation_site',
                                             'back_translation_situ_create'] ? ' active' }}"
                    href="{{ path('back_translation_site') }}">
-                    {{ 'lang.translation.title'|trans() }}
+                    {{ 'lang.translation.title'|trans }}
                 </a>
                 <a class="collapse-item{{ route in [
                                             'back_translation_generate_list',
                                             'back_translation_clean'] ? ' active' }}"
                    href="{{ path('back_translation_generate_list') }}">
-                    {{ 'lang.translation.yaml.title'|trans() }}
+                    {{ 'lang.translation.yaml.title'|trans }}
                 </a>
                 {% endif %}
             </div>
@@ -141,7 +141,7 @@
                             'back_user_update'] ? ' active' }}">
         <a class="nav-link pb-1" href="{{ path('back_user_search') }}">
             <i class="fas fa-users"></i>
-            <span>{{ 'label.users'|trans() }}</span>
+            <span>{{ 'label.users'|trans }}</span>
         </a>
     </li>
     

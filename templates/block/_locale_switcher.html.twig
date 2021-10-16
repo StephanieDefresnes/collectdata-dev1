@@ -11,7 +11,7 @@
         <a class="nav-link dropdown-toggle" id="menu_lang" 
                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             <img src="{{ asset('img/flag/'~ locale.lang ~'.jpg') }}" alt="{{ locale.lang|raw }}" class="d-md-inline d-none lang-flag mr-1">
-            <span>{{ 'nav.lang_choice'|trans() }}</span>
+            <span>{{ 'nav.lang_choice'|trans }}</span>
         </a>
         {% endif %}
     {% endfor %}

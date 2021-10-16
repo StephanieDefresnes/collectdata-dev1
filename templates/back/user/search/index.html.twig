@@ -3,7 +3,7 @@
 
 {% set locale = app.request.locale %}
 
-{% block title %}{{ 'label.users'|trans() }}{% endblock %}
+{% block title %}{{ 'label.users'|trans }}{% endblock %}
 
 {% block stylesheets %}
     {{ parent() }}
@@ -20,7 +20,7 @@
     <div class="container-fluid pt-4">
         
         <div class="d-sm-flex align-items-center justify-content-between mb-4">
-            <h1 class="h3 mb-0 text-gray-800">{{ 'label.users'|trans() }}</h1>
+            <h1 class="h3 mb-0 text-gray-800">{{ 'label.users'|trans }}</h1>
         </div>
 
         {{ include('back/user/search/_list.html.twig') }}

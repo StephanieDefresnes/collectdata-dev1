@@ -1,14 +1,14 @@
 {% extends 'back/layout.html.twig' %}
 {% trans_default_domain 'back_messages' %}
 
-{% block title %}{{ 'error.title'|trans() }}{% endblock %}
+{% block title %}{{ 'error.title'|trans }}{% endblock %}
 
 {% block content %}
     <div class="container-fluid pt-4">
         
         <div class="text-center">
             <div class="error mx-auto" data-text="404">404</div>
-            <p class="lead text-gray-800 mb-5">{{ 'error.title'|trans() }}</p>
+            <p class="lead text-gray-800 mb-5">{{ 'error.title'|trans }}</p>
         </div>
 
     </div>

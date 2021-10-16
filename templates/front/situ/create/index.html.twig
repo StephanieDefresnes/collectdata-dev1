@@ -2,7 +2,7 @@
 {% trans_default_domain 'user_messages' %}
 {% set locale = app.request.locale %}
 
-{% block title %}{{ situ.id ? 'contrib.form.situ.h1_update'|trans() : 'contrib.form.situ.h1'|trans() }}{% endblock %}
+{% block title %}{{ situ.id ? 'contrib.form.situ.h1_update'|trans : 'contrib.form.situ.h1'|trans }}{% endblock %}
 
 {% block stylesheets %}
     {{ parent() }}
@@ -25,9 +25,9 @@
                     <div class="d-flex justify-content-center">
                         <h5 class="mb-2 pb-1">
                             {% if situ.id %}
-                                {{ 'contrib.form.situ.h1_update'|trans() }}
+                                {{ 'contrib.form.situ.h1_update'|trans }}
                             {% else %}
-                                {{ 'contrib.form.situ.h1'|trans() }}
+                                {{ 'contrib.form.situ.h1'|trans }}
                             {% endif %}
                         </h5>
                     </div>
@@ -96,7 +96,7 @@
                             <div id="collapseOne" class="pt-2 small infoCollapse d-none collapse"
                                 aria-labelledby="headingOne" data-parent="#details">
                                 <div class="d-block font-weight-bold">
-                                    {{ 'label_dp.description'|trans() }}
+                                    {{ 'label_dp.description'|trans }}
                                 </div>
                                 <div class="mt-1 px-3 line-11 first-letter description">
                                     {{ situ.categoryLevel1 ? situ.categoryLevel1.description }}
@@ -131,7 +131,7 @@
                             <div id="collapseTwo" class="pt-2 small infoCollapse d-none collapse"
                                 aria-labelledby="headingTwo" data-parent="#details">
                                 <div class="d-block font-weight-bold">
-                                    {{ 'label_dp.description'|trans() }}
+                                    {{ 'label_dp.description'|trans }}
                                 </div>
                                 <div class="mt-1 px-3 line-11 first-letter description">
                                     {{ situ.categoryLevel2 ? situ.categoryLevel2.description }}
@@ -143,14 +143,14 @@
                 </div>
 
                 <div class="card-body px-4 pt-3 pb-0 bg-white-80 d-none">
-                    <h2 class="h5 font-weight-normal">{{ 'contrib.form.situ.label'|trans() }}</h2>
+                    <h2 class="h5 font-weight-normal">{{ 'contrib.form.situ.label'|trans }}</h2>
                     
                     {{ form_row(form.title) }}
                     {{ form_row(form.description) }} 
 
                     <div id="form-items" class="pt-4" data-count="{{ situ ? situ.situItems|length : '' }}">
 
-                        <h2 class="h5 font-weight-normal my-2">{{ 'contrib.form.item.label'|trans() }}</h2>
+                        <h2 class="h5 font-weight-normal my-2">{{ 'contrib.form.item.label'|trans }}</h2>
 
                         <div id="situItems" class="list-group list-group-flush col-12 px-0"
                             data-prototype="{{ form_widget(form.situItems.vars.prototype)|e('html_attr') }}"
@@ -163,15 +163,15 @@
                         </div>
 
                         <div id="add-situItem" class="col-12 pb-3e">
-                            <p class="h6">{{ 'contrib.form.item.add_item.title'|trans() }}</p>
+                            <p class="h6">{{ 'contrib.form.item.add_item.title'|trans }}</p>
                             <div class="small d-block my-4 pb-1">
-                                {{ 'contrib.form.item.add_item.comment'|trans()|raw }}
+                                {{ 'contrib.form.item.add_item.comment'|trans|raw }}
                             </div>
                             <div id="add-itemSitu-link"
                                  class="col-md-6 offset-md-3 mb-4 pb-2 text-center text-decoration-none"
                                 data-list-selector="#situItems">
                                 <i class="fas fa-plus-circle"></i>
-                                <span class="text-muted">{{ 'contrib.form.item.add_item.btn'|trans() }}</span>
+                                <span class="text-muted">{{ 'contrib.form.item.add_item.btn'|trans }}</span>
                             </div>
                         </div>
                     </div>
@@ -183,10 +183,10 @@
                 <div class="card-footer bg-light text-right d-none">
                     <div class="d-flex justify-content-center">
                         <div id="save-btn" class="btn btn-outline-primary px-3 mx-2">
-                            {{ 'action.save'|trans() }}
+                            {{ 'action.save'|trans }}
                         </div>
                         <div id="submit-btn" class="btn btn-primary px-4 mx-2">
-                            {{ 'action.submit'|trans() }}
+                            {{ 'action.submit'|trans }}
                         </div>
                     </div>
                 </div>
@@ -208,22 +208,22 @@
             "locale" : "{{ locale }}",
         }
         var translations = {
-            "flashError" : "{{ 'contrib.form.flash.error' | trans }}",
-            "srOnly-error" : "{{ 'contrib.form.sr_only.error' | trans }}",
-            "toValidate" : "{{ 'contrib.form.to_validate' | trans }}",
-            "event-titlePlaceholder" : "{{ 'contrib.form.event.placeholder_add' | trans }}",
-            "categoryLevel1-titlePlaceholder" : "{{ 'contrib.form.category.level1.title_placeholder' | trans }}",
-            "categoryLevel2-titlePlaceholder" : "{{ 'contrib.form.category.level2.title_placeholder' | trans }}",
-            "categoryLevel1-descriptionPlaceholder" : "{{ 'contrib.form.category.level1.description_placeholder' | trans }}",
-            "categoryLevel2-descriptionPlaceholder" : "{{ 'contrib.form.category.level2.description_placeholder' | trans }}",
-            "deleteItem-title" : "{{ 'contrib.form.item.remove.title' | trans }}",
-            "deleteItem-content" : "{{ 'contrib.form.item.remove.confirm' | trans }}",
-            "yes" : "{{ 'yes' | trans }}",
-            "no" : "{{ 'no' | trans }}",
-            "scoreLabel" : "{{ 'contrib.form.item.score.placeholder' | trans }}",
-            "scoreLabelAlt" : "{{ 'contrib.form.item.score.placeholder_alt' | trans }}",
-            "scoreInfo" : "{{ 'contrib.form.item.score.tooltip' | trans }}",
-            "formError" : "{{ 'contrib.form.error' | trans }}",
+            "flashError" : "{{ 'contrib.form.flash.error'|trans }}",
+            "srOnly-error" : "{{ 'contrib.form.sr_only.error'|trans }}",
+            "toValidate" : "{{ 'contrib.form.to_validate'|trans }}",
+            "event-titlePlaceholder" : "{{ 'contrib.form.event.placeholder_add'|trans }}",
+            "categoryLevel1-titlePlaceholder" : "{{ 'contrib.form.category.level1.title_placeholder'|trans }}",
+            "categoryLevel2-titlePlaceholder" : "{{ 'contrib.form.category.level2.title_placeholder'|trans }}",
+            "categoryLevel1-descriptionPlaceholder" : "{{ 'contrib.form.category.level1.description_placeholder'|trans }}",
+            "categoryLevel2-descriptionPlaceholder" : "{{ 'contrib.form.category.level2.description_placeholder'|trans }}",
+            "deleteItem-title" : "{{ 'contrib.form.item.remove.title'|trans }}",
+            "deleteItem-content" : "{{ 'contrib.form.item.remove.confirm'|trans }}",
+            "yes" : "{{ 'yes'|trans }}",
+            "no" : "{{ 'no'|trans }}",
+            "scoreLabel" : "{{ 'contrib.form.item.score.placeholder'|trans }}",
+            "scoreLabelAlt" : "{{ 'contrib.form.item.score.placeholder_alt'|trans }}",
+            "scoreInfo" : "{{ 'contrib.form.item.score.tooltip'|trans }}",
+            "formError" : "{{ 'contrib.form.error'|trans }}",
         }
     </script>
 {% endblock %}

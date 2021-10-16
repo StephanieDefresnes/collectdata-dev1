@@ -1,7 +1,7 @@
 {% extends 'front/layout.html.twig' %}
 {% trans_default_domain 'security' %}
 
-{% block title %}{{ 'error.else.title'|trans() }}{% endblock %}
+{% block title %}{{ 'error.else.title'|trans }}{% endblock %}
 {% block seo %}<meta name="robots" content="noindex, nofollow">{% endblock %}
 
 {% block stylesheets %}
@@ -13,8 +13,8 @@
     <div class="row mt-3 mb-5 pt-5">
         <div class="col-md-8 col-12 m-auto p-4 text-white text-center">
             <div class="h1 oops">Error</div>
-            <div class="h1">{{ 'error.else.error'|trans() }}</div>
-            <p>{{ 'error.else.text'|trans() }}</p>
+            <div class="h1">{{ 'error.else.error'|trans }}</div>
+            <p>{{ 'error.else.text'|trans }}</p>
             <a href="{{ path('front_home') }}"
                class="btn btn-light">{{ 'nav.home'|trans({}, 'front_messages') }}</a>
         </div>

@@ -1,7 +1,7 @@
 {% trans_default_domain 'front_messages' %}
 {% extends 'front/layout.html.twig' %}
 
-{% block title %}{{ 'contact.confirm.title'|trans() }}{% endblock %}
+{% block title %}{{ 'contact.confirm.title'|trans }}{% endblock %}
 
 {% block content %}
     
@@ -9,9 +9,9 @@
         <div class="card mt-5 mb-4 px-3 py-2 bg-white-80">            
             <div class="card-body">
                 
-                <h1 class="h3 mb-3 font-weight-normal">{{ 'contact.confirm.title'|trans() }}</h1>
+                <h1 class="h3 mb-3 font-weight-normal">{{ 'contact.confirm.title'|trans }}</h1>
                 
-                <p>{{ 'contact.confirm.comment'|trans()|raw }}</p>
+                <p>{{ 'contact.confirm.comment'|trans|raw }}</p>
 
                 <div class="text-center mt-4 pt-2">
                     <a href="{{ path('front_home') }}"

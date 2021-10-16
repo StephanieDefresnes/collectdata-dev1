@@ -1,7 +1,7 @@
 {% trans_default_domain 'security' %}
 {% extends 'front/layout.html.twig' %}
 
-{% block title %}{{ 'registration.title'|trans() }}{% endblock %}
+{% block title %}{{ 'registration.title'|trans }}{% endblock %}
 
 {% block stylesheets %}
     {{ parent() }}
@@ -13,7 +13,7 @@
     {% block flash_message %}
         {% for flashError in app.flashes('verify_email_error') %}
             <div class="alert alert-danger" role="alert">
-                <span class="sr-only">{{ ('alert.danger')|trans() }} : </span>
+                <span class="sr-only">{{ ('alert.danger')|trans }} : </span>
                 <span class="icon text-danger"><i class="fas fa-exclamation-circle"></i></span>
                 <span class="msg">{{ flashError }}</span>
                 <span id="hideFlash" class="pl-4 text-secondary pointer"><i class="far fa-times-circle"></i></span>
@@ -27,7 +27,7 @@
             
             <div class="card-body">
                 {{ form_start(registrationForm) }}
-                    <h1 class="h3 mb-3 font-weight-normal d-flex justify-content-start">{{ 'registration.title'|trans() }}</h1>
+                    <h1 class="h3 mb-3 font-weight-normal d-flex justify-content-start">{{ 'registration.title'|trans }}</h1>
                     
                     {{ form_row(registrationForm.email) }}
                     {{ form_row(registrationForm.name) }}
@@ -51,12 +51,12 @@
                     
                     <div id="comment" class="mx-2 px-3 pt-2 pb-3 bg-light rounded-lg line-12">
                         <span class="text-primary"><i class="fas fa-info-circle"></i></span>
-                        <span class="small">{{ 'registration.comment'|trans()|raw|nl2br }}</span>
+                        <span class="small">{{ 'registration.comment'|trans|raw|nl2br }}</span>
                     </div>
                     
                     <div class="mt-4 pt-2 text-center">
                         <button class="btn btn-secondary px-5" type="submit">
-                            {{ 'button.validate'|trans() }}
+                            {{ 'button.validate'|trans }}
                         </button>
                     </div>
                 {{ form_end(registrationForm) }}

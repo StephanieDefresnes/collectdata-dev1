@@ -14,10 +14,10 @@
     {% block banner%}
     <div class="d-flex justify-content-between mt-3 mb-5 pt-5">
         <div class="d-flex justify-content-start">
-            <h3 class=" text-white">{{ 'contrib.situ.title'|trans() }}
+            <h3 class=" text-white">{{ 'contrib.situ.title'|trans }}
                 {% if app.user and situ.statusId == 2 %}
                     <span class="badge badge-secondary mx-2">
-                        {{ 'action.preview_title'|trans() }}
+                        {{ 'action.preview_title'|trans }}
                     </span>
                 {% endif %}
             </h3>
@@ -26,13 +26,13 @@
             {% if app.user %}
                 <a href="{{ path('user_situs') }}" class="btn btn-outline-light bg-dark-50-0 px-3">
                     <i class="fas fa-chevron-left ltr pr-2"></i>
-                    {{ 'contrib.title'|trans() }}
+                    {{ 'contrib.title'|trans }}
                     <i class="fas fa-chevron-right rtl pl-2"></i>
                 </a>
             {% endif %}
             <a href="{{ path('all_situs') }}" class="btn btn-outline-light bg-dark-50-0 px-3">
                 <i class="fas fa-chevron-left ltr pr-2"></i>
-                {{ 'action.situs_all'|trans() }}
+                {{ 'action.situs_all'|trans }}
                 <i class="fas fa-chevron-right rtl pl-2"></i>
             </a>
         </div>
@@ -72,13 +72,13 @@
                         {{ situ.title|capitalize }}
                     </h1>
                     <div class="d-flex justify-content-start mb-4 small">
-                        <span>{{ 'contrib.situ.by_author'|trans() }}</span>
+                        <span>{{ 'contrib.situ.by_author'|trans }}</span>
                         <a href="" class="px-1 text-secondary font-weight-bold">{{ situ.user.name|capitalize }}</a>
                     </div>
                     <div class="d-flex justify-content-start mb-5">
                         {{ situ.description|capitalize }}
                     </div>
-                    <div class="d-flex justify-content-start h5 mt-4 mb-2 font-weight-bold">{{ 'contrib.form.item.label'|trans() }}</div>
+                    <div class="d-flex justify-content-start h5 mt-4 mb-2 font-weight-bold">{{ 'contrib.form.item.label'|trans }}</div>
                     {% for situItem in situ.situItems %}
                         {% if situItem.score == 0 %}
                         <div class="d-flex justify-content-start mb-2 font-weight-bold">
@@ -91,11 +91,11 @@
                         {% if app.user and situItem.score != 0 %}
                             <div class="d-flex justify-content-start h5 mt-4 mb-2 text-info font-weight-bold">
                             {% if situItem.score == 1 %}
-                                <span class="text-info">{{ 'contrib.form.item.score.info'|trans()~' :' }}</span>
+                                <span class="text-info">{{ 'contrib.form.item.score.info'|trans~' :' }}</span>
                             {% elseif situItem.score == 2 %}
-                                <span class="text-warning">{{ 'contrib.form.item.score.warning'|trans()~' :' }}</span>
+                                <span class="text-warning">{{ 'contrib.form.item.score.warning'|trans~' :' }}</span>
                             {% elseif situItem.score == 3 %}
-                                <span class="text-danger">{{ 'contrib.form.item.score.danger'|trans()~' :' }}</span>
+                                <span class="text-danger">{{ 'contrib.form.item.score.danger'|trans~' :' }}</span>
                             {% endif %}
                             </div>
                             <div class="d-flex justify-content-start mb-2 font-weight-bold">

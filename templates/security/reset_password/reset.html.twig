@@ -1,7 +1,7 @@
 {% trans_default_domain 'security' %}
 {% extends 'front/layout.html.twig' %}
 
-{% block title %}{{ 'reset_password.title'|trans() }}{% endblock %}
+{% block title %}{{ 'reset_password.title'|trans }}{% endblock %}
 
 {% block content %}
     
@@ -9,7 +9,7 @@
         <div class="card mt-5 mb-4 px-3 py-2 bg-white-80">            
             <div class="card-body">
                 
-                <h1 class="h3 mb-3 font-weight-normal">{{ 'reset_password.title'|trans() }}</h1>
+                <h1 class="h3 mb-3 font-weight-normal">{{ 'reset_password.title'|trans }}</h1>
 
                 {{ form_start(resetForm) }}
                 
@@ -28,7 +28,7 @@
 
                     <div class="text-center mt-4 pt-2">
                         <button class="btn btn-secondary px-4 mx-2">
-                            {{ 'button.validate'|trans() }}
+                            {{ 'button.validate'|trans }}
                         </button>
                     </div>
                     

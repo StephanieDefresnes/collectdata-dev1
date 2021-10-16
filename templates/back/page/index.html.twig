@@ -1,7 +1,7 @@
 {% extends 'back/layout.html.twig' %}
 {% trans_default_domain 'back_messages' %}
 
-{% block title %}{{ 'label.dashboard'|trans() }}{% endblock %}
+{% block title %}{{ 'label.dashboard'|trans }}{% endblock %}
 
 {% block stylesheets %}
     {{ parent() }}
@@ -11,7 +11,7 @@
     <div class="container-fluid pt-4">
         
         <div class="d-sm-flex align-items-center justify-content-between mb-4">
-            <h1 class="h3 mb-0 text-gray-800">{{ 'label.dashboard'|trans() }}</h1>
+            <h1 class="h3 mb-0 text-gray-800">{{ 'label.dashboard'|trans }}</h1>
         </div>
         
         <div class="row">

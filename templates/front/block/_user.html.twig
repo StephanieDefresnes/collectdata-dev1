@@ -8,19 +8,19 @@
             <span class="badge badge-light border border-dark rounded-pill">10</span>
             <i class="fas fa-bell"></i>
             <span class="{#{% if ...%}#}ml-2 {#{% endif %}#}d-md-none d-inline">
-                {{ 'nav.message.alert.title'|trans() }}
+                {{ 'nav.message.alert.title'|trans }}
             </span>
         </a>
         <ul class="dropdown-menu dropdown-menu-right pt-md-4 pt-0 border-0" aria-labelledby="dropdown_alert">
             <li class="dropdown-item bg-dark-95">
                 <a class="text-white" href="">
-                    {{ 'nav.message.alert.contrib'|trans() }}
+                    {{ 'nav.message.alert.contrib'|trans }}
                 </a>
             </li>
             <div class="dropdown-divider m-0"></div>
             <li class="dropdown-item bg-dark-95">
                 <a href="">
-                    {{ 'nav.message.alert.title_all'|trans() }}
+                    {{ 'nav.message.alert.title_all'|trans }}
                 </a>
             </li>
         </ul>
@@ -31,19 +31,19 @@
             <span class="badge badge-light border border-dark rounded-pill">2</span>
             <i class="fas fa-envelope"></i>
             <span class="{#{% if ...%}#}ml-2 {#{% endif %}#}d-md-none d-inline">
-                {{ 'nav.message.envelope.title'|trans() }}
+                {{ 'nav.message.envelope.title'|trans }}
             </span>
         </a>
         <ul class="dropdown-menu dropdown-menu-right pt-md-4 pt-0 border-0" aria-labelledby="dropdown_envelope">
             <li class="dropdown-item bg-dark-95">
                 <a class="text-white" href="">
-                    {{ 'nav.message.envelope.new'|trans() }}
+                    {{ 'nav.message.envelope.new'|trans }}
                 </a>
             </li>
             <div class="dropdown-divider m-0"></div>
             <li class="dropdown-item bg-dark-95">
                 <a href="">
-                    {{ 'nav.message.envelope.title_all'|trans() }}
+                    {{ 'nav.message.envelope.title_all'|trans }}
                 </a>
             </li>
         </ul>
@@ -69,20 +69,20 @@
                 <li class="dropdown-item bg-dark-95{{ route == 'back_home' ? ' active' }}">
                     <a href="{{ path('back_home') }}">
                         <i class="fas fa-fw fa-tachometer-alt"></i>
-                        {{ 'nav.account_back'|trans() }}
+                        {{ 'nav.account_back'|trans }}
                     </a>
                 </li>
             {% endif %}
             <li class="dropdown-item bg-dark-95{{ route == 'user_account' ? ' active' }}">
                 <a href="{{ path('user_account') }}">
                     <i class="fas fa-user-cog"></i>
-                    {{ 'nav.account_profile'|trans() }}
+                    {{ 'nav.account_profile'|trans }}
                 </a>
             </li>
             <li class="dropdown-item bg-dark-95">
                 <a href="{{ path('app_logout') }}">
                     <i class="fas fa-sign-out-alt"></i>
-                    {{ 'nav.account_logout'|trans() }}
+                    {{ 'nav.account_logout'|trans }}
                 </a>
             </li>
         </ul>
@@ -94,19 +94,19 @@
             <span class="d-md-inline d-none">
                 <i class="fas fa-user"></i>
             </span>
-            {{ 'nav.account_unknown'|trans() }}
+            {{ 'nav.account_unknown'|trans }}
         </a>
         <ul class="dropdown-menu dropdown-menu-right pt-md-4 pt-0" aria-labelledby="dropdown_account">
             <li class="dropdown-item bg-dark-95{{ route == 'app_login' ? ' active' }}">
                 <a href="{{ path('app_login') }}">
                     <i class="fas fa-sign-in-alt"></i>
-                    {{ 'nav.account_login'|trans() }}
+                    {{ 'nav.account_login'|trans }}
                 </a>
             </li>
             <li class="dropdown-item bg-dark-95{{ route == 'app_register' ? ' active' }}">
                 <a href="{{ path('app_register') }}">
                     <i class="fas fa-user"></i>
-                    {{ 'nav.account_register'|trans() }}
+                    {{ 'nav.account_register'|trans }}
                 </a>
             </li>
         </ul>

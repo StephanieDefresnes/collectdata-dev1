@@ -9,17 +9,17 @@
     {{ encore_entry_link_tags('app') }}
 {% endblock %}
 
-{% block title %}{{ 'contrib.title'|trans() }}{% endblock %}
+{% block title %}{{ 'contrib.title'|trans }}{% endblock %}
 
 {% block content %}
     <div id="loader"></div>
         
     {% block banner%}
     <div class="d-flex justify-content-between mt-3 mb-5 pt-5">
-        <h1 class="h3 text-white">{{ 'contrib.title'|trans() }}</h1>
+        <h1 class="h3 text-white">{{ 'contrib.title'|trans }}</h1>
         <a href="{{ path('create_situ') }}" class="btn btn-outline-light bg-dark-50-0 px-3">
             <i class="fas fa-plus ltr pr-2"></i>
-            {{ 'action.situ_add'|trans() }}
+            {{ 'action.situ_add'|trans }}
             <i class="fas fa-plus rtl pl-2"></i>
         </a>
     </div>
@@ -30,22 +30,22 @@
 
             {% if app.user.situs is empty %}
             <div class="mb-5 p-3 bg-white-70 text-secondary">
-                {{ 'account.contribs.empty'|trans() }}
+                {{ 'account.contribs.empty'|trans }}
             </div>
             {% else %}
             <table id="dataTable-situs" class="shadow table table-borderless table-hover text-nowrap">
                 <thead class="bg-black-40 text-white">
                     <tr>
                         <th class="d-none"></th>
-                        <th class="py-2">{{ 'label.title'|trans() }}</th>
-                        <th class="py-2">{{ 'label.description'|trans() }}</th>
-                        <th class="py-2">{{ 'status.date_creation'|trans() }}</th>
-                        <th class="py-2">{{ 'label.event'|trans() }}</th>
-                        <th class="py-2">{{ 'label.catLevel1'|trans() }}</th>
-                        <th class="py-2">{{ 'label.catLevel2'|trans() }}</th>
-                        <th class="py-2">{{ 'label.lang'|trans() }}</th>
-                        <th class="py-2">{{ 'status.title'|trans() }}</th>
-                        <th class="cust-nowrap p-2 no-sort">{{ 'action.actions'|trans() }}</th>
+                        <th class="py-2">{{ 'label.title'|trans }}</th>
+                        <th class="py-2">{{ 'label.description'|trans }}</th>
+                        <th class="py-2">{{ 'status.date_creation'|trans }}</th>
+                        <th class="py-2">{{ 'label.event'|trans }}</th>
+                        <th class="py-2">{{ 'label.catLevel1'|trans }}</th>
+                        <th class="py-2">{{ 'label.catLevel2'|trans }}</th>
+                        <th class="py-2">{{ 'label.lang'|trans }}</th>
+                        <th class="py-2">{{ 'status.title'|trans }}</th>
+                        <th class="cust-nowrap p-2 no-sort">{{ 'action.actions'|trans }}</th>
                         <th class="no-sort"></th>
                         <th class="no-sort"></th>
                         {% if app.user.langs|length > 1 %}<th class="no-sort"></th>{% endif %}
@@ -97,16 +97,16 @@
                             
                             <td class="pt-3 situStatus">
                                 {% if situ.statusId == 1 %}
-                                    {{ 'status.writing'|trans() }}
+                                    {{ 'status.writing'|trans }}
                                 {% elseif situ.statusId == 2 %}
-                                    {{ 'status.validation'|trans() }}
+                                    {{ 'status.validation'|trans }}
                                 {% elseif situ.statusId == 3 %}
-                                    {{ 'status.validated'|trans() }}
+                                    {{ 'status.validated'|trans }}
                                 {% elseif situ.statusId == 4 %}
                                     {% if situ.initialSitu ==  0 %}
-                                        {{ 'status.translation_refused'|trans() }}
+                                        {{ 'status.translation_refused'|trans }}
                                     {% else %}
-                                        {{ 'status.refused'|trans() }}
+                                        {{ 'status.refused'|trans }}
                                     {% endif %}
                                 {% endif %}
                             </td>
@@ -119,8 +119,8 @@
                                        class="{% if situ.statusId == 3 %}updateConfirm {%
                                                 endif %}btn btn-outline-secondary btn-sm px-1"
                                        data-toggle="tooltip" data-placement="left"
-                                       title="{{ 'action.edit'|trans() }}"
-                                       aria-label="{{ 'action.edit'|trans() }}">
+                                       title="{{ 'action.edit'|trans }}"
+                                       aria-label="{{ 'action.edit'|trans }}">
                                         <i class="fas fa-pen"></i>
                                     </a>
                                 </td>
@@ -131,15 +131,15 @@
                                     {% if situ.initialSitu == 1 %}
                                         <span class="situTranslate btn btn-outline-primary btn-sm px-1"
                                               data-lang="{{ situ.lang.id }}" data-toggle="tooltip" data-placement="left"
-                                              title="{{ 'action.translate'|trans() }}"
-                                              aria-label="{{ 'action.translate'|trans() }}">
+                                              title="{{ 'action.translate'|trans }}"
+                                              aria-label="{{ 'action.translate'|trans }}">
                                             <i class="fas fa-globe"></i>
                                         </span>
                                     {% else %}
                                         <span class="btn btn-outline-secondary btn-sm px-1 situ-translation"
                                               data-toggle="tooltip" data-placement="left"
-                                              title="{{ 'action.translated'|trans() }}"
-                                              aria-label="{{ 'action.translated'|trans() }}">
+                                              title="{{ 'action.translated'|trans }}"
+                                              aria-label="{{ 'action.translated'|trans }}">
                                             <i class="fas fa-globe"></i>
                                         </span>
                                     {% endif %}
@@ -151,8 +151,8 @@
                                     <a href="{{ path('validation_situ_request', { 'situ': situ.id }) }}"
                                        class="btn btn-outline-success btn-sm pcx-2"
                                        data-toggle="tooltip" data-placement="left"
-                                       title="{{ 'action.validation'|trans() }}"
-                                       aria-label="{{ 'action.validation'|trans() }}">
+                                       title="{{ 'action.validation'|trans }}"
+                                       aria-label="{{ 'action.validation'|trans }}">
                                         <i class="far fa-paper-plane"></i>
                                     </a>
                                 </td>
@@ -164,11 +164,11 @@
                                                     : 'btn-outline-secondary' }} btn-sm px-1"
                                        data-toggle="tooltip" data-placement="left"
                                        title="{{ situ.statusId == 3
-                                                    ? 'action.read'|trans() 
-                                                    : 'action.preview'|trans() }}"
+                                                    ? 'action.read'|trans 
+                                                    : 'action.preview'|trans }}"
                                        aria-label="{{ situ.statusId == 3
-                                                    ? 'action.read'|trans() 
-                                                    : 'action.preview'|trans() }}"">
+                                                    ? 'action.read'|trans 
+                                                    : 'action.preview'|trans }}"">
                                         <i class="fas fa-eye"></i>
                                     </a>
                                 </td>
@@ -180,8 +180,8 @@
                                 <a href="{{ path('delete_situ', { 'situ': situ.id }) }}"
                                    class="situDelete btn btn-outline-danger btn-sm"
                                    data-toggle="tooltip" data-placement="left"
-                                   title="{{ 'action.delete'|trans() }}"
-                                   aria-label="{{ 'action.delete'|trans() }}">
+                                   title="{{ 'action.delete'|trans }}"
+                                   aria-label="{{ 'action.delete'|trans }}">
                                     <i class="far fa-trash-alt"></i>
                                 </a>
                             </td>
@@ -203,17 +203,17 @@
                 <div class="modal-content">
                     <div class="modal-header bg-dark">
                         <h5 class="modal-title text-white" id="translateModalLabel">
-                            {{ 'contrib.translation.title'|trans() }}
+                            {{ 'contrib.translation.title'|trans }}
                         </h5>
                     </div>
                     <div class="modal-body text-secondary pb-4">
-                        <p class="mb-1">{{ 'contrib.translation.modal.text'|trans() }}</p>
+                        <p class="mb-1">{{ 'contrib.translation.modal.text'|trans }}</p>
                         <p data-id="" class="situ-title text-center font-weight-bold text-capitalize"></p>
                         <div class="row mt-4 mb-2">
                             <div class="col-md-6 offset-md-3 text-capitalize">
                                 <select id="translateLangs" class="form-control">
                                     <option value="" class="d-none">
-                                        {{ 'multiple_search'|trans() }}
+                                        {{ 'multiple_search'|trans }}
                                     </option>
                                     {% for lang in app.user.langs %}
                                         <option value="{{ lang.id }}">
@@ -229,14 +229,14 @@
                             </div>
                         </div>
                         <p id="result" class="text-center mt-3 mb-0 d-none">
-                            <span class="success">{{ 'contrib.translation.modal.result.success'|trans() }}</span>
-                            <span class="error">{{ 'contrib.translation.modal.result.error'|trans() }}</span>
+                            <span class="success">{{ 'contrib.translation.modal.result.success'|trans }}</span>
+                            <span class="error">{{ 'contrib.translation.modal.result.error'|trans }}</span>
                         </p>
                     </div>
                     <div class="modal-footer">
                         <button id="valid" class="btn btn-primary d-none" data-id=""></button>
                         <button class="cancel btn btn-secondary">
-                            {{ 'action.cancel'|trans() }}
+                            {{ 'action.cancel'|trans }}
                         </button>
                     </div>
                 </div>
@@ -253,10 +253,10 @@
     <script>
         let path = { "locale" : "{{ locale }}" }
         let translations = {
-            "modalBtnRead" : "{{ 'action.read'|trans() }}",
-            "modalBtnValid" : "{{ 'action.translate'|trans() }}",
-            "deleteTitle" : "{{ 'contrib.delete.title'|trans() }}",
-            "deleteQuestion" : "{{ 'contrib.delete.text'|trans() }}",
+            "modalBtnRead" : "{{ 'action.read'|trans }}",
+            "modalBtnValid" : "{{ 'action.translate'|trans }}",
+            "deleteTitle" : "{{ 'contrib.delete.title'|trans }}",
+            "deleteQuestion" : "{{ 'contrib.delete.text'|trans }}",
             "updateTitle" : "{{ 'contrib.update_validated.title'|trans }}",
             "updateQuestion" : "{{ 'contrib.update_validated.question'|trans|raw }}",
             "no" : "{{ 'no'|trans }}",

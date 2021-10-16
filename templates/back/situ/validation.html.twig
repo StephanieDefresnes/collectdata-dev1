@@ -2,7 +2,7 @@
 {% extends "back/layout.html.twig" %}
 {% set locale = app.request.locale %}
 
-{% block title %}{{ 'contrib.situ.validation'|trans() }}{% endblock %}
+{% block title %}{{ 'contrib.situ.validation'|trans }}{% endblock %}
 
 {% block stylesheets %}
     {{ parent() }}
@@ -16,34 +16,34 @@
     <div class="container-fluid pt-4">
         
         <div class="d-sm-flex align-items-center justify-content-between mb-4">
-            <h1 class="h3 mb-0 text-gray-800">{{ 'label.contributions'|trans() }}</h1>
+            <h1 class="h3 mb-0 text-gray-800">{{ 'label.contributions'|trans }}</h1>
         </div>
 
         <div id="card-list" class="card shadow mb-4">
 
             <div class="card-header py-3">
-                <h6 class="m-0 font-weight-bold text-primary">{{ 'contrib.situ.validation'|trans() }}</h6>
+                <h6 class="m-0 font-weight-bold text-primary">{{ 'contrib.situ.validation'|trans }}</h6>
             </div>
 
             <div id="list" class="card-body pb-3 back-dataTable">
 
                 {% if situs is empty %}
-                    {{ 'contrib.situ.empty'|trans() }}
+                    {{ 'contrib.situ.empty'|trans }}
                 {% else %}
 
                 <table id="dataTable-list" class="table table-sm mb-0 text-nowrap">
                     <thead class="bg-gray-600 text-white">
                         <tr>
-                            <th class="no-sort">{{ 'action.action'|trans() }}</th>
+                            <th class="no-sort">{{ 'action.action'|trans }}</th>
                             <th class="pl-2 text-center">#</th>
-                            <th class="pl-2">{{ 'status.title'|trans() }}</th>
-                            <th class="pl-2">{{ 'label.date_creation'|trans() }}</th>
-                            <th class="pl-2">{{ 'label.date_submit'|trans() }}</th>
-                            <th class="pl-2">{{ 'label.lang'|trans() }}</th>
-                            <th class="pl-2">{{ 'label.initial'|trans() }}</th>
-                            <th class="pl-2">{{ 'label.event'|trans() }}</th>
-                            <th class="pl-2">{{ 'label.catLevel1'|trans() }}</th>
-                            <th class="pl-2 text-nowrap">{{ 'label.catLevel2'|trans() }}</th>
+                            <th class="pl-2">{{ 'status.title'|trans }}</th>
+                            <th class="pl-2">{{ 'label.date_creation'|trans }}</th>
+                            <th class="pl-2">{{ 'label.date_submit'|trans }}</th>
+                            <th class="pl-2">{{ 'label.lang'|trans }}</th>
+                            <th class="pl-2">{{ 'label.initial'|trans }}</th>
+                            <th class="pl-2">{{ 'label.event'|trans }}</th>
+                            <th class="pl-2">{{ 'label.catLevel1'|trans }}</th>
+                            <th class="pl-2 text-nowrap">{{ 'label.catLevel2'|trans }}</th>
                         </tr>
                     </thead>
                     <tbody class="bg-white">
@@ -54,7 +54,7 @@
                                    role="button" class="btn btn-outline-warning pcx-2 py-1"
                                    data-id="{{ situ.id }}" data-action=""
                                    data-toggle="tooltip" data-placement="left"
-                                   title="{{ 'action.validate'|trans() }}">
+                                   title="{{ 'action.validate'|trans }}">
                                     <i class="far fa-paper-plane"></i>
                                 </a>
                             </td>
@@ -65,7 +65,7 @@
                             <td class="px-2 align-middle">{{ situ.lang.englishName }}</td>
                             <td class="px-2 align-middle">
                                 {% if situ.initialSitu%}
-                                    {{ 'yes'|trans() }}
+                                    {{ 'yes'|trans }}
                                 {% else %}
                                     <span class="id">{{ situ.translatedSituId }}</span>
                                 {% endif %}
@@ -75,7 +75,7 @@
                                     {{ situ.event.title|u.truncate(20, '...') }}
                                 {% else %}
                                     {{ situ.event.title|u.truncate(10, '...') }}
-                                    <span class="badge badge-pill badge-primary">{{ 'badge.new'|trans() }}</span>
+                                    <span class="badge badge-pill badge-primary">{{ 'badge.new'|trans }}</span>
                                 {% endif %}
                             </td>
                             <td class="px-2 align-middle text-nowrap">
@@ -83,7 +83,7 @@
                                     {{ situ.categoryLevel1.title|u.truncate(20, '...') }}
                                 {% else %}
                                     {{ situ.categoryLevel1.title|u.truncate(10, '...') }}
-                                    <span class="badge badge-pill badge-primary">{{ 'badge.new'|trans() }}</span>
+                                    <span class="badge badge-pill badge-primary">{{ 'badge.new'|trans }}</span>
                                 {% endif %}
                             </td>
                             <td class="px-2 align-middle text-nowrap">
@@ -91,7 +91,7 @@
                                     {{ situ.categoryLevel2.title|u.truncate(20, '...') }}
                                 {% else %}
                                     {{ situ.categoryLevel2.title|u.truncate(10, '...') }}
-                                    <span class="badge badge-pill badge-primary">{{ 'badge.new'|trans() }}</span>
+                                    <span class="badge badge-pill badge-primary">{{ 'badge.new'|trans }}</span>
                                 {% endif %}
                             </td>
                         </tr>

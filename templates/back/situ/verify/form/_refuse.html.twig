@@ -8,17 +8,17 @@
 
             <div class="modal-header bg-dark text-white">
                 <h5 class="modal-title" id="refuseModalLabel">
-                    {{ 'contrib.situ.verify.form.modal.refuse.title'|trans() }}
+                    {{ 'contrib.situ.verify.form.modal.refuse.title'|trans }}
                 </h5>
             </div>
 
             <div class="modal-body">
-                <h5 class="text-center mb-4">{{ 'contrib.situ.verify.form.modal.refuse.question'|trans() }}</h5>
+                <h5 class="text-center mb-4">{{ 'contrib.situ.verify.form.modal.refuse.question'|trans }}</h5>
                 <ul class="small pb-2 mb-4">
-                    {{ 'contrib.situ.verify.form.modal.refuse.detail'|trans()|raw }}
+                    {{ 'contrib.situ.verify.form.modal.refuse.detail'|trans|raw }}
                 </ul>
                 
-                <h6 class="font-bold">{{ 'contrib.situ.verify.form.modal.refuse.entities'|trans() }}</h6>
+                <h6 class="font-bold">{{ 'contrib.situ.verify.form.modal.refuse.entities'|trans }}</h6>
                 
                 {% if situ.initialSitu == 0 and situsTranslated|length > 1 %}
                     <div id="conflict-refuse" class="row mb-2">
@@ -26,7 +26,7 @@
                             <div class="form-check">
                                 <input class="form-check-input" type="checkbox" value="" id="translationRefuse">
                                 <label class="form-check-label" for="translationRefuse">
-                                    {{ 'contrib.situ.verify.form.modal.refuse.translation'|trans() }}
+                                    {{ 'contrib.situ.verify.form.modal.refuse.translation'|trans }}
                                 </label>
                             </div>
                         </div>
@@ -39,7 +39,7 @@
                             <div class="form-check">
                                 <input class="form-check-input" type="checkbox" value="" id="EventRefuse">
                                 <label class="form-check-label" for="EventRefuse">
-                                    {{ 'label.event'|trans() }}
+                                    {{ 'label.event'|trans }}
                                 </label>
                             </div>
                         </div>
@@ -47,7 +47,7 @@
                             <div class="form-check">
                                 <input class="form-check-input" type="checkbox" value="" id="CategoryLevel1Refuse">
                                 <label class="form-check-label" for="CategoryLevel1Refuse">
-                                    {{ 'label.catLevel1'|trans() }}
+                                    {{ 'label.catLevel1'|trans }}
                                 </label>
                             </div>
                         </div>
@@ -55,7 +55,7 @@
                             <div class="form-check">
                                 <input class="form-check-input" type="checkbox" value="" id="CategoryLevel2Refuse">
                                 <label class="form-check-label" for="CategoryLevel2Refuse">
-                                    {{ 'label.catLevel2'|trans() }}
+                                    {{ 'label.catLevel2'|trans }}
                                 </label>
                             </div>
                         </div>
@@ -65,7 +65,7 @@
                             <div class="form-check">
                                 <input class="form-check-input" type="checkbox" value="" id="SituRefuse">
                                 <label class="form-check-label" for="SituRefuse">
-                                    {{ 'label.situ_'|trans() }}
+                                    {{ 'label.situ_'|trans }}
                                 </label>
                             </div>
                         </div>
@@ -73,7 +73,7 @@
                             <div class="form-check">
                                 <input class="form-check-input" type="checkbox" value="" id="ItemsRefuse">
                                 <label class="form-check-label" for="ItemsRefuse">
-                                    {{ 'contrib.situ.verify.form.modal.refuse.items'|trans() }}
+                                    {{ 'contrib.situ.verify.form.modal.refuse.items'|trans }}
                                 </label>
                             </div>
                         </div>
@@ -83,15 +83,15 @@
                 <div class="row mb-4">         
                     <div class="col-md-5 mb-2">
                         <select id="refuseReason" class="form-control" required="required">
-                            <option value="">{{ 'contrib.situ.verify.form.modal.refuse.select.placeholder'|trans() }}</option>
-                            <option value="inappropriate">{{ 'contrib.situ.verify.form.modal.refuse.select.inappropriate'|trans() }}</option>
-                            <option value="create">{{ 'contrib.situ.verify.form.modal.refuse.select.create'|trans() }}</option>
-                            <option value="other">{{ 'contrib.situ.verify.form.modal.refuse.select.other'|trans() }}</option>
+                            <option value="">{{ 'contrib.situ.verify.form.modal.refuse.select.placeholder'|trans }}</option>
+                            <option value="inappropriate">{{ 'contrib.situ.verify.form.modal.refuse.select.inappropriate'|trans }}</option>
+                            <option value="create">{{ 'contrib.situ.verify.form.modal.refuse.select.create'|trans }}</option>
+                            <option value="other">{{ 'contrib.situ.verify.form.modal.refuse.select.other'|trans }}</option>
                         </select>
                     </div>
                     <div class="col-md-7">
                         <textarea id="refuseComment" name="refuseComment" class="form-control" rows="7"
-                                  placeholder="{{ 'contrib.situ.verify.form.modal.refuse.comment.placeholder'|trans() }}"></textarea>
+                                  placeholder="{{ 'contrib.situ.verify.form.modal.refuse.comment.placeholder'|trans }}"></textarea>
                     </div>
                 </div>
                     
@@ -101,10 +101,10 @@
                     
             <div class="modal-footer" translate="no">
                 <span id="refuse-cancel" class="btn btn-secondary">
-                    {{ 'action.cancel'|trans() }}
+                    {{ 'action.cancel'|trans }}
                 </span>
                 <span class="btn btn-primary submit" data-action="refuse">
-                    {{ 'action.confirm'|trans() }}
+                    {{ 'action.confirm'|trans }}
                 </span>
             </div>
         </div>

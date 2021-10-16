@@ -2,7 +2,7 @@
 {% trans_default_domain 'user_messages' %}
 {% set locale = app.request.locale %}
 
-{% block title %}{{ 'account.update.title'|trans() }}{% endblock %}
+{% block title %}{{ 'account.update.title'|trans }}{% endblock %}
 
 {% block stylesheets %}
     {{ parent() }}
@@ -18,7 +18,7 @@
             <div class="card border-0 my-4 bg-light-50">
 
                 <div class="card-header py-4 pl-4 bg-secondary-80 text-center text-white">
-                    <h3 class="h4 mb-0">{{ 'account.update.title'|trans() }}</h3>
+                    <h3 class="h4 mb-0">{{ 'account.update.title'|trans }}</h3>
                 </div>
                 {{ form_start(form) }}
 
@@ -34,11 +34,11 @@
                                         <div class="img-circle">
                                             <img src="{{ user.imageFilename == '' ? asset('/img/unknown.jpg') : asset('/uploads/img/'~ user.imageFilename) }}"
                                                 data-toggle="tooltip" data-placement="right"
-                                                title="{{ user.imageFilename == '' ? 'account.image.add'|trans() : 'account.image.update'|trans() }}"
+                                                title="{{ user.imageFilename == '' ? 'account.image.add'|trans : 'account.image.update'|trans }}"
                                                 id="defaultImg" alt="">
                                             <img src=""
                                                 data-toggle="tooltip" data-placement="right"
-                                                title="{{ 'account.image.update'|trans() }}"
+                                                title="{{ 'account.image.update'|trans }}"
                                                 id="previewImg" class="d-none" alt="">
                                         </div>
                                     </div>
@@ -117,10 +117,10 @@
                 <div class="card-footer bg-light text-right">
                     <div class="d-flex justify-content-between">
                         <a href="{{ path('user_account') }}" class="btn btn-light">
-                            {{ 'action.cancel'|trans() }}
+                            {{ 'action.cancel'|trans }}
                         </a>
                         <button class="btn btn-secondary px-5" type="submit">
-                            {{ 'action.validate'|trans() }}
+                            {{ 'action.validate'|trans }}
                         </button>
                     </div>
                 </div>
@@ -139,8 +139,8 @@
             "locale" : "{{ locale }}",
         }
         let translations = {
-            "single-searchLang" : "{{ 'account.lang.default' | trans }}",
-            "multiple-search" : "{{ 'multiple_search' | trans }}",
+            "single-searchLang" : "{{ 'account.lang.default'|trans }}",
+            "multiple-search" : "{{ 'multiple_search'|trans }}",
         }
         let img = {
             "default" : "{{ asset('/img/unknown.jpg') }}",

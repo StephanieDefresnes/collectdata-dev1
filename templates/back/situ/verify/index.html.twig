@@ -2,7 +2,7 @@
 {% extends "back/layout.html.twig" %}
 {% set locale = app.request.locale %}
 
-{% block title %}{{ 'contrib.situ.verify.title'|trans() }}{% endblock %}
+{% block title %}{{ 'contrib.situ.verify.title'|trans }}{% endblock %}
 
 {% block stylesheets %}
     {{ parent() }}
@@ -20,9 +20,9 @@
     <div class="container-fluid pt-4">
         
         <div class="d-sm-flex justify-content-between mb-4" translate="no">
-            <h1 class="h3 mb-0 text-gray-800">{{ 'contrib.situ.verify.title'|trans() }}</h1>
+            <h1 class="h3 mb-0 text-gray-800">{{ 'contrib.situ.verify.title'|trans }}</h1>
             <a href="{{ path('back_situs_validation') }}" class="btn btn-secondary mx-2 pt-1">
-                <i class="fas fa-reply"></i> {{ 'action.back'|trans() }}
+                <i class="fas fa-reply"></i> {{ 'action.back'|trans }}
             </a>
         </div>
         
@@ -50,27 +50,27 @@
             "locale" : "{{ locale }}",
         }
         var translations = {
-            "toValidate" : "{{ 'contrib.situ.verify.data.to_validate' | trans }}",
-            "ok" : "{{ 'contrib.situ.verify.form.action.valid' | trans }}",
-            "todoValidate" : "{{ 'status.validation' | trans }}",
-            "doneValidated" : "{{ 'status.validated' | trans }}",
-            "noResult" : "{{ 'select2.no_result' | trans }}",
-            "createEventRefuse" : "{{ 'contrib.situ.verify.form.modal.refuse.comment.create.eventRefuse' | trans }}",
-            "createCategoryLevel1Refuse" : "{{ 'contrib.situ.verify.form.modal.refuse.comment.create.categoryLevel1Refuse' | trans }}",
-            "createCategoryLevel2Refuse" : "{{ 'contrib.situ.verify.form.modal.refuse.comment.create.categoryLevel2Refuse' | trans }}",
+            "toValidate" : "{{ 'contrib.situ.verify.data.to_validate'|trans }}",
+            "ok" : "{{ 'contrib.situ.verify.form.action.valid'|trans }}",
+            "todoValidate" : "{{ 'status.validation'|trans }}",
+            "doneValidated" : "{{ 'status.validated'|trans }}",
+            "noResult" : "{{ 'select2.no_result'|trans }}",
+            "createEventRefuse" : "{{ 'contrib.situ.verify.form.modal.refuse.comment.create.eventRefuse'|trans }}",
+            "createCategoryLevel1Refuse" : "{{ 'contrib.situ.verify.form.modal.refuse.comment.create.categoryLevel1Refuse'|trans }}",
+            "createCategoryLevel2Refuse" : "{{ 'contrib.situ.verify.form.modal.refuse.comment.create.categoryLevel2Refuse'|trans }}",
             "createSituRefuse" : "",
             "createItemsRefuse" : "",
-            "inappropriateEventRefuse" : "{{ 'contrib.situ.verify.form.modal.refuse.comment.inappropriate.eventRefuse' | trans }}",
-            "inappropriateCategoryLevel1Refuse" : "{{ 'contrib.situ.verify.form.modal.refuse.comment.inappropriate.categoryLevel1Refuse' | trans }}",
-            "inappropriateCategoryLevel2Refuse" : "{{ 'contrib.situ.verify.form.modal.refuse.comment.inappropriate.categoryLevel2Refuse' | trans }}",
-            "inappropriateSituRefuse" : "{{ 'contrib.situ.verify.form.modal.refuse.comment.inappropriate.situRefuse' | trans }}",
-            "inappropriateItemsRefuse" : "{{ 'contrib.situ.verify.form.modal.refuse.comment.inappropriate.itemsRefuse' | trans }}",
-            "unvalidRefuse" : "{{ 'contrib.situ.verify.form.modal.refuse.unvalid' | trans }}",
-            "translationRefuse" : "{{ 'contrib.situ.verify.form.modal.refuse.comment.conflict.validated' | trans }}",
+            "inappropriateEventRefuse" : "{{ 'contrib.situ.verify.form.modal.refuse.comment.inappropriate.eventRefuse'|trans }}",
+            "inappropriateCategoryLevel1Refuse" : "{{ 'contrib.situ.verify.form.modal.refuse.comment.inappropriate.categoryLevel1Refuse'|trans }}",
+            "inappropriateCategoryLevel2Refuse" : "{{ 'contrib.situ.verify.form.modal.refuse.comment.inappropriate.categoryLevel2Refuse'|trans }}",
+            "inappropriateSituRefuse" : "{{ 'contrib.situ.verify.form.modal.refuse.comment.inappropriate.situRefuse'|trans }}",
+            "inappropriateItemsRefuse" : "{{ 'contrib.situ.verify.form.modal.refuse.comment.inappropriate.itemsRefuse'|trans }}",
+            "unvalidRefuse" : "{{ 'contrib.situ.verify.form.modal.refuse.unvalid'|trans }}",
+            "translationRefuse" : "{{ 'contrib.situ.verify.form.modal.refuse.comment.conflict.validated'|trans }}",
             
             {% for translation in situsTranslated %}
                 {% if translation.statusId == 3 %}
-                    "translationRead" : "{{ 'contrib.situ.verify.form.modal.refuse.comment.conflict.read' | trans }}",
+                    "translationRead" : "{{ 'contrib.situ.verify.form.modal.refuse.comment.conflict.read'|trans }}",
                     "translationPath" : "/{{ authorLang }}/read/{{ translation.id }}",
                 {% endif %}
             {% endfor %}

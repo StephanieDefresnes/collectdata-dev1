@@ -3,7 +3,7 @@
 {% set locale = app.request.locale %}
 
 {% block title %}
-    {{ langPage ? 'content.form.update' |trans() : 'content.form.card' |trans() }}
+    {{ langPage ? 'content.form.update' |trans : 'content.form.card' |trans }}
 {% endblock %}
 
 {% block stylesheets %}
@@ -18,10 +18,10 @@
     <div class="container-fluid pt-4" translate="no">
         
         <div class="d-sm-flex align-items-center justify-content-between mb-4">
-            <h1 class="h3 mb-0 text-gray-800">{{ 'content.form.title'|trans() }}</h1>
+            <h1 class="h3 mb-0 text-gray-800">{{ 'content.form.title'|trans }}</h1>
             <a href="{{ path('back_content_search') }}" class="btn btn-secondary mx-2 pt-1">
                 <i class="fas fa-reply"></i>
-                {{ 'action.cancel'|trans() }}
+                {{ 'action.cancel'|trans }}
             </a>
         </div>
             
@@ -30,7 +30,7 @@
 
                 <div class="card-header py-3">
                     <h6 class="m-0 font-weight-bold text-primary">
-                        {{ langPage ? 'content.form.update' |trans() : 'content.form.card' |trans() }}
+                        {{ langPage ? 'content.form.update' |trans : 'content.form.card' |trans }}
                     </h6>
                 </div>
 
@@ -69,7 +69,7 @@
                             {{ form_label(form.title)}}
                             {% if not page.id %}
                                 <span id="title-danger" class="px-1 text-danger small">
-                                    ( {{ 'content.form.page.title_lang'|trans() }} {{ lang }} )
+                                    ( {{ 'content.form.page.title_lang'|trans }} {{ lang }} )
                                 </span>
                             {% endif%}
                             {{ form_widget(form.title)}}
@@ -79,7 +79,7 @@
                             {{ form_label(form.slug)}}
                             <span id="GGTbtn"
                                 class="pointer mx-1 small badge badge-warning d-none">
-                                {{ 'content.form.badge'|trans() }}
+                                {{ 'content.form.badge'|trans }}
                             </span>
                             {{ form_widget(form.slug)}}
                             {{ form_errors(form.slug)}}
@@ -92,7 +92,7 @@
                         <div id="add-content-link" class="btn btn-primary pt-1"
                             data-list-selector="#pageContents">
                             <i class="fas fa-plus-circle"></i>
-                            {{ 'content.form.page.collection.btn'|trans() }}
+                            {{ 'content.form.page.collection.btn'|trans }}
                         </div>
                     </div>
             
@@ -110,11 +110,11 @@
                         
                     <div class="d-flex justify-content-center mt-4">
                         <button id="save" class="btn btn-outline-primary mx-2">
-                            {{ 'action.save'|trans() }}
+                            {{ 'action.save'|trans }}
                         </button>
                         {% if langPage %}
                             <button id="submit" class="btn btn-primary mx-2 px-4">
-                                {{ 'action.enable'|trans() }}
+                                {{ 'action.enable'|trans }}
                             </button>
                         {% endif %}
                     </div>
@@ -135,7 +135,7 @@
             <div class="modal-content">
                 <div class="modal-header bg-dark text-white" translate="no">
                     <h5 class="modal-title" id="ggtModalLabel" >
-                        {{ 'content.form.badge'|trans() }}
+                        {{ 'content.form.badge'|trans }}
                     </h5>
                 </div>
                 <div class="modal-body">
@@ -143,11 +143,11 @@
                     <div id="GGT" class="text-center mb-2"></div>
                     
                     <h6 class="font-weight-bold" translate="no">
-                        {{ 'content.form.page.title'|trans() }} :</h6>
+                        {{ 'content.form.page.title'|trans }} :</h6>
                     <p id="ggtTitle" class="px-3"></p>
                     
                     <h6 class="font-weight-bold" translate="no">
-                        {{ 'content.form.page.slug'|trans() }} :</h6>
+                        {{ 'content.form.page.slug'|trans }} :</h6>
                     <div id="modalSpinner" class="d-none">
                         <div class="d-flex justify-content-center">
                             <div class="spinner-border spinner-border-sm text-primary" role="status">
@@ -160,10 +160,10 @@
                 </div>
                 <div class="modal-footer" translate="no">
                     <button class="btn btn-secondary" data-dismiss="modal" type="button">
-                        {{ 'button.cancel'|trans() }}
+                        {{ 'button.cancel'|trans }}
                     </button>
                     <button id="addTranslation" class="btn btn-primary" type="button">
-                        {{ 'button.create'|trans() }}
+                        {{ 'button.create'|trans }}
                     </button>
                 </div>
             </div>
@@ -179,10 +179,10 @@
            "locale" : "{{ locale }}",
         }
         var translations = {
-           "deletePage-title" : "{{ 'content.form.page.collection.remove.title' | trans }}",
-           "deletePage-content" : "{{ 'content.form.page.collection.remove.confirm' | trans }}",
-           "yes" : "{{ 'yes' | trans }}",
-           "no" : "{{ 'no' | trans }}",
+           "deletePage-title" : "{{ 'content.form.page.collection.remove.title'|trans }}",
+           "deletePage-content" : "{{ 'content.form.page.collection.remove.confirm'|trans }}",
+           "yes" : "{{ 'yes'|trans }}",
+           "no" : "{{ 'no'|trans }}",
         }
         function googleTranslateElementInit() { 
             new google.translate.TranslateElement({pageLanguage: '{{ locale }}'},'GGT')

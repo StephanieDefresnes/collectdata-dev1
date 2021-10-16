@@ -1,19 +1,19 @@
 {% trans_default_domain 'back_messages' %}
 {% extends "back/layout.html.twig" %}
 
-{% block title %}{{ 'user.create.title'|trans() }}{% endblock %}
+{% block title %}{{ 'user.create.title'|trans }}{% endblock %}
 
 {% block content %}
     <div class="container-fluid pt-4">
         
         <div class="d-sm-flex align-items-center justify-content-between mb-4">
-            <h1 class="h3 mb-0 text-gray-800">{{ 'user.create.title'|trans() }}</h1>
+            <h1 class="h3 mb-0 text-gray-800">{{ 'user.create.title'|trans }}</h1>
         </div>
 
         <div class="col-lg-8 offset-lg-2 col-12 offset-0 px-0">
             <div class="card shadow mb-4">
                 <div class="card-header py-3">
-                    <h6 class="m-0 font-weight-bold text-primary">{{ 'user.create.card'|trans() }}</h6>
+                    <h6 class="m-0 font-weight-bold text-primary">{{ 'user.create.card'|trans }}</h6>
                 </div>
                 {{ form_start(form) }}
                 <div class="card-body pb-3 row">
@@ -33,7 +33,7 @@
                         <div class="d-flex justify-content-center row">
                             <div class="col-auto">
                                 <button class="btn btn-primary btn-block">
-                                    <i class="far fa-paper-plane"></i> {{ 'action.send'|trans() }}
+                                    <i class="far fa-paper-plane"></i> {{ 'action.send'|trans }}
                                 </button>
                             </div>
                         </div>

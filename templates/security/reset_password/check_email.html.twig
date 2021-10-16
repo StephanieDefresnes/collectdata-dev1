@@ -1,7 +1,7 @@
 {% trans_default_domain 'security' %}
 {% extends 'front/layout.html.twig' %}
 
-{% block title %}{{ 'reset_password.sent.title'|trans() }}{% endblock %}
+{% block title %}{{ 'reset_password.sent.title'|trans }}{% endblock %}
 
 {% block content %}
     
@@ -9,7 +9,7 @@
         <div class="card mt-5 mb-4 px-3 py-2 bg-white-80">            
             <div class="card-body">
                 
-                <h1 class="h3 mb-3 font-weight-normal">{{ 'reset_password.sent.title'|trans() }}</h1>
+                <h1 class="h3 mb-3 font-weight-normal">{{ 'reset_password.sent.title'|trans }}</h1>
                 
                 {% set expire_message = resetToken.expirationMessageKey|trans(resetToken.expirationMessageData, 'ResetPasswordBundle') %}
             
@@ -22,7 +22,7 @@
                 <div class="text-center mt-4 pt-2">
                     <a href="{{ path('front_home') }}"
                        class="btn btn-secondary px-4">
-                        {{ 'button.back'|trans() }}
+                        {{ 'button.back'|trans }}
                     </a>
                 </div>
     

@@ -1,7 +1,7 @@
 {% trans_default_domain 'back_messages' %}
 {% extends "back/layout.html.twig" %}
 
-{% block title %}{{ 'user.update.title'|trans() }}{% endblock %}
+{% block title %}{{ 'user.update.title'|trans }}{% endblock %}
 
 {% block stylesheets %}
     {{ parent() }}
@@ -18,14 +18,14 @@
         
         <div class="d-sm-flex align-items-center justify-content-between mb-4">
             <h1 class="h3 mb-0 text-gray-800">
-                {{ 'user.update.h1'|trans() }} <span class="text-capitalize">{{ user.name }}</span>
+                {{ 'user.update.h1'|trans }} <span class="text-capitalize">{{ user.name }}</span>
             </h1>
         </div>
 
         <div class="col-lg-8 offset-lg-2 col-12 offset-0 px-0">
             <div class="card shadow mb-4">
                 <div class="card-header py-3">
-                    <h6 class="m-0 font-weight-bold text-primary">{{ 'user.update.h2'|trans() }}</h6>
+                    <h6 class="m-0 font-weight-bold text-primary">{{ 'user.update.h2'|trans }}</h6>
                 </div>
                 
                 {{ form_start(form) }}
@@ -47,12 +47,12 @@
                         <div class="d-flex justify-content-center row">
                             <div class="col-auto">
                                 <a href="{{ path('back_user_search') }}" class="btn btn-outline-secondary" role="button">
-                                        {{ 'action.cancel'|trans() }}
+                                        {{ 'action.cancel'|trans }}
                                 </a>
                             </div>
                             <div class="col-auto">
                                 <button class="btn btn-primary btn-block">
-                                    {{ 'action.validate'|trans() }}
+                                    {{ 'action.validate'|trans }}
                                 </button>
                             </div>
                         </div>
