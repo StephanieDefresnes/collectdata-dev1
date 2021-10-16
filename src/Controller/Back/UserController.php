@@ -5,7 +5,6 @@ namespace App\Controller\Back;
 use App\Entity\User;
 use App\Form\Back\User\UserBatchType;
 use App\Form\Back\User\UserUpdateFormType;
-use App\Mailer\Mailer;
 use App\Manager\UserManager;
 use App\Service\LangService;
 use App\Service\SituService;
@@ -52,7 +51,6 @@ class UserController extends AbstractController
     }
 
     /**
-     * @IsGranted("ROLE_MODERATOR")
      * @Route("/search", name="back_user_search", methods="GET|POST")
      */
     public function allUsers(Request $request, Session $session)
@@ -76,7 +74,6 @@ class UserController extends AbstractController
     }
 
     /**
-     * @IsGranted("ROLE_MODERATOR")
      * @Route("/read/{id}", name="back_user_read", methods="GET")
      */
     public function read(User $user): Response
@@ -89,7 +86,6 @@ class UserController extends AbstractController
     }
 
     /**
-     * @IsGranted("ROLE_MODERATOR")
      * @Route("/update/{id}", name="back_user_update", methods="GET|POST")
      */
     public function update(Request $request, $id): Response

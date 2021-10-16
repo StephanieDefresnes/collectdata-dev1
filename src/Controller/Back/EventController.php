@@ -4,6 +4,7 @@ namespace App\Controller\Back;
 
 use App\Entity\Event;
 use Doctrine\ORM\EntityManagerInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -12,6 +13,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 
 /**
+ * @IsGranted("IS_AUTHENTICATED_FULLY")
  * @Route("/{_locale<%app_locales%>}/back/event")
  */
 class EventController extends AbstractController

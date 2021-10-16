@@ -3,12 +3,14 @@
 namespace App\Controller\Back;
 
 use Doctrine\ORM\EntityManagerInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
+ * @IsGranted("IS_AUTHENTICATED_FULLY")
  * @Route("/{_locale<%app_locales%>}/back/category")
  */
 class CategoryController extends AbstractController
@@ -27,9 +29,7 @@ class CategoryController extends AbstractController
      * @Route("/search", name="back_categories")
      */
     public function allCategroies(): Response
-    {
-        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
-        
+    {        
         return $this->render('back/category/index.html.twig', [
             'controller_name' => 'CategoryController',
         ]);

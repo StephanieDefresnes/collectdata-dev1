@@ -5,6 +5,7 @@ namespace App\Controller\Back;
 use App\Entity\Lang;
 use App\Service\LangService;
 use Doctrine\ORM\EntityManagerInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -13,6 +14,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
+ * @IsGranted("IS_AUTHENTICATED_FULLY")
  * @Route("/{_locale<%app_locales%>}/back/lang")
  */
 class LangController extends AbstractController
@@ -23,9 +25,7 @@ class LangController extends AbstractController
     public function search( LangService $langService,
                             Request $request,
                             Session $session)
-    {
-        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
-        
+    {        
         $langs = $langService->getAll();
         
         return $this->render('back/lang/search.html.twig', [
@@ -40,8 +40,6 @@ class LangController extends AbstractController
                                     TranslatorInterface $translatorInterface,
                                     Request $request, $id): Response
     {    
-        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
-            
         $lang = $em->getRepository(Lang::class)->find($id);
 
         if ($lang->getEnabled() == true) {

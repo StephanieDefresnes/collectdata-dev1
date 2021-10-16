@@ -13,6 +13,7 @@ use App\Messenger\Messenger;
 use App\Service\CategoryService;
 use App\Service\SituService;
 use Doctrine\ORM\EntityManagerInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -60,13 +61,12 @@ class SituController extends AbstractController
     }
     
     /**
+     * @IsGranted("IS_AUTHENTICATED_FULLY")
+     * @IsGranted("ROLE_CONTRIBUTOR")
      * @Route("/my-contribs", name="user_situs", methods="GET")
      */
     public function getUserSitus()
     {
-        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
-        $this->denyAccessUnlessGranted('ROLE_CONTRIBUTOR');
-        
         return $this->render('front/situ/user.html.twig');
     }
     
@@ -92,13 +92,12 @@ class SituController extends AbstractController
     }
     
     /**
+     * @IsGranted("IS_AUTHENTICATED_FULLY")
+     * @IsGranted("ROLE_CONTRIBUTOR")
      * @Route("/validation/{situ}", name="validation_situ_request", methods="GET|POST")
      */
     function validationSituRequest(Situ $situ): Response
     {
-        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
-        $this->denyAccessUnlessGranted('ROLE_CONTRIBUTOR');
-        
         // Current user
         $user = $this->security->getUser();
         
@@ -138,13 +137,12 @@ class SituController extends AbstractController
     }
     
     /**
+     * @IsGranted("IS_AUTHENTICATED_FULLY")
+     * @IsGranted("ROLE_CONTRIBUTOR")
      * @Route("/delete/{situ}", name="delete_situ", methods="GET|POST")
      */
     function deleteSitu(Situ $situ): Response
     {
-        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
-        $this->denyAccessUnlessGranted('ROLE_CONTRIBUTOR');
-        
         // Current user
         $user = $this->security->getUser();
         
@@ -184,14 +182,12 @@ class SituController extends AbstractController
     }
     
     /**
+     * @IsGranted("IS_AUTHENTICATED_FULLY")
+     * @IsGranted("ROLE_CONTRIBUTOR")
      * @Route("/contrib/{id}", defaults={"id" = null}, name="create_situ", methods="GET|POST")
      */
     public function createSitu(Request $request, $id): Response
     {
-        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
-        $this->denyAccessUnlessGranted('ROLE_CONTRIBUTOR');
-        
-        
         $defaultLang = $this->em->getRepository(Lang::class)
                 ->findOneBy(['lang' => $this->parameters->get('locale')])
                 ->getId();
@@ -244,13 +240,12 @@ class SituController extends AbstractController
     }
 
     /**
+     * @IsGranted("IS_AUTHENTICATED_FULLY")
+     * @IsGranted("ROLE_CONTRIBUTOR")
      * @Route("/translate/{situId}/{langId}", name="translate_situ", methods="GET|POST")
      */
     public function translateSitu(Request $request, $situId, $langId): Response
     {
-        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
-        $this->denyAccessUnlessGranted('ROLE_CONTRIBUTOR');
-        
         $defaultLang = $this->em->getRepository(Lang::class)
                 ->findOneBy(['lang' => $this->parameters->get('locale')])
                 ->getId();
@@ -279,6 +274,8 @@ class SituController extends AbstractController
     }
     
     /**
+     * @IsGranted("IS_AUTHENTICATED_FULLY")
+     * @IsGranted("ROLE_CONTRIBUTOR")
      * Situ creation by ajax because of alternative of create event & category
      * instead of choose them with dynamic form events
      * 
@@ -286,8 +283,6 @@ class SituController extends AbstractController
      */
     public function ajaxCreate(Request $request)
     {
-        $this->denyAccessUnlessGranted('ROLE_CONTRIBUTOR');
-            
         // Get current user
         $user = $this->security->getUser();
         
@@ -427,7 +422,7 @@ class SituController extends AbstractController
      * Load data depending on selection or creation
      * Used by ajaxSitu()
      */
-    public function createOrChooseData($dataEntity, $entity, $lang, $parent, $user)
+    protected function createOrChooseData($dataEntity, $entity, $lang, $parent, $user)
     {        
         if (is_array($dataEntity)) {
             switch ($entity) {
@@ -471,6 +466,8 @@ class SituController extends AbstractController
     /**
      * Load Category description on select with dynamic form events
      * 
+     * @IsGranted("IS_AUTHENTICATED_FULLY")
+     * @IsGranted("ROLE_CONTRIBUTOR")
      * @Route("/situ/ajaxGetData", methods="GET|POST")
      */
     public function ajaxGetData(CategoryService $categoryService,
@@ -497,12 +494,12 @@ class SituController extends AbstractController
     /**
      * Search for any translation in the selected language
      * 
+     * @IsGranted("IS_AUTHENTICATED_FULLY")
+     * @IsGranted("ROLE_CONTRIBUTOR")
      * @Route("/situ/ajaxFindTranslation", methods="GET")
      */
     public function ajaxFindTranslation(SituService $situService, Request $request)
     {
-        $this->denyAccessUnlessGranted('ROLE_CONTRIBUTOR');
-        
         // Situ to translate
         $situId = $request->query->get('id');
         

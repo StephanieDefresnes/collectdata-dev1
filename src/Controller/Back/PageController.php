@@ -8,6 +8,7 @@ use App\Service\LangService;
 use App\Form\Back\Page\PageFormType;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -15,6 +16,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
+ * @IsGranted("IS_AUTHENTICATED_FULLY")
  * @Route("/{_locale<%app_locales%>}/back")
  */
 class PageController extends AbstractController
@@ -27,16 +29,13 @@ class PageController extends AbstractController
         $this->em = $em;
         $this->translator = $translator;
     }
+    
     /**
      * @Route("/404", name="back_not_found")
      */
     public function notFoundPage(): Response
     {
-        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
-        
-        return $this->render('back/page/404.html.twig', [
-            
-        ]);
+        return $this->render('back/page/404.html.twig');
     }
     
     /**
@@ -44,21 +43,17 @@ class PageController extends AbstractController
      */
     public function dashboard(): Response
     {
-        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
-        
         return $this->render('back/page/index.html.twig', [
             
         ]);
     }
     
     /**
+     * @IsGranted("ROLE_SUPER_ADMIN")
      * @Route("/content/all", name="back_content_search", methods="GET")
      */
     public function contentList(): Response
     {
-        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
-        $this->denyAccessUnlessGranted('ROLE_SUPER_ADMIN');
-        
         $repository = $this->getDoctrine()->getRepository(Page::class);
         $pages = $repository->findAll();
         
@@ -68,14 +63,12 @@ class PageController extends AbstractController
     }
     
     /**
+     * @IsGranted("ROLE_SUPER_ADMIN")
      * @Route("/content/{id}", defaults={"id" = null}, name="back_content_edit", methods="GET|POST")
      */
     public function contentEdit(Request $request,
                                 LangService $langService, $id): Response
     {
-        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
-        $this->denyAccessUnlessGranted('ROLE_SUPER_ADMIN');
-        
         $lang = $this->getDoctrine()->getRepository(Lang::class)->findOneBy(
             ['lang' => locale_get_default()]
         );
@@ -154,13 +147,11 @@ class PageController extends AbstractController
     }
     
     /**
+     * @IsGranted("ROLE_SUPER_ADMIN")
      * @Route("/content/{page}/validate", name="back_content_validate", methods="GET|POST")
      */
     public function contentValidate(Request $request, Page $page): Response
     {
-        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
-        $this->denyAccessUnlessGranted('ROLE_SUPER_ADMIN');
-        
         $page->setEnabled(1);
         $this->em->persist($page);
         $this->em->flush();

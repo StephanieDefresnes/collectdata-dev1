@@ -7,6 +7,7 @@ use App\Form\Front\User\UserUpdateFormType;
 use App\Service\LangService;
 use App\Service\SituService;
 use Doctrine\ORM\EntityManagerInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\Request;
@@ -38,12 +39,21 @@ class UserController extends AbstractController
     }
 
     /**
-     * @Route("/profile", name="user_account", methods="GET|POST")
+     * @Route("/visit", name="user_visit", methods="GET")
+     */
+    public function visit(User $user): Response
+    {
+        return $this->render('front/user/visit.html.twig', [
+            'user' => $user,
+        ]);
+    }
+
+    /**
+     * @IsGranted("IS_AUTHENTICATED_FULLY")
+     * @Route("/profile", name="user_account", methods="GET")
      */
     public function read(Request $request): Response
     {
-        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
-        
         // Get current user
         $user = $this->security->getUser();
         
@@ -58,14 +68,13 @@ class UserController extends AbstractController
     }
 
     /**
+     * @IsGranted("IS_AUTHENTICATED_FULLY")
      * @Route("/profile/edit", name="user_update", methods="GET|POST")
      */
     public function update( EntityManagerInterface $em,
                             Request $request,
                             SluggerInterface $slugger): Response
-    {
-        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
-        
+    {        
         // Get current user
         $user = $this->security->getUser();
         
@@ -169,6 +178,7 @@ class UserController extends AbstractController
     
 
     /**
+     * @IsGranted("IS_AUTHENTICATED_FULLY")
      * @Route("/ajaxLangEnabled", methods="GET|POST")
      */
     public function ajaxLangEnabled()

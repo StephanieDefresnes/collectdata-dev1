@@ -4,12 +4,14 @@ namespace App\Controller\Back;
 
 use App\Entity\Message;
 use Doctrine\ORM\EntityManagerInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Security;
 
 /**
+ * @IsGranted("IS_AUTHENTICATED_FULLY")
  * @Route("/{_locale<%app_locales%>}/back")
  */
 class MessageController extends AbstractController
@@ -29,8 +31,6 @@ class MessageController extends AbstractController
      */
     public function index(): Response
     {
-        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
-        
         // Current user
         $user = $this->security->getUser();
         
@@ -47,10 +47,8 @@ class MessageController extends AbstractController
     /**
      * @Route("/follow-alert/{id}", name="follow_alert")
      */
-    public function followAlert($id) {
-        
-        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
-        
+    public function followAlert($id)
+    {        
         $alert = $this->em->getRepository(Message::class)->find($id);
             
         if (!$alert) {
