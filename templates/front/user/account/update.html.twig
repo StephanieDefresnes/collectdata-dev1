@@ -6,8 +6,8 @@
 
 {% block stylesheets %}
     {{ parent() }}
-    {{ encore_entry_link_tags('user_update_app', null, 'frontApp') }}
     {{ encore_entry_link_tags('app') }}
+    {{ encore_entry_link_tags('user_update_app', null, 'frontApp') }}
 {% endblock %}
     
 {% block content %}
@@ -63,6 +63,16 @@
                             <div class="col-sm-8">
                                 {{ form_widget(form.email) }}
                                 {{ form_errors(form.email) }}
+                            </div>
+                        </div>
+
+                        <div class="row mt-2 mb-3">
+                            <div class="col-sm-4 pt-2">
+                                {{ form_label(form.country) }}
+                            </div>
+                            <div class="col-sm-8">
+                                {{ form_widget(form.country) }}
+                                {{ form_errors(form.country) }}
                             </div>
                         </div>
 

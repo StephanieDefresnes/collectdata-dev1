@@ -156,6 +156,11 @@ class User implements UserInterface
      */
     private $senders;
 
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $country;
+
     public function __construct()
     {
         $this->langs = new ArrayCollection();
@@ -682,6 +687,18 @@ class User implements UserInterface
                 $recipient->setRecipientUser(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getCountry(): ?string
+    {
+        return $this->country;
+    }
+
+    public function setCountry(?string $country): self
+    {
+        $this->country = $country;
 
         return $this;
     }

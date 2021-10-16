@@ -60,6 +60,11 @@ $(function() {
         minimumResultsForSearch: Infinity,
         width: 'resolve'
     });
+    
+    // Init select2 to single
+    $('.single-search').select2({
+        width: 'resolve'
+    });
 
     // Remove User current lang form optional langs
     removeLangtoOptions($('#user_update_form_lang').val())

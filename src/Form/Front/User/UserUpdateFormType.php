@@ -8,6 +8,7 @@ use App\Service\LangService;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\CountryType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
@@ -64,6 +65,13 @@ class UserUpdateFormType extends AbstractType
                         'message' => 'unique_email',
                     ]),
                 ],
+            ])
+            ->add('country', CountryType::class, [
+                'label' => 'label_dp.country',
+                'attr' => [
+                    'class' => 'single-search',
+                ],
+                'placeholder' => 'multiple_search'
             ])
             ->add('lang', ChoiceType::class, [
                 'required' => false,
