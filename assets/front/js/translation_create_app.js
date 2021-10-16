@@ -1,6 +1,3 @@
-// css
-import '../scss/translation_create_app.scss'
-
 // Set status value depending on button clicked
 function submissionStatus(buttonId) {
     let statusId;
