@@ -24,7 +24,7 @@ class MessageController extends AbstractController
             $id = $request->request->get('id');
             $message = $em->getRepository(Message::class)->find($id);
             
-            if ($message->getScanned() == true) $message->setScanned(false);
+            if ($message->getScanned() === true) $message->setScanned(false);
             else $message->setScanned(true);
 
             $em->persist($message);

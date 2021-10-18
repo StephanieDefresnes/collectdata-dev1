@@ -42,7 +42,7 @@ class LangController extends AbstractController
     {    
         $lang = $em->getRepository(Lang::class)->find($id);
 
-        if ($lang->getEnabled() == true) {
+        if ($lang->getEnabled() === true) {
             $lang->setEnabled(false);
             $action = 'disable';
         } else {

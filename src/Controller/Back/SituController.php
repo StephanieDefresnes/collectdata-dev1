@@ -95,7 +95,7 @@ class SituController extends AbstractController
             return $this->redirectToRoute('back_not_found', [
                 '_locale' => locale_get_default()
             ]);
-        } else if ($situ->getStatusId() != 2) {
+        } else if ($situ->getStatusId() !== 2) {
             
             $msg = $this->translator->trans(
                     'contrib.situ.verify.error',['%id%' => $situ->getId()],
@@ -112,7 +112,7 @@ class SituController extends AbstractController
             $situInitial = '';
             $situsTranslated = '';
             
-            if ($situ->getInitialSitu() == 0) {
+            if ($situ->getInitialSitu() === false) {
                 $situInitial = $this->em->getRepository(Situ::class)
                         ->find($situ->getTranslatedSituId());
                 $situsTranslated = $this->em->getRepository(Situ::class)
@@ -164,17 +164,17 @@ class SituController extends AbstractController
         
         $situ->setStatusId($data['statusId']);
         
-        if ($data['action'] == 'validation') {
+        if ($data['action'] === 'validation') {
             
             $situ->setDateValidation(new \DateTime('now'));
             
-            if ($this->checkValidation('event', $data['eventId'], $data['eventValidated']) == 'validated') {
+            if ($this->checkValidation('event', $data['eventId'], $data['eventValidated']) === 'validated') {
                 // todo notification (alert)
             }
-            if ($this->checkValidation('categoryLevel1', $data['categoryLevel1Id'], $data['categoryLevel1Validated']) == 'validated') {
+            if ($this->checkValidation('categoryLevel1', $data['categoryLevel1Id'], $data['categoryLevel1Validated']) === 'validated') {
                 // todo notification (alert)
             }
-            if ($this->checkValidation('categoryLevel2', $data['categoryLevel2Id'], $data['categoryLevel2Validated']) == 'validated') {
+            if ($this->checkValidation('categoryLevel2', $data['categoryLevel2Id'], $data['categoryLevel2Validated']) === 'validated') {
                 // todo notification (alert)
             }
             
@@ -214,12 +214,12 @@ class SituController extends AbstractController
     {
         $request = $this->get('request_stack')->getCurrentRequest();
         
-        if ($entity == 'event') $class = Event::class;
+        if ($entity === 'event') $class = Event::class;
         else $class = Category::class;
         
         $classId = $this->em->getRepository($class)->find($id);
         
-        if ($classId->getValidated() == false && $validated == 1) {
+        if ($classId->getValidated() === false && $validated === 1) {
             $classId->setValidated(true);
             
             try {
@@ -245,7 +245,7 @@ class SituController extends AbstractController
      */
     function removeDefinitelySitu(Situ $situ)
     {
-        if ($situ->getStatusId() != 5) {
+        if ($situ->getStatusId() !== 5) {
             return $this->redirectToRoute('access_denied', [
                 '_locale' => locale_get_default(),
                 'code' => 'B1918',

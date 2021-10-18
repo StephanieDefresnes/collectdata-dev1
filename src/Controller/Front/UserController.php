@@ -164,7 +164,7 @@ class UserController extends AbstractController
             if (false === $user->getLangs()->contains($lang)) {
                 $user->addLang($lang);
             }
-            if ($user->getLang() != $lang) {
+            if ($user->getLang() !== $lang) {
                 $user->removeLang($user->getLang());
             }
             

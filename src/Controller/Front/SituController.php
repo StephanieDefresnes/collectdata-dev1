@@ -80,11 +80,11 @@ class SituController extends AbstractController
         if (!$situ) return $notFoundRoute;
         
         // Only user can read a contribution requested to validate (with preview mode)
-        if ($situ->getStatusId() == 2 && isset($_GET['preview'])) {
+        if ($situ->getStatusId() === 2 && isset($_GET['preview'])) {
             if (!$this->security->getUser()) return $notFoundRoute;
         }
         // None can read a contribution except validated
-        else if ($situ->getStatusId() != 3) return $notFoundRoute;
+        else if ($situ->getStatusId() !== 3) return $notFoundRoute;
         
         return $this->render('front/situ/read.html.twig', [
             'situ' => $situ,
@@ -102,7 +102,7 @@ class SituController extends AbstractController
         $user = $this->security->getUser();
         
         // Only situ author can request situ validation 
-        if ($user != $situ->getUser()) {
+        if ($user !== $situ->getUser()) {
             return $this->redirectToRoute('access_denied', [
                 '_locale' => locale_get_default(),
                 'code' => '22181',
@@ -147,7 +147,7 @@ class SituController extends AbstractController
         $user = $this->security->getUser();
         
         // Only situ author can delete situ
-        if ($user->getId() != $situ->getUser()) {
+        if ($user->getId() !== $situ->getUser()) {
             return $this->redirectToRoute('access_denied', [
                 '_locale' => locale_get_default(),
                 'code' => '4191',
@@ -207,7 +207,7 @@ class SituController extends AbstractController
             }
             
             // If validation requested return to preview
-            if ($situ->getStatusId() == 2) {
+            if ($situ->getStatusId() === 2) {
                 return $this->redirectToRoute('read_situ', [
                     '_locale' => locale_get_default(),
                     'situ' => $situ->getId(),
@@ -216,8 +216,8 @@ class SituController extends AbstractController
             }
         
             // Only situ author can update situ
-            if (($situ->getStatusId() == 1 || $situ->getStatusId() == 3)
-                    && $situ->getUser() != $user) {
+            if (($situ->getStatusId() === 1 || $situ->getStatusId() === 3)
+                    && $situ->getUser() !== $user) {
                 return $this->redirectToRoute('access_denied', [
                     '_locale' => locale_get_default(),
                     'code' => '21191',
@@ -331,7 +331,7 @@ class SituController extends AbstractController
                 $situ = $this->em->getRepository(Situ::class)->find($data['id']);
 
                 // Only situ author can update situ
-                if ($user != $situ->getUser()) {
+                if ($user !== $situ->getUser()) {
                     return $this->redirectToRoute('access_denied', [
                         '_locale' => locale_get_default(),
                         'code' => '21191',
@@ -358,7 +358,7 @@ class SituController extends AbstractController
             $situ->setDescription($data['description']);
 
             // Depending on the button save (val = 1) or submit (val = 2) clicked
-            if ($statusId == 2) {
+            if ($statusId === 2) {
                 $situ->setDateSubmission($dateNow);
                 $msgAction = 'submit';
             } else {
@@ -377,7 +377,7 @@ class SituController extends AbstractController
             // Add new collection
             foreach ($data['situItems'] as $key => $dataItem) {
                 $situItem = new SituItem();
-                if ($key == 0) $situItem->setScore(0);
+                if ($key === 0) $situItem->setScore(0);
                 else $situItem->setScore($dataItem['score']);
                 $situItem->setTitle($dataItem['title']);
                 $situItem->setDescription($dataItem['description']);
@@ -388,7 +388,7 @@ class SituController extends AbstractController
             try {
                 $this->em->flush();
 
-                if ($statusId == 2) {
+                if ($statusId === 2) {
                     $this->mailer->sendModeratorSituValidate($situ);
                     $this->messenger->sendModeratorAlert('situ', $situ);
                 
@@ -510,7 +510,7 @@ class SituController extends AbstractController
         $langData = $this->em->getRepository(Lang::class)->find($langId);
         
         // If wanted lang is Lang situ to translate or wanted lang is not enabled
-        if ($langId == $situData->getLang()->getId() || !$langData->getEnabled()) {
+        if ($langId === $situData->getLang()->getId() || !$langData->getEnabled()) {
             return new JsonResponse([
                 'success' => false,
                 'redirect' => $this->generateUrl('access_denied', [

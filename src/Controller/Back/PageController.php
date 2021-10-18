@@ -111,7 +111,7 @@ class PageController extends AbstractController
                 }
             }
             
-            $msgType = $form->get('enabled')->getData() == 0
+            $msgType = $form->get('enabled')->getData() === false
                     ? 'save' : 'submit';
                 
             $this->em->persist($page);
@@ -124,7 +124,7 @@ class PageController extends AbstractController
                                 'back_messages', $locale = locale_get_default());
                 $this->addFlash('success', $msg);
 
-                if ($msgType == 'save') {
+                if ($msgType === 'save') {
                     return $this->redirectToRoute('back_content_edit', [
                         'id' => $page->getId(), '_locale' => locale_get_default()
                     ]);

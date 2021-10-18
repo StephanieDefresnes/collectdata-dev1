@@ -93,7 +93,7 @@ class UserManager
             // Deny SUPER_ADMIN access except SUPER_ADMIN #1
             if ($user->hasRole('ROLE_SUPER_ADMIN')
                     && !$this->security->isGranted('ROLE_SUPER_ADMIN')
-                    && $this->security->getUser()->getId() != 1) {
+                    && $this->security->getUser()->getId() !== 1) {
                 return 'B211921';
             }
 
@@ -118,7 +118,7 @@ class UserManager
             // Deny SUPER_ADMIN access except SUPER_ADMIN #1
             if ($user->hasRole('ROLE_SUPER_ADMIN')
                     && !$this->security->isGranted('ROLE_SUPER_ADMIN')
-                    && $this->security->getUser()->getId() != 1) {
+                    && $this->security->getUser()->getId() !== 1) {
                 return 'B161921';
             }
 
@@ -142,7 +142,7 @@ class UserManager
         // Deny SUPER_ADMIN access except SUPER_ADMIN #1
         if ($user->hasRole('ROLE_SUPER_ADMIN')
                 && !$this->security->isGranted('ROLE_SUPER_ADMIN')
-                && $this->security->getUser()->getId() != 1) {
+                && $this->security->getUser()->getId() !== 1) {
             return 'B211921';
         }
         

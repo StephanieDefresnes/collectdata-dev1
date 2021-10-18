@@ -70,7 +70,7 @@ class EventController extends AbstractController
             $id = $request->request->get('id');
             $event = $this->em->getRepository(Event::class)->find($id);
             
-            if ($event->getValidated() == false) $event->setValidated(true);
+            if ($event->getValidated() === false) $event->setValidated(true);
 
             $this->em->persist($event);
             

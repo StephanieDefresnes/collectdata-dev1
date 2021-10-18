@@ -60,7 +60,7 @@ class MessageController extends AbstractController
         // Current user
         $user = $this->security->getUser();
         
-        if ($user->getId() != $alert->getRecipientUserId()) {
+        if ($user->getId() !== $alert->getRecipientUserId()) {
             return $this->redirectToRoute('access_denied', [
                 '_locale' => locale_get_default(),
                 'code' => 'B1118',
@@ -73,20 +73,20 @@ class MessageController extends AbstractController
         try {
             $this->em->flush();
             
-            if ($alert->getEntity() == 'situ') {
+            if ($alert->getEntity() === 'situ') {
                 return $this->redirectToRoute('back_situ_verify', [
                         'situ' => $alert->getEntityId(), '_locale' => locale_get_default()
                     ]);
-            } elseif ($alert->getEntity() == 'event') {
+            } elseif ($alert->getEntity() === 'event') {
                 return $this->redirectToRoute('back_event_read', [
                         'event' => $alert->getEntityId(), '_locale' => locale_get_default()
                     ]);
-            } elseif ($alert->getEntity() == 'categoryLevel1') {
+            } elseif ($alert->getEntity() === 'categoryLevel1') {
                 // TODO
 //                return $this->redirectToRoute('back_categoryLevel1_read', [
 //                        'id' => $alert->getEntityId(), '_locale' => locale_get_default()
 //                    ]);
-            } elseif ($alert->getEntity() == 'categoryLevel2') {
+            } elseif ($alert->getEntity() === 'categoryLevel2') {
                 // TODO
 //                return $this->redirectToRoute('back_categoryLevel2_read', [
 //                        'id' => $alert->getEntityId(), '_locale' => locale_get_default()

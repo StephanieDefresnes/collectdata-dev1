@@ -138,7 +138,7 @@ class TranslationManager
     public function validationAction($translations, $action)
     {
         $status = 'status_ok';
-        if ($action == 'permute_enabled') {
+        if ($action === 'permute_enabled') {
             $type = 'enable';
         } else {
             $type = 'delete';
@@ -170,31 +170,31 @@ class TranslationManager
                 );
             }
             // If not validated
-            if ($translation->getStatusId() == 1
-                    || $translation->getStatusId() == 2) {
+            if ($translation->getStatusId() === 1
+                    || $translation->getStatusId() === 2) {
                 $status = 'status_ko';
             }
             
             // Cannot be deleted or disable
             if (
                 // A unique translation form
-                ($translation->getReferent() == true 
-                    && $translation->getEnabled() == true
-                    && $translation->getStatusId() == 3
+                ($translation->getReferent() === true 
+                    && $translation->getEnabled() === true
+                    && $translation->getStatusId() === 3
                     && count($base) < 2) ||
                 // A translation form not stated
-                ($translation->getReferent() == true
-                    && ($translation->getStatusId() == 1
-                    || $translation->getStatusId() == 2)) ||
+                ($translation->getReferent() === true
+                    && ($translation->getStatusId() === 1
+                    || $translation->getStatusId() === 2)) ||
                 // A unique translation
-                ($translation->getReferent() == false
-                    && $translation->getEnabled() == true
-                    && $translation->getStatusId() == 3
+                ($translation->getReferent() === false
+                    && $translation->getEnabled() === true
+                    && $translation->getStatusId() === 3
                     && count($base) < 2) ||
                 // A translation not stated
-                ($translation->getReferent() == false
-                    && ($translation->getStatusId() == 1
-                    || $translation->getStatusId() == 2))
+                ($translation->getReferent() === false
+                    && ($translation->getStatusId() === 1
+                    || $translation->getStatusId() === 2))
             ) {
                 $result = [
                     'success' => false,
