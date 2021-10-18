@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Entity\TranslationField;
+use App\Entity\Status;
 use App\Repository\TranslationRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -42,9 +43,9 @@ class Translation
     private $lang;
 
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Status", inversedBy="translations", fetch="EAGER")
      */
-    private $statusId;
+    private $status;
 
     /**
      * @ORM\Column(type="datetime")
@@ -150,15 +151,15 @@ class Translation
         return $this;
     }
 
-    public function getStatusId(): ?int
+    public function getStatus(): ?Status
     {
-        return $this->statusId;
+        return $this->status;
     }
 
-    public function setStatusId(int $statusId): self
+    public function setStatus(?Status $status): self
     {
-        $this->statusId = $statusId;
-
+        $this->status = $status;
+        
         return $this;
     }
 

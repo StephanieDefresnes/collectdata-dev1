@@ -37,6 +37,11 @@ class TranslationField
      * @ORM\ManyToOne(targetEntity="App\Entity\Translation", inversedBy="fields")
      */
     private $translation;
+
+    /**
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $invalid;
     
     public function __construct(Translation $translation = null)
     {
@@ -93,6 +98,18 @@ class TranslationField
     {
         $this->translation = $translation;
         
+        return $this;
+    }
+
+    public function getInvalid(): ?bool
+    {
+        return $this->invalid;
+    }
+
+    public function setInvalid(bool $invalid): self
+    {
+        $this->invalid = $invalid;
+
         return $this;
     }
 }
