@@ -1,0 +1,38 @@
+// global
+@import "../../scss/_variables";
+
+#fields {
+    & label {
+        color: $primary;
+    }
+    & .alert-danger {
+        margin-bottom: 0;
+        & label {
+            color: #78261f;
+        }
+    }
+}
+
+// GG Translate
+#page-top {
+    top: 0 !important;
+}
+.skiptranslate {
+    color: #fff !important;
+    font-size: 0 !important;
+}
+.skiptranslate  iframe,
+.skiptranslate  span {
+    display: none !important;
+}
+.skiptranslate  select {
+    background: #fff !important;
+    color: #858796 !important;
+    font-size: 14px !important;
+    border: 1px solid #bbb;
+    border-radius: 3px;
+    padding: 4px;
+}
+#translator {
+    min-height: 44px;
+}
