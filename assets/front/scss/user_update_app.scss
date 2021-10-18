@@ -22,6 +22,9 @@
     &:not(.select2-selection--multiple) {
         & .select2-selection__rendered {
             color: $dark !important;
+            &.empty {
+                color: $gray-b !important;
+            }
         }
     }
 }

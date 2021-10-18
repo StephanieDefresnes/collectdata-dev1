@@ -5,7 +5,6 @@ namespace App\Entity;
 use App\Entity\Category;
 use App\Entity\Event;
 use App\Entity\Situ;
-use App\Entity\UserFile;
 use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -170,6 +169,7 @@ class User implements UserInterface
         $this->categories = new ArrayCollection();
         $this->senders = new ArrayCollection();
         $this->recipients = new ArrayCollection();
+        $this->translations = new ArrayCollection();
     }
 
     public function __toString()
@@ -606,7 +606,7 @@ class User implements UserInterface
      */
     public function getTranslations(): Collection
     {
-        return $this->categories;
+        return $this->translations;
     }
      
     public function addTranslation(Translation $translation): self

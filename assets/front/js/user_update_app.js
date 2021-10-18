@@ -141,4 +141,18 @@ $(function() {
         $('#user_update_form_imageFilename').attr('value', '');
     })
     
+    /*
+     * Update select2 style on choice country value
+     */
+    if ($('#user_update_form_country').val() == '')
+        $('#select2-user_update_form_country-container').addClass('empty')
+    
+    $('#user_update_form_country').change(function() {
+        if ($('#user_update_form_country').val() != ''
+                && $('#select2-user_update_form_country-container').hasClass('empty'))
+            $('#select2-user_update_form_country-container').removeClass('empty')
+        else $('#select2-user_update_form_country-container').addClass('empty')
+    }) 
+
+    
 });

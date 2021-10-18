@@ -4,8 +4,8 @@ namespace App\Form\Front\User;
 
 use App\Entity\User;
 use App\Entity\Lang;
-use App\Service\LangService;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\CountryType;
@@ -23,17 +23,18 @@ use Doctrine\ORM\EntityManagerInterface;
 class UserUpdateFormType extends AbstractType
 {
     private $em;
-    private $langService;
+    private $parameters;
 
-    public function __construct(EntityManagerInterface $em, LangService $langService)
+    public function __construct(EntityManagerInterface $em, 
+                                ParameterBagInterface $parameters)
     {
         $this->em = $em;
-        $this->langService = $langService;
+        $this->parameters = $parameters;
     }
     
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $langs = $this->em->getRepository(Lang::class)->findBy(['enabled' => 1]);
+        $langs = $this->em->getRepository(Lang::class)->findBy(['enabled' => 1]);;
         
         $builder
             ->add('imageFilename', FileType::class, [
@@ -106,15 +107,15 @@ class UserUpdateFormType extends AbstractType
                 'attr' => [
                     'class' => 'custom-checkbox'
                 ],
-                'label' => 'account.translator.checkbox',
-                'label_attr' => ['class' => 'pointer'],
+                'label' => false,
             ])
             ->add('contributorLangs', EntityType::class, [
                 'required' => false,
                 'class' => Lang::class,
                 'label' => 'account.translator.translate',
                 'multiple' => true,
-                'choices' => $this->em->getRepository(Lang::class)->findBy(['enabled' => 0]),
+                'choices' => $this->em->getRepository(Lang::class)
+                    ->findByAllExcept($this->parameters->get('locale')),
                 'choice_label' => function ($lang) {
                     return html_entity_decode($lang->getName(), ENT_QUOTES, 'UTF-8');
                 },

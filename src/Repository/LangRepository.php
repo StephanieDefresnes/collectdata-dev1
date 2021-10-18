@@ -18,7 +18,20 @@ class LangRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Lang::class);
     }
-
+    
+    /**
+     * @return Lang[] Returns an array of Lang objects except param
+     */
+    public function findByAllExcept($lang)
+    {
+        return $this->createQueryBuilder('l')
+            ->andWhere('l.lang != ?1')
+            ->setParameter(1, $lang)
+            ->getQuery()
+            ->getResult()
+        ;
+    }
+    
     // /**
     //  * @return Lang[] Returns an array of Lang objects
     //  */

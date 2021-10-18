@@ -106,17 +106,20 @@
                            </div>
                         </div>
 
-                        <div class="row mt-1 mb-4">
-                            <div class="col-10 mx-auto line-11">
-                                {{ form_row(form.langContributor) }}
+                        <div class="row mt-1 mb-3">
+                            <div class="col-md-9 pt-1 pb-2 line-11 pointer">
+                                {{ 'account.translator.checkbox'|trans }}
                             </div>
+                            <div class="col-md-3 mb-md-0 mb-3 px-md-0 px-5">
+                                {{ form_row(form.langContributor) }}
+                           </div>
                         </div>
 
-                        <div id="contributorLangs" class="row mt-1 mb-4">
-                            <div class="col-sm-7 pt-1 pb-2 text-right line-11">
+                        <div id="contributorLangs" class="row mb-3">
+                            <div class="col-12 pt-1 pb-2 line-11">
                                 {{ form_label(form.contributorLangs) }}
                             </div>
-                            <div class="col-sm-5 text-capitalize">
+                            <div class="col-8 offset-4 text-capitalize">
                                 {{ form_widget(form.contributorLangs) }}
                                 {{ form_errors(form.contributorLangs) }}
                            </div>
@@ -124,7 +127,7 @@
 
                 </div>
 
-                <div class="card-footer bg-light text-right">
+                <div class="card-footer bg-light">
                     <div class="d-flex justify-content-between">
                         <a href="{{ path('user_account') }}" class="btn btn-light">
                             {{ 'action.cancel'|trans }}
