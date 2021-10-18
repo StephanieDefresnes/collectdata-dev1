@@ -17,7 +17,7 @@ class PageController extends AbstractController
      */
     public function index(LangService $langService)
     {
-        $langs = $langService->getLangsEnabledOrNot(1);
+        $langs = $this->em->getRepository(Lang::class)->findBy(['enabled' => 1]);
         
         return $this->render('front/page/index.html.twig', [
             'langs' => $langs,

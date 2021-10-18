@@ -40,7 +40,7 @@
                             {% for lang in langs %}
                             <tr data-id="{{ lang.id }}">
                                 <td class="align-middle">{{ lang.lang }}</td>
-                                <td class="align-middle text-capitalize">{{ lang.name }}</td>
+                                <td class="align-middle text-capitalize">{{ lang.name|raw }}</td>
                                 <td class="align-middle">{{ lang.englishName }}</td>
                                 <td class="align-middle">
                                     {% if lang.lang == locale %}

@@ -22,11 +22,9 @@ class LangController extends AbstractController
     /**
      * @Route("/search", name="back_lang_search", methods="GET|POST")
      */
-    public function search( LangService $langService,
-                            Request $request,
-                            Session $session)
+    public function search(EntityManagerInterface $em)
     {        
-        $langs = $langService->getAll();
+        $langs = $em->getRepository(Lang::class)->findAll();
         
         return $this->render('back/lang/search.html.twig', [
             'langs' => $langs,

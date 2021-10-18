@@ -34,7 +34,7 @@ class UserUpdateFormType extends AbstractType
     
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $langs = $this->em->getRepository(Lang::class)->findBy(['enabled' => 1]);;
+        $langs = $this->em->getRepository(Lang::class)->findBy(['enabled' => 1]);
         
         $builder
             ->add('imageFilename', FileType::class, [

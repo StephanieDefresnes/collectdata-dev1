@@ -214,7 +214,7 @@ class UserController extends AbstractController
     {
         return $this->json([
             'success' => true,
-            'langs' => $this->langService->getLangsEnabledOrNot(1)
+            'langs' => $this->em->getRepository(Lang::class)->findBy(['enabled' => 1])
         ]);
     }
     
