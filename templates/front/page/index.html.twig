@@ -26,7 +26,7 @@
                     <a href="/{{ lang.lang }}"
                        class="btn btn-outline-light m-1 select-lang">
                         <img src="{{ asset('img/flag/'~ lang.lang ~'.jpg') }}" alt="">
-                        {{ lang.name }}
+                        {{ lang.name|raw }}
                     </a>
                 {% endfor %}
             </div>

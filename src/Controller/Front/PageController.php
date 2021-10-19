@@ -2,10 +2,12 @@
 
 namespace App\Controller\Front;
 
+use App\Entity\Lang;
 use App\Entity\Page;
 use App\Form\Front\Contact\ContactType;
 use App\Mailer\Mailer;
 use App\Service\LangService;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -15,9 +17,9 @@ class PageController extends AbstractController
     /**
      * @Route("/", name="index")
      */
-    public function index(LangService $langService)
+    public function index(EntityManagerInterface $em, LangService $langService)
     {
-        $langs = $this->em->getRepository(Lang::class)->findBy(['enabled' => 1]);
+        $langs = $em->getRepository(Lang::class)->findBy(['enabled' => 1]);
         
         return $this->render('front/page/index.html.twig', [
             'langs' => $langs,
