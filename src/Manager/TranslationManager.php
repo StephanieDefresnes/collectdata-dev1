@@ -170,8 +170,8 @@ class TranslationManager
                 );
             }
             // If not validated
-            if ($translation->getStatusId() === 1
-                    || $translation->getStatusId() === 2) {
+            if ($translation->getStatus()->getId() === 1
+                    || $translation->getStatus()->getId() === 2) {
                 $status = 'status_ko';
             }
             
@@ -180,21 +180,21 @@ class TranslationManager
                 // A unique translation form
                 ($translation->getReferent() === true 
                     && $translation->getEnabled() === true
-                    && $translation->getStatusId() === 3
+                    && $translation->getStatus()->getId() === 3
                     && count($base) < 2) ||
                 // A translation form not stated
                 ($translation->getReferent() === true
-                    && ($translation->getStatusId() === 1
-                    || $translation->getStatusId() === 2)) ||
+                    && ($translation->getStatus()->getId() === 1
+                    || $translation->getStatus()->getId() === 2)) ||
                 // A unique translation
                 ($translation->getReferent() === false
                     && $translation->getEnabled() === true
-                    && $translation->getStatusId() === 3
+                    && $translation->getStatus()->getId() === 3
                     && count($base) < 2) ||
                 // A translation not stated
                 ($translation->getReferent() === false
-                    && ($translation->getStatusId() === 1
-                    || $translation->getStatusId() === 2))
+                    && ($translation->getStatus()->getId() === 1
+                    || $translation->getStatus()->getId() === 2))
             ) {
                 $result = [
                     'success' => false,
