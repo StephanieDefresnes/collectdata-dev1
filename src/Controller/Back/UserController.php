@@ -69,7 +69,6 @@ class UserController extends AbstractController
         
         return $this->render('back/user/search/index.html.twig', [
             'form_batch' => $formBatch->createView(),
-            'form_delete' => $this->createFormBuilder()->getForm()->createView(),
         ]);
     }
 
