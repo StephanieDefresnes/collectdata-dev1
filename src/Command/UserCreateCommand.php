@@ -53,6 +53,7 @@ class UserCreateCommand extends Command
             ->addArgument('email', InputArgument::REQUIRED, 'The email')
             ->addArgument('password', InputArgument::REQUIRED, 'The password')
             ->addOption('super-admin', null, InputOption::VALUE_NONE, 'Set the user as super admin')
+            ->addOption('super-visitor', null, InputOption::VALUE_NONE, 'Set the user as super visitor')
             ->addOption('admin', null, InputOption::VALUE_NONE, 'Set the user as admin')
             ->addOption('moderator', null, InputOption::VALUE_NONE, 'Set the user as moderator')
             ->addOption('inactive', null, InputOption::VALUE_NONE, 'Set the user as inactive')
@@ -64,6 +65,8 @@ class UserCreateCommand extends Command
                 '<info>php %command.full_name% Name email@domain.com add_a_password</info>',
                 'You can create a super admin via the super-admin flag:',
                 '<info>php %command.full_name% --super-admin</info>',
+                'You can create a super admin via the super-visitor flag:',
+                '<info>php %command.full_name% --super-visitor</info>',
                 'You can create an admin via the admin flag:',
                 '<info>php %command.full_name% --admin</info>',
                 'You can create an admin via the moderator flag:',
@@ -150,6 +153,8 @@ class UserCreateCommand extends Command
         // Options role
         if ($input->getOption('super-admin')) {
             $user->setRoles(['ROLE_SUPER_ADMIN']);
+        } elseif ($input->getOption('super-visitor')) {
+            $user->setRoles(['ROLE_SUPER_VISITOR']);
         } elseif ($input->getOption('admin')) {
             $user->setRoles(['ROLE_ADMIN']);
         } elseif ($input->getOption('moderator')) {
@@ -163,6 +168,7 @@ class UserCreateCommand extends Command
             $user->setEnabled(false);
         } else {
             $user->setEnabled(true);
+            $user->setIsVerified(true);
         }
 
         $this->em->persist($user);

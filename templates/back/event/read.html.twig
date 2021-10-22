@@ -103,7 +103,7 @@
                                                     {{ category.parents|length }}
                                                 </td>
                                                 <td class="width-max-26">
-                                                    <a href="{#{{ path('back_event_read', { 'event': event.id }) }}#}"
+                                                    <a href="{{ path('back_categories') }}"
                                                        class="btn btn-outline-primary py-0 px-1"
                                                        title="{{ 'action.read'|trans }}">
                                                         <i class="fas fa-eye"></i>
@@ -150,18 +150,14 @@
                                                 <td class="px-2 align-middle">{{ situ.id }}</td>
                                                 <td class="px-2 align-middle text-capitalize">{{ situ.title|u.truncate(20, '...') }}</td>
                                                 <td class="px-2 align-middle" translate="no">
-                                                    {% if situ.statusId == 1 %}
-                                                        {{ 'status.writing'|trans }}
-                                                    {% elseif situ.statusId == 2 %}
-                                                        {{ 'status.validation'|trans }}
-                                                    {% elseif situ.statusId == 3 %}
-                                                        {{ 'status.validated'|trans }}
-                                                    {% elseif situ.statusId == 4 %}
+                                                    {% if situ.status.id == 4 %}
                                                         {% if situ.initialSitu ==  0 %}
                                                             {{ 'status.translation_refused'|trans }}
                                                         {% else %}
-                                                            {{ 'status.refused'|trans }}
+                                                            {{ situ.status.name|trans }}
                                                         {% endif %}
+                                                    {% elseif situ.status.id != 5 %}
+                                                        {{ situ.status.name|trans }}
                                                     {% endif %}
                                                 </td>
                                                 <td class="px-2 align-middle text-capitalize">{{ situ.categoryLevel1.title|u.truncate(20, '...') }}</td>

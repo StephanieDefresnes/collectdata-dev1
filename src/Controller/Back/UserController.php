@@ -94,6 +94,8 @@ class UserController extends AbstractController
             return $this->redirectToRoute('not_found', ['_locale' => locale_get_default()]);
         }
         
+        $user = $this->security->getUser(); 
+        
         $result = $this->userManager->validationUpdate($user);
         if (true !== $result) {
             return $this->redirectToRoute('access_denied', [
@@ -113,6 +115,11 @@ class UserController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            
+            if ($user->hasRole('ROLE_SUPER_VISITOR')) {
+                return $this->redirectToRoute('visitor_denied', [ '_locale' => locale_get_default()]);
+            }
+            
             $this->em->flush();
             $msg = $this->translator->trans('user.update.flash.success.', [], 'back_messages');
             $this->addFlash('success', $msg);
@@ -131,10 +138,19 @@ class UserController extends AbstractController
      */
     public function delete(Request $request): Response
     {    
+        $user = $this->security->getUser();            
+        if ($user->hasRole('ROLE_SUPER_VISITOR')) {
+            return $this->redirectToRoute('visitor_denied', [ '_locale' => locale_get_default()]);
+        }
+        
         $users = $this->userManager->getUsers();
         
         $result = $this->userManager->validationPermuteEnabled($users);
+        
+        $user = $this->security->getUser();
+        
         if (true !== $result) {
+            
             return $this->redirectToRoute('access_denied', [
                 '_locale' => locale_get_default(),
                 'code' => $result,
@@ -205,10 +221,18 @@ class UserController extends AbstractController
      */
     public function permuteEnabled(Request $request): Response
     {    
+        $user = $this->security->getUser();            
+        if ($user->hasRole('ROLE_SUPER_VISITOR')) {
+            return $this->redirectToRoute('visitor_denied', [ '_locale' => locale_get_default()]);
+        }
+            
         $users = $this->userManager->getUsers();
         
         $result = $this->userManager->validationPermuteEnabled($users);
+        
+        
         if (true !== $result) {
+            
             return $this->redirectToRoute('access_denied', [
                 '_locale' => locale_get_default(),
                 'code' => $result,

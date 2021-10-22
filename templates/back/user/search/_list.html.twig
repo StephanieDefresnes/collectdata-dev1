@@ -46,8 +46,8 @@
                     <td class="px-2 check">
                         {% set checkBox = form_widget(child, { 'attr': { 'class': 'select'} }) %}
                         {% if is_granted("ROLE_ADMIN") %}
-                            {% if not user.hasRole("ROLE_SUPER_ADMIN") %}
-                                {% if (is_granted("ROLE_SUPER_ADMIN"))
+                            {% if not user.hasRole("ROLE_SUPER_ADMIN") or not user.hasRole("ROLE_SUPER_VISITOR") %}
+                                {% if (is_granted("ROLE_SUPER_ADMIN") or is_granted("ROLE_SUPER_VISITOR"))
                                     or (is_granted("ROLE_ADMIN") and not user.hasRole("ROLE_ADMIN")
                                         and (user.hasRole("ROLE_USER") and user.hasRole("ROLE_MODERATOR")))
                                     or (is_granted("ROLE_MODERATOR") and not user.hasRole("ROLE_ADMIN")
@@ -65,6 +65,8 @@
                             <p class="mb-0">
                             {% if role == 'ROLE_SUPER_ADMIN' %}
                                 {{ 'user.role.super_admin'|trans }}
+                            {% elseif role == 'ROLE_SUPER_VISITOR' %}
+                                {{ 'user.role.super_visitor'|trans }}
                             {% elseif role == 'ROLE_ADMIN' %}
                                 {{ 'user.role.admin'|trans }}
                             {% elseif role == 'ROLE_MODERATOR' %}
@@ -80,8 +82,8 @@
                     </td>
                     <td>
                         {# Permute user #}
-                        {% if not user.hasRole("ROLE_SUPER_ADMIN") %}
-                            {% if (is_granted("ROLE_SUPER_ADMIN"))
+                        {% if not user.hasRole("ROLE_SUPER_ADMIN") and not user.hasRole("ROLE_SUPER_VISITOR") %}
+                            {% if (is_granted("ROLE_SUPER_ADMIN") and is_granted("ROLE_SUPER_ADMIN") )
                                 or (is_granted("ROLE_ADMIN") and not user.hasRole("ROLE_ADMIN")
                                     and (user.hasRole("ROLE_USER") and user.hasRole("ROLE_MODERATOR")))
                                 or (is_granted("ROLE_MODERATOR") and not user.hasRole("ROLE_ADMIN")
@@ -100,8 +102,8 @@
                         {{ user.lang.englishName }}
                     </td>
                     <td>
-                        {% if not user.hasRole("ROLE_SUPER_ADMIN")
-                            and (is_granted("ROLE_SUPER_ADMIN")
+                        {% if (not user.hasRole("ROLE_SUPER_ADMIN") or not user.hasRole("ROLE_SUPER_VISITOR"))
+                            and (is_granted("ROLE_SUPER_ADMIN") or is_granted("ROLE_SUPER_VISITOR") 
                                 or (is_granted("ROLE_ADMIN") and not user.hasRole("ROLE_ADMIN"))
                                 or (is_granted("ROLE_MODERATOR") and not user.hasRole("ROLE_ADMIN") and not user.hasRole("ROLE_MODERATOR"))) %}
                             {{ user.adminNote ? '<span class="text-success"><i class="fas fa-check-circle"></i></span>' }}
@@ -120,17 +122,12 @@
                     </td>
                     <td class="pr-0 width-max-40">
                         {# Update user #}
-                        {% if not user.hasRole("ROLE_SUPER_ADMIN") and is_granted("ROLE_SUPER_ADMIN") 
-                            or (not user.hasRole("ROLE_SUPER_ADMIN")
-                                and (
-                                    ( is_granted("ROLE_ADMIN")
-                                        and not is_granted("ROLE_SUPER_ADMIN")
-                                        and not user.hasRole("ROLE_ADMIN") )
-                                    or ( is_granted("ROLE_MODERATOR")
-                                        and not is_granted("ROLE_SUPER_ADMIN")
-                                        and not is_granted("ROLE_ADMIN")
-                                        and not user.hasRole("ROLE_ADMIN")
-                                        and not user.hasRole("ROLE_MODERATOR") ) ) ) %}
+                        {% if not user.hasRole("ROLE_SUPER_ADMIN") and not user.hasRole("ROLE_SUPER_VISITOR") %}
+                            {% if (is_granted("ROLE_SUPER_ADMIN") and is_granted("ROLE_SUPER_ADMIN") )
+                                or (is_granted("ROLE_ADMIN") and not user.hasRole("ROLE_ADMIN")
+                                    and (user.hasRole("ROLE_USER") and user.hasRole("ROLE_MODERATOR")))
+                                or (is_granted("ROLE_MODERATOR") and not user.hasRole("ROLE_ADMIN")
+                                    and not user.hasRole("ROLE_MODERATOR") and user.hasRole("ROLE_USER")) %}
                             <a href="{{ path('back_user_update', {'id': user.id}) }}"
                                class="btn btn-outline-warning px-2" 
                                data-toggle="tooltip" data-placement="left"
@@ -138,6 +135,7 @@
                                aria-label="{{ 'action.edit'|trans }}" role="button">
                                 <i class="fas fa-edit"></i>
                             </a>
+                            {% endif %}
                         {% endif %}
                     </td>
                     <td class="pl-2">

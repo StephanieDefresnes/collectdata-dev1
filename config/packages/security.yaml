@@ -39,7 +39,8 @@ security:
         ROLE_CONTRIBUTOR:       ROLE_USER
         ROLE_MODERATOR:         ROLE_CONTRIBUTOR
         ROLE_ADMIN:             ROLE_MODERATOR
-        ROLE_SUPER_ADMIN:       ROLE_ADMIN
+        ROLE_SUPER_VISITOR:           ROLE_ADMIN
+        ROLE_SUPER_ADMIN:       ROLE_SUPER_VISITOR
     access_control:
         - { path: ^/%app_locales%, roles: PUBLIC_ACCESS }
         - { path: ^/%app_locales%/contrib, roles: ROLE_CONTRIBUTOR }
@@ -48,5 +49,5 @@ security:
         - { path: ^/%app_locales%/my-translations, roles: ROLE_CONTRIBUTOR }
         - { path: ^/%app_locales%/back, roles: ROLE_MODERATOR }
         - { path: ^/%app_locales%/back/content, roles: ROLE_ADMIN }
-        - { path: ^/%app_locales%/back/lang, roles: ROLE_SUPER_ADMIN }
-        - { path: ^/%app_locales%/back/translation, roles: ROLE_SUPER_ADMIN }
+        - { path: ^/%app_locales%/back/lang, roles: ROLE_SUPER_VISITOR }
+        - { path: ^/%app_locales%/back/translation, roles: ROLE_SUPER_VISITOR }

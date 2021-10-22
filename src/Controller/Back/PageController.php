@@ -165,4 +165,14 @@ class PageController extends AbstractController
             '_locale' => locale_get_default()
         ]);
     }
+    
+    /**
+     * @Route("/403", name="visitor_denied")
+     */
+    public function visitorAccessDenied(): Response
+    {
+        return $this->render('back/page/visitor.html.twig', [
+            
+        ]);
+    }
 }

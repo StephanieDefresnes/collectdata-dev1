@@ -28,7 +28,7 @@
 
     <hr class="sidebar-divider mb-1">
     
-    {% if is_granted("ROLE_SUPER_ADMIN") %}
+    {% if is_granted("ROLE_SUPER_VISITOR") %}
     <li class="nav-item{{ route in [
                             'back_content_search',
                             'back_content_edit'] ? ' active' }}">
@@ -116,7 +116,7 @@
                    href="{{ path('back_lang_search') }}">
                     {{ 'label.search'|trans }}
                 </a>
-                {% if is_granted('ROLE_SUPER_ADMIN')  %}
+                {% if is_granted('ROLE_SUPER_VISITOR')  %}
                 <a class="collapse-item{{ route in [
                                             'back_translation_forms',
                                             'back_translation_create'] ? ' active' }}"

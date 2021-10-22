@@ -63,11 +63,17 @@
                     
             </div>
             <div class="modal-footer" translate="no">
+                {% if app.user.hasRole('ROLE_SUPER_VISITOR') %}
+                    <a href="{{ path('visitor_denied') }}" class="btn btn-primary mx-1 px-3">
+                        {{ 'action.confirm'|trans }}
+                    </a>
+                {% else %}
+                    <span class="btn btn-primary submit" data-action="validation">
+                        {{ 'action.confirm'|trans }}
+                    </span>
+                {% endif %}
                 <span id="valid-cancel" class="btn btn-secondary">
                     {{ 'action.cancel'|trans }}
-                </span>
-                <span class="btn btn-primary submit" data-action="validation">
-                    {{ 'action.confirm'|trans }}
                 </span>
             </div>
         </div>

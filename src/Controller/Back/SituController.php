@@ -155,7 +155,7 @@ class SituController extends AbstractController
      * @Route("/ajaxValidation", methods="GET|POST")
      */
     public function ajaxValidation(): JsonResponse
-    {
+    {        
         // Get request data
         $request = $this->get('request_stack')->getCurrentRequest();
         $dataForm = $request->request->all();        

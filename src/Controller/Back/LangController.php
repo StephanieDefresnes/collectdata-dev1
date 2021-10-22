@@ -12,6 +12,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Contracts\Translation\TranslatorInterface;
+use Symfony\Component\Security\Core\Security;
 
 /**
  * @IsGranted("IS_AUTHENTICATED_FULLY")
@@ -36,8 +37,14 @@ class LangController extends AbstractController
      */
     public function permuteEnabled( EntityManagerInterface $em,
                                     TranslatorInterface $translatorInterface,
-                                    Request $request, $id): Response
+                                    Request $request,
+                                    Security $security, $id): Response
     {    
+        $user = $security->getUser();            
+        if ($user->hasRole('ROLE_SUPER_VISITOR')) {
+            return $this->redirectToRoute('visitor_denied', [ '_locale' => locale_get_default()]);
+        }
+        
         $lang = $em->getRepository(Lang::class)->find($id);
 
         if ($lang->getEnabled() === true) {
