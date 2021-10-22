@@ -52,13 +52,6 @@ function addField() {
     newElem.appendTo(collectionHolder)
 }
 
-// Set status value depending on button clicked
-function submissionStatus(buttonId) {
-    let statusId;
-    buttonId == 'save-btn' ? statusId = 1 : statusId = 3
-    $('#translation_form_statusId').val(statusId)
-}
-
 $(function() {
     
     // Init jQuery ui sortable on fields list item
@@ -82,13 +75,6 @@ $(function() {
     // Remove
     $('.removeField').each(function() {
         removeField($(this))
-    })
-    
-    //Submission
-    $('#save-btn, #submit-btn').click(function(){
-        $('#loader').show()
-        submissionStatus($(this).attr('id'))
-        $('form').submit()
     })
     
 });
