@@ -52,7 +52,7 @@
                         {% for situ in situs %}
                         <tr>
                             <td class="px-2 align-middle">
-                                {% if situ.statusId == 2 %}
+                                {% if situ.status.id == 2 %}
                                     <a href="{{ path('back_situ_verify', { 'id': situ.id }) }}"
                                        class="btn btn-outline-warning pcx-2 py-1"
                                        data-id="{{ situ.id }}" data-action=""
@@ -62,7 +62,7 @@
                                     </a>                            
                                 {% else %}
                                     <a href="{{ path('back_situ_read', { 'id': situ.id }) }}"
-                                       class="btn {%if situ.statusId == 4 or  situ.statusId == 5 %}btn-outline-danger{% else %}btn-outline-primary{% endif %} px-2 py-1"
+                                       class="btn {%if situ.status.id== 4 or  situ.status.id== 5 %}btn-outline-danger{% else %}btn-outline-primary{% endif %} px-2 py-1"
                                        data-id="{{ situ.id }}" data-action=""
                                        data-toggle="tooltip" data-placement="left"
                                        title="{{ 'action.read'|trans }}">
@@ -74,18 +74,12 @@
                             <td class="px-2 align-middle text-center">{{ situ.id }}</td>
                             <td class="px-2 align-middle firstletter text-nowrap">{{ situ.title|u.truncate(20, '...') }}</td>
                             <td class="px-2 align-middle text-nowrap">
-                                {% if situ.statusId == 1 %}
-                                    {{ 'status.writing'|trans }}
-                                {% elseif situ.statusId == 2 %}
-                                    {{ 'status.validation'|trans }}
-                                {% elseif situ.statusId == 3 %}
-                                    {{ 'status.validated'|trans }}
-                                {% elseif situ.statusId == 4 and situ.initialSitu == 1 %}
-                                    {{ 'status.refused'|trans }}
-                                {% elseif situ.statusId == 4 and situ.initialSitu == 0 %}
+                                {% if situ.status.id == 4 and situ.status.id == 1 %}
+                                    {{ situ.status.name|trans }}
+                                {% elseif situ.status.id == 4 and situ.initialSitu == 0 %}
                                     {{ 'status.translation_refused'|trans }}
                                 {% else %}
-                                    {{ 'status.deleted'|trans }}
+                                    {{ situ.status.name|trans }}
                                 {% endif %}
                             </td>
                             <td class="px-2 align-middle">{{ situ.dateCreation|format_datetime('short', 'none', locale=locale) }}</td>

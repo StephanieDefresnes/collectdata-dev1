@@ -181,7 +181,7 @@ $(function() {
      */
     /** Validated situ **/
     $('#valid-btn').click(function(){
-        $('#verify_situ_form_statusId').val(3)
+        $('#accordion').attr('value-status', 3)
         $('#validModal').find('.validation').each(function() {
             let result = $(this).attr('data-result')
             $(this).find('.result').each(function() {
@@ -192,7 +192,7 @@ $(function() {
     })
     
     $('#valid-cancel').click(function() {
-        $('#verify_situ_form_statusId').val('')
+        $('#accordion').attr('value-status', '')
         $('#validModal').modal('hide')
                 .find('.result').each(function() { $(this).show() })
     })
@@ -205,7 +205,7 @@ $(function() {
             $('#refuseReason').val('other')
             $('#refuseComment').prop('required', true)
         }
-        $('#verify_situ_form_statusId').val(4)
+        $('#accordion').attr('value-status', 4)
         $('#refuseModal').modal('show')
     })
     
@@ -267,8 +267,8 @@ $(function() {
     $('#refuse-cancel').click(function() {
         $('#refuseModal').modal('hide')
         if ($('form').find('#situConflict').attr('data-conflict') != 'ko') {
-            $('#verify_situ_form_statusId').val('')
-                    .find('input').each(function() { $(this).prop('checked', false) })
+            $('#accordion').attr('value-status', '')
+            $('#refuseModal').find('input').each(function() { $(this).prop('checked', false) })
                     .parents('.modal-body').find('select').val('')
                     .parents('.modal-body').find('textarea').val('').prop('required', false)
             $('#refuseModal ul, #contrib, #no-contrib').show()
@@ -310,7 +310,7 @@ $(function() {
             
             action = $(this).attr('data-action')
             id = $('#situ').attr('data-id')
-            statusId = $('#verify_situ_form_statusId').val()
+            statusId = $('#accordion').attr('value-status')
             eventId = $('#event').attr('data-id')
             eventValidated = $('#validated-event').val()
             categoryLevel1Id = $('#categoryLevel1').attr('data-id')

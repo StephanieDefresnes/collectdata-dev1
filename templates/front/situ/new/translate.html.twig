@@ -1,0 +1,180 @@
+{% extends 'front/layout.html.twig' %}
+{% trans_default_domain 'user_messages' %}
+{% set locale = app.request.locale %}
+
+{% block title %}{{ 'contrib.translation.title'|trans }}{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('jquery-confirm/css/jquery-confirm.css') }}">
+    {{ encore_entry_link_tags('situ_create_app', null, 'frontApp') }}
+    {{ encore_entry_link_tags('app') }}
+{% endblock %}
+
+{% block content %}
+    <div id="loader" class="d-block"></div>
+        
+    {% block banner%}
+    <div class="mt-3 mb-3 pt-5">
+        <h1 class="h3 text-white">
+            {{ 'contrib.translation.title'|trans }}
+        </h1>
+    </div>
+    {% endblock %}
+
+    <div id="translation-situ" class="row">
+
+        <div id="initialSitu" class="col-md-5">
+            
+            <div class="card my-4 bg-none border-0 shadow">
+
+                <div class="card-header p-3 bg-dark text-white">
+                    <div class="d-flex justify-content-center">
+                        <h5 class="mb-2 pb-1">
+                            {{ 'contrib.form.from'|trans }}
+                            <span class="text-capitalize">{{ situ.lang.name|raw }}</span>
+                            <img src="{{ asset('img/flag/'~ situ.lang.lang ~'.jpg') }}"
+                                 alt="{{ situ.lang.lang }}" class="translation-flag mx-1 border">
+                        </h5>
+                    </div>
+                </div>
+
+                <div class="card-header py-4 pl-4 bg-secondary-80 text-white">
+
+                    <div class="row mb-4 pb-1">
+                        <div class="col-md-12 mb-2 pt-1">
+                            <span class="font-weight-bolder">
+                                {{ 'label_dp.event'|trans }}</span>
+                            {{ situ.event.title }}
+                        </div>
+                    </div>
+
+                    <div id="initialDetails" class="accordion">
+
+                        <div class="row mb-4">
+                            <div class="col-md-12 mb-2 pt-1">
+                                <div id="initialHeadingOne" class="pointer">
+                                    <div data-toggle="collapse" data-target="#initialCollapseOne"
+                                         aria-expanded="false" aria-controls="initialCollapseOne">
+                                        <span class="font-weight-bolder">
+                                            {{ 'label_dp.catLevel1'|trans }}</span>
+                                        {{ situ.categoryLevel1.title }}
+                                        <span class="infoCollapse small">
+                                            <i class="fas fa-question-circle"></i>
+                                        </span>
+                                    </div>
+                                </div>
+                                <div id="initialCollapseOne" class="mx-4 pt-2 small infoCollapse collapse"
+                                     aria-labelledby="initialHeadingOne" data-parent="#initialDetails">
+                                    <div class="d-block font-weight-bold">
+                                        {{ 'label_dp.description'|trans }}
+                                    </div>
+                                    <div class="mt-1 px-3 line-11 first-letter description">
+                                        {{ situ.categoryLevel1.description }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row mb-4 pb-3">
+                            <div class="col-md-12">
+                                <div id="initialHeadingTwo" class="pointer">
+                                    <div data-toggle="collapse" data-target="#initialCollapseTwo"
+                                         aria-expanded="false" aria-controls="initialCollapseTwo">
+                                        <span class="font-weight-bolder">
+                                            {{ 'label_dp.catLevel2'|trans }}</span>
+                                        {{ situ.categoryLevel2.title }}
+                                        <span class="infoCollapse small">
+                                            <i class="fas fa-question-circle"></i>
+                                        </span>
+                                    </div>
+                                </div>
+                                <div id="initialCollapseTwo" class="mx-4 pt-2 small infoCollapse collapse"
+                                     aria-labelledby="initialHeadingTwo" data-parent="#initialDetails">
+                                    <div class="d-block font-weight-bold">
+                                        {{ 'label_dp.description'|trans }}
+                                    </div>
+                                    <div class="mt-1 px-3 line-11 first-letter description">
+                                        {{ situ.categoryLevel2.description }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="card-body pt-4 pb-0 px-4 bg-white-80">
+                    <h2 class="h5 font-weight-normal">{{ 'contrib.form.situ.label'|trans }}</h2>
+
+                    <h6 class="h6 mb-2 pb-1 font-weight-bolder">{{ 'label_dp.title'|trans }}</h6>
+                    <div class="h-title mb-3 first-letter">{{ situ.title }}</div>
+
+                    <h6 class="h6 font-weight-bolder">{{ 'label_dp.description'|trans }}</h6>
+                    <div class="h-description mb-4 pt-1 first-letter">{{ situ.description }}</div>
+
+                    <div id="initialSituItems" data-initial="{{ situ.situItems|length }}">
+                        <h2 class="h5 font-weight-normal pt-4 pb-1 mb-3">{{ 'contrib.form.item.label'|trans }}</h2>
+                        {% for item in situ.situItems %}
+                            {% if item.score != 0 %}
+                                <legend class="col-12 px-0 border-top border-secondary col-form-label">{{ 'contrib.form.item.label_item'|trans }}</legend>
+                                <h6 class="h6 font-weight-bolder pt-2 pb-4 mb-score">
+                                    {% if item.score == 1 %}
+                                        {{ 'contrib.form.item.score.info'|trans }}
+                                    {% elseif item.score == 2 %}
+                                        {{ 'contrib.form.item.score.warning'|trans }}
+                                    {% else %}
+                                        {{ 'contrib.form.item.score.danger'|trans }}
+                                    {% endif %}
+                                </h6>
+                            {% endif %}
+                            <div class="h-title mb-4 first-letter">{{ item.title }}</div>
+                            <div class="h-description {#{% if item.score == 0 
+                                 %}mb-4{% else %}mb-3{%
+                                 endif %}#} first-letter">{{ item.description }}</div>
+                            {% if item.score == 0 %}
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="situ" class="col-md-7 p-0" data-id=""
+             data-lang="{{ lang.id }}" data-default="{{ app.user.lang.id }}">
+            {% include('front/situ/new/_form/form.html.twig') %}
+        </div>
+
+    </div>                
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ asset('jquery-confirm/js/jquery-confirm.js') }}"></script>
+    {{ encore_entry_script_tags('situ_create_app', null, 'frontApp') }}
+    <script>
+        let path = {
+            "locale" : "{{ locale }}",
+        }
+        let translations = {
+            "flashError" : "{{ 'contrib.table.edit.flash.error'|trans }}",
+            "srOnly-error" : "{{ 'contrib.form.sr_only.error'|trans }}",
+            "toValidate" : "{{ 'contrib.form.to_validate'|trans }}",
+            "event-titlePlaceholder" : "{{ 'contrib.form.event.add.placeholder'|trans }}",
+            "categoryLevel1-titlePlaceholder" : "{{ 'contrib.form.category.level1.title_placeholder'|trans }}",
+            "categoryLevel2-titlePlaceholder" : "{{ 'contrib.form.category.level2.title_placeholder'|trans }}",
+            "categoryLevel1-descriptionPlaceholder" : "{{ 'contrib.form.category.level1.description_placeholder'|trans }}",
+            "categoryLevel2-descriptionPlaceholder" : "{{ 'contrib.form.category.level2.description_placeholder'|trans }}",
+            "deleteItem-title" : "{{ 'contrib.form.item.remove.title'|trans }}",
+            "deleteItem-content" : "{{ 'contrib.form.item.remove.confirm'|trans }}",
+            "yes" : "{{ 'yes'|trans }}",
+            "no" : "{{ 'no'|trans }}",
+            "scoreLabel" : "{{ 'contrib.form.item.score.placeholder'|trans }}",
+            "scoreLabelAlt" : "{{ 'contrib.form.item.score.placeholder_alt'|trans }}",
+            "scoreInfo" : "{{ 'contrib.form.item.score.tooltip'|trans }}",
+            "formError" : "{{ 'contrib.form.error'|trans }}",
+        }
+        
+    </script>
+{% endblock %}

@@ -28,10 +28,16 @@ class Status
      * @ORM\OneToMany(targetEntity="App\Entity\Translation",  mappedBy="status")
      */
     protected $translations;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Situ",  mappedBy="status")
+     */
+    protected $situs;
     
     public function __construct()
     {
         $this->translations = new ArrayCollection();
+        $this->status = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -57,5 +63,13 @@ class Status
     public function getTranslations(): Collection
     {
         return $this->translations;
+    }
+    
+    /**
+     * @return Collection|Translation[]
+     */
+    public function getSitus(): Collection
+    {
+        return $this->situs;
     }
 }

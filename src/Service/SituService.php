@@ -3,6 +3,7 @@
 namespace App\Service;
 
 use App\Entity\Situ;
+use App\Entity\Status;
 use App\Entity\Lang;
 use Doctrine\ORM\EntityManagerInterface;
 
@@ -50,13 +51,13 @@ class SituService {
             ->select('situ.id')
             ->where('situ.translatedSituId = ?1')
             ->andWhere('situ.lang = ?2')
-            ->andWhere($qb->expr()->neq('situ.statusId', '?3'))
-            ->andWhere($qb->expr()->neq('situ.statusId', '?4'))
+            ->andWhere($qb->expr()->neq('situ.status', '?3'))
+            ->andWhere($qb->expr()->neq('situ.status', '?4'))
             ->setParameters([
                 1 => $situId,
                 2 => $langId,
-                3 => 4,
-                4 => 5
+                3 => $this->em->getRepository(Status::class)->find(4),
+                4 => $this->em->getRepository(Status::class)->find(5)
             ]);
         
         return $qb->getQuery()->getResult();

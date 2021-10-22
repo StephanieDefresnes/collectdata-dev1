@@ -94,3 +94,68 @@
 .card-footer {
     opacity: 0;
 }
+.select2-selection__rendered.is-invalid {
+    border-color: #dc3545;
+    padding-right: calc(1.5em + 0.75rem);
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='none' stroke='%23dc3545' viewBox='0 0 12 12'%3e%3ccircle cx='6' cy='6' r='4.5'/%3e%3cpath stroke-linejoin='round' d='M5.8 3.6h.4L6 6.5z'/%3e%3ccircle cx='6' cy='8.2' r='.6' fill='%23dc3545' stroke='none'/%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right calc(0.375em + 0.1875rem) center;
+    background-size: calc(0.75em + 0.375rem) calc(0.75em + 0.375rem);
+}
+
+/*
+ * When translate situ
+ */
+#translation-situ {
+    
+    .card-header:nth-child(2) {
+        min-height: 218px;
+    }
+    .card-body,
+    .card-footer {
+        opacity: 1;
+    }
+    .translation-flag {
+        vertical-align: baseline;
+    }
+    .h-title {
+        height: 40px;
+        overflow-y: auto;
+        line-height: 1.2;
+    }
+    .h-description {
+        height: 136px;
+        overflow-y: auto;
+        line-height: 1.2;
+    }
+    #initialSituItems {
+        & .h-title {
+            height: 28px;
+        }
+        & .h-description {
+            height: 133px;
+            margin-bottom: 26px;
+        }
+        & legend {
+            padding-top: 15px;
+        }
+    }
+    .mb-score {
+        margin-bottom: 14px;
+    }
+
+    @media screen and (max-width: 768px) {
+        .h-title,.h-description {
+            height: auto;
+            overflow-y: none;
+        }
+        .title-success {
+            margin-bottom: 12px !important;
+            padding-bottom: 0 !important;
+        }
+        .pt-score {
+            margin-bottom: 12px;
+            padding-top: 12px;
+        }
+    }
+}

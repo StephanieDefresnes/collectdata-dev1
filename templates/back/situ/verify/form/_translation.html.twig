@@ -46,12 +46,8 @@
                                 {{ 'label_dp.status'|trans }}
                             </div>
                             <div class="col-md-8 first-letter">
-                                {% if situInitial.statusId == 1 %}
-                                    {{ 'status.writing'|trans }}
-                                {% elseif situInitial.statusId == 2 %}
-                                    {{ 'status.validation'|trans }}
-                                {% elseif situInitial.statusId == 3 %}
-                                    {{ 'status.validated'|trans }}
+                                {% if situInitial.status.id != 4 or situInitial.status.id != 5 %}
+                                    {{ situInitial.status.name|trans }}
                                 {% endif %}
                             </div>
                         </div>
@@ -216,7 +212,7 @@
                                     {% endfor %}
                                     {% for translation in situsTranslated %}
                                         {% if translation.id != situ.id %}
-                                            <a class="nav-link mb-1{{ translation.statusId == 3 ? ' bg-success text-white' }}"
+                                            <a class="nav-link mb-1{{ translation.status.id == 3 ? ' bg-success text-white' }}"
                                                id="v-pills-{{ translation.id }}-tab"
                                                data-toggle="pill" href="#v-pills-{{ translation.id }}"
                                                role="tab" aria-controls="v-pills-{{ translation.id }}" aria-selected="false">
@@ -252,12 +248,10 @@
                                                     {{ 'label_dp.status'|trans }}
                                                 </div>
                                                 <div class="col-md-8 first-letter">
-                                                    {% if translation.statusId == 1 %}
-                                                        {{ 'status.writing'|trans }}
-                                                    {% elseif translation.statusId == 2 %}
-                                                        {{ 'status.validation'|trans }}
-                                                    {% elseif translation.statusId == 3 %}
-                                                        <span class="text-success font-weight-bolder">{{ 'status.validated'|trans }}</span>
+                                                    {% if translation.status.id != 4 or translation.status.id != 5 %}
+                                                        {{ translation.status.id == 3 ? '<span class="text-success font-weight-bolder">' }}
+                                                        {{ translation.status.name|trans }}
+                                                        {{ translation.status.3d == 3 ? '</span>' }}
                                                     {% endif %}
                                                 </div>
                                             </div>

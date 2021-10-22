@@ -6,6 +6,7 @@ use App\Entity\Event;
 use App\Entity\Category;
 use App\Entity\Lang;
 use App\Entity\Situ;
+use App\Entity\Status;
 use App\Entity\User;
 use App\Form\Back\Situ\VerifySituFormType;
 use App\Service\LangService;
@@ -75,7 +76,7 @@ class SituController extends AbstractController
     public function situsToValidate()
     {
         $situs = $this->em->getRepository(Situ::class)
-                    ->findBy(['statusId' => 2]);
+                    ->findBy(['status' => 2]);
         
         return $this->render('back/situ/validation.html.twig', [
             'situs' => $situs,
@@ -95,7 +96,7 @@ class SituController extends AbstractController
             return $this->redirectToRoute('back_not_found', [
                 '_locale' => locale_get_default()
             ]);
-        } else if ($situ->getStatusId() !== 2) {
+        } else if ($situ->getStatus()->getId() !== 2) {
             
             $msg = $this->translator->trans(
                     'contrib.situ.verify.error',['%id%' => $situ->getId()],
@@ -105,7 +106,7 @@ class SituController extends AbstractController
             
             return $this->redirectToRoute('back_situ_read', [
                 '_locale' => locale_get_default(),
-                'situ' => $situ->getId(),
+                'id' => $situ->getId(),
             ]);
             
         } else {        
@@ -162,7 +163,7 @@ class SituController extends AbstractController
         
         $situ = $this->em->getRepository(Situ::class)->find($data['id']);
         
-        $situ->setStatusId($data['statusId']);
+        $situ->setStatus($this->em->getRepository(Status::class)->find($data['statusId']));
         
         if ($data['action'] === 'validation') {
             
@@ -245,7 +246,7 @@ class SituController extends AbstractController
      */
     function removeDefinitelySitu(Situ $situ)
     {
-        if ($situ->getStatusId() !== 5) {
+        if ($situ->getStatus()->getId() !== 5) {
             return $this->redirectToRoute('access_denied', [
                 '_locale' => locale_get_default(),
                 'code' => 'B1918',

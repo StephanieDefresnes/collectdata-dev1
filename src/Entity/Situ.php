@@ -64,9 +64,9 @@ class Situ
     private $user;
 
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Status", inversedBy="situs", fetch="EAGER")
      */
-    private $statusId;
+    private $status;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Lang", inversedBy="situs", fetch="EAGER")
@@ -221,15 +221,15 @@ class Situ
         return $this;
     }
 
-    public function getStatusId(): ?int
+    public function getStatus(): ?Status
     {
-        return $this->statusId;
+        return $this->status;
     }
 
-    public function setStatusId(?int $statusId): self
+    public function setStatus(?Status $status): self
     {
-        $this->statusId = $statusId;
-
+        $this->status = $status;
+        
         return $this;
     }
 

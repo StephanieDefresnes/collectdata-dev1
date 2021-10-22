@@ -2,55 +2,42 @@
 {% trans_default_domain 'user_messages' %}
 {% set locale = app.request.locale %}
 
-{% block title %}{{ 'contrib.translation.title'|trans }}{% endblock %}
+{% block title %}{{ situ.id ? 'contrib.form.situ.h1_update'|trans : 'contrib.form.situ.h1'|trans }}{% endblock %}
 
 {% block stylesheets %}
     {{ parent() }}
     <link rel="stylesheet" href="{{ asset('jquery-confirm/css/jquery-confirm.css') }}">
     {{ encore_entry_link_tags('situ_create_app', null, 'frontApp') }}
-    {{ encore_entry_link_tags('situ_translation_app', null, 'frontApp') }}
     {{ encore_entry_link_tags('app') }}
 {% endblock %}
 
 {% block content %}
-    <div id="loader" class="d-block"></div>
-        
-    {% block banner%}
-    <div class="mt-3 mb-3 pt-5">
-        <h1 class="h3 text-white">
-            {{ 'contrib.translation.title'|trans }}
-        </h1>
+    <div id="loader"></div>
+
+    <div class="row">
+
+        <div id="situ" class="col-lg-8 mx-auto mt-5 p-0" data-lang=""
+             data-id="{{ situ ? situ.id }}" data-default="{{ app.user.lang.id }}">
+            {% include('front/situ/new/_form/form.html.twig') %}
+        </div>
+
     </div>
-    {% endblock %}
-
-    <div class="row translation-situ">
-
-        <div id="initialSitu" class="col-md-5">
-            {{ include('front/situ/translation/_initial.html.twig') }}
-        </div>
-
-        <div id="situ" class="col-md-7 p-0" data-id=""
-             data-lang="{{ lang.id }}" data-default="{{ defaultLang }}">
-            {{ include('front/situ/translation/_form.html.twig') }}
-        </div>
-
-    </div>                
+            
 {% endblock %}
 
 {% block javascripts %}
     {{ parent() }}
     <script src="{{ asset('jquery-confirm/js/jquery-confirm.js') }}"></script>
     {{ encore_entry_script_tags('situ_create_app', null, 'frontApp') }}
-    {{ encore_entry_script_tags('situ_translation_app', null, 'frontApp') }}
     <script>
-        let path = {
+        var path = {
             "locale" : "{{ locale }}",
         }
-        let translations = {
-            "flashError" : "{{ 'contrib.table.edit.flash.error'|trans }}",
+        var translations = {
+            "flashError" : "{{ 'contrib.form.flash.error'|trans }}",
             "srOnly-error" : "{{ 'contrib.form.sr_only.error'|trans }}",
             "toValidate" : "{{ 'contrib.form.to_validate'|trans }}",
-            "event-titlePlaceholder" : "{{ 'contrib.form.event.add.placeholder'|trans }}",
+            "event-titlePlaceholder" : "{{ 'contrib.form.event.placeholder_add'|trans }}",
             "categoryLevel1-titlePlaceholder" : "{{ 'contrib.form.category.level1.title_placeholder'|trans }}",
             "categoryLevel2-titlePlaceholder" : "{{ 'contrib.form.category.level2.title_placeholder'|trans }}",
             "categoryLevel1-descriptionPlaceholder" : "{{ 'contrib.form.category.level1.description_placeholder'|trans }}",
@@ -64,6 +51,5 @@
             "scoreInfo" : "{{ 'contrib.form.item.score.tooltip'|trans }}",
             "formError" : "{{ 'contrib.form.error'|trans }}",
         }
-        
     </script>
 {% endblock %}

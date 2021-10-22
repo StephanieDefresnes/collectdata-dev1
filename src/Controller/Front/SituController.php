@@ -2,16 +2,16 @@
 
 namespace App\Controller\Front;
 
-use App\Entity\Situ;
-use App\Entity\SituItem;
-use App\Entity\Category;
-use App\Entity\Event;
 use App\Entity\Lang;
+use App\Entity\Situ;
+use App\Entity\Status;
 use App\Form\Front\Situ\SituFormType;
 use App\Mailer\Mailer;
+use App\Manager\SituManager;
 use App\Messenger\Messenger;
 use App\Service\CategoryService;
 use App\Service\SituService;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -33,6 +33,7 @@ class SituController extends AbstractController
     private $messenger;
     private $parameters;
     private $security;
+    private $situManager;
     private $translator;
     
     public function __construct(EntityManagerInterface $em,
@@ -40,6 +41,7 @@ class SituController extends AbstractController
                                 Messenger $messenger,
                                 ParameterBagInterface $parameters,
                                 Security $security,
+                                SituManager $situManager, 
                                 TranslatorInterface $translator)
     {
         $this->em = $em;
@@ -47,6 +49,7 @@ class SituController extends AbstractController
         $this->messenger = $messenger;
         $this->parameters = $parameters;
         $this->security = $security;
+        $this->situManager = $situManager;
         $this->translator = $translator;
     }
     
@@ -80,11 +83,11 @@ class SituController extends AbstractController
         if (!$situ) return $notFoundRoute;
         
         // Only user can read a contribution requested to validate (with preview mode)
-        if ($situ->getStatusId() === 2 && isset($_GET['preview'])) {
+        if ($situ->getStatus()->getId() === 2 && isset($_GET['preview'])) {
             if (!$this->security->getUser()) return $notFoundRoute;
         }
         // None can read a contribution except validated
-        else if ($situ->getStatusId() !== 3) return $notFoundRoute;
+        else if ($situ->getStatus()->getId() !== 3) return $notFoundRoute;
         
         return $this->render('front/situ/read.html.twig', [
             'situ' => $situ,
@@ -110,7 +113,7 @@ class SituController extends AbstractController
         }
         
         $situ->setDateSubmission(new \DateTime('now'));
-        $situ->setStatusId(2);
+        $situ->setStatus($this->em->getRepository(Status::class)->find(2));
         $this->em->persist($situ);
             
         try {
@@ -155,7 +158,7 @@ class SituController extends AbstractController
         }
             
         $situ->setDateDeletion(new \DateTime('now'));
-        $situ->setStatusId(5);
+        $situ->setStatus($this->em->getRepository(Status::class)->find(5));
         $this->em->persist($situ);
         
         try {
@@ -207,7 +210,7 @@ class SituController extends AbstractController
             }
             
             // If validation requested return to preview
-            if ($situ->getStatusId() === 2) {
+            if ($situ->getStatus()->getId() === 2) {
                 return $this->redirectToRoute('read_situ', [
                     '_locale' => locale_get_default(),
                     'situ' => $situ->getId(),
@@ -216,7 +219,7 @@ class SituController extends AbstractController
             }
         
             // Only situ author can update situ
-            if (($situ->getStatusId() === 1 || $situ->getStatusId() === 3)
+            if (($situ->getStatus()->getId() === 1 || $situ->getStatus()->getId() === 3)
                     && $situ->getUser() !== $user) {
                 return $this->redirectToRoute('access_denied', [
                     '_locale' => locale_get_default(),
@@ -228,16 +231,22 @@ class SituController extends AbstractController
             $situ = new Situ();
         }
         
+        $originalItems = new ArrayCollection();
+        foreach ($situ->getSituItems() as $item) {
+            $originalItems->add($item);
+        }
+        
         $form = $this->createForm(SituFormType::class, $situ);
         $form->handleRequest($request);
-                
-        return $this->render('front/situ/create/index.html.twig', [
+        
+        return $this->render('front/situ/new/create.html.twig', [
+            'defaultLang' => $defaultLang,
             'form' => $form->createView(),
             'langs' => $langs,
             'situ' => $situ,
-            'defaultLang' => $defaultLang,
         ]);
     }
+    
 
     /**
      * @IsGranted("IS_AUTHENTICATED_FULLY")
@@ -264,203 +273,53 @@ class SituController extends AbstractController
         $formSitu = $this->createForm(SituFormType::class, $situ);
         $formSitu->handleRequest($request);
         
-        return $this->render('front/situ/translation/index.html.twig', [
+        return $this->render('front/situ/new/translate.html.twig', [
+            'defaultLang' => $defaultLang,
             'form' => $formSitu->createView(),
+            'lang' => $langData,
             'langs' => $langs,
             'situ' => $situData,
-            'lang' => $langData,
-            'defaultLang' => $defaultLang,
         ]);
     }
     
     /**
-     * @IsGranted("IS_AUTHENTICATED_FULLY")
-     * @IsGranted("ROLE_CONTRIBUTOR")
      * Situ creation by ajax because of alternative of create event & category
      * instead of choose them with dynamic form events
      * 
+     * @IsGranted("IS_AUTHENTICATED_FULLY")
+     * @IsGranted("ROLE_CONTRIBUTOR")
      * @Route("/situ/ajaxCreate", methods="GET|POST")
      */
     public function ajaxCreate(Request $request)
-    {
-        // Get current user
-        $user = $this->security->getUser();
+    {   
+        $result = $this->situManager->setData($request);
+        $situ = $result['situ'];
         
-        $defaultLang = $this->em->getRepository(Lang::class)
-                ->findOneBy(['lang' => $this->parameters->get('locale')]);
+        $this->em->persist($situ);
         
-        $userLang = $user->getLang();
-            
-        // Get request data        
-        if ($request->isXMLHttpRequest()) {
-            
-            $data = $request->request->get('dataForm');
-        
-            $landId = isset($data['lang']) ? $data['lang'] : $userLang;
-
-            $langData = $this->em->getRepository(Lang::class)->find($landId);
-
-            if (!$langData->getEnabled()) {
-                return $this->redirectToRoute('access_denied', [
-                    '_locale' => locale_get_default(),
-                    'code' => '1912',
-                ]);      
-            }
-
-            $eventData = $this->createOrChooseData(
-                    $data['event'], 'event', $langData, '', $user
-            );
-            $categoryLevel1 = $this->createOrChooseData(
-                    $data['categoryLevel1'], 'categoryLevel1', $langData,
-                    $eventData, $user
-            );
-            $categoryLevel2 = $this->createOrChooseData(
-                    $data['categoryLevel2'], 'categoryLevel2', $langData,
-                    $categoryLevel1, $user
-            );
-
-            $statusId = $data['statusId'];
-            $dateNow = new \DateTime('now');
-
-            // Update or create Situ
-            if (empty($data['id'])) {
-                $situ = new Situ();
-                $situ->setDateCreation($dateNow);
-                $situ->setUser($user); 
-            } else {
-                $situ = $this->em->getRepository(Situ::class)->find($data['id']);
-
-                // Only situ author can update situ
-                if ($user !== $situ->getUser()) {
-                    return $this->redirectToRoute('access_denied', [
-                        '_locale' => locale_get_default(),
-                        'code' => '21191',
-                    ]);              
-                }
-
-                $situ->setDateLastUpdate($dateNow);
-
-                // Clear original collection
-                foreach ($situ->getSituItems() as $item) {
-                    $situ->getSituItems()->removeElement($item);
-                    $this->em->remove($item);
-                }
-            }
-
-            if (!empty($data['translatedSituId'])) {
-                $situ->setInitialSitu(false);
-                $situ->setTranslatedSituId($data['translatedSituId']);
-            } else {
-                $situ->setInitialSitu(true);
-            }
-
-            $situ->setTitle($data['title']);
-            $situ->setDescription($data['description']);
-
-            // Depending on the button save (val = 1) or submit (val = 2) clicked
-            if ($statusId === 2) {
-                $situ->setDateSubmission($dateNow);
-                $msgAction = 'submit';
-            } else {
-                $situ->setDateSubmission(null);
-                $msgAction = 'save';
-            }
-
-            $situ->setDateValidation(null); 
-            $situ->setLang($langData);
-            $situ->setEvent($eventData);
-            $situ->setCategoryLevel1($categoryLevel1);
-            $situ->setCategoryLevel2($categoryLevel2);
-            $situ->setStatusId($statusId);
-            $this->em->persist($situ);
-
-            // Add new collection
-            foreach ($data['situItems'] as $key => $dataItem) {
-                $situItem = new SituItem();
-                if ($key === 0) $situItem->setScore(0);
-                else $situItem->setScore($dataItem['score']);
-                $situItem->setTitle($dataItem['title']);
-                $situItem->setDescription($dataItem['description']);
-                $this->em->persist($situItem);
-                $situItem->setSitu($situ);
-            }
-
-            try {
+        try {       
                 $this->em->flush();
 
-                if ($statusId === 2) {
-                    $this->mailer->sendModeratorSituValidate($situ);
-                    $this->messenger->sendModeratorAlert('situ', $situ);
+                if ($result['update']) { $actionSuccess = 'success_update'; }
+                else { $actionSuccess = 'success'; }
                 
-                    $msg = $this->translator->trans(
-                                'contrib.form.'. $msgAction .'.flash.success', [],
-                                'user_messages', $locale = locale_get_default()
-                                );
-                } else {
-                    $msg = $this->translator->trans(
-                                'contrib.form.'. $msgAction .'.flash.success_update', [],
-                                'user_messages', $locale = locale_get_default()
-                                );
-                }
+                $msg = $this->translator->trans(
+                            'contrib.form.'. $result['action'] .'.flash.'. $actionSuccess, [],
+                            'user_messages', $locale = locale_get_default()
+                            );
                 $request->getSession()->getFlashBag()->add('success', $msg);
 
                 return $this->json(['success' => true]);
 
             } catch (\Doctrine\DBAL\DBALException $e) {
                 $msg = $this->translator->trans(
-                            'contrib.form.'. $msgAction .'.flash.error', [],
+                            'contrib.form.'. $result['action'] .'.flash.error', [],
                             'user_messages', $locale = locale_get_default()
                             );
                 $this->addFlash('error', $msg.PHP_EOL.$e->getMessage());
                 
                 return $this->json(['success' => false]);
             }
-        }
-    }
-    
-    /**
-     * Load data depending on selection or creation
-     * Used by ajaxSitu()
-     */
-    protected function createOrChooseData($dataEntity, $entity, $lang, $parent, $user)
-    {        
-        if (is_array($dataEntity)) {
-            switch ($entity) {
-                case 'event':
-                    $data = new Event();
-                    break;
-                case 'categoryLevel1':
-                    $data = new Category();
-                    $data->setDateCreation(new \DateTime('now'));
-                    $data->setDescription($dataEntity['description']);
-                    $data->setEvent($parent);
-                    break;
-                case 'categoryLevel2':
-                    $data = new Category();
-                    $data->setDateCreation(new \DateTime('now'));
-                    $data->setDescription($dataEntity['description']);
-                    $data->setParent($parent);
-                    break;
-            }
-            $data->setTitle($dataEntity['title']);
-            $data->setUser($user);
-            $data->setValidated(0);
-            $data->setLang($lang);
-            $this->em->persist($data);
-        } else {
-            switch ($entity) {
-                case 'event':
-                    $data = $this->em->getRepository(Event::class)->find($dataEntity);
-                    break;
-                case 'categoryLevel1':
-                    $data = $this->em->getRepository(Category::class)->find($dataEntity);
-                    break;
-                case 'categoryLevel2':
-                    $data = $this->em->getRepository(Category::class)->find($dataEntity);
-                    break;
-            }
-        }
-        return $data;
     }
     
     /**

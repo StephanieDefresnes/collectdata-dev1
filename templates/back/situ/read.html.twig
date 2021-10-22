@@ -19,7 +19,7 @@
                 <h1 class="h3 mb-0 text-gray-800">{{ 'contrib.situ.read.title'|trans }}</h1>
             </div>
             <div class="col-md-6 d-sm-flex justify-content-end">
-                {% if situ.statusId == 5 %}
+                {% if situ.status.id== 5 %}
                     <a href="{{ path('back_situ_remove', { 'situ': situ.id }) }}"
                        id="confirmDelete" class="btn btn-danger mx-2 pt-1">
                         {{ 'action.delete_definitively'|trans }}
@@ -45,17 +45,7 @@
                             <div class="col-md-5">
                                 <h6 class="mb-0 mt-2">
                                     <span class="font-weight-bold text-primary">
-                                        {% if situ.statusId == 1 %}
-                                            {{ 'status.writing'|trans }}
-                                        {% elseif situ.statusId == 2 %}
-                                            {{ 'status.validation'|trans }}
-                                        {% elseif situ.statusId == 3 %}
-                                            {{ 'status.validated'|trans }}
-                                        {% elseif situ.statusId == 4 %}
-                                            {{ 'status.refused'|trans }}
-                                        {% else %}
-                                            {{ 'status.deleted'|trans }}
-                                        {% endif %}
+                                        {{ situ.status.name|trans }}
                                     </span>
                                 </h6>
                             </div>

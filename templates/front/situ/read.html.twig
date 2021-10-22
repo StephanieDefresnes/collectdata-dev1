@@ -15,7 +15,7 @@
     <div class="d-flex justify-content-between mt-3 mb-5 pt-5">
         <div class="d-flex justify-content-start">
             <h3 class=" text-white">{{ 'contrib.situ.title'|trans }}
-                {% if app.user and situ.statusId == 2 %}
+                {% if app.user and situ.status.id == 2 %}
                     <span class="badge badge-secondary mx-2">
                         {{ 'action.preview_title'|trans }}
                     </span>

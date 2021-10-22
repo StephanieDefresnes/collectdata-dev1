@@ -21,7 +21,7 @@ class VerifySituFormType extends AbstractType
         $categoriesLevel2 = $options['categoriesLevel2'];
         
         $builder
-            ->add('statusId', HiddenType::class)
+//            ->add('statusId', HiddenType::class)
             ->add('event', EntityType::class, [
                 'class' => Event::class,
                 'choice_label' => function($choice, $key, $value) {

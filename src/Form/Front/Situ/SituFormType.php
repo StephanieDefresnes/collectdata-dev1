@@ -15,6 +15,7 @@ use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
@@ -87,27 +88,25 @@ class SituFormType extends AbstractType
             // Get User langs
             $userLangs = $user->getLangs();
             
-            if (count($userLangs) > 1) {
-                // Build choices with current and optional user land
-                $builder->add('lang', EntityType::class, [
-                    'class' => 'App\Entity\Lang',
-                    'required' => false,
-                    'label' => 'contrib.form.lang.label',
-                    'choice_label' => function($lang, $key, $value) {
-                        return html_entity_decode($lang->getName());
-                    },
-                    'placeholder' => 'label.lang_placeholder',
-                    'query_builder' => function (EntityRepository $er) use ($userLangs) {
-                            return $er->createQueryBuilder('lang')
-                                    ->where('lang.id IN (:array)')
-                                    ->setParameters(['array' => $userLangs]);
-                    },
-                    'row_attr' => ['class' => ''],
-                    'choice_attr' => function($choice, $key, $value) {
-                        return ['class' => 'first-letter text-dark'];
-                    },
-                ]);
-            }
+            // Build choices with current and optional user land
+            $builder->add('lang', EntityType::class, [
+                'class' => 'App\Entity\Lang',
+                'required' => false,
+                'label' => 'contrib.form.lang.label',
+                'choice_label' => function($lang, $key, $value) {
+                    return html_entity_decode($lang->getName());
+                },
+                'placeholder' => 'label.lang_placeholder',
+                'query_builder' => function (EntityRepository $er) use ($userLangs) {
+                        return $er->createQueryBuilder('lang')
+                                ->where('lang.id IN (:array)')
+                                ->setParameters(['array' => $userLangs]);
+                },
+                'row_attr' => ['class' => ''],
+                'choice_attr' => function($choice, $key, $value) {
+                    return ['class' => 'first-letter text-dark'];
+                },
+            ]);
                 
             $formModifierEvent = function (FormInterface $form, $lang_id) {
                 
@@ -368,7 +367,6 @@ class SituFormType extends AbstractType
                 'prototype' => true,
                 ])
             )
-            ->add('statusId', HiddenType::class)
             ->add('translatedSituId', HiddenType::class)
         ;
     }
