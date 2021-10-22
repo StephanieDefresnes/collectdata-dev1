@@ -26,7 +26,7 @@ class SituService {
             ->leftJoin(Lang::class, 'lang', 'WITH', 'situ.lang=lang.id')
             ->groupBy('lang.id')
             ->andWhere('situ.user = ?1')
-            ->andWhere('situ.statusId = ?2')
+            ->andWhere('situ.status = ?2')
             ->setParameter(1, $userId)
             ->setParameter(2, 3);
         

@@ -68,6 +68,7 @@ class UserUpdateFormType extends AbstractType
                 ],
             ])
             ->add('country', CountryType::class, [
+                'required' => false,
                 'label' => 'label_dp.country',
                 'attr' => [
                     'class' => 'single-search',
