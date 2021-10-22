@@ -39,7 +39,7 @@ security:
         ROLE_CONTRIBUTOR:       ROLE_USER
         ROLE_MODERATOR:         ROLE_CONTRIBUTOR
         ROLE_ADMIN:             ROLE_MODERATOR
-        ROLE_SUPER_VISITOR:           ROLE_ADMIN
+        ROLE_SUPER_VISITOR:     ROLE_ADMIN
         ROLE_SUPER_ADMIN:       ROLE_SUPER_VISITOR
     access_control:
         - { path: ^/%app_locales%, roles: PUBLIC_ACCESS }
