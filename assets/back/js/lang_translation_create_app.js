@@ -48,6 +48,7 @@ function addField() {
     collectionHolder.attr('data-widget-counter', counter)
     let newElem = $(collectionHolder.attr('data-widget-fields')).html(newWidget)
 
+    newElem.find('.badge').text(counter)
     removeField(newElem.find('.removeField'))
     newElem.appendTo(collectionHolder)
 }
