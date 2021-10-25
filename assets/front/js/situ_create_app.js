@@ -124,6 +124,8 @@ function loadOrCreateData($form, data, selectId, nextSelectId) {
         
     }
     else nextSelectParent.addClass('d-none on-load')
+        
+    toggleInfoCollapse('hide', selectId)
     
     // Load data from eventListener
     $.ajax({
@@ -144,6 +146,8 @@ function loadOrCreateData($form, data, selectId, nextSelectId) {
                 
                 removeClass($('#categoryLevel1, #categoryLevel2'), 'd-none') 
                 removeClass($('#categoryLevel1, #categoryLevel2'), 'on-load')
+        
+                toggleInfoCollapse('hide', selectId)
                 
             } else {
             // If options select exist
@@ -163,6 +167,8 @@ function loadOrCreateData($form, data, selectId, nextSelectId) {
                     $(this).find('.btnAdd').show()
                 })
                 unvalidatedOption(nextSelectId)
+        
+                toggleInfoCollapse('showNext', selectId)
             }
             
             // Show next selection container
@@ -647,6 +653,20 @@ function checkForm() {
     })
 }
 
+function toggleInfoCollapse(toogle, selectId) {
+    if (toogle == 'hide') {
+        $(selectId).parents('.formData').nextAll().each(function(){
+            $(this).find('.btn-collapse').removeClass('pointer')
+            $(this).find('.infoCollapse ').each(function(){ $(this).addClass('d-none') })
+        })
+    } else {
+        $(selectId).parents('.formData').next().find('.btn-collapse').addClass('pointer')
+                .parents('.formData').find('.infoCollapse ').each(function(){
+                    $(this).addClass('d-none')
+                })
+    }
+}
+
 function sendData(btn) {
     let action, lang, event, categoryLevel1, categoryLevel2,
         title, description, id, translatedSituId,
@@ -712,6 +732,8 @@ function loadTranslation(langId) {
 }
 
 $(function() {
+    
+    $('#situ_form_lang').val($('#situ').attr('data-default')).trigger('change')
     
     $('#loader').hide()
     
@@ -797,10 +819,6 @@ $(function() {
         
     } else {
         $('.colBtn').each(function(){ $(this).hide() })
-        $('.formData').each(function(){
-            $(this).find('.pointer').removeClass('pointer')
-            $(this).find('.infoCollapse ').each(function(){ $(this).remove() })
-        })
         removeClass($('#event'), 'd-none on-load') 
         removeClass($('#categoryLevel1'), 'd-none on-load') 
         removeClass($('#categoryLevel2'), 'd-nonloadTranslatione on-load') 
