@@ -70,6 +70,11 @@ form {
             padding: 0 6px;
         }
     }
+    & fieldset {
+        &.form-group {
+            display: none;
+        }
+    }
 }
 
 // Custom styles
