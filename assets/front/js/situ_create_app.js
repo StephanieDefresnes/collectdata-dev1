@@ -672,11 +672,9 @@ function sendData(btn) {
         title, description, id, translatedSituId,
         dataForm, situItems = []
 
-    lang = $('#lang').length == 0
-            ? $('#situ').attr('data-default')
-            : $('#situ_form_lang').val()
 
     action = $(btn).attr('id')
+    lang = $('#situ_form_lang').val()
     event = setData('event')
     categoryLevel1 = setData('categoryLevel1')
     categoryLevel2 = setData('categoryLevel2')        
@@ -733,9 +731,14 @@ function loadTranslation(langId) {
 
 $(function() {
     
-    $('#situ_form_lang').val($('#situ').attr('data-default')).trigger('change')
+    // Preselect user lang if no optional exists
+    if ($('#situ_form_lang option').length <= 2)    
+        $('#situ_form_lang').val($('#situ').attr('data-default')).trigger('change')
     
-    $('#loader').hide()
+    // When update Situ
+    if ($('#situ').attr('data-id') != '') updateSitu()
+    // Create SituItem once required
+    else addSituItem()
     
     $('.card-header').find('select').each(function() {
         unvalidatedOption(this)
@@ -745,19 +748,12 @@ $(function() {
                 .addClass('selection-on')
     })
     
-    // When update Situ
-    if ($('#situ').attr('data-id') != '') {
-        updateSitu()
-    }
-    // Create SituItem once required
-    else {
-        addSituItem()
-    }
-    
     // Hide adding events/categories button if must have to be created (choices empty)
     $('.colDataLang').each(function(){
         if (!$(this).children().is('select')) $(this).next().find('.btnAdd').hide()
     })
+    
+    $('#loader').hide()
     
     /**
      * Load events/categories or create them
