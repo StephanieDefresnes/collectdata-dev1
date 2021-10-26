@@ -10,27 +10,6 @@
      display: none;
 }
 
-// GG Translate
-#page-top {
-    top: 0 !important;
-}
-.skiptranslate {
-    color: #fff !important;
-    font-size: 0 !important;
-    & iframe,
-    & span {
-        display: none !important;
-    }
-    & select {
-        background: #fff !important;
-        color: #858796 !important;
-        font-size: 15px !important;
-        border: 1px solid #bbb;
-        border-radius: 1px;
-        padding: 8px;
-    }
-}
-
 // FOSCKEditor
  .cke_chrome {
     border: 0 !important;

@@ -7,8 +7,10 @@ use App\Entity\Page;
 use App\Form\Back\Page\PageContentType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\ChoiceList\ChoiceList;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -37,21 +39,19 @@ class PageFormType extends AbstractType
                 'placeholder' => 'content.form.page.type.placeholder'
             ])
             ->add('lang', ChoiceType::class, [
-                'label' => 'label_dp.lang',
+                'label' => 'label.lang',
+                'choices' => $this->em->getRepository(Lang::class)->findAll(),
                 'choice_value' => 'lang',
                 'choice_label' => 'englishName',
-                'choices' => $this->em->getRepository(Lang::class)
-                    ->findAll(),
-                'placeholder' => '',
-                'attr' => ['class' => 'd-none'],
+                'placeholder' => 'action.select',
             ])
             ->add('title', TextType::class, [
                 'label' => 'label.title',
             ])
             ->add('slug', TextType::class, [
+                'required' => false,
                 'label' => 'label.slug',
             ])
-            ->add('enabled', HiddenType::class)
             ->add($builder->create('pageContents' , CollectionType::class, [
                     'entry_type'   => PageContentType::class,
                     'label' => false,
@@ -61,6 +61,21 @@ class PageFormType extends AbstractType
                     'by_reference' => false,
                 ])
             )
+            ->add('save', SubmitType::class, [
+                    'label' => 'action.save',
+                    'row_attr' => [
+                        'class' => 'mb-0'
+                    ],
+                ])
+            ->add('validate', SubmitType::class, [
+                    'label' => 'action.validate',
+                    'attr' => [
+                        'class' => 'btn-primary px-4 mx-2'
+                    ],
+                    'row_attr' => [
+                        'class' => 'mb-0'
+                    ],
+                ])
         ;
     }
 

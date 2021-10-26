@@ -70,6 +70,11 @@ class Lang
     */
     protected $translations;
 
+    /**
+    * @ORM\OneToMany(targetEntity=Page::class, cascade={"persist"}, mappedBy="lang")
+    */
+    protected $pages;
+
     public function __construct()
     {
         $this->langUsers = new ArrayCollection();
@@ -77,6 +82,7 @@ class Lang
         $this->events = new ArrayCollection();
         $this->categories = new ArrayCollection();
         $this->situs = new ArrayCollection();
+        $this->pages = new ArrayCollection();
     }
 
     public function __toString()
@@ -270,6 +276,36 @@ class Lang
             // set the owning side to null (unless already changed)
             if ($translation->getLang() === $this) {
                 $translation->setLang(null);
+            }
+        }
+        return $this;
+    }
+
+    /**
+     * @return Collection|Page[]
+     */
+    public function getPages(): ?Collection
+    {
+        return $this->pages;
+    }
+     
+    public function addPage(Page $page): self
+    {
+        if (!$this->pages->contains($page)) {
+            $this->pages[] = $page;
+            $page->setLang($this);
+        }
+        
+        return $this;
+    }
+
+    public function removePage(Page $page): self
+    {
+        if ($this->pages->contains($page)) {
+            $this->pages->removeElement($page);
+            // set the owning side to null (unless already changed)
+            if ($page->getLang() === $this) {
+                $page->setLang(null);
             }
         }
         return $this;

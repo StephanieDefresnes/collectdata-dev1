@@ -20,5 +20,8 @@ class LangService {
     public function getEnabled() {
         return $this->em->getRepository(Lang::class)->findBy(['enabled' => 1]);
     }
+    public function getLang($lang) {
+        return $this->em->getRepository(Lang::class)->findOneBy(['lang' => $lang]);
+    }
     
 }

@@ -3,7 +3,7 @@
 {% set locale = app.request.locale %}
 
 {% block title %}
-    {{ langPage ? 'content.form.update' |trans : 'content.form.card' |trans }}
+    {{ page ? 'content.form.update' |trans : 'content.form.card' |trans }}
 {% endblock %}
 
 {% block stylesheets %}
@@ -21,74 +21,75 @@
             <h1 class="h3 mb-0 text-gray-800">{{ 'content.form.title'|trans }}</h1>
             <a href="{{ path('back_content_search') }}" class="btn btn-secondary mx-2 pt-1">
                 <i class="fas fa-reply"></i>
-                {{ 'action.cancel'|trans }}
+                {{ 'action.back_list'|trans }}
             </a>
         </div>
             
         <div class="row">
             <div class="col-10 mx-auto px-0 card shadow mb-4">
-
+                
                 <div class="card-header py-3">
-                    <h6 class="m-0 font-weight-bold text-primary">
-                        {{ langPage ? 'content.form.update' |trans : 'content.form.card' |trans }}
+                    <h6 class="d-flex justify-content-start m-0">
+                            <span class="font-weight-bold text-primary">
+                                {{ page.id ? 'content.form.update'|trans : 'content.form.card'|trans }}
+                            </span>
+                        {% if page.id %}
+                            <span class="text-secondary px-1">-</span>
+                            <span class="text-secondary px-2">
+                                {{ 'label_dp.title'|trans }}
+                            </span>
+                            <span class="text-secondary font-weight-bold">
+                                {{ page.title  }}
+                            </span>
+                            <span class="text-secondary px-2">
+                                {{ 'label_dp.lang'|trans }}
+                            </span>
+                            <span class="text-secondary font-weight-bold">
+                                {{ lang_service.getLang(page.lang).englishName  }}
+                            </span>
+                        {% endif %}
                     </h6>
-                </div>
+                </div> 
+
+                {{ form_start(form) }}
+                {{ form_errors(form) }}
 
                 <div id="page" class="card-body">
 
-                    {{ form_start(form) }}
-                    {{ form_errors(form) }}
-
-                    <div class="row">
-
-                        <div class="col-md-6 mb-3">
+                    <div class="row mb-3{{ page.id ? ' d-none'}}">
+                        <div class="col-md-6">
                             <div class="row">
-                                <div class="col-md-4 pt-1">
+                                <div class="col-auto pt-1">
                                     {{ form_label(form.type)}}
                                 </div>
-                                <div class="col-md-8">
+                                <div class="col">
                                     {{ form_widget(form.type) }}
                                 </div>
                             </div>
                         </div>
-
-                        <div id="selectedLang" class="col-md-6 mb-3 pt-1
-                             {% if not langPage %}d-none{% endif%}">
-                                {{ form_label(form.lang)}}
-                                <span class="px-2 selectedLang">
-                                    {{ langPage ? langPage : lang }}
-                                </span>
-                            {{ form_widget(form.lang, {'value' : ( langPage ? page.lang : locale ) }) }}
+                        <div class="col-md-6">
+                            <div class="row">
+                                <div class="col-auto pt-1">
+                                    {{ form_label(form.lang)}}
+                                </div>
+                                <div class="col">
+                                    {{ form_widget(form.lang, { value: page.id ? page.lang : '' })}}
+                                    {{ form_errors(form.lang)}}
+                                </div>
+                            </div>
                         </div>
-
                     </div>
 
                     <div class="row">
-                        
                         <div class="col-md-6">
-                            {{ form_label(form.title)}}
-                            {% if not page.id %}
-                                <span id="title-danger" class="px-1 text-danger small">
-                                    ( {{ 'content.form.page.title_lang'|trans }} {{ lang }} )
-                                </span>
-                            {% endif%}
-                            {{ form_widget(form.title)}}
-                            {{ form_errors(form.title)}}
+                            {{ form_row(form.title)}}
                         </div>
-                        <div class="col-md-6">
-                            {{ form_label(form.slug)}}
-                            <span id="GGTbtn"
-                                class="pointer mx-1 small badge badge-warning d-none">
-                                {{ 'content.form.badge'|trans }}
-                            </span>
-                            {{ form_widget(form.slug)}}
-                            {{ form_errors(form.slug)}}
+                        <div class="{{ not page.slug ? 'd-none' : 'col-md-6'}}">
+                            {{ form_row(form.slug)}}
                         </div>
-                        <div id="toTranslate" class=""></div>
-                        
                     </div>
                         
-                    <div class="d-flex justify-content-end my-4">
+                    <div class="d-flex justify-content-end my-2">
                         <div id="add-content-link" class="btn btn-primary pt-1"
                             data-list-selector="#pageContents">
                             <i class="fas fa-plus-circle"></i>
@@ -99,76 +100,32 @@
                     <div id="form-pageContents">
                         <div id="pageContents" class="ui-sortable"
                             data-prototype="{{ form_widget(form.pageContents.vars.prototype)|e }}"
-                            data-widget-pageContents="{{ '<div class="col-12 mb-4"></div>'|e }}"
+                            data-widget-pageContents="{{ '<div class="col-12 px-0 pt-3 pb-1"></div>'|e }}"
                             data-widget-counter="{{ form.pageContents|length }}">
                             {% for content in form.pageContents %}
-                                {{ form_widget(content) }}
-                                {{ form_errors(content) }}
+                                <div class="col-12 px-0 pt-3 pb-1">
+                                    {{ form_widget(content) }}
+                                    {{ form_errors(content) }}
+                                </div>
                             {% endfor %}
                         </div>
                     </div>
                         
-                    <div class="d-flex justify-content-center mt-4">
-                        <button id="save" class="btn btn-outline-primary mx-2">
-                            {{ 'action.save'|trans }}
-                        </button>
-                        {% if langPage %}
-                            <button id="submit" class="btn btn-primary mx-2 px-4">
-                                {{ 'action.enable'|trans }}
-                            </button>
-                        {% endif %}
-                    </div>
-
-                    {{ form_end(form) }}
-
-
                 </div>
+                        
+                <div class="card-footer bg-light d-flex justify-content-center py-3">
+                    {{ form_widget(form.save, { 'attr': {
+                        'class': page.id and lang_service.getLang(page.lang).enabled 
+                            ? 'd-none' : 'btn-outline-primary px-3 mx-2' } }) }}
+                    {{ form_widget(form.validate) }}
+                </div>
+
+                {{ form_end(form) }}
             </div>
         </div>
                     
     </div>
                     
-
-    <!-- Modal -->
-    <div class="modal fade" id="ggtModal" tabindex="-1" aria-labelledby="ggtModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header bg-dark text-white" translate="no">
-                    <h5 class="modal-title" id="ggtModalLabel" >
-                        {{ 'content.form.badge'|trans }}
-                    </h5>
-                </div>
-                <div class="modal-body">
-                    
-                    <div id="GGT" class="text-center mb-2"></div>
-                    
-                    <h6 class="font-weight-bold" translate="no">
-                        {{ 'content.form.page.title'|trans }} :</h6>
-                    <p id="ggtTitle" class="px-3"></p>
-                    
-                    <h6 class="font-weight-bold" translate="no">
-                        {{ 'content.form.page.slug'|trans }} :</h6>
-                    <div id="modalSpinner" class="d-none">
-                        <div class="d-flex justify-content-center">
-                            <div class="spinner-border spinner-border-sm text-primary" role="status">
-                                <span class="sr-only">Loading...</span>
-                            </div>
-                        </div>
-                    </div>
-                    <p id="ggtSlung" class="px-3" translate="no"></p>
-                    
-                </div>
-                <div class="modal-footer" translate="no">
-                    <button class="btn btn-secondary" data-dismiss="modal" type="button">
-                        {{ 'button.cancel'|trans }}
-                    </button>
-                    <button id="addTranslation" class="btn btn-primary" type="button">
-                        {{ 'button.create'|trans }}
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
 {% endblock %}
 
 {% block javascripts %}
@@ -184,10 +141,6 @@
            "yes" : "{{ 'yes'|trans }}",
            "no" : "{{ 'no'|trans }}",
         }
-        function googleTranslateElementInit() { 
-            new google.translate.TranslateElement({pageLanguage: '{{ locale }}'},'GGT')
-        }
     </script>
-    <script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
     {{ encore_entry_script_tags('page_edit_app', null, 'backApp') }}
 {% endblock %}

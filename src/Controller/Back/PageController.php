@@ -13,6 +13,8 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\String\Slugger\AsciiSlugger;
+use Symfony\Component\String\Slugger\SluggerInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
@@ -66,14 +68,10 @@ class PageController extends AbstractController
      * @IsGranted("ROLE_SUPER_ADMIN")
      * @Route("/content/{id}", defaults={"id" = null}, name="back_content_edit", methods="GET|POST")
      */
-    public function contentEdit(Request $request,
-                                LangService $langService, $id): Response
+    public function contentEdit(LangService $langService,
+                                SluggerInterface $slugger,
+                                Request $request, $id): Response
     {
-        $lang = $this->getDoctrine()->getRepository(Lang::class)->findOneBy(
-            ['lang' => locale_get_default()]
-        );
-        
-        
         // Update or Create new Page
         $langPage = '';
         if ($id) {
@@ -104,15 +102,33 @@ class PageController extends AbstractController
         
         if ($form->isSubmitted() && $form->isValid()) {
             
+            // Slug if empty, esle user can custom
+            if (!$page->getSlug()) {
+                $slugger = new AsciiSlugger();
+                $page->setSlug($slugger->slug($form->get('title')->getData()));
+            }
+            
             foreach ($originalContents as $content) {
                 if (false === $page->getPageContents()->contains($content)) {
                     $page->getPageContents()->removeElement($content);
                     $this->em->remove($content);
                 }
             }
-            
-            $msgType = $form->get('enabled')->getData() === false
-                    ? 'save' : 'submit';
+
+            // Enable value depending on submitted button
+            if ($form->get('save')->isClicked()) {
+                $enabled = false;
+                $url = $this->redirectToRoute('back_content_edit', [
+                        'id' => $page->getId(),
+                        '_locale' => locale_get_default()
+                    ]);
+            } else {
+                $enabled = true;
+                $url = $this->redirectToRoute('back_content_search', [
+                        '_locale' => locale_get_default()
+                    ]);
+            }
+            $page->setEnabled($enabled);
                 
             $this->em->persist($page);
             
@@ -120,19 +136,12 @@ class PageController extends AbstractController
                 $this->em->flush();
 
                 $msg = $this->translator
-                        ->trans('content.form.'.$msgType.'.flash.success', [],
+                        ->trans('content.form.'.$form->getClickedButton()->getName().'.flash.success', [],
                                 'back_messages', $locale = locale_get_default());
                 $this->addFlash('success', $msg);
-
-                if ($msgType === 'save') {
-                    return $this->redirectToRoute('back_content_edit', [
-                        'id' => $page->getId(), '_locale' => locale_get_default()
-                    ]);
-                } else {
-                    return $this->redirectToRoute('back_content_search', [
-                        '_locale' => locale_get_default()
-                    ]);
-                }
+                
+                return $url;
+                
             } catch (\Doctrine\DBAL\DBALException $e) {
                 $this->addFlash('warning', $e->getMessage());
             }
@@ -140,7 +149,6 @@ class PageController extends AbstractController
         
         return $this->render('back/page/content/edit/index.html.twig', [
             'form' => $form->createView(),
-            'lang' => html_entity_decode($lang->getName(), ENT_QUOTES, 'UTF-8'),
             'page' => $page,
             'langPage' => $langPage,
         ]);

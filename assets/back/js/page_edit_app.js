@@ -1,5 +1,9 @@
 // css
 import '../scss/page_edit_app.scss';
+import 'select2/src/scss/core.scss';
+import 'select2-theme-bootstrap4/dist/select2-bootstrap.min.css'
+
+require('select2')
 
 /**
  * Add pageContent collection
@@ -54,58 +58,16 @@ function removeContent(button) {
     })
 }
 
-// Slugify from title
-function slugify(title) {
-    
-    // If latin characters
-    if (title.match(/[a-z]/i)) {
-        title = title.toString().toLowerCase().trim();
-
-        const sets = [
-          {to: 'a', from: '[ÀÁÂÃÄÅÆĀĂĄẠẢẤẦẨẪẬẮẰẲẴẶἀ]'},
-          {to: 'c', from: '[ÇĆĈČ]'},
-          {to: 'd', from: '[ÐĎĐÞ]'},
-          {to: 'e', from: '[ÈÉÊËĒĔĖĘĚẸẺẼẾỀỂỄỆ]'},
-          {to: 'g', from: '[ĜĞĢǴ]'},
-          {to: 'h', from: '[ĤḦ]'},
-          {to: 'i', from: '[ÌÍÎÏĨĪĮİỈỊ]'},
-          {to: 'j', from: '[Ĵ]'},
-          {to: 'ij', from: '[Ĳ]'},
-          {to: 'k', from: '[Ķ]'},
-          {to: 'l', from: '[ĹĻĽŁ]'},
-          {to: 'm', from: '[Ḿ]'},
-          {to: 'n', from: '[ÑŃŅŇ]'},
-          {to: 'o', from: '[ÒÓÔÕÖØŌŎŐỌỎỐỒỔỖỘỚỜỞỠỢǪǬƠ]'},
-          {to: 'oe', from: '[Œ]'},
-          {to: 'p', from: '[ṕ]'},
-          {to: 'r', from: '[ŔŖŘ]'},
-          {to: 's', from: '[ßŚŜŞŠȘ]'},
-          {to: 't', from: '[ŢŤ]'},
-          {to: 'u', from: '[ÙÚÛÜŨŪŬŮŰŲỤỦỨỪỬỮỰƯ]'},
-          {to: 'w', from: '[ẂŴẀẄ]'},
-          {to: 'x', from: '[ẍ]'},
-          {to: 'y', from: '[ÝŶŸỲỴỶỸ]'},
-          {to: 'z', from: '[ŹŻŽ]'},
-          {to: '-', from: '[·/_,:;\']'}
-        ];
-
-        sets.forEach(set => {
-          title = title.replace(new RegExp(set.from,'gi'), set.to)
-        });
-
-        return title
-          .replace(/\s+/g, '-')    // Replace spaces with -
-          .replace(/[^-a-zа-я\u0370-\u03ff\u1f00-\u1fff]+/g, '') // Remove all non-word chars
-          .replace(/--+/g, '-')    // Replace multiple - with single -
-          .replace(/^-+/, '')      // Trim - from start of text
-          .replace(/-+$/, '')      // Trim - from end of text
-  
-    } else {
-        return encodeURIComponent(title)
-    }
-}
-
 $(function() {
+    
+    // Init select2
+    $('#page_form_type').select2({
+        minimumResultsForSearch: Infinity,
+        width: 'resolve'
+    });
+    $('#page_form_lang').select2({
+        width: 'resolve'
+    });
     
     // Add new Content to collection
     $('#add-content-link').click(function() {
@@ -117,62 +79,9 @@ $(function() {
         removeContent($(this))
     })
     
-    /**
-     * GGTranslation & Slug generation 
-     */
-    $('#page_form_title').on('keyup paste', function () {
-        if ($('#GGTbtn').hasClass('d-none')) $('#GGTbtn').removeClass('d-none')
+    $('select').change(function() {
+        if ($(this).val() == '' && $(this).parent().find('.select2-selection__rendered').hasClass('selection-on'))
+            $(this).parent().find('.select2-selection__rendered').removeClass('selection-on')
+        else $(this).parent().find('.select2-selection__rendered').addClass('selection-on')
     })
-    
-    $('#GGTbtn').on('click', function(){
-        // Reset GGTranslate
-        $('#\\:1\\.container').contents().find('#\\:1\\.restore').click()
-        // Load title and slug to translate an generate slug
-        $('#ggtTitle').html($('#page_form_title').val())
-        $('#ggtSlung').html(slugify($('#page_form_title').val()))
-        $('#ggtModal').modal('show')
-    })
-
-    $('#GGT').bind('change', '.goog-te-combo', function() {
-
-        // Wait ang get GGtranslation
-        $(this).delay(950).find('option').each(function() {
-            if ($(this).val() == $('.goog-te-combo').val()){
-                let langName = $(this).html()
-                $('#page_form_lang').val($(this).val())
-                $('#selectedLang .selectedLang').html(langName)
-            }
-        })
-        // Toggle spinner
-        $('#modalSpinner').removeClass('d-none')
-                .delay(1000).queue(function(next){
-                    $(this).addClass('d-none')
-                    next();
-                })
-        // Toggle GGtranslation and reslugify
-        $('#ggtSlung').addClass('d-none')
-                .delay(1000).queue(function(next){
-                    $(this).html(slugify($('#ggtTitle font font').text()))
-                        .removeClass('d-none')
-                    next();
-                })
-    })
-
-    // Load slug and title translated
-    $('#addTranslation').click(function() {
-        $('#page_form_title').val($('#ggtTitle').text())
-        $('#page_form_slug').val($('#ggtSlung').text())
-        if ($('#selectedLang').hasClass('d-none'))
-            $('#selectedLang').removeClass('d-none')
-        $('#title-danger').hide()
-        $('#ggtModal').modal('hide')
-    })
-    
-    // Submit
-    $('#save, #submit').click(function() {
-        if ($(this).attr('id') == 'save') $('#page_form_enabled').val(0)
-        else $('#page_form_enabled').val(1)
-        $('form').submit()
-    })
-    
 })
