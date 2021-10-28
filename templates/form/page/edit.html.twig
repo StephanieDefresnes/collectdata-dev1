@@ -1,0 +1,63 @@
+{% trans_default_domain 'back_messages' %}
+
+{{ form_start(form) }}
+{{ form_errors(form) }}
+
+<div id="page" class="card-body">
+    
+    {% if route == 'back_content_edit' %}
+        {% include 'form/page/_lang_type.html.twig' %}
+    {% endif %}
+    
+    <div class="row">
+        <div class="col-md-6">
+            {{ form_row(form.title)}}
+        </div>
+        <div class="{{ not page.slug ? 'd-none' : 'col-md-6'}}">
+            {{ form_row(form.slug)}}
+        </div>
+    </div>
+
+    <div class="d-flex justify-content-end my-2">
+        <div id="add-content-link" class="btn btn-primary pt-1"
+            data-list-selector="#pageContents">
+            <i class="fas fa-plus-circle"></i>
+            {{ 'content.form.page.collection.btn'|trans }}
+        </div>
+    </div>
+
+    <div id="form-pageContents">
+        <div id="pageContents" class="ui-sortable"
+            data-prototype="{{ form_widget(form.pageContents.vars.prototype)|e }}"
+            data-widget-pageContents="{{ '<div class="col-12 px-0 pt-3 pb-1"></div>'|e }}"
+            data-widget-counter="{{ form.pageContents|length }}">
+            {% for content in form.pageContents %}
+                <div class="col-12 px-0 pt-3 pb-1">
+                    {{ form_widget(content) }}
+                    {{ form_errors(content) }}
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+</div>
+
+<div class="card-footer bg-light d-flex justify-content-center py-3">
+    {{ form_widget(form.save, { 'attr': {
+        'class': route == 'back_content_edit' and page.id and lang_service.getLang(page.lang).enabled 
+            ? 'd-none' : 'btn-outline-primary px-3 mx-2' } }) }}
+    
+    {% if route == 'back_content_edit' %}
+        {% if lang_service.getLang(page.lang) in app.user.langs
+                or lang_service.getLang(page.lang) in app.user.contributorLangs %}
+        {% else %}
+            {% include "form/page/_users.html.twig" %}
+        {% endif %}
+    {% endif %}
+    
+    {{ form_widget(form.action, { 'attr': {
+        'class': route == 'back_content_edit' and not page.id 
+            ? 'd-none' : 'btn-primary px-3 mx-2' } }) }}
+</div>
+
+{{ form_end(form) }}

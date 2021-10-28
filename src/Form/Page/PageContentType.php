@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Form\Back\Page;
+namespace App\Form\Page;
 
 use App\Entity\PageContent;
 use FOS\CKEditorBundle\Form\Type\CKEditorType;

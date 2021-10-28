@@ -1,0 +1,80 @@
+{% trans_default_domain 'back_messages' %}
+{% extends "back/layout.html.twig" %}
+{% set locale = app.request.locale %}
+
+{% block title %}
+    {{ page ? 'content.form.update' |trans : 'content.form.card' |trans }}
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('jquery-confirm/css/jquery-confirm.css') }}">
+    {{ encore_entry_link_tags('page_edit_app', null, 'backApp') }}
+    {{ encore_entry_link_tags('app') }}
+{% endblock %}
+
+{% block content %}
+    
+    <div class="container-fluid pt-4" translate="no">
+        
+        <div class="d-sm-flex align-items-center justify-content-between mb-4">
+            <h1 class="h3 mb-0 text-gray-800">{{ 'content.form.title'|trans }}</h1>
+            <a href="{{ path('back_content_search') }}" class="btn btn-secondary mx-2 pt-1">
+                <i class="fas fa-reply"></i>
+                {{ 'action.back_list'|trans }}
+            </a>
+        </div>
+            
+        <div class="row">
+            <div class="col-10 mx-auto px-0 card shadow mb-4">
+
+                <div class="card-header py-3">
+                    <h6 class="d-flex justify-content-start m-0">
+                            <span class="font-weight-bold text-primary">
+                                {{ page ? 'content.form.update'|trans : 'content.form.card'|trans }}
+                            </span>
+                        {% if page.id %}
+                            <span class="text-secondary px-1">-</span>
+                            <span class="text-secondary px-2">
+                                {{ 'label_dp.type'|trans }}
+                            </span>
+                            <span class="text-secondary font-weight-bold">
+                                {% set type = 'content.form.page.type.choice.'~page.type %}
+                                {{ type|trans  }}
+                            </span>
+                            <span class="text-secondary px-1">-</span>
+                            <span class="text-secondary">
+                                {{ 'label_dp.lang'|trans }}
+                            </span>
+                            <span class="text-secondary px-2 font-weight-bold">
+                                {{ lang_service.getLang(page.lang).englishName  }}
+                            </span>
+                        {% endif %}
+                    </h6>
+                </div>
+                    
+                 {% include 'form/page/edit.html.twig' %}
+                
+            </div>
+        </div>
+                    
+    </div>
+                    
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ asset('jquery-confirm/js/jquery-confirm.js') }}"></script>
+    <script>
+        var path = {
+           "locale" : "{{ locale }}",
+        }
+        var translations = {
+           "deletePage-title" : "{{ 'content.form.page.collection.remove.title'|trans }}",
+           "deletePage-content" : "{{ 'content.form.page.collection.remove.confirm'|trans }}",
+           "yes" : "{{ 'yes'|trans }}",
+           "no" : "{{ 'no'|trans }}",
+        }
+    </script>
+    {{ encore_entry_script_tags('page_edit_app', null, 'backApp') }}
+{% endblock %}

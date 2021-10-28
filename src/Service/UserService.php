@@ -52,4 +52,18 @@ class UserService {
         
         return $qb->getQuery()->getResult();
     }
+    
+    public function getUsersLangContributorByLang($lang)
+    {
+        $qb = $this->em->createQueryBuilder();
+        
+        $qb->from(User::class,'u')
+            ->select('u')
+            ->andWhere('?1 MEMBER OF u.langs OR ?1 MEMBER OF u.contributorLangs')
+            ->andWhere('u.langContributor = ?2')
+            ->setParameter(1, $lang)
+            ->setParameter(2, true);
+        
+        return $qb->getQuery()->getResult();
+    }
 }

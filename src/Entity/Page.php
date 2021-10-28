@@ -54,6 +54,16 @@ class Page
      */
     private $enabled;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=Status::class, inversedBy="pages")
+     */
+    private $status;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="pages")
+     */
+    private $user;
+
     public function __construct()
     {
         $this->pageContents = new ArrayCollection();
@@ -150,6 +160,30 @@ class Page
     public function setEnabled(bool $enabled): self
     {
         $this->enabled = $enabled;
+
+        return $this;
+    }
+
+    public function getStatus(): ?Status
+    {
+        return $this->status;
+    }
+
+    public function setStatus(?Status $status): self
+    {
+        $this->status = $status;
+
+        return $this;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): self
+    {
+        $this->user = $user;
 
         return $this;
     }

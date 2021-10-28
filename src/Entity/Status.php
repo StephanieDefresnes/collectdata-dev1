@@ -33,11 +33,17 @@ class Status
      * @ORM\OneToMany(targetEntity="App\Entity\Situ",  mappedBy="status")
      */
     protected $situs;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Page::class, mappedBy="status")
+     */
+    private $pages;
     
     public function __construct()
     {
         $this->translations = new ArrayCollection();
         $this->status = new ArrayCollection();
+        $this->pages = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -71,5 +77,35 @@ class Status
     public function getSitus(): Collection
     {
         return $this->situs;
+    }
+
+    /**
+     * @return Collection|Page[]
+     */
+    public function getPages(): Collection
+    {
+        return $this->pages;
+    }
+
+    public function addPage(Page $page): self
+    {
+        if (!$this->pages->contains($page)) {
+            $this->pages[] = $page;
+            $page->setStatus($this);
+        }
+
+        return $this;
+    }
+
+    public function removePage(Page $page): self
+    {
+        if ($this->pages->removeElement($page)) {
+            // set the owning side to null (unless already changed)
+            if ($page->getStatus() === $this) {
+                $page->setStatus(null);
+            }
+        }
+
+        return $this;
     }
 }

@@ -1,6 +1,5 @@
 {% trans_default_domain 'back_messages' %}
 {% extends "back/layout.html.twig" %}
-{#{% set locale = app.request.locale %}#}
 
 {% block title %}{{ 'content.list.table.title'|trans }}{% endblock %}
 
@@ -16,7 +15,9 @@
         
         <div class="d-sm-flex align-items-center justify-content-between mb-4">
             <h1 class="h3 mb-0 text-gray-800">{{ 'content.list.title'|trans }}</h1>
-            <a href="{{ path('back_content_edit') }}" class="btn btn-primary mx-2 pt-1">
+            <a href="{{ path('back_content_edit', {
+                                'locale': locale,
+                                'back': 'back' }) }}" class="btn btn-primary mx-2 pt-1">
                 <i class="fas fa-plus-circle"></i>
                 {{ 'content.form.title'|trans }}
             </a>
@@ -42,6 +43,7 @@
                             <th class="px-2 no-sort">{{ 'action.action'|trans }}</th>
                             <th class="px-2">{{ 'label.enabled'|trans }}</th>
                             <th class="px-2">{{ 'label.lang'|trans }}</th>
+                            <th class="px-2">{{ 'label.attribution'|trans }}</th>
                             <th class="px-2">{{ 'label.type'|trans }}</th>
                             <th class="px-2">{{ 'label.title'|trans }}</th>
                             <th class="px-2">{{ 'label.slug'|trans }}</th>
@@ -51,7 +53,10 @@
                         {% for page in pages %}
                         <tr>
                             <td class="px-2">
-                                <a href="{{ path('back_content_edit', {'id': page.id}) }}"
+                                <a href="{{ path('back_content_edit', {
+                                                    'locale': locale,
+                                                    'back': 'back',
+                                                    'id': page.id }) }}"
                                    role="button" class="btn btn-outline-primary px-2 py-1"
                                    data-id="{{ page.id }}" data-action=""
                                    data-toggle="tooltip" data-placement="left"
@@ -73,6 +78,9 @@
                             </td>
                             <td class="px-2 text-uppercase">
                                 {{ page.lang }}
+                            </td>
+                            <td class="px-2">
+                                {{ page.user ? page.user.name }}
                             </td>
                             <td class="px-2">
                                 {% if page.type == 'home' %}

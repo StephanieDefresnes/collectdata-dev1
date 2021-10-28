@@ -98,6 +98,11 @@ class User implements UserInterface
     private $lang;
 
     /**
+     * @ORM\ManyToMany(targetEntity=Lang::class, inversedBy="users")
+     */
+    private $langs;
+
+    /**
      * @ORM\Column(type="boolean", nullable=true)
      */
     private $langContributor;
@@ -107,11 +112,6 @@ class User implements UserInterface
     * @ORM\JoinTable(name="contributor_langs")
     */
     protected $contributorLangs;
-
-    /**
-     * @ORM\ManyToMany(targetEntity=Lang::class, inversedBy="users")
-     */
-    private $langs;
 
     /**
      * @ORM\Column(type="integer", nullable=true)
@@ -160,6 +160,11 @@ class User implements UserInterface
      */
     private $country;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Page::class, mappedBy="User")
+     */
+    private $pages;
+
     public function __construct()
     {
         $this->langs = new ArrayCollection();
@@ -170,6 +175,7 @@ class User implements UserInterface
         $this->senders = new ArrayCollection();
         $this->recipients = new ArrayCollection();
         $this->translations = new ArrayCollection();
+        $this->pages = new ArrayCollection();
     }
 
     public function __toString()
@@ -412,18 +418,6 @@ class User implements UserInterface
 
         return $this;
     }
-
-    public function getLangContributor(): ?bool
-    {
-        return $this->langContributor;
-    }
-
-    public function setLangContributor(bool $langContributor): self
-    {
-        $this->langContributor = $langContributor;
-
-        return $this;
-    }
     
     /**
      * @return Collection|Lang[]
@@ -446,6 +440,18 @@ class User implements UserInterface
             $this->langs->removeElement($lang);
         }
         
+        return $this;
+    }
+
+    public function getLangContributor(): ?bool
+    {
+        return $this->langContributor;
+    }
+
+    public function setLangContributor(bool $langContributor): self
+    {
+        $this->langContributor = $langContributor;
+
         return $this;
     }
     
@@ -699,6 +705,36 @@ class User implements UserInterface
     public function setCountry(?string $country): self
     {
         $this->country = $country;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Page[]
+     */
+    public function getPages(): Collection
+    {
+        return $this->pages;
+    }
+
+    public function addPage(Page $page): self
+    {
+        if (!$this->pages->contains($page)) {
+            $this->pages[] = $page;
+            $page->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removePage(Page $page): self
+    {
+        if ($this->pages->removeElement($page)) {
+            // set the owning side to null (unless already changed)
+            if ($page->getUser() === $this) {
+                $page->setUser(null);
+            }
+        }
 
         return $this;
     }

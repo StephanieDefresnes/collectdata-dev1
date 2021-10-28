@@ -1,0 +1,25 @@
+{% trans_default_domain 'back_messages' %}
+
+<div class="row mb-3{{ page.id ? ' d-none'}}">
+    <div class="col-md-6">
+        <div class="row">
+            <div class="col-auto pt-1">
+                {{ form_label(form.type)}}
+            </div>
+            <div class="col">
+                {{ form_widget(form.type) }}
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="row">
+            <div class="col-auto pt-1">
+                {{ form_label(form.lang)}}
+            </div>
+            <div class="col">
+                {{ form_widget(form.lang, { value: page.id ? page.lang : '' })}}
+                {{ form_errors(form.lang)}}
+            </div>
+        </div>
+    </div>
+</div>

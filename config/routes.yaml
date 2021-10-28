@@ -10,3 +10,15 @@ front_translation_create:
     methods:    ['GET', 'POST']
     defaults:
         id: null
+back_content_edit:
+    path:       /{locale}/{back}/content/{id}
+    controller: App\Controller\PageController::contentEdit
+    methods:    ['GET', 'POST']
+    defaults:
+        id: null
+front_content_edit:
+    path:       /{locale}/translation/content/{id}
+    controller: App\Controller\PageController::contentEdit
+    methods:    ['GET', 'POST']
+    requirements:
+        id:     '\d+'
