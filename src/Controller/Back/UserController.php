@@ -94,7 +94,11 @@ class UserController extends AbstractController
             return $this->redirectToRoute('not_found', ['_locale' => locale_get_default()]);
         }
         
-        $user = $this->security->getUser(); 
+        // Super visitor filter
+        $currentUser = $this->security->getUser();
+        if ($currentUser->hasRole('ROLE_SUPER_VISITOR')) {
+            return $this->redirectToRoute('visitor_denied', [ '_locale' => locale_get_default()]);
+        }
         
         $result = $this->userManager->validationUpdate($user);
         if (true !== $result) {
