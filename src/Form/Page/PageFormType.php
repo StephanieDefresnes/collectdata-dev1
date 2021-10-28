@@ -4,15 +4,12 @@ namespace App\Form\Page;
 
 use App\Entity\Lang;
 use App\Entity\Page;
-use App\Entity\User;
-use App\Form\Page\PageContentType;
+use App\Form\Page\ContentType;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
-use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -58,7 +55,7 @@ class PageFormType extends AbstractType
                 'label' => 'label.title',
             ])
             ->add($builder->create('pageContents' , CollectionType::class, [
-                    'entry_type'   => PageContentType::class,
+                    'entry_type'   => ContentType::class,
                     'label' => false,
                     'allow_add' => true,
                     'allow_delete' => true,
