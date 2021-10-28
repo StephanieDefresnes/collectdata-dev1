@@ -59,32 +59,6 @@ class PageController extends AbstractController
     }
     
     /**
-     * @IsGranted("ROLE_SUPER_VISITOR")
-     * @Route("/content/{page}/validate", name="back_content_validate", methods="GET|POST")
-     */
-    public function contentValidate(Request $request, Page $page): Response
-    {      
-        // Super visitor filter
-        $currentUser = $security->getUser();
-        if ($currentUser->hasRole('ROLE_SUPER_VISITOR')) {
-            return $this->redirectToRoute('visitor_denied', [ '_locale' => locale_get_default()]);
-        }
-        
-        $page->setEnabled(1);
-        $this->em->persist($page);
-        $this->em->flush();
-
-        $msg = $this->translator
-                ->trans('content.form.submit.flash.success', [],
-                        'back_messages', $locale = locale_get_default());
-        $this->addFlash('success', $msg);
-
-        return $this->redirectToRoute('back_content_search', [
-            '_locale' => locale_get_default()
-        ]);
-    }
-    
-    /**
      * @Route("/403", name="visitor_denied")
      */
     public function visitorAccessDenied(): Response

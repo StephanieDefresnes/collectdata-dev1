@@ -22,3 +22,16 @@
         }
     }
 }
+
+[dir="rtl"] {
+    .card-footer {
+        & > .form-inline  {
+            margin-left: unset !important;
+            margin-right: 1.5rem !important;
+            padding-left: unset !important;
+            padding-right: 1rem !important;
+            border-left: 0 !important;
+            border-right: 1px solid #e3e6f0 !important;
+        }
+    }
+}

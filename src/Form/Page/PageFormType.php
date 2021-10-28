@@ -57,10 +57,6 @@ class PageFormType extends AbstractType
                 'required' => false,
                 'label' => 'label.title',
             ])
-            ->add('slug', TextType::class, [
-                'required' => false,
-                'label' => 'label.slug',
-            ])
             ->add($builder->create('pageContents' , CollectionType::class, [
                     'entry_type'   => PageContentType::class,
                     'label' => false,
@@ -91,7 +87,7 @@ class PageFormType extends AbstractType
                 'required' => false,
                 'row_attr' => ['class' => 'form-inline mb-0 border-left ml-4 pl-3'],
                 'label' => 'label.user',
-                'label_attr' => ['class' => 'px-1'],
+                'label_attr' => ['class' => 'mb-1 px-1'],
                 'choices' => $options['users'],
                 'choice_label' => 'name',
                 'placeholder' => 'action.select'

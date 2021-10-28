@@ -65,6 +65,7 @@
 {% block javascripts %}
     {{ parent() }}
     <script src="{{ asset('jquery-confirm/js/jquery-confirm.js') }}"></script>
+    {{ encore_entry_script_tags('page_edit_app', null, 'backApp') }}
     <script>
         var path = {
            "locale" : "{{ locale }}",
@@ -76,5 +77,4 @@
            "no" : "{{ 'no'|trans }}",
         }
     </script>
-    {{ encore_entry_script_tags('page_edit_app', null, 'backApp') }}
 {% endblock %}

@@ -10,20 +10,27 @@
     {% endif %}
     
     <div class="row">
-        <div class="col-md-6">
-            {{ form_row(form.title)}}
+        
+        <div class="col">
+            <div class="d-flex justify-content-start">
+                {{ form_label(form.title)}}
+            </div>
+            <div class="form-group">
+                {{ form_widget(form.title) }}
+                {{ form_errors(form.title) }}
+            </div>
         </div>
-        <div class="{{ not page.slug ? 'd-none' : 'col-md-6'}}">
-            {{ form_row(form.slug)}}
-        </div>
-    </div>
-
-    <div class="d-flex justify-content-end my-2">
-        <div id="add-content-link" class="btn btn-primary pt-1"
-            data-list-selector="#pageContents">
-            <i class="fas fa-plus-circle"></i>
-            {{ 'content.form.page.collection.btn'|trans }}
-        </div>
+        
+        {% if route == 'back_content_edit' %}
+            <div class="d-flex justify-content-end col-auto pt-4 pb-2 mt-1 mb-2">
+                <div id="add-content-link" class="btn btn-primary pt-1"
+                    data-list-selector="#pageContents">
+                    <i class="fas fa-plus-circle"></i>
+                    {{ 'content.form.page.collection.btn'|trans }}
+                </div>
+            </div>
+        {% endif %}
+        
     </div>
 
     <div id="form-pageContents">

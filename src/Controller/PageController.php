@@ -117,6 +117,7 @@ class PageController extends AbstractController
                 $action = $form->getClickedButton()->getName();
                 
                 if ($back) {
+                    $page->setUser(null);
                     $url = $this->redirectToRoute('back_content_edit', [
                         'locale' => locale_get_default(),
                         'back' => 'back',
