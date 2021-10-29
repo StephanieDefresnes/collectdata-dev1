@@ -77,6 +77,64 @@ form {
     }
 }
 
+// Lang menu
+.lang-item {
+    & > a {
+        &::after {
+            display: none;
+        }
+        & > span {
+            display: none;
+        }
+        & > img.d-md-inline.d-none {
+            display: block !important;
+        }
+        & .lang-flag {
+            width: 17px;
+            height: 13px;
+        }
+    }
+    .lang-menu {
+        width: 66px !important;
+        padding: 0 !important;
+        left: -15px !important;
+        & > li {
+            & > a {
+                max-width: 50px;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                &:hover {
+                    text-decoration: none;
+                }
+                & > .lang-flag {
+                    width: 16px;
+                    height: 12px;
+                    vertical-align: inherit;
+                }
+                & > span.d-md-inline.d-none {
+                    display: inline-block !important;
+                    color: $secondary !important;
+                }
+            }
+        }
+    }
+}
+@media (max-width: 768px) {
+    .lang-item {
+        .lang-menu {
+            left: -7px !important;
+        }
+    }
+}
+@media (max-width: 576px) {
+    .lang-item {
+        .lang-menu {
+            left: 65px !important;
+        }
+    }
+}
+
 // Custom styles
 #accordionSidebar {
     & > a {
@@ -173,14 +231,35 @@ th.cust-nowrap {
  */
 [dir="rtl"] {
     h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 { text-align: right !important; }
-    .navbar {
+    .navbar.topbar {
         & > div {
             margin-right: 1rem !important;
             margin-left: auto !important;
+            &#menu-date {
+                margin-left: 0 !important;
+            }
         }
         & > ul {
-            margin-left: 1rem !important;
             margin-right: auto !important;
+            margin-left: 0 !important;
+            & .dropdown-menu.dropdown-menu-right {
+                right: auto !important;
+                left: 0 !important;
+                & a,
+                & li {
+                    text-align: right !important;
+                }
+            }
+            &#menu-lang {
+                margin-right: 0 !important;
+                padding: 0;
+                & > li > ul > li {
+                    text-align: right !important;
+                }
+            }
+        }
+        & .mr-2 {
+            margin: 0 0 0 0.5rem !important;
         }
     }
     #accordionSidebar {

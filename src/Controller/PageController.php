@@ -14,7 +14,6 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Component\String\Slugger\AsciiSlugger;
 use Symfony\Component\String\Slugger\SluggerInterface;
@@ -22,10 +21,30 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * @IsGranted("IS_AUTHENTICATED_FULLY")
- * @Route("/{_locale<%app_locales%>}")
  */
 class PageController extends AbstractController
 {
+    /**
+     * Back and Front use this page with include
+     * And provides different data depending on the context :
+     *      - $label for label of submit button "action"
+     *      - $action for flash message
+     *      - $referentPage for lang contributor in front context
+     *      - $route & $url for redirect
+     *      - $users in back context: when user can't translate into lang page,
+     *      he attributes it to lang contributor
+     * 
+     * Status values:
+     *      - '-1': new, for lang contributor in front
+     *      - 1:    on writing
+     *      - 2:    submitted to validation, for lang contributor in front
+     *      - 3:    validated
+     * 
+     * @param type $locale
+     * @param type $id
+     * @param type $back : front context if empty
+     * @return Response
+     */
     public function contentEdit(EntityManagerInterface $em,
                                 LangService $langService,
                                 Request $request,
@@ -33,13 +52,12 @@ class PageController extends AbstractController
                                 SluggerInterface $slugger,
                                 TranslatorInterface $translator,
                                 UserService $userService,
-                                $locale, $id, $back = null): Response
+                                $_locale, $id, $back = null): Response
     {
-        // $label depending on route and user langs
-        // Route front_content_edit
         $label = 'action.submit';
         $users = [];
         $action = 'submit';
+        $referentPage;
         
         if ($back) {
             $this->denyAccessUnlessGranted('ROLE_SUPER_VISITOR');
@@ -73,8 +91,17 @@ class PageController extends AbstractController
                 // Get lang contributor user for page
                 $langPage = $this->getDoctrine()->getRepository(Lang::class)
                         ->findOneBy(['lang' => $page->getLang()]);
+                
+                // Array of users to attribute translation page in form
                 $users = $userService->getUsersLangContributorByLang($langPage);
                 
+            } else {
+                $referentPage = $this->getDoctrine()->getRepository(Page::class)
+                        ->findOneBy([
+                            'type' => $page->getType(),
+                            'lang' => locale_get_default(),
+                        ]);
+            
             }
         } else {
             $page = new Page();
@@ -94,11 +121,9 @@ class PageController extends AbstractController
         
         if ($form->isSubmitted() && $form->isValid()) {
             
-            // Slug if empty, esle user can custom
-            if (!$page->getSlug()) {
-                $slugger = new AsciiSlugger();
-                $page->setSlug($slugger->slug($form->get('title')->getData()));
-            }
+            // Slug title
+            $slugger = new AsciiSlugger();
+            $page->setSlug($slugger->slug($form->get('title')->getData()));
             
             if ($back) {
                 foreach ($originalContents as $content) {
@@ -143,7 +168,7 @@ class PageController extends AbstractController
                     }
                     $route = 'back_content_search';
                 } else {
-                    $status = $em->getRepository(Status::class)->find(3);
+                    $status = $em->getRepository(Status::class)->find(2);
                     $enabled = false;
                     $action = $form->getClickedButton()->getName();
                     $route = 'user_translations';
@@ -186,6 +211,7 @@ class PageController extends AbstractController
             return $this->render('front/translation/page.html.twig', [
                 'form' => $form->createView(),
                 'page' => $page,
+                'referentPage' => $referentPage,
             ]);
         }
     }

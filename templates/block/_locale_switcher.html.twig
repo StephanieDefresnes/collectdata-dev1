@@ -15,14 +15,14 @@
         </a>
         {% endif %}
     {% endfor %}
-    <ul class="dropdown-menu pt-md-4 pt-0 lang-menu" aria-labelledby="menu_lang">
+    <ul class="dropdown-menu pt-md-4 pt-0 lang-menu dropdown-list dropdown-menu-left shadow animated--grow-in" aria-labelledby="menu_lang">
         {% if app.user %}
             {% for userLang in app.user.langs %}
                 {% if userLang.lang != app.request.locale %}
                     <li class="dropdown-item bg-dark-95">
-                        <a class="" href="{{ path(route, params|merge({ _locale: userLang.lang })) }}">
+                        <a href="{{ path(route, params|merge({ _locale: userLang.lang })) }}">
                             <img src="{{ asset('img/flag/'~ userLang.lang ~'.jpg') }}" alt="{{ userLang.lang }}" class="lang-flag mr-2">
-                            <span class="text-capitalize d-md-inline d-none decode">{{ userLang.name|raw  }}</span>
+                            <span class="text-capitalize d-md-inline d-none">{{ userLang.name|raw  }}</span>
                         </a>
                     </li>
                 {% endif %}

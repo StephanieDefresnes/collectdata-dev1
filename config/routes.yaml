@@ -1,23 +1,23 @@
 back_translation_situ_create:
-    path:       /{locale}/{back}/translation/{referentId}/{langId}/{id}
+    path:       /{_locale}/{back}/translation/{referentId}/{langId}/{id}
     controller: App\Controller\TranslationController::createTranslate
     methods:    ['GET', 'POST']
     defaults:
         id: null
 front_translation_create:
-    path:       /{locale}/translation/{referentId}/{langId}/{id}
+    path:       /{_locale}/translation/{referentId}/{langId}/{id}
     controller: App\Controller\TranslationController::createTranslate
     methods:    ['GET', 'POST']
     defaults:
         id: null
 back_content_edit:
-    path:       /{locale}/{back}/content/{id}
+    path:       /{_locale}/{back}/content/{id}
     controller: App\Controller\PageController::contentEdit
     methods:    ['GET', 'POST']
     defaults:
         id: null
 front_content_edit:
-    path:       /{locale}/translation/content/{id}
+    path:       /{_locale}/content/{id}
     controller: App\Controller\PageController::contentEdit
     methods:    ['GET', 'POST']
     requirements:

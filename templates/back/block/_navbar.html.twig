@@ -11,10 +11,15 @@
     </button>
 
     <!-- Topbar Date -->
-    <div class="d-none d-sm-inline-block mr-auto ml-md-3 my-2 my-md-0 mw-100 text-capitalize">
+    <div id="menu-date" class="d-none d-sm-inline-block ml-md-3 my-2 my-md-0 mw-100 text-capitalize">
         {{ "now"|format_datetime('full', 'none', locale=locale) }}
     </div>
-
+    
+    <!-- Menu lang  -->
+    <ul id="menu-lang" class="navbar-nav mx-2 pointer">
+        {% include 'block/_locale_switcher.html.twig' %}
+    </ul>
+    
     <!-- Topbar Navbar -->
     <ul class="navbar-nav ml-auto">
 
@@ -135,18 +140,18 @@
                 {% endif %}
             </a>
             <!-- Dropdown - User Information -->
-            <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
+            <div class="dropdown-menu py-0 dropdown-menu-right shadow animated--grow-in"
                 aria-labelledby="userDropdown">
-                <a class="dropdown-item" href="{{ path('front_home') }}">
+                <a class="dropdown-item py-2 text-secondary" href="{{ path('front_home') }}">
                     <i class="fas fa-house-user fa-sm fa-fw mr-2 text-gray-400"></i>
                     {{ 'nav.front'|trans }}
                 </a>
-                <a class="dropdown-item" href="{{ path('user_account') }}">
+                <a class="dropdown-item py-2 text-secondary" href="{{ path('user_account') }}">
                     <i class="fas fa-user-cog fa-sm fa-fw mr-2 text-gray-400"></i>
                     {{ 'nav.account_profile'|trans }}
                 </a>
-                <div class="dropdown-divider"></div>
-                <a class="dropdown-item" href="{{ path('app_logout') }}">
+                <div class="dropdown-divider my-0"></div>
+                <a class="dropdown-item py-2 text-secondary" href="{{ path('app_logout') }}">
                     <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
                     {{ 'nav.account_logout'|trans }}
                 </a>
