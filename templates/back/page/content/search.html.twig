@@ -74,15 +74,8 @@
                                 {{ page.user ? page.user.name }}
                             </td>
                             <td class="px-2">
-                                {% if page.type == 'home' %}
-                                    {{ 'content.form.page.type.choice.home'|trans }}
-                                {% elseif page.type == 'legal' %}
-                                    {{ 'content.form.page.type.choice.legal'|trans }}
-                                {% elseif page.type == 'cgu' %}
-                                    {{ 'content.form.page.type.choice.cgu'|trans }}
-                                {% else %}
-                                    {{ 'content.form.page.type.choice.page'|trans }}
-                                {% endif %}
+                                {% set type = 'content.form.page.type.choice.'~page.type %}
+                                {{ type|trans  }}
                             </td>
                             <td class="px-2">
                                 {{ page.title }}
