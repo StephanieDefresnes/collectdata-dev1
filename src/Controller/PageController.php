@@ -40,7 +40,7 @@ class PageController extends AbstractController
      *      - 2:    submitted to validation, for lang contributor in front
      *      - 3:    validated
      * 
-     * @param type $locale
+     * @param type $_locale
      * @param type $id
      * @param type $back : front context if empty
      * @return Response
