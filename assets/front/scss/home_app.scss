@@ -9,6 +9,13 @@ h2 {
     font-size: 19px;
     line-height: 1.2;
 }
+#page {
+    & > .container {
+        & > .row {
+            min-height: 440px;
+        }
+    }
+}
 #carouselContent {
     & .bg-dark-50 {
         transition: 250ms;
