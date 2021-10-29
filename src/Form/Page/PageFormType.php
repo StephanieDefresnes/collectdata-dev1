@@ -82,9 +82,9 @@ class PageFormType extends AbstractType
         if ($options['label'] === 'action.attribute') {
             $builder->add('user', ChoiceType::class, [
                 'required' => false,
-                'row_attr' => ['class' => 'form-inline mb-0 border-left ml-4 pl-3'],
+                'row_attr' => ['class' => 'form-inline mb-0 border-left ml-lg-4 ml-0 pl-lg-3 pl-2'],
                 'label' => 'label.user',
-                'label_attr' => ['class' => 'mb-1 px-1'],
+                'label_attr' => ['class' => 'd-lg-inline d-none px-2'],
                 'choices' => $options['users'],
                 'choice_label' => 'name',
                 'placeholder' => 'action.select'

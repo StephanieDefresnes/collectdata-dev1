@@ -84,4 +84,9 @@ $(function() {
             $(this).parent().find('.select2-selection__rendered').removeClass('selection-on')
         else $(this).parent().find('.select2-selection__rendered').addClass('selection-on')
     })
+    
+    if ($('#page_form_save').hasClass('d-none')) {
+        $('.card-footer .form-inline').removeClass('border-left ml-lg-4 ml-0 pl-lg-3 pl-2')
+    }
+    
 })

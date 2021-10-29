@@ -10,6 +10,37 @@
      display: none;
 }
 
+// Front
+.more {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    background-image: url('~@fortawesome/fontawesome-free/svgs/solid/caret-up.svg') !important;
+    background-position: right center !important;
+    background-repeat: no-repeat;
+    background-size: 10px;
+    opacity: 0.5;
+}
+.collapsed {
+    & .more {
+        background-image: url('~@fortawesome/fontawesome-free/svgs/solid/caret-down.svg') !important;            
+    }           
+}
+.section-contenu {
+    strong {
+        font-weight: 900;
+    }
+}
+#form-pageContents {
+    &.accordion {
+        & .divContent {
+            .content-remove {
+                display: none;
+            }
+        }
+    }
+}
+
 // FOSCKEditor
  .cke_chrome {
     border: 0 !important;
