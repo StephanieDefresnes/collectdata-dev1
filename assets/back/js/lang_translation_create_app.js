@@ -83,4 +83,13 @@ $(function() {
         $(this).find('.badge').text(index+1)
     })
     
+    // Scroll buttons
+    $('#scrollBottom').click(function() {
+        $('html, body').animate({ scrollTop: $(document).height() });
+    })
+    $('#scrollTop').click(function() {
+        $('html, body').animate({ scrollTop: 0 });
+    })
+    
+    
 });
