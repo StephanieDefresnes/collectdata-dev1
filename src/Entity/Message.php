@@ -23,7 +23,7 @@ class Message
     private $type;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=190)
      */
     private $channel;
 
@@ -40,7 +40,7 @@ class Message
     private $recipientUser;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=190)
      */
     private $subject;
 
@@ -50,7 +50,7 @@ class Message
     private $text;
 
     /**
-     * @ORM\Column(type="string", length=255, nullable=true)
+     * @ORM\Column(type="string", length=190, nullable=true)
      */
     private $entity;
 
