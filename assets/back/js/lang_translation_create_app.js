@@ -78,4 +78,9 @@ $(function() {
         removeField($(this))
     })
     
+    // Add count number badge when update
+    $('#fields').find('.translationField').each(function(index) {
+        $(this).find('.badge').text(index+1)
+    })
+    
 });
