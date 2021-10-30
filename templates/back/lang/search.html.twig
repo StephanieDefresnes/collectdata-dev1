@@ -43,7 +43,7 @@
                                 <td class="align-middle text-capitalize">{{ lang.name|raw }}</td>
                                 <td class="align-middle">{{ lang.englishName }}</td>
                                 <td class="align-middle">
-                                    {% if lang.lang == locale %}
+                                    {% if lang.lang == locale_default %}
                                         {{ 'lang.default'|trans }}
                                     {% else %}
                                         <a href="{{ path('back_lang_permute_enabled', { 'id': lang.id }) }}"
