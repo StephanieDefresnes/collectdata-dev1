@@ -24,8 +24,8 @@
             <div class="d-block text-center">
                 {% for lang in langs %}
                     <a href="/{{ lang.lang }}"
-                       class="btn btn-outline-light m-1 select-lang">
-                        <img src="{{ asset('img/flag/'~ lang.lang ~'.jpg') }}" alt="">
+                       class="btn btn-outline-light m-1 text-capitalize select-lang">
+                        <img src="{{ asset('img/flag/'~ lang.lang ~'.jpg') }}" width="16" height="12" alt="">
                         {{ lang.name|raw }}
                     </a>
                 {% endfor %}
