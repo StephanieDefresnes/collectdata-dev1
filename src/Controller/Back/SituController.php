@@ -189,6 +189,12 @@ class SituController extends AbstractController
         }
             
         try {
+            // Filter super visitor
+            $user = $this->security->getUser();            
+            if ($user->hasRole('ROLE_SUPER_VISITOR')) {
+                return $this->redirectToRoute('visitor_denied', [ '_locale' => locale_get_default()]);
+            }
+            
             $this->em->flush();
             
             // processing notification (mail)
@@ -254,6 +260,12 @@ class SituController extends AbstractController
         }
             
         try {
+            // Filter super visitor
+            $user = $this->security->getUser();            
+            if ($user->hasRole('ROLE_SUPER_VISITOR')) {
+                return $this->redirectToRoute('visitor_denied', [ '_locale' => locale_get_default()]);
+            }
+            
             $this->em->remove($situ);
             $this->em->flush();
 

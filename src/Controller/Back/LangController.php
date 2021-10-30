@@ -56,6 +56,12 @@ class LangController extends AbstractController
         }
         
         try {
+            // Filter super visitor
+            $user = $this->security->getUser();            
+            if ($user->hasRole('ROLE_SUPER_VISITOR')) {
+                return $this->redirectToRoute('visitor_denied', [ '_locale' => locale_get_default()]);
+            }
+            
             $em->flush();
 
             $msg = $translatorInterface
@@ -68,4 +74,5 @@ class LangController extends AbstractController
         }
         return $this->redirectToRoute('back_lang_search');
     }
+    
 }

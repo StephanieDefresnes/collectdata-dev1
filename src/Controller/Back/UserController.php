@@ -93,7 +93,6 @@ class UserController extends AbstractController
         if (!$user) {
             return $this->redirectToRoute('not_found', ['_locale' => locale_get_default()]);
         }
-        
         // Super visitor filter
         $currentUser = $this->security->getUser();
         if ($currentUser->hasRole('ROLE_SUPER_VISITOR')) {
@@ -124,9 +123,13 @@ class UserController extends AbstractController
                 return $this->redirectToRoute('visitor_denied', [ '_locale' => locale_get_default()]);
             }
             
-            $this->em->flush();
-            $msg = $this->translator->trans('user.update.flash.success.', [], 'back_messages');
-            $this->addFlash('success', $msg);
+            try {
+                $this->em->flush();
+                $msg = $this->translator->trans('user.update.flash.success', [], 'back_messages');
+                $this->addFlash('success', $msg);
+            } catch (\Doctrine\DBAL\DBALException $e) {
+                $this->addFlash('warning', $e->getMessage());
+            }
             return $this->redirectToRoute('back_user_search');
         }
 
@@ -142,6 +145,7 @@ class UserController extends AbstractController
      */
     public function delete(Request $request): Response
     {    
+        // Filter super visitor
         $user = $this->security->getUser();            
         if ($user->hasRole('ROLE_SUPER_VISITOR')) {
             return $this->redirectToRoute('visitor_denied', [ '_locale' => locale_get_default()]);
@@ -250,14 +254,14 @@ class UserController extends AbstractController
         
         if (count($users) > 1) $type = 'users';
         else {
-            if ($permute) $type = 'user_disabled';
-            else $type = 'user_enabled';
+            if ($permute) $type = 'user_enabled';
+            else $type = 'user_disabled';
         }
         
         try {
             $this->em->flush();
             $msg = $this->translator
-                    ->trans('user.update.flash.success.'. $type, [], 'back_messages');
+                    ->trans('user.permute.flash.success.'. $type, [], 'back_messages');
             $this->addFlash('success', $msg);
         } catch (\Doctrine\DBAL\DBALException $e) {
             $this->addFlash('warning', $e->getMessage());
