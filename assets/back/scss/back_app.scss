@@ -70,7 +70,7 @@ form {
             padding: 0 6px;
         }
     }
-    & fieldset {
+    &:not([name="user_update_form"]) fieldset {
         &.form-group {
             display: none;
         }
