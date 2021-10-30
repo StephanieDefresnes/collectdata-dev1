@@ -25,6 +25,9 @@ h2 {
             background: $dark-70 !important;
         }
     }
+    & strong {
+        font-weight: 900;
+    }
 }
 .carousel-control-prev,
 .carousel-control-next {
