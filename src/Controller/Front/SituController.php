@@ -7,7 +7,7 @@ use App\Entity\Situ;
 use App\Entity\Status;
 use App\Form\Front\Situ\SituFormType;
 use App\Mailer\Mailer;
-use App\Manager\SituManager;
+use App\Manager\Front\SituManager;
 use App\Messenger\Messenger;
 use App\Service\CategoryService;
 use App\Service\SituService;
@@ -108,7 +108,6 @@ class SituController extends AbstractController
         if ($user !== $situ->getUser()) {
             return $this->redirectToRoute('access_denied', [
                 '_locale' => locale_get_default(),
-                'code' => '22181',
             ]);
         }
         
@@ -153,7 +152,6 @@ class SituController extends AbstractController
         if ($user->getId() !== $situ->getUser()) {
             return $this->redirectToRoute('access_denied', [
                 '_locale' => locale_get_default(),
-                'code' => '4191',
             ]);
         }
             
@@ -223,7 +221,6 @@ class SituController extends AbstractController
                     && $situ->getUser() !== $user) {
                 return $this->redirectToRoute('access_denied', [
                     '_locale' => locale_get_default(),
-                    'code' => '21191',
                 ]);
             }
             
@@ -298,28 +295,28 @@ class SituController extends AbstractController
         $this->em->persist($situ);
         
         try {       
-                $this->em->flush();
+            $this->em->flush();
 
-                if ($result['update']) { $actionSuccess = 'success_update'; }
-                else { $actionSuccess = 'success'; }
-                
-                $msg = $this->translator->trans(
-                            'contrib.form.'. $result['action'] .'.flash.'. $actionSuccess, [],
-                            'user_messages', $locale = locale_get_default()
-                            );
-                $request->getSession()->getFlashBag()->add('success', $msg);
+            if ($result['update']) { $actionSuccess = 'success_update'; }
+            else { $actionSuccess = 'success'; }
 
-                return $this->json(['success' => true]);
+            $msg = $this->translator->trans(
+                        'contrib.form.'. $result['action'] .'.flash.'. $actionSuccess, [],
+                        'user_messages', $locale = locale_get_default()
+                        );
+            $request->getSession()->getFlashBag()->add('success', $msg);
 
-            } catch (\Doctrine\DBAL\DBALException $e) {
-                $msg = $this->translator->trans(
-                            'contrib.form.'. $result['action'] .'.flash.error', [],
-                            'user_messages', $locale = locale_get_default()
-                            );
-                $this->addFlash('error', $msg.PHP_EOL.$e->getMessage());
-                
-                return $this->json(['success' => false]);
-            }
+            return $this->json(['success' => true]);
+
+        } catch (\Doctrine\DBAL\DBALException $e) {
+            $msg = $this->translator->trans(
+                        'contrib.form.'. $result['action'] .'.flash.error', [],
+                        'user_messages', $locale = locale_get_default()
+                        );
+            $this->addFlash('error', $msg.PHP_EOL.$e->getMessage());
+
+            return $this->json(['success' => false]);
+        }
     }
     
     /**
@@ -373,9 +370,8 @@ class SituController extends AbstractController
             return new JsonResponse([
                 'success' => false,
                 'redirect' => $this->generateUrl('access_denied', [
-                            '_locale' => locale_get_default(),
-                            'code' => '1912',
-                        ])
+                                    '_locale' => locale_get_default(),
+                                ])
             ]);
         } else {
             $situTranslated = $situService->searchTranslation($situId, $langId);

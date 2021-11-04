@@ -5,7 +5,7 @@ namespace App\Controller\Back;
 use App\Entity\User;
 use App\Form\Back\User\UserBatchType;
 use App\Form\Back\User\UserUpdateFormType;
-use App\Manager\UserManager;
+use App\Manager\Back\UserManager;
 use App\Service\LangService;
 use App\Service\SituService;
 use App\Service\UserService;

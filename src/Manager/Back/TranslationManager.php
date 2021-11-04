@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Manager;
+namespace App\Manager\Back;
 
 use App\Entity\Translation;
 use Doctrine\ORM\EntityManagerInterface;
@@ -78,7 +78,6 @@ class TranslationManager
             case 'permute_enabled':
                 return $this->validationAction($translations, 'permute_enabled');
         }
-        return true;
     }
     
     /**
@@ -94,6 +93,7 @@ class TranslationManager
     {
         $translations = $form->get('translations')->getData();
         $action = $form->get('action')->getData();
+        
         switch ($action) {
             case 'delete':
                 return $this->urlGenerator->generate('back_translation_delete', $this->getIds($translations));

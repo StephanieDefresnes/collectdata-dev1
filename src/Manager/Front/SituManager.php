@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Manager;
+namespace App\Manager\Front;
 
 use App\Entity\Category;
 use App\Entity\Event;
@@ -8,13 +8,10 @@ use App\Entity\Lang;
 use App\Entity\Situ;
 use App\Entity\SituItem;
 use App\Entity\Status;
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\Form\FormInterface;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -52,8 +49,6 @@ class SituManager {
     public function setData(Request $request)
     {        
         $dateNow = new \DateTime('now');
-        
-//        dd($data = $request->request->get('dataForm'));
         
         // Get current user
         $user = $this->security->getUser();        
@@ -141,7 +136,6 @@ class SituManager {
             $situ->setCategoryLevel1($categoryLevel1);
             $situ->setCategoryLevel2($categoryLevel2);
             $situ->setStatus($status);
-//            $this->em->persist($situ);
 
             // Add new collection
             foreach ($data['situItems'] as $key => $dataItem) {
@@ -159,36 +153,6 @@ class SituManager {
                 'action' => $data['action'],
                 'update' => $update,
             ];
-//            try {
-//                $this->em->flush();
-//
-//                if ($statusId === 2) {
-//                    $this->mailer->sendModeratorSituValidate($situ);
-//                    $this->messenger->sendModeratorAlert('situ', $situ);
-//                
-//                    $msg = $this->translator->trans(
-//                                'contrib.form.'. $msgAction .'.flash.success', [],
-//                                'user_messages', $locale = locale_get_default()
-//                                );
-//                } else {
-//                    $msg = $this->translator->trans(
-//                                'contrib.form.'. $msgAction .'.flash.success_update', [],
-//                                'user_messages', $locale = locale_get_default()
-//                                );
-//                }
-//                $request->getSession()->getFlashBag()->add('success', $msg);
-//
-//                return $this->json(['success' => true]);
-//
-//            } catch (\Doctrine\DBAL\DBALException $e) {
-//                $msg = $this->translator->trans(
-//                            'contrib.form.'. $msgAction .'.flash.error', [],
-//                            'user_messages', $locale = locale_get_default()
-//                            );
-//                $this->addFlash('error', $msg.PHP_EOL.$e->getMessage());
-//                
-//                return $this->json(['success' => false]);
-//            }
         }
     }
     
