@@ -53,7 +53,7 @@ class User implements UserInterface
     private $confirmationToken;
 
     /**
-     * @ORM\Column(type="string", length=190, nullable=true)
+     * @ORM\Column(type="string", length=190, unique=true)
      */
     private $name;
 
