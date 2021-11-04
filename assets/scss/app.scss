@@ -480,3 +480,19 @@ input[type="checkbox"].custom-checkbox {
         }
     }
 }
+
+
+/*
+ * jquery-confirm
+ */
+[dir="rtl"] {
+    .jconfirm-title {
+        float: right !important;
+        margin-bottom: 0.5em !important;
+    }
+    .jconfirm-content {
+        & p.line-11 {
+            float: right !important;
+        }
+    }
+}
