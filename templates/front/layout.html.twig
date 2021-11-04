@@ -1,8 +1,12 @@
 {% extends 'base.html.twig' %}
+{% set locale = app.request.locale %}
 
 {% block stylesheets %}
-    {{ encore_entry_link_tags('front_app', null, 'frontApp') }}
     <link rel="stylesheet" href="{{ asset('fullscreenslide/css/style.css') }}">
+    {{ encore_entry_link_tags('front_app', null, 'frontApp') }}
+    {% if (locale == 'ar') or (locale == 'he') or (locale == 'ur') %}
+        {{ encore_entry_link_tags('app_rtl') }}
+    {% endif %}
 {% endblock %}
 
 {% block body %}
@@ -15,7 +19,7 @@
         {% endblock %}
         
         {% block navbar %}
-            {% include "front/block/_navbar.html.twig" %}
+            {% include "front/block/_navbar/index.html.twig" %}
         {% endblock %}
     
         {% block container %}

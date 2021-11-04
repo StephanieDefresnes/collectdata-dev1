@@ -10,6 +10,7 @@ Encore
         pattern: /\.(png|jpg|jpeg)$/
     })
     .addEntry('app', './assets/js/app.js')
+    .addEntry('app_rtl', './assets/js/app_rtl.js')
     .splitEntryChunks()
     .enableSingleRuntimeChunk()
     .cleanupOutputBeforeBuild()
@@ -87,9 +88,9 @@ Encore
     .addEntry('event_read_app', './assets/back/js/event_read_app.js')
     .addEntry('lang_translation_clean_app', './assets/back/js/lang_translation_clean_app.js')
     .addEntry('lang_translation_create_app', './assets/back/js/lang_translation_create_app.js')
-    .addEntry('lang_translation_forms_app', './assets/back/js/lang_translation_forms_app.js')
     .addEntry('lang_translation_site_app', './assets/back/js/lang_translation_site_app.js')
     .addEntry('lang_translation_verify_app', './assets/back/js/lang_translation_verify_app.js')
+    .addEntry('lang_translations_app', './assets/back/js/lang_translations_app.js')
     .addEntry('message_app', './assets/back/js/message_app.js')
     .addEntry('page_edit_app', './assets/back/js/page_edit_app.js')
     .addEntry('situ_read_app', './assets/back/js/situ_read_app.js')

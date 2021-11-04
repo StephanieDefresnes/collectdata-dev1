@@ -23,6 +23,7 @@
         "build": "encore production --progress"
     },
     "dependencies": {
+        "bootstrap-v4-rtl": "^4.6.0-3",
         "del": "^6.0.0",
         "jquery-ui": "^1.12.1",
         "select2": "^4.1.0-rc.0",
