@@ -67,7 +67,7 @@ class UserController extends AbstractController
             if ($url) { return $this->redirect($url); }
         }
         
-        return $this->render('back/user/search/index.html.twig', [
+        return $this->render('back/user/search.html.twig', [
             'form_batch' => $formBatch->createView(),
         ]);
     }
@@ -75,8 +75,13 @@ class UserController extends AbstractController
     /**
      * @Route("/read/{id}", name="back_user_read", methods="GET")
      */
-    public function read(User $user): Response
+    public function read($id): Response
     {
+        $user = $this->em->getRepository(User::class)->find($id);
+        if (!$user) {
+            return $this->redirectToRoute('back_not_found', ['_locale' => locale_get_default()]);
+        }
+        
         return $this->render('back/user/read.html.twig', [
             'user' => $user,
             'situs' => count($user->getSitus()),
@@ -85,27 +90,18 @@ class UserController extends AbstractController
     }
 
     /**
+     * @IsGranted("ROLE_ADMIN")
      * @Route("/update/{id}", name="back_user_update", methods="GET|POST")
      */
     public function update(Request $request, $id): Response
     {
         $user = $this->em->getRepository(User::class)->find($id);
         if (!$user) {
-            return $this->redirectToRoute('not_found', ['_locale' => locale_get_default()]);
-        }
-        // Super visitor filter
-        $currentUser = $this->security->getUser();
-        if ($currentUser->hasRole('ROLE_SUPER_VISITOR')) {
-            return $this->redirectToRoute('visitor_denied', [ '_locale' => locale_get_default()]);
+            return $this->redirectToRoute('back_not_found', ['_locale' => locale_get_default()]);
         }
         
-        $result = $this->userManager->validationUpdate($user);
-        if (true !== $result) {
-            return $this->redirectToRoute('access_denied', [
-                '_locale' => locale_get_default(),
-                'code' => $result,
-            ]);
-        }
+        // Check permission
+        $this->denyAccessUnlessGranted('back_user_update', $user);
         
         // Form depending on user role
         $role = '';
@@ -119,11 +115,12 @@ class UserController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             
-            if ($user->hasRole('ROLE_SUPER_VISITOR')) {
-                return $this->redirectToRoute('visitor_denied', [ '_locale' => locale_get_default()]);
-            }
-            
             try {
+                // Super visitor filter
+                if ($this->security->getUser()->hasRole('ROLE_SUPER_VISITOR')) {
+                    return $this->redirectToRoute('visitor_denied', [ '_locale' => locale_get_default()]);
+                }
+            
                 $this->em->flush();
                 $msg = $this->translator->trans('user.update.flash.success', [], 'back_messages');
                 $this->addFlash('success', $msg);
@@ -144,79 +141,71 @@ class UserController extends AbstractController
      * @Route("/delete", name="back_user_delete", methods="GET|POST")
      */
     public function delete(Request $request): Response
-    {    
-        // Filter super visitor
-        $user = $this->security->getUser();            
-        if ($user->hasRole('ROLE_SUPER_VISITOR')) {
-            return $this->redirectToRoute('visitor_denied', [ '_locale' => locale_get_default()]);
-        }
-        
+    {   
         $users = $this->userManager->getUsers();
         
-        $result = $this->userManager->validationPermuteEnabled($users);
+        // Check permission
+        $this->denyAccessUnlessGranted('back_user_delete', $users);
         
-        $user = $this->security->getUser();
-        
-        if (true !== $result) {
-            
-            return $this->redirectToRoute('access_denied', [
-                '_locale' => locale_get_default(),
-                'code' => $result,
-            ]);
-        }
-        
-        $anonymous = $this->em->getRepository(User::class)->find(intval('-99'));
-        
+        // Assign user contribs to anonymous
+        $anonymous = $this->em->getRepository(User::class)->find(0);
+
         foreach ($users as $user) {
-            
+
             // If get situs, set them to anonymous
-            if($user->getSitus()) {
+            if ($user->getSitus()) {
                 foreach ($user->getSitus() as $situ) {
                     $situ->setUser($anonymous);
                 }
             }
             // If get events, set them to anonymous
-            if($user->getEvents()) {
+            if ($user->getEvents()) {
                 foreach ($user->getEvents() as $event) {
                     $event->setUser($anonymous);
                 }
             }
             // If get categories, set them to anonymous
-            if($user->getCategories()) {
+            if ($user->getCategories()) {
                 foreach ($user->getCategories() as $category) {
                     $category->setUser($anonymous);
                 }
             }
             // If get translations, set them to anonymous
-            if($user->getTranslations()) {
+            if ($user->getTranslations()) {
                 foreach ($user->getTranslations() as $translation) {
                     $translation->setUser($anonymous);
                 }
             }
             // If recevied messages, set them to anonymous
-            if($user->getRecipients()) {
+            if ($user->getRecipients()) {
                 foreach ($user->getSenders() as $message) {
                     $message->setRecipientUser($anonymous);
                 }
             }
             // If sent messages, removed by orphanRemoval
-             
+
             // If get image, remove it
             if($user->getImageFilename()) {
                 unlink($this->getParameter('user_img').'/'.$user->getImageFilename());
             }
-            
+
             $this->em->remove($user);
         }
-        
+
         if (count($users) > 1) $type = 'users';
         else $type = 'user';
-            
+
         try {
+            // Filter super visitor           
+            if ($this->security->getUser()->hasRole('ROLE_SUPER_VISITOR')) {
+                return $this->redirectToRoute('visitor_denied', [ '_locale' => locale_get_default()]);
+            }
+
             $this->em->flush();
             $msg = $this->translator
                     ->trans('user.delete.flash.success.'. $type, [], 'back_messages');
             $this->addFlash('success', $msg);
+
         } catch (\Doctrine\DBAL\DBALException $e) {
             $this->addFlash('warning', $e->getMessage());
         }
@@ -224,45 +213,38 @@ class UserController extends AbstractController
     }
     
     /**
-     * @IsGranted("ROLE_ADMIN")
      * @Route("/permute/enabled", name="back_user_permute_enabled", methods="GET")
      */
     public function permuteEnabled(Request $request): Response
-    {    
-        $user = $this->security->getUser();            
-        if ($user->hasRole('ROLE_SUPER_VISITOR')) {
-            return $this->redirectToRoute('visitor_denied', [ '_locale' => locale_get_default()]);
-        }
-            
+    {     
         $users = $this->userManager->getUsers();
         
-        $result = $this->userManager->validationPermuteEnabled($users);
-        
-        
-        if (true !== $result) {
+        // Check permission
+        $this->denyAccessUnlessGranted('back_user_permute_enabled', $users);
             
-            return $this->redirectToRoute('access_denied', [
-                '_locale' => locale_get_default(),
-                'code' => $result,
-            ]);
-        }
-        $permute = '';
+        $permute;
         foreach ($users as $user) {
             $permute = $user->getEnabled() ? false : true;
             $user->setEnabled($permute);
         }
-        
+
         if (count($users) > 1) $type = 'users';
         else {
             if ($permute) $type = 'user_enabled';
             else $type = 'user_disabled';
         }
-        
+
         try {
+            // Filter super visitor    
+            if ($this->security->getUser()->hasRole('ROLE_SUPER_VISITOR')) {
+                return $this->redirectToRoute('visitor_denied', [ '_locale' => locale_get_default()]);
+            }
+
             $this->em->flush();
             $msg = $this->translator
                     ->trans('user.permute.flash.success.'. $type, [], 'back_messages');
             $this->addFlash('success', $msg);
+
         } catch (\Doctrine\DBAL\DBALException $e) {
             $this->addFlash('warning', $e->getMessage());
         }
