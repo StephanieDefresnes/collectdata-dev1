@@ -63,7 +63,6 @@ class MessageController extends AbstractController
         if ($user->getId() !== $alert->getRecipientUserId()) {
             return $this->redirectToRoute('access_denied', [
                 '_locale' => locale_get_default(),
-                'code' => 'B1118',
             ]);
         }
         

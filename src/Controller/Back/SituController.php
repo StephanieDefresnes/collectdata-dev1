@@ -192,7 +192,9 @@ class SituController extends AbstractController
             // Filter super visitor
             $user = $this->security->getUser();            
             if ($user->hasRole('ROLE_SUPER_VISITOR')) {
-                return $this->redirectToRoute('visitor_denied', [ '_locale' => locale_get_default()]);
+                return $this->redirectToRoute('back_access_denied', [
+                    '_locale' => locale_get_default()
+                ]);
             }
             
             $this->em->flush();
@@ -255,7 +257,6 @@ class SituController extends AbstractController
         if ($situ->getStatus()->getId() !== 5) {
             return $this->redirectToRoute('access_denied', [
                 '_locale' => locale_get_default(),
-                'code' => 'B1918',
             ]);
         }
             
@@ -263,7 +264,9 @@ class SituController extends AbstractController
             // Filter super visitor
             $user = $this->security->getUser();            
             if ($user->hasRole('ROLE_SUPER_VISITOR')) {
-                return $this->redirectToRoute('visitor_denied', [ '_locale' => locale_get_default()]);
+                return $this->redirectToRoute('back_access_denied', [
+                    '_locale' => locale_get_default()
+                ]);
             }
             
             $this->em->remove($situ);

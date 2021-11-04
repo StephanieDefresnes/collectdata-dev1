@@ -38,10 +38,7 @@ class LangController extends AbstractController
                                     Request $request,
                                     Security $security, $id): Response
     {    
-        $user = $security->getUser();            
-        if ($user->hasRole('ROLE_SUPER_VISITOR')) {
-            return $this->redirectToRoute('visitor_denied', [ '_locale' => locale_get_default()]);
-        }
+        $user = $security->getUser(); 
         
         $lang = $em->getRepository(Lang::class)->find($id);
 
@@ -57,7 +54,9 @@ class LangController extends AbstractController
             // Filter super visitor
             $user = $this->security->getUser();            
             if ($user->hasRole('ROLE_SUPER_VISITOR')) {
-                return $this->redirectToRoute('visitor_denied', [ '_locale' => locale_get_default()]);
+                return $this->redirectToRoute('back_access_denied', [
+                    '_locale' => locale_get_default()
+                ]);
             }
             
             $em->flush();

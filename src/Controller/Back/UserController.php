@@ -118,7 +118,9 @@ class UserController extends AbstractController
             try {
                 // Super visitor filter
                 if ($this->security->getUser()->hasRole('ROLE_SUPER_VISITOR')) {
-                    return $this->redirectToRoute('visitor_denied', [ '_locale' => locale_get_default()]);
+                    return $this->redirectToRoute('back_access_denied', [
+                        '_locale' => locale_get_default()
+                    ]);
                 }
             
                 $this->em->flush();
@@ -198,7 +200,9 @@ class UserController extends AbstractController
         try {
             // Filter super visitor           
             if ($this->security->getUser()->hasRole('ROLE_SUPER_VISITOR')) {
-                return $this->redirectToRoute('visitor_denied', [ '_locale' => locale_get_default()]);
+                return $this->redirectToRoute('back_access_denied', [
+                    '_locale' => locale_get_default()
+                ]);
             }
 
             $this->em->flush();
@@ -237,7 +241,9 @@ class UserController extends AbstractController
         try {
             // Filter super visitor    
             if ($this->security->getUser()->hasRole('ROLE_SUPER_VISITOR')) {
-                return $this->redirectToRoute('visitor_denied', [ '_locale' => locale_get_default()]);
+                return $this->redirectToRoute('back_access_denied', [
+                    '_locale' => locale_get_default()
+                ]);
             }
 
             $this->em->flush();

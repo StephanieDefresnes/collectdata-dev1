@@ -185,8 +185,10 @@ class PageController extends AbstractController
             try {
                 // Super visitor filter
                 $currentUser = $security->getUser();
-                if ($currentUser->hasRole('ROLE_SUPER_VISITOR')) {
-                    return $this->redirectToRoute('visitor_denied', [ '_locale' => locale_get_default()]);
+                if ($back && $currentUser->hasRole('ROLE_SUPER_VISITOR')) {
+                    return $this->redirectToRoute('back_access_denied', [
+                        '_locale' => locale_get_default()
+                    ]);
                 }
                 
                 $em->flush();
