@@ -1,4 +1,4 @@
-{% trans_default_domain 'front_messages' %}
+{% trans_default_domain 'user_messages' %}
 
 <ul class="navbar-nav">
 {% if app.user %}
@@ -8,19 +8,19 @@
             <span class="badge badge-light border border-dark rounded-pill">10</span>
             <i class="fas fa-bell"></i>
             <span class="{#{% if ...%}#}ml-2 {#{% endif %}#}d-md-none d-inline">
-                {{ 'nav.message.alert.title'|trans }}
+                {{ 'message.alert.title'|trans }}
             </span>
         </a>
         <ul class="dropdown-menu dropdown-menu-right pt-md-4 pt-0 border-0" aria-labelledby="dropdown_alert">
             <li class="dropdown-item bg-dark-95">
                 <a class="text-white" href="">
-                    {{ 'nav.message.alert.contrib'|trans }}
+                    {{ 'message.alert.contrib'|trans }}
                 </a>
             </li>
             <div class="dropdown-divider m-0"></div>
             <li class="dropdown-item bg-dark-95">
                 <a href="">
-                    {{ 'nav.message.alert.title_all'|trans }}
+                    {{ 'message.alert.title_all'|trans({}, 'messages')  }}
                 </a>
             </li>
         </ul>
@@ -31,19 +31,19 @@
             <span class="badge badge-light border border-dark rounded-pill">2</span>
             <i class="fas fa-envelope"></i>
             <span class="{#{% if ...%}#}ml-2 {#{% endif %}#}d-md-none d-inline">
-                {{ 'nav.message.envelope.title'|trans }}
+                {{ 'message.envelope.title'|trans({}, 'messenger_messages') }}
             </span>
         </a>
         <ul class="dropdown-menu dropdown-menu-right pt-md-4 pt-0 border-0" aria-labelledby="dropdown_envelope">
             <li class="dropdown-item bg-dark-95">
                 <a class="text-white" href="">
-                    {{ 'nav.message.envelope.new'|trans }}
+                    {{ 'envelope.new'|trans({}, 'messenger_messages') }}
                 </a>
             </li>
             <div class="dropdown-divider m-0"></div>
             <li class="dropdown-item bg-dark-95">
                 <a href="">
-                    {{ 'nav.message.envelope.title_all'|trans }}
+                    {{ 'message.envelope.title_all'|trans({}, 'messenger_messages') }}
                 </a>
             </li>
         </ul>
@@ -76,13 +76,13 @@
             <li class="dropdown-item bg-dark-95{{ route == 'user_account' ? ' active' }}">
                 <a href="{{ path('user_account') }}">
                     <i class="fas fa-user-cog"></i>
-                    {{ 'nav.account_profile'|trans }}
+                    {{ 'user.account_profile'|trans({}, 'messages') }}
                 </a>
             </li>
             <li class="dropdown-item bg-dark-95">
                 <a href="{{ path('app_logout') }}">
                     <i class="fas fa-sign-out-alt"></i>
-                    {{ 'nav.account_logout'|trans }}
+                    {{ 'action.logout'|trans({}, 'security') }}
                 </a>
             </li>
         </ul>
@@ -94,19 +94,19 @@
             <span class="d-md-inline d-none">
                 <i class="fas fa-user"></i>
             </span>
-            {{ 'nav.account_unknown'|trans }}
+            {{ 'user.account_unknown'|trans({}, 'front_messages') }}
         </a>
         <ul class="dropdown-menu dropdown-menu-right pt-md-4 pt-0" aria-labelledby="dropdown_account">
             <li class="dropdown-item bg-dark-95{{ route == 'app_login' ? ' active' }}">
                 <a href="{{ path('app_login') }}">
                     <i class="fas fa-sign-in-alt"></i>
-                    {{ 'nav.account_login'|trans }}
+                    {{ 'user.account_login'|trans({}, 'front_messages') }}
                 </a>
             </li>
             <li class="dropdown-item bg-dark-95{{ route == 'app_register' ? ' active' }}">
                 <a href="{{ path('app_register') }}">
-                    <i class="fas fa-user"></i>
-                    {{ 'nav.account_register'|trans }}
+                    <i class="fas fa-user-plus"></i>
+                    {{ 'user.account_register'|trans({}, 'front_messages') }}
                 </a>
             </li>
         </ul>

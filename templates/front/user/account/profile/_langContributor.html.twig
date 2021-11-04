@@ -1,26 +1,29 @@
 {% trans_default_domain 'user_messages' %}
 
-<div id="form-translation" class="mb-3"
-     data-translation="{{ user.contributorLangs|length }}">
+<div id="form-translation" data-translation="{{ user.contributorLangs|length }}">
 {% if user.langContributor and user.contributorLangs %}
-    <div class="row">
-        <div class="col-lg-5 mb-3 text-secondary">
-            <hr class="d-lg-none d-block mt-1 mb-3">
-            <p>{{ 'account.translator.title'|trans }}</p>
+    <div class="row mb-lg-2 mb-3">
+        <div class="d-sm-flex justify-content-start col-lg-5 mb-3 text-secondary">
+            <p>{{ 'label_dp.translator'|trans({}, 'messages') }}</p>
         </div>
-        <div id="form-userFiles" class="col-lg-7">
-            <p class="mb-0">
-                <span class="d-inline text-secondary">
-                {% if user.contributorLangs|length == 1 %}
-                    {{ 'account.translator.choice'|trans }}
+        <div class="col-lg-7">
+            {% if route == 'user_account' %}
+                <p class="d-sm-flex justify-content-start mb-0 text-secondary">
+                    {% if user.contributorLangs|length == 1 %}
+                        {{ 'account.translator.choice'|trans }}
+                    {% else %}
+                        {{ 'account.translator.choice_s'|trans }}
+                    {% endif %}
+                </p>
+            {% endif %}
+            <ul id="contributorLangs" class="d-sm-flex justify-content-start pl-0 line-11">
+                {% if (locale == 'ar') or (locale == 'he') or (locale == 'ur') %}
+                    {% set langs = user.contributorLangs|reverse %}
                 {% else %}
-                    {{ 'account.translator.choice_s'|trans }}
+                    {% set langs = user.contributorLangs|sort %}
                 {% endif %}
-                </span>
-            </p>
-            <ul id="contributorLangs" class="pl-0 line-11">
-                {% for lang in user.contributorLangs %}
-                    <li data-id="{{ lang.id }}" class="d-inline text-capitalize">{{ lang.name|raw }}{% if not loop.last %}, {% endif %}</li>
+                {% for lang in langs %}
+                    {{ lang.name|raw }}{% if not loop.last %} - {% endif %}
                 {% endfor %}
             </ul>
         </div>

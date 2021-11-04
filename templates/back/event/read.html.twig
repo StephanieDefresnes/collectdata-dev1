@@ -52,15 +52,15 @@
                     
                     <div class="row mb-3" translate="no">
                         <div class="col-auto{% if event.validated == false %} mt-1{% endif %}">
-                            {{ 'label_dp.enabled'|trans }}
+                            {{ 'label_dp.enabled'|trans({}, 'messages') }}
                         </div>
                         <div id="enable-row" class="col-auto">
                             {% if event.validated %}
-                                {{ 'yes'|trans }}
+                                {{ 'yes'|trans({}, 'messages') }}
                             {% else %}
                                 <span id="enableEvent" class="btn btn-primary py-1"
                                       data-id="{{ event.id }}">
-                                    {{ 'action.enable'|trans}}
+                                    {{ 'action.enable'|trans({}, 'messages')}}
                             {% endif %}
                         </div>
                     </div>
@@ -85,9 +85,9 @@
                                         <thead class="bg-gray-600 text-white" translate="no">
                                             <tr>
                                                 <th class="pl-2">#ID</th>
-                                                <th class="pl-2">{{ 'label.title'|trans }}</th>
-                                                <th class="pl-2">{{ 'action.validated'|trans }}</th>
-                                                <th class="pl-2">{{ 'label.categoriesLevel2'|trans }}</th>  
+                                                <th class="pl-2">{{ 'label.title'|trans({}, 'messages') }}</th>
+                                                <th class="pl-2">{{ 'status.validated'|trans({}, 'messages') }}</th>
+                                                <th class="pl-2">{{ 'label.categoriesLevel2'|trans({}, 'messages') }}</th>  
                                                 <th class="no-sort"></th>              
                                             </tr>
                                         </thead>
@@ -97,7 +97,7 @@
                                                 <td class="px-2 align-middle">{{ category.id }}</td>
                                                 <td class="px-2 align-middle text-capitalize">{{ category.title|u.truncate(20, '...') }}</td>
                                                 <td class="px-2 align-middle" translate="no">
-                                                    {{ category.validated ? 'yes'|trans : 'no'|trans }}
+                                                    {{ category.validated ? 'yes'|trans({}, 'messages') : 'no'|trans({}, 'messages') }}
                                                 </td>
                                                 <td class="px-2 align-middle">
                                                     {{ category.parents|length }}
@@ -105,7 +105,8 @@
                                                 <td class="width-max-26">
                                                     <a href="{{ path('back_categories') }}"
                                                        class="btn btn-outline-primary py-0 px-1"
-                                                       title="{{ 'action.read'|trans }}">
+                                                       data-toggle="tooltip" data-placement="left"
+                                                       title="{{ 'action.read'|trans({}, 'messages') }}">
                                                         <i class="fas fa-eye"></i>
                                                     </a>
                                                 </td>
@@ -137,10 +138,10 @@
                                         <thead class="bg-gray-600 text-white" translate="no">
                                             <tr>
                                                 <th class="pl-2">#ID</th>
-                                                <th class="pl-2">{{ 'label.title'|trans }}</th>
-                                                <th class="pl-2">{{ 'label.status'|trans }}</th>
-                                                <th class="pl-2">{{ 'label.categoriesLevel1'|trans }}</th>  
-                                                <th class="pl-2">{{ 'label.categoriesLevel2'|trans }}</th>  
+                                                <th class="pl-2">{{ 'label.title'|trans({}, 'messages') }}</th>
+                                                <th class="pl-2">{{ 'status.title'|trans({}, 'messages') }}</th>
+                                                <th class="pl-2">{{ 'label.categoriesLevel1'|trans({}, 'messages') }}</th>  
+                                                <th class="pl-2">{{ 'label.categoriesLevel2'|trans({}, 'messages') }}</th>  
                                                 <th class="no-sort"></th>              
                                             </tr>
                                         </thead>
@@ -152,12 +153,14 @@
                                                 <td class="px-2 align-middle" translate="no">
                                                     {% if situ.status.id == 4 %}
                                                         {% if situ.initialSitu ==  0 %}
-                                                            {{ 'status.translation_refused'|trans }}
+                                                            {{ 'status.translation_refused'|trans({}, 'messages') }}
                                                         {% else %}
-                                                            {{ situ.status.name|trans }}
+                                                            {{ situ.status.name|trans({}, 'messages') }}
                                                         {% endif %}
+                                                    {% elseif situ.status.id == 2 %}
+                                                        {{ 'status.validate_to'|trans({}, 'messages') }}
                                                     {% elseif situ.status.id != 5 %}
-                                                        {{ situ.status.name|trans }}
+                                                        {{ situ.status.name|trans({}, 'messages') }}
                                                     {% endif %}
                                                 </td>
                                                 <td class="px-2 align-middle text-capitalize">{{ situ.categoryLevel1.title|u.truncate(20, '...') }}</td>
@@ -165,7 +168,8 @@
                                                 <td class="width-max-26">
                                                     <a href="{{ path('back_situ_read', { 'id': situ.id }) }}"
                                                        class="btn btn-outline-primary py-0 px-1"
-                                                       title="{{ 'action.read'|trans }}">
+                                                       data-toggle="tooltip" data-placement="left"
+                                                       title="{{ 'action.read'|trans({}, 'messages') }}">
                                                         <i class="fas fa-eye"></i>
                                                     </a>
                                                 </td>

@@ -15,7 +15,7 @@
     <div class="container-fluid pt-4">
         
         <div class="d-sm-flex align-items-center justify-content-between mb-4">
-            <h1 class="h3 mb-0 text-gray-800">{{ 'label.contributions'|trans }}</h1>
+            <h1 class="h3 mb-0 text-gray-800">{{ 'label.contribution.title'|trans({}, 'messages') }}</h1>
         </div>
 
         <div class="col-lg-10 offset-lg-1 col-12 offset-0 px-0">
@@ -31,11 +31,11 @@
                         <thead class="bg-gray-600 text-white">
                             <tr>
                                 <th class="pl-2">#ID</th>
-                                <th class="pl-2">{{ 'label.title'|trans }}</th>
-                                <th class="pl-2">{{ 'label.lang'|trans }}</th>
-                                <th class="pl-2">{{ 'label.enabled'|trans }}</th>
-                                <th class="pl-2">{{ 'label.categoriesLevel1'|trans }}</th>
-                                <th class="pl-2">{{ 'label.contributions'|trans }}</th> 
+                                <th class="pl-2">{{ 'label.title'|trans({}, 'messages') }}</th>
+                                <th class="pl-2">{{ 'label.lang'|trans({}, 'messages') }}</th>
+                                <th class="pl-2">{{ 'label.enabled'|trans({}, 'messages') }}</th>
+                                <th class="pl-2">{{ 'label.categoriesLevel1'|trans({}, 'messages') }}</th>
+                                <th class="pl-2">{{ 'label.contributions'|trans({}, 'messages') }}</th> 
                                 <th class="no-sort"></th>              
                             </tr>
                         </thead>
@@ -48,7 +48,7 @@
                                     {{ event.lang.englishName }}
                                 </td>
                                 <td class="px-2 align-middle">
-                                    {{ event.validated ? 'yes'|trans : 'no'|trans }}
+                                    {{ event.validated ? 'yes'|trans({}, 'messages') : 'no'|trans({}, 'messages') }}
                                 </td>
                                 <td class="px-2 align-middle">
                                     {{ event.categories|length }}
@@ -59,7 +59,8 @@
                                 <td class="px-2 width-max-26">
                                     <a href="{{ path('back_event_read', { 'event': event.id }) }}"
                                        class="btn btn-outline-primary"
-                                       title="{{ 'action.read'|trans }}">
+                                       data-toggle="tooltip" data-placement="left"
+                                       title="{{ 'action.read'|trans({}, 'messages') }}">
                                         <i class="fas fa-eye"></i>
                                     </a>
                                 </td>

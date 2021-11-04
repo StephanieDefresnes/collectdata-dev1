@@ -1,4 +1,4 @@
-{% trans_default_domain 'back_messages' %}
+{% trans_default_domain 'messages' %}
 {% set route = app.request.get('_route') %}
 
 {% set can_create = true %}
@@ -48,7 +48,7 @@
         <a class="nav-link collapsed pb-1" href="#" data-toggle="collapse" data-target="#collapseContrib"
             aria-expanded="true" aria-controls="collapseContrib">
             <i class="fas fa-list-ul"></i>
-            <span>{{ 'label.contributions'|trans }}</span>
+            <span>{{ 'label.contribution.title'|trans }}</span>
         </a>
         <div id="collapseContrib" class="collapse{{ route in [
                                                         'back_situs_search',
@@ -121,20 +121,20 @@
                                             'back_translation_forms',
                                             'back_translation_create'] ? ' active' }}"
                    href="{{ path('back_translation_forms') }}">
-                    {{ 'lang.translation.form.title'|trans }}
+                    {{ 'lang.translation.form.title'|trans({}, 'back_messages') }}
                 </a>
                 <a class="collapse-item{{ route in [
                                             'back_translation_site',
                                             'back_translation_situ_create',
                                             'back_translation_verify'] ? ' active' }}"
                    href="{{ path('back_translation_site') }}">
-                    {{ 'lang.translation.title'|trans }}
+                    {{ 'lang.translation.title'|trans({}, 'back_messages') }}
                 </a>
                 <a class="collapse-item{{ route in [
                                             'back_translation_generate_list',
                                             'back_translation_clean'] ? ' active' }}"
                    href="{{ path('back_translation_generate_list') }}">
-                    {{ 'lang.translation.yaml.title'|trans }}
+                    {{ 'lang.translation.yaml.title'|trans({}, 'back_messages') }}
                 </a>
                 {% endif %}
             </div>

@@ -2,33 +2,27 @@
 {% extends "back/layout.html.twig" %}
 
 {% block title %}{{ 'user.update.title'|trans }}{% endblock %}
-
-{% block stylesheets %}
-    {{ parent() }}
-    <style>
-        .textarea {
-            text-align: left;
-            vertical-align: top;
-        }
-    </style>
- {% endblock %}
  
 {% block content %}
     <div class="container-fluid pt-4">
         
         <div class="d-sm-flex align-items-center justify-content-between mb-4">
             <h1 class="h3 mb-0 text-gray-800">
-                {{ 'user.update.h1'|trans }} <span class="text-capitalize">{{ user.name }}</span>
+                {{ 'user.update.title'|trans }}
             </h1>
         </div>
 
         <div class="col-lg-8 offset-lg-2 col-12 offset-0 px-0">
             <div class="card shadow mb-4">
-                <div class="card-header py-3">
-                    <h6 class="m-0 font-weight-bold text-primary">{{ 'user.update.h2'|trans }}</h6>
-                </div>
                 
                 {{ form_start(form) }}
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">
+                        {{ 'user.update.card'|trans }}
+                        <span class="text-capitalize">{{ user.name }}</span>
+                    </h6>
+                </div>
+                    
                 <div class="card-body pb-3 row">
                     {% if is_granted("ROLE_SUPER_ADMIN")
                         or is_granted("ROLE_ADMIN")
@@ -43,22 +37,19 @@
                                 else %}col-md-6{% endif %}">
                         {{ form_row(form.adminNote) }}
                     </div>
-                    <div class="col-md-12 my-3">
-                        <div class="d-flex justify-content-center row">
-                            <div class="col-auto">
-                                <a href="{{ path('back_user_search') }}" class="btn btn-outline-secondary" role="button">
-                                        {{ 'action.cancel'|trans }}
-                                </a>
-                            </div>
-                            <div class="col-auto">
-                                <button class="btn btn-primary btn-block">
-                                    {{ 'action.validate'|trans }}
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                 </div>
+                </div>
+                    
+                <div class="card-footer d-flex justify-content-center">
+                    <a href="{{ path('back_user_search') }}"
+                       class="btn btn-outline-secondary mx-2">
+                            {{ 'action.cancel'|trans({}, 'messages')  }}
+                    </a>
+                    <button class="btn btn-primary mx-2">
+                        {{ 'action.validate'|trans({}, 'messages')  }}
+                    </button>
+                </div>
                 {{ form_end(form) }}
+                
             </div>
         </div>
         

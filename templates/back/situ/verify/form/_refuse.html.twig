@@ -41,7 +41,7 @@
                             <div class="form-check">
                                 <input class="form-check-input" type="checkbox" value="" id="EventRefuse">
                                 <label class="form-check-label" for="EventRefuse">
-                                    {{ 'label.event'|trans }}
+                                    {{ 'label.event'|trans({}, 'messages')  }}
                                 </label>
                             </div>
                         </div>
@@ -49,7 +49,7 @@
                             <div class="form-check">
                                 <input class="form-check-input" type="checkbox" value="" id="CategoryLevel1Refuse">
                                 <label class="form-check-label" for="CategoryLevel1Refuse">
-                                    {{ 'label.categoryLevel1'|trans }}
+                                    {{ 'label.categoryLevel1'|trans({}, 'messages') }}
                                 </label>
                             </div>
                         </div>
@@ -57,7 +57,7 @@
                             <div class="form-check">
                                 <input class="form-check-input" type="checkbox" value="" id="CategoryLevel2Refuse">
                                 <label class="form-check-label" for="CategoryLevel2Refuse">
-                                    {{ 'label.categoryLevel2'|trans }}
+                                    {{ 'label.categoryLevel2'|trans({}, 'messages') }}
                                 </label>
                             </div>
                         </div>
@@ -67,7 +67,7 @@
                             <div class="form-check">
                                 <input class="form-check-input" type="checkbox" value="" id="SituRefuse">
                                 <label class="form-check-label" for="SituRefuse">
-                                    {{ 'label.situ_'|trans }}
+                                    {{ 'label.situ'|trans({}, 'messages') }}
                                 </label>
                             </div>
                         </div>
@@ -101,16 +101,16 @@
                     
             <div class="modal-footer" translate="no">
                 {% if app.user.hasRole('ROLE_SUPER_VISITOR') %}
-                    <a href="{{ path('visitor_denied') }}" class="btn btn-primary mx-1 px-3">
-                        {{ 'action.confirm'|trans }}
+                    <a href="{{ path('back_access_denied') }}" class="btn btn-primary mx-1 px-3">
+                        {{ 'action.confirm'|trans({}, 'messages') }}
                     </a>
                 {% else %}
                     <span class="btn btn-primary submit" data-action="refuse">
-                        {{ 'action.confirm'|trans }}
+                        {{ 'action.confirm'|trans({}, 'messages') }}
                     </span>
                 {% endif %}
                 <span id="refuse-cancel" class="btn btn-secondary">
-                    {{ 'action.cancel'|trans }}
+                    {{ 'action.cancel'|trans({}, 'messages') }}
                 </span>
             </div>
         </div>

@@ -28,24 +28,25 @@ class UserUpdateFormType extends AbstractType
             case 'super-admin':
                 if ($this->security->getUser()->getId() == 1) {
                     $choices = [
-                        'user.role.super_admin' => 'ROLE_SUPER_ADMIN',
-                        'user.role.admin' => 'ROLE_ADMIN',
-                        'user.role.moderator' => 'ROLE_MODERATOR',
-                        'user.role.contributor' => 'ROLE_CONTRIBUTOR',
+                        'role.ROLE_SUPER_ADMIN' => 'ROLE_SUPER_ADMIN',
+                        'role.ROLE_SUPER_VISITOR' => 'ROLE_SUPER_VISITOR',
+                        'role.ROLE_ADMIN' => 'ROLE_ADMIN',
+                        'role.ROLE_MODERATOR' => 'ROLE_MODERATOR',
+                        'role.ROLE_CONTRIBUTOR' => 'ROLE_CONTRIBUTOR',
                     ];
                 } else {
                     $choices = [
-                        'user.role.admin' => 'ROLE_ADMIN',
-                        'user.role.moderator' => 'ROLE_MODERATOR',
-                        'user.role.contributor' => 'ROLE_CONTRIBUTOR',
+                        'role.ROLE_ADMIN' => 'ROLE_ADMIN',
+                        'role.ROLE_MODERATOR' => 'ROLE_MODERATOR',
+                        'role.ROLE_CONTRIBUTOR' => 'ROLE_CONTRIBUTOR',
                     ];
                 }
                 $bsClass = '';
                 break;
             case 'admin':
                 $choices = [
-                    'user.role.moderator' => 'ROLE_MODERATOR',
-                    'user.role.contributor' => 'ROLE_CONTRIBUTOR',
+                    'role.ROLE_MODERATOR' => 'ROLE_MODERATOR',
+                    'role.ROLE_CONTRIBUTOR' => 'ROLE_CONTRIBUTOR',
                 ];
                 $bsClass = '';
                 break;
@@ -60,11 +61,12 @@ class UserUpdateFormType extends AbstractType
                 ],
             ])
             ->add('roles', ChoiceType::class, [
-                'label' => 'label.roles',
+                'label' => 'role.label',
                 'row_attr' => ['class' => $bsClass],
                 'choices' => $choices,
                 'expanded' => true,
                 'multiple' => true,
+                'translation_domain' => 'front_messages'
             ]);
     }
 

@@ -1,0 +1,271 @@
+{% trans_default_domain 'back_messages' %}
+{% extends "back/layout.html.twig" %}
+
+{% set locale = app.request.locale %}
+
+{% block title %}{{ 'label.users'|trans({}, 'messages') }}{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {% if is_granted("ROLE_SUPER_VISITOR") %}
+        <link rel="stylesheet" href="{{ asset('jquery-confirm/css/jquery-confirm.css') }}">
+    {% endif %}
+    {{ encore_entry_link_tags('table_app', null, 'backApp') }}
+    {{ encore_entry_link_tags('app') }}
+ {% endblock %}
+
+{% block content %}
+    <div id="loader"></div>
+
+    <div class="container-fluid pt-4">
+        
+        <div class="d-sm-flex align-items-center justify-content-between mb-4">
+            <h1 class="h3 text-gray-800">{{ 'label.users'|trans({}, 'messages') }}</h1>
+        </div>
+
+        {% set col_count = 0 %}
+
+        {% if is_granted("ROLE_SUPER_VISITOR") %}
+            {{ form_start(form_batch) }}
+            {{ form_errors(form_batch) }}
+        {% endif %}
+
+        <div class="card shadow mb-4">
+
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary">{{ 'user.search.table'|trans }}</h6>
+            </div>
+
+            <div id="list" class="card-body back-dataTable pb-3">
+
+                <table id="dataTable-list" class="table table-sm mb-0 text-nowrap">
+                    <thead class="bg-gray-600 text-white">
+                        <tr>
+                            <th class="{{ not is_granted("ROLE_SUPER_VISITOR") ? 'p-0 ' }}no-sort" name="check">
+                                {# Multi select #}
+                                {% if is_granted("ROLE_SUPER_VISITOR") %}
+                                    <div class="form-check pl-1"><input type="checkbox" id="select_all" /></div>
+                                {% endif %}
+                            </th>
+                            <th class="d-none"></th>
+                            <th class="pl-2 pr-4" nowrap>{{ 'label.name'|trans({}, 'messages') }}</th>
+                            <th class="pr-4" nowrap>{{ 'label.email'|trans({}, 'messages') }}</th>
+                            <th class="pr-4" nowrap>{{ 'label.roles'|trans({}, 'messages') }}</th>
+                            <th class="pr-4" nowrap>{{ 'label.translator'|trans({}, 'messages') }}</th>
+                            <th class="pr-4" nowrap>{{ 'label.enabled'|trans({}, 'messages') }}</th>
+                            <th class="pr-4" nowrap>{{ 'label.contributions'|trans({}, 'messages') }}</th>
+                            <th class="pr-4" nowrap>{{ 'label.lang'|trans({}, 'messages') }}</th>
+                            <th class="pr-4" nowrap>{{ 'label.note'|trans({}, 'messages') }}</th>
+                            <th class="pr-4" nowrap>{{ 'label.date_login'|trans({}, 'messages') }}</th>
+                            <th class="pr-4" nowrap>{{ 'label.date_creation'|trans({}, 'messages') }}</th>
+                            <th class="pr-4" nowrap>{{ 'label.date_update'|trans({}, 'messages') }}</th>
+                            <th class="cust-nowrap pr-4 no-sort"></th>
+                            <th class="no-sort"></th>
+                            <th class="px-2 no-sort"></th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white">
+                    {% for child in form_batch.users %}
+                        {% set user = form_batch.users.vars.choices[child.vars.value].data %}
+                        
+                        {# == Set buttons permission == #}
+                        {# Super-admin can access to actions 
+                            except for supreme-admin, super-visitor & himself #}
+                        {% set can_access = false %}
+                        {% if is_granted("ROLE_SUPER_VISITOR")
+                            and user.id != supremeAdminId
+                            and user != app.user %}
+                            {% set can_access = true %}{% endif %}
+                                
+                        {# Permute user
+                            - supreme-admin can permute all users except himself
+                            - super-visitor can permute all except supreme-admin & himself (but action is filtered)
+                            - super-admin can update admins, moderators and contributors only
+                            - admin can update moderators and contributors only 
+                            - moderator can update contributors only #}
+                        {% set can_permute = false %}
+                        {% if user.id != supremeAdminId
+                            and user != app.user
+                            and (is_granted("ROLE_SUPER_VISITOR")
+                                or (is_granted("ROLE_SUPER_ADMIN")
+                                    and not user.hasRole("ROLE_SUPER_VISITOR")
+                                    and not user.hasRole("ROLE_SUPER_ADMIN"))
+                                or (is_granted("ROLE_ADMIN")
+                                    and not user.hasRole("ROLE_SUPER_VISITOR")
+                                    and not user.hasRole("ROLE_SUPER_ADMIN")
+                                    and not user.hasRole("ROLE_ADMIN")))
+                                or (is_granted("ROLE_MODERATOR")
+                                    and not user.hasRole("ROLE_SUPER_VISITOR")
+                                    and not user.hasRole("ROLE_SUPER_ADMIN")
+                                    and not user.hasRole("ROLE_ADMIN")
+                                    and not user.hasRole("ROLE_MODERATOR")) %}
+                            {% set can_permute = true %}{% endif %}
+                                
+                        {# Update user
+                            - supreme-admin can update all users and himself
+                            - super-visitor can update all except supreme-admin & himself (but action is filtered)
+                            - super-admin can update admins, moderators and contributors only
+                            - admin can update moderators and contributors only #}
+                        {% set can_update = false %}
+                        {% if (app.user.id == supremeAdminId)
+                            or (is_granted("ROLE_SUPER_VISITOR")
+                                and user.id != supremeAdminId
+                                and app.user != user)
+                            or (is_granted("ROLE_SUPER_ADMIN")
+                                and app.user.id != supremeAdminId
+                                and not user.hasRole("ROLE_SUPER_ADMIN")
+                                and not user.hasRole("ROLE_SUPER_VISITOR"))
+                            or (is_granted("ROLE_ADMIN")
+                                and not user.hasRole("ROLE_SUPER_ADMIN")
+                                and not user.hasRole("ROLE_SUPER_VISITOR")
+                                and not user.hasRole("ROLE_ADMIN"))%}
+                            {% set can_update = true %}{% endif %}
+                                
+                        <tr>
+                            <td class="{{ is_granted("ROLE_SUPER_VISITOR") ? 'px-2' : 'p-0' }} check">
+                                {# Multi select #}
+                                {% set checkBox = form_widget(child, { 'attr': { 'class': 'select'} }) %}
+                                {% if can_access %}
+                                    {{ checkBox|raw }}
+                                {% endif %}
+                            </td>
+                            <td class="d-none userId">{{ user.id }}</td>
+                            <td class="px-2 text-nowrap userName">{{ user.name }}</td>
+                            <td class="text-nowrap">{{ user.email }}</td>
+                            <td class="text-nowrap">
+                                {% for role in user.roles|sort %}
+                                    {% set roleName = 'user.'~role %}
+                                    {% if role != 'ROLE_USER' %}
+                                        <p class="mb-0 line-12{{ user.id == 1 and role == 'ROLE_SUPER_ADMIN' ? ' text-uppercase' }}">
+                                                {{ roleName|trans({}, 'messages') }}
+                                        </p>
+                                    {% endif %}
+                                {% endfor %}
+                            </td>
+                            <td>
+                                {% if user.langContributor %}
+                                    {{ 'yes'|trans({}, 'messages')  }}</p>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {# Permute user #}
+                                {% if can_permute %}
+                                    <a href="{{ path('back_user_permute_enabled', { 'ids': {0: user.id} }) }}"
+                                        class="btn btn-primary py-1" role="button">
+                                        <span>{{ user.enabled
+                                                    ? 'action.disable'|trans({}, 'messages')
+                                                    : 'action.enable'|trans({}, 'messages') }}</span>
+                                    </a>
+                                {% endif %}
+                            </td>
+                            <td class="text-center">
+                                {{ user.situs|length != 0 ? user.situs|length : '' }}
+                            </td>
+                            <td>
+                                {{ user.lang.englishName }}
+                            </td>
+                            <td>
+                                {# Read note user #}
+                                {% if can_access %}
+                                    {{ user.adminNote ? '<span class="text-success"><i class="fas fa-check-circle"></i></span>' }}
+                                {% endif %}
+                            </td>
+                            <td class="text-nowrap">{{ user.dateLastLogin ? user.dateLastLogin|format_datetime('short', 'short', locale=locale) : '' }}</td>
+                            <td class="text-nowrap">{{ user.dateCreate ? user.dateCreate|format_datetime('short', 'short', locale=locale) : '' }}</td>
+                            <td class="text-nowrap">{{ user.dateUpdate ? user.dateUpdate|format_datetime('short', 'short', locale=locale) : '' }}</td>
+                            <td class="pr-0">
+                                <a href="{{ path('back_user_read', {'id': user.id}) }}" title="{{ 'action.read_title'|trans({}, 'messages') }}"
+                                   data-toggle="tooltip" data-placement="left" aria-label="{{ 'action.read_title'|trans({}, 'messages') }}"
+                                   class="btn btn-outline-primary px-2" role="button">
+                                    <i class="fas fa-eye"></i>
+                                </a>
+                            </td>
+                            <td class="pr-0 width-max-40">
+                                {# Update user #}
+                                {% if can_update %}
+                                    <a href="{{ path('back_user_update', {'id': user.id}) }}"
+                                       class="btn btn-outline-warning px-2" 
+                                       data-toggle="tooltip" data-placement="left"
+                                       title="{{ 'action.edit'|trans({}, 'messages') }}"
+                                       aria-label="{{ 'action.edit'|trans({}, 'messages') }}" role="button">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                {% endif %}
+                            </td>
+                            <td class="pr-1">
+                                {# Delete user #}
+                                {% if can_access %}
+                                    <span class="btn btn-outline-danger userDelete"
+                                          data-url="{{ path('back_user_delete', { 'ids': {0: user.id} }) }}"
+                                          data-user="{{ user.name }}"
+                                          data-toggle="tooltip" data-placement="left"
+                                          title="{{ 'action.delete'|trans({}, 'messages') }}"
+                                          aria-label="{{ 'action.delete'|trans({}, 'messages') }}" role="button">
+                                        <i class="fas fa-times"></i>
+                                    </span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+
+            </div>
+        </div>
+
+        {% if is_granted("ROLE_SUPER_VISITOR") %}
+            <div class="row mx-0">
+                <div id="userActions" class="col-md-8 offset-md-2 px-sm-3 px-2 card border-left-primary shadow h-100 d-none">
+                    <div class="card-body px-2 py-1">
+                        <div class="row no-gutters align-items-center">
+                            <div class="col mt-2">
+                                <div class="row">
+                                    <div class="col-12 text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                        {{ 'action.batch'|trans({}, 'messages') }}</div>
+                                    <div class="col-xl-4 col-lg-5 col-md-6 col-sm-6 col-7">
+                                        {{ form_row(form_batch.action) }}
+                                    </div>
+                                    <div class="col-auto mt-4">
+                                        <div class="text-center">
+                                            <span id="submit" class="btn btn-primary px-3">
+                                                {{ 'action.validate'|trans({}, 'messages') }}
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-auto d-lg-block d-md-none d-sm-block d-none">
+                                <i class="fas fa-users fa-2x text-gray-300"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {{ form_end(form_batch) }}
+        {% endif %}
+
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {{ encore_entry_script_tags('user_search_app', null, 'backApp') }}
+
+    {% if is_granted("ROLE_SUPER_VISITOR") %}
+        <script src="{{ asset('jquery-confirm/js/jquery-confirm.js') }}"></script>
+        {{ encore_entry_script_tags('user_can_multi_select', null, 'backApp') }}
+        {{ encore_entry_script_tags('user_can_delete', null, 'backApp') }}
+        <script>
+            var translations = {
+               "confirm" : "{{ 'user.delete.confirm'|trans }}",
+               "confirms" : "{{ 'user.delete.confirm_s'|trans }}",
+               "user" : "{{ 'delete.title'|trans }}",
+               "users" : "{{ 'user.delete.title_s'|trans }}",
+               "warning" : "{{ 'delete.warning'|trans }}",
+               "no" : "{{ 'no'|trans }}",
+               "yes" : "{{ 'yes'|trans }}",
+            }
+        </script>
+    {% endif %}
+
+{% endblock %}

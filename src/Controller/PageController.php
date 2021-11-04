@@ -144,13 +144,13 @@ class PageController extends AbstractController
                 if ($back) {
                     $page->setUser(null);
                     $url = $this->redirectToRoute('back_content_edit', [
-                        '_locale' => locale_get_default(),
+                        'locale' => locale_get_default(),
                         'back' => 'back',
                         'id' => $page->getId(),
                     ]);
                 } else {
                     $url = $this->redirectToRoute('front_content_edit', [
-                        '_locale' => locale_get_default(),
+                        'locale' => locale_get_default(),
                         'id' => $page->getId(),
                     ]);
                 }
@@ -184,7 +184,8 @@ class PageController extends AbstractController
             
             try {
                 // Super visitor filter
-                if ($user->hasRole('ROLE_SUPER_VISITOR')) {
+                $currentUser = $security->getUser();
+                if ($currentUser->hasRole('ROLE_SUPER_VISITOR')) {
                     return $this->redirectToRoute('visitor_denied', [ '_locale' => locale_get_default()]);
                 }
                 

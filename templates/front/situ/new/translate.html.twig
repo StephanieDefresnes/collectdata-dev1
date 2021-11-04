@@ -44,7 +44,7 @@
                     <div class="row mb-4 pb-1">
                         <div class="col-md-12 mb-2 pt-1">
                             <span class="font-weight-bolder">
-                                {{ 'label_dp.event'|trans }}</span>
+                                {{ 'label_dp.event'|trans({}, 'messages') }}</span>
                             {{ situ.event.title }}
                         </div>
                     </div>
@@ -57,7 +57,7 @@
                                     <div data-toggle="collapse" data-target="#initialCollapseOne"
                                          aria-expanded="false" aria-controls="initialCollapseOne">
                                         <span class="font-weight-bolder">
-                                            {{ 'label_dp.catLevel1'|trans }}</span>
+                                            {{ 'label_dp.categoryLevel1'|trans({}, 'messages') }}</span>
                                         {{ situ.categoryLevel1.title }}
                                         <span class="infoCollapse small">
                                             <i class="fas fa-question-circle"></i>
@@ -67,7 +67,7 @@
                                 <div id="initialCollapseOne" class="mx-4 pt-2 small infoCollapse collapse"
                                      aria-labelledby="initialHeadingOne" data-parent="#initialDetails">
                                     <div class="d-block font-weight-bold">
-                                        {{ 'label_dp.description'|trans }}
+                                        {{ 'label_dp.description'|trans({}, 'messages') }}
                                     </div>
                                     <div class="mt-1 px-3 line-11 first-letter description">
                                         {{ situ.categoryLevel1.description }}
@@ -82,7 +82,7 @@
                                     <div data-toggle="collapse" data-target="#initialCollapseTwo"
                                          aria-expanded="false" aria-controls="initialCollapseTwo">
                                         <span class="font-weight-bolder">
-                                            {{ 'label_dp.catLevel2'|trans }}</span>
+                                            {{ 'label_dp.categoryLevel2'|trans({}, 'messages') }}</span>
                                         {{ situ.categoryLevel2.title }}
                                         <span class="infoCollapse small">
                                             <i class="fas fa-question-circle"></i>
@@ -92,7 +92,7 @@
                                 <div id="initialCollapseTwo" class="mx-4 pt-2 small infoCollapse collapse"
                                      aria-labelledby="initialHeadingTwo" data-parent="#initialDetails">
                                     <div class="d-block font-weight-bold">
-                                        {{ 'label_dp.description'|trans }}
+                                        {{ 'label_dp.description'|trans({}, 'messages') }}
                                     </div>
                                     <div class="mt-1 px-3 line-11 first-letter description">
                                         {{ situ.categoryLevel2.description }}
@@ -108,10 +108,10 @@
                 <div class="card-body pt-4 pb-0 px-4 bg-white-80">
                     <h2 class="h5 font-weight-normal">{{ 'contrib.form.situ.label'|trans }}</h2>
 
-                    <h6 class="h6 mb-2 pb-1 font-weight-bolder">{{ 'label_dp.title'|trans }}</h6>
+                    <h6 class="h6 mb-2 pb-1 font-weight-bolder">{{ 'label_dp.title'|trans({}, 'messages') }}</h6>
                     <div class="h-title mb-3 first-letter">{{ situ.title }}</div>
 
-                    <h6 class="h6 font-weight-bolder">{{ 'label_dp.description'|trans }}</h6>
+                    <h6 class="h6 font-weight-bolder">{{ 'label_dp.description'|trans({}, 'messages') }}</h6>
                     <div class="h-description mb-4 pt-1 first-letter">{{ situ.description }}</div>
 
                     <div id="initialSituItems" data-initial="{{ situ.situItems|length }}">
@@ -121,11 +121,11 @@
                                 <legend class="col-12 px-0 border-top border-secondary col-form-label">{{ 'contrib.form.item.label_item'|trans }}</legend>
                                 <h6 class="h6 font-weight-bolder pt-2 pb-4 mb-score">
                                     {% if item.score == 1 %}
-                                        {{ 'contrib.form.item.score.info'|trans }}
+                                        <span class="text-info">{{ 'situ.item.info'|trans({}, 'messages') }}</span>
                                     {% elseif item.score == 2 %}
-                                        {{ 'contrib.form.item.score.warning'|trans }}
+                                        <span class="text-warning">{{ 'situ.item.warning'|trans({}, 'messages') }}</span>
                                     {% else %}
-                                        {{ 'contrib.form.item.score.danger'|trans }}
+                                        <span class="text-danger">{{ 'situ.item.danger'|trans({}, 'messages') }}</span>
                                     {% endif %}
                                 </h6>
                             {% endif %}
@@ -161,15 +161,15 @@
             "flashError" : "{{ 'contrib.table.edit.flash.error'|trans }}",
             "srOnly-error" : "{{ 'contrib.form.sr_only.error'|trans }}",
             "toValidate" : "{{ 'contrib.form.to_validate'|trans }}",
-            "event-titlePlaceholder" : "{{ 'contrib.form.event.add.placeholder'|trans }}",
+            "event-titlePlaceholder" : "{{ 'contrib.form.event.placeholder_add'|trans }}",
             "categoryLevel1-titlePlaceholder" : "{{ 'contrib.form.category.level1.title_placeholder'|trans }}",
             "categoryLevel2-titlePlaceholder" : "{{ 'contrib.form.category.level2.title_placeholder'|trans }}",
             "categoryLevel1-descriptionPlaceholder" : "{{ 'contrib.form.category.level1.description_placeholder'|trans }}",
             "categoryLevel2-descriptionPlaceholder" : "{{ 'contrib.form.category.level2.description_placeholder'|trans }}",
             "deleteItem-title" : "{{ 'contrib.form.item.remove.title'|trans }}",
             "deleteItem-content" : "{{ 'contrib.form.item.remove.confirm'|trans }}",
-            "yes" : "{{ 'yes'|trans }}",
-            "no" : "{{ 'no'|trans }}",
+            "yes" : "{{ 'yes'|trans({}, 'messages') }}",
+            "no" : "{{ 'no'|trans({}, 'messages')  }}",
             "scoreLabel" : "{{ 'contrib.form.item.score.placeholder'|trans }}",
             "scoreLabelAlt" : "{{ 'contrib.form.item.score.placeholder_alt'|trans }}",
             "scoreInfo" : "{{ 'contrib.form.item.score.tooltip'|trans }}",

@@ -71,18 +71,18 @@
                 <div class="d-flex justify-content-center mt-5 menu-log">
                     <a href="{{ path('create_situ') }}"
                        class="btn btn-light mx-3 px-4 py-3 h3">
-                        {{ 'btn.contribute'|trans }}
+                        {{ 'action.contribute'|trans({}, 'messages') }}
                     </a>
                 </div>
             {% else %}
                 <div class="d-flex justify-content-around mt-5 menu-log">
                     <a href="{{ path('app_login') }}"
                        class="btn btn-outline-light bg-dark-50-0 mx-3 px-4 py-3 h3">
-                        {{ 'nav.account_login'|trans }}
+                        {{ 'user.account_login'|trans }}
                     </a>
                     <a href="{{ path('app_register') }}"
                        class="btn btn-outline-light bg-dark-50-0 mx-3 px-4 py-3 h3">
-                        {{ 'nav.account_register'|trans }}
+                        {{ 'user.account_register'|trans }}
                     </a>
                 </div>
             {% endif %}

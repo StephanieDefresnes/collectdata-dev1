@@ -10,6 +10,7 @@
                 {{ 'contact.btn'|trans }}
             </button>
         </div>
+            
         <div class="card bg-transparent shadow-none border-0">
             <div id="collapse" class="collapse" aria-labelledby="heading">
                 <div class="card-body">
@@ -41,11 +42,11 @@
                         {{ form_end(form) }}
                         
                     {% else %}
-                        
+                        <div class="text-center text-secondary">
                         {{ 'contact.connect'|trans({
                             '%login%' : path('app_login'),
                             '%registrer%' : path('app_register') })|raw }}
-                        
+                        </div>
                     {% endif %}
                 </div>
             </div>

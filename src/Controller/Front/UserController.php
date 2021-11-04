@@ -65,10 +65,10 @@ class UserController extends AbstractController
             // TODO messenger
         }
         
-        return $this->render('front/user/visit/index.html.twig', [
+        return $this->render('front/user/account/profile/index.html.twig', [
             'form' => $form->createView(),
-            'situsLangs' => $situsLangs,
             'user' => $user,
+            'situsLangs' => $situsLangs,
         ]);
     }
 

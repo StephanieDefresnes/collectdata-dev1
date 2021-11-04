@@ -1,10 +1,10 @@
-{% trans_default_domain 'back_messages' %}
+{% trans_default_domain 'messages' %}
 
 <div class="card shadow">
 
     <div class="card-header">
         <h6 class="d-flex justify-content-start m-0">
-            <span class="font-weight-bold text-primary">{{ 'contrib.situ.verify.data.title'|trans }}</span>
+            <span class="font-weight-bold text-primary">{{ 'contrib.situ.verify.data.title'|trans({}, 'back_messages') }}</span>
             <span class="px-2">-</span>
             <span>{{ situ.lang.englishName }}</span>
             <img src="{{ asset('img/flag/'~ situ.lang.lang ~'.jpg') }}"
@@ -39,7 +39,7 @@
                 {{ situ.event.title }}
                 {% if situ.event.validated == 0 %}
                     <span class="pl-0 pr-3">
-                        {{ 'contrib.situ.verify.data.to_validate'|trans }}
+                        {{ 'contrib.situ.verify.data.to_validate'|trans({}, 'back_messages') }}
                     </span>
                 {% endif %}
             </div>
@@ -49,7 +49,7 @@
             
             <div class="row mb-3">
                 <div class="col-md-4 font-weight-bold">
-                    {{ 'label_dp.catLevel1'|trans }}
+                    {{ 'label_dp.categoryLevel1'|trans }}
                 </div>
                 <div class="col-md-8 first-letter">
                     <span id="headingCatLv1">
@@ -57,7 +57,7 @@
                               data-target="#collapseCatLv1" aria-expanded="false" aria-controls="collapseCatLv1">
                             {{ situ.categoryLevel1.title }}
                             {% if situ.categoryLevel1.validated == 0 %}
-                                {{ 'contrib.situ.verify.data.to_validate'|trans }}
+                                {{ 'contrib.situ.verify.data.to_validate'|trans({}, 'back_messages') }}
                             {% endif %}
                             <small class="align-text-bottom"><i class="fas fa-question-circle"></i></small>
                         </span>
@@ -72,7 +72,7 @@
 
             <div class="row pb-1">
                 <div class="col-md-4 font-weight-bold">
-                    {{ 'label_dp.catLevel2'|trans }}
+                    {{ 'label_dp.categoryLevel2'|trans }}
                 </div>
                 <div class="col-md-8 first-letter mb-1 pb-2">
                     <span id="headingCatLv2">
@@ -80,7 +80,7 @@
                               data-target="#collapseCatLv2" aria-expanded="false" aria-controls="collapseCatLv2">
                             {{ situ.categoryLevel2.title }}
                             {% if situ.categoryLevel2.validated == 0 %}
-                                {{ 'contrib.situ.verify.data.to_validate'|trans }}
+                                {{ 'contrib.situ.verify.data.to_validate'|trans({}, 'back_messages') }}
                             {% endif %}
                             <small class="align-text-bottom"><i class="fas fa-question-circle"></i></small>
                         </span>
@@ -122,31 +122,31 @@
                 <div class="col-12">
                     {% if item.score == 0 %}
                         <h2 class="h5 font-weight-normal">
-                            {{ 'contrib.situ.verify.data.item.label'|trans }}
+                            {{ 'contrib.situ.verify.data.item.label'|trans({}, 'back_messages') }}
                         </h2>
                     {% else %}
                         {% if loop.index == 2 %}
                             <h2 class="h5 mb-3 font-weight-normal">
                                 {% if situ.situItems|length > 2 %}
-                                {{ 'contrib.situ.verify.data.item.label_items'|trans }}
+                                {{ 'contrib.situ.verify.data.item.label_items'|trans({}, 'back_messages')  }}
                                 {% else %}
-                                {{ 'contrib.situ.verify.data.item.label_item'|trans }}
+                                {{ 'contrib.situ.verify.data.item.label_item'|trans({}, 'back_messages')  }}
                                 {% endif %}
                             </h2>
                         {% endif %}
                         <div class="mb-3 font-weight-bold">
-                            {{ 'contrib.situ.verify.data.item.score.title'|trans }}
+                            {{ 'contrib.situ.verify.data.item.score.title'|trans({}, 'back_messages')  }}
                             {% if item.score == 1 %}
                                 <span class="text-info">
-                                    {{ 'contrib.situ.verify.data.item.score.info'|trans }}
+                                    {{ 'situ.item.info'|trans }}
                                 </span>
                             {% elseif item.score == 2 %}
                                 <span class="text-warning">
-                                    {{ 'contrib.situ.verify.data.item.score.warning'|trans }}
+                                    {{ 'situ.item.warning'|trans }}
                                 </span>
                             {% else %}
                                 <span class="text-danger">
-                                    {{ 'contrib.situ.verify.data.item.score.danger'|trans }}
+                                    {{ 'situ.item.danger'|trans }}
                                 </span>
                             {% endif %}
                         </div>

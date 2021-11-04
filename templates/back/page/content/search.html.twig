@@ -13,14 +13,16 @@
     <div id="loader"></div>
     <div class="container-fluid pt-4">
         
-        <div class="d-sm-flex align-items-center justify-content-between mb-4">
-            <h1 class="h3 mb-0 text-gray-800">{{ 'content.list.title'|trans }}</h1>
-            <a href="{{ path('back_content_edit', {
-                                '_locale': locale,
-                                'back': 'back' }) }}" class="btn btn-primary mx-2 pt-1">
-                <i class="fas fa-plus-circle"></i>
-                {{ 'content.form.title'|trans }}
-            </a>
+        <div class="d-sm-flex justify-content-between row mb-4">
+            <h1 class="col-auto h3 text-gray-800">{{ 'content.list.title'|trans }}</h1>
+            <div class="col-auto">
+                <a href="{{ path('back_content_edit', {
+                                    '_locale': locale,
+                                    'back': 'back' }) }}" class="btn btn-primary pt-1">
+                    <i class="fas fa-plus-circle"></i>
+                    {{ 'content.form.title'|trans }}
+                </a>
+            </div>
         </div>
         
         <div id="card-list" class="card shadow mb-4">
@@ -40,13 +42,13 @@
                 <table id="dataTable-list" class="table table-sm text-nowrap">
                     <thead class="bg-gray-600 text-white">
                         <tr>
-                            <th class="px-2 no-sort">{{ 'action.action'|trans }}</th>
-                            <th class="px-2">{{ 'label.enabled'|trans }}</th>
-                            <th class="px-2">{{ 'label.lang'|trans }}</th>
-                            <th class="px-2">{{ 'label.attribution'|trans }}</th>
-                            <th class="px-2">{{ 'label.type'|trans }}</th>
-                            <th class="px-2">{{ 'label.title'|trans }}</th>
-                            <th class="px-2">{{ 'label.slug'|trans }}</th>
+                            <th class="no-sort"></th>
+                            <th class="px-2">{{ 'label.enabled'|trans({}, 'messages') }}</th>
+                            <th class="px-2">{{ 'label.lang'|trans({}, 'messages') }}</th>
+                            <th class="px-2">{{ 'label.attribution'|trans({}, 'messages') }}</th>
+                            <th class="px-2">{{ 'label.type'|trans({}, 'messages') }}</th>
+                            <th class="px-2">{{ 'label.title'|trans({}, 'messages') }}</th>
+                            <th class="px-2">{{ 'label.slug'|trans({}, 'messages') }}</th>
                         </tr>
                     </thead>
                     <tbody class="bg-white">
@@ -60,7 +62,7 @@
                                    role="button" class="btn btn-outline-primary px-2 py-1"
                                    data-id="{{ page.id }}" data-action=""
                                    data-toggle="tooltip" data-placement="left"
-                                   title="{{ 'action.edit'|trans }}">
+                                   title="{{ 'action.edit'|trans({}, 'messages') }}">
                                     <i class="fas fa-edit"></i>
                                 </a>
                             </td>

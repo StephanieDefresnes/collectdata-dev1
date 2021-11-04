@@ -1,4 +1,3 @@
-{% trans_default_domain 'back_messages' %}
 {% set route = app.request.get('_route') %}
 {% set locale = app.request.locale %}
 {% set alerts = message_service.getUnreadUserAlerts(app.user.id) %}
@@ -76,7 +75,7 @@
                 
                 <a href="{{ path('back_user_alerts') }}"
                    class="dropdown-item text-center small text-gray-500">
-                    {{ 'message.alert.title_all'|trans }}
+                    {{ 'message.alert.title_all'|trans({}, 'messenger_messages') }}
                 </a>
                 
             </div>
@@ -95,7 +94,7 @@
             <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in"
                 aria-labelledby="messagesDropdown">
                 <h6 class="dropdown-header">
-                    {{ 'message.envelope.title'|trans }}
+                    {{ 'message.envelope.title'|trans({}, 'messenger_messages') }}
                 </h6>
                 <a class="dropdown-item d-flex align-items-center" href="#">
                     <div class="dropdown-list-image mr-3">
@@ -120,7 +119,7 @@
                     </div>
                 </a>
                 <a class="dropdown-item text-center small text-gray-500" href="#">
-                    {{ 'message.envelope.title_all'|trans }}
+                    {{ 'message.envelope.title_all'|trans({}, 'messenger_messages') }}
                 </a>
             </div>
         </li>
@@ -144,16 +143,16 @@
                 aria-labelledby="userDropdown">
                 <a class="dropdown-item py-2 text-secondary" href="{{ path('front_home') }}">
                     <i class="fas fa-house-user fa-sm fa-fw mr-2 text-gray-400"></i>
-                    {{ 'nav_front'|trans }}
+                    {{ 'nav_front'|trans({}, 'back_messages') }}
                 </a>
                 <a class="dropdown-item py-2 text-secondary" href="{{ path('user_account') }}">
                     <i class="fas fa-user-cog fa-sm fa-fw mr-2 text-gray-400"></i>
-                    {{ 'nav.account_profile'|trans({}, 'front_messages') }}
+                    {{ 'user.account_profile'|trans({}, 'messages') }}
                 </a>
                 <div class="dropdown-divider my-0"></div>
                 <a class="dropdown-item py-2 text-secondary" href="{{ path('app_logout') }}">
                     <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
-                    {{ 'nav.account_logout'|trans({}, 'front_messages') }}
+                    {{ 'action.logout'|trans({}, 'security') }}
                 </a>
             </div>
         </li>

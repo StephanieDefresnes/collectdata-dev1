@@ -22,13 +22,13 @@
             <div class="d-flex justify-content-between container-fluid px-3">
                 <ul class="navbar-nav p-0">
                     {% if app.user %}
-                        {% include "front/block/_contrib.html.twig" %}
-                        {% include "front/block/_translation.html.twig" %}
+                        {% include "front/block/_navbar/_contribution.html.twig" %}
+                        {% include "front/block/_navbar/_translation.html.twig" %}
                     {% endif %}
                     {% include 'block/_locale_switcher.html.twig' %}
                 </ul>
                 <div class="d-flex">
-                    {% include 'front/block/_user.html.twig' %}
+                    {% include 'front/block/_navbar/_user.html.twig' %}
                 </div>
         </div>
         </div>

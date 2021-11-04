@@ -156,7 +156,7 @@
                 </div>
 
                 <div id="add-situItem" class="col-12 pb-3e">
-                    <p class="h6">{{ 'contrib.form.item.add_item.title'|trans }}</p>
+                    <p class="h6">{{ 'contrib.form.item.add_item.title'|trans|raw }}</p>
                     <div class="small d-block my-4 pb-1">
                         {{ 'contrib.form.item.add_item.comment'|trans|raw }}
                     </div>
@@ -175,10 +175,10 @@
 
         <div class="card-footer bg-light d-flex justify-content-center{{ route == 'create_situ' ? ' d-none' }}">
             <div id="save" class="btn btn-outline-primary px-3 mx-2">
-                {{ 'action.save'|trans }}
+                {{ 'action.save'|trans({}, 'messages') }}
             </div>
             <div id="submit" class="btn btn-primary px-4 mx-2">
-                {{ 'action.submit'|trans }}
+                {{ 'action.submit'|trans({}, 'messages') }}
             </div>
         </div>
 

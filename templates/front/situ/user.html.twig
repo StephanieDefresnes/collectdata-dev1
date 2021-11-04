@@ -1,5 +1,5 @@
 {% extends 'front/layout.html.twig' %}
-{% trans_default_domain 'user_messages' %}
+{% trans_default_domain 'messages' %}
 {% set locale = app.request.locale %}
 
 {% block stylesheets %}
@@ -16,7 +16,7 @@
         
     {% block banner%}
     <div class="d-flex justify-content-between mt-3 mb-5 pt-5">
-        <h1 class="h3 text-white">{{ 'contrib.title'|trans }}</h1>
+        <h1 class="h3 text-white">{{ 'contrib.title'|trans({}, 'user_messages') }}</h1>
         <a href="{{ path('create_situ') }}" class="btn btn-outline-light bg-dark-50-0 px-3">
             <i class="fas fa-plus ltr pr-2"></i>
             {{ 'action.situ_add'|trans }}
@@ -29,8 +29,8 @@
         <div id="situs" class="card-body text-white front-dataTable" data-empty="{{ app.user.situs is empty ? 'yes' }}">
 
             {% if app.user.situs is empty %}
-            <div class="mb-5 p-3 bg-white-70 text-secondary">
-                {{ 'account.contribs.empty'|trans }}
+            <div class="text-left mb-5 p-3 bg-white-70 text-secondary">
+                {{ 'contribs.empty'|trans }}
             </div>
             {% else %}
             <table id="dataTable-situs" class="shadow table table-borderless table-hover text-nowrap">
@@ -41,8 +41,8 @@
                         <th class="py-2">{{ 'label.description'|trans }}</th>
                         <th class="py-2">{{ 'status.date_creation'|trans }}</th>
                         <th class="py-2">{{ 'label.event'|trans }}</th>
-                        <th class="py-2">{{ 'label.categoryLevel1'|trans }}</th>
-                        <th class="py-2">{{ 'label.categoryLevel2'|trans }}</th>
+                        <th class="py-2">{{ 'label.catLevel1'|trans }}</th>
+                        <th class="py-2">{{ 'label.catLevel2'|trans }}</th>
                         <th class="py-2">{{ 'label.lang'|trans }}</th>
                         <th class="py-2">{{ 'status.title'|trans }}</th>
                         <th class="cust-nowrap p-2 no-sort">{{ 'action.actions'|trans }}</th>
@@ -203,11 +203,11 @@
                 <div class="modal-content">
                     <div class="modal-header bg-dark">
                         <h5 class="modal-title text-white" id="translateModalLabel">
-                            {{ 'contrib.translation.title'|trans }}
+                            {{ 'contrib.translation.title'|trans({}, 'user_messages') }}
                         </h5>
                     </div>
                     <div class="modal-body text-secondary pb-4">
-                        <p class="mb-1">{{ 'contrib.translation.modal.text'|trans }}</p>
+                        <p class="mb-1">{{ 'contrib.translation.modal.text'|trans ({}, 'user_messages')}}</p>
                         <p data-id="" class="situ-title text-center font-weight-bold text-capitalize"></p>
                         <div class="row mt-4 mb-2">
                             <div class="col-md-6 offset-md-3 text-capitalize">
@@ -229,8 +229,8 @@
                             </div>
                         </div>
                         <p id="result" class="text-center mt-3 mb-0 d-none">
-                            <span class="success">{{ 'contrib.translation.modal.result.success'|trans }}</span>
-                            <span class="error">{{ 'contrib.translation.modal.result.error'|trans }}</span>
+                            <span class="success">{{ 'contrib.translation.modal.result.success'|trans({}, 'user_messages') }}</span>
+                            <span class="error">{{ 'contrib.translation.modal.result.error'|trans({}, 'user_messages') }}</span>
                         </p>
                     </div>
                     <div class="modal-footer">
