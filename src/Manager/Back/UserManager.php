@@ -9,8 +9,9 @@ use Symfony\Component\Form\Exception\LogicException;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Component\Routing\Exception\InvalidParameterException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\Routing\Exception\InvalidParameterException;
+use Symfony\Component\Security\Core\Security;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class UserManager
@@ -25,10 +26,12 @@ class UserManager
                                 ParameterBagInterface $parameters,
                                 RequestStack $requestStack,
                                 TranslatorInterface $translator,
+                                Security $security,
                                 UrlGeneratorInterface $urlGenerator)
     {
         $this->em = $em;
         $this->requestStack = $requestStack;
+        $this->security = $security;
         $this->supremeAdminId = $parameters->get('supreme_admin_id');
         $this->translator = $translator;
         $this->urlGenerator = $urlGenerator;
@@ -110,4 +113,71 @@ class UserManager
         if (count($ids) !== count($users)) { throw new NotFoundHttpException(); }
         return $users;
     }
+    
+    /**
+     * Prevent SUPER_VISITOR before push
+     * 
+     * @param type $user
+     */
+    public function preventSuperVisitor($user)
+    {
+        if ($this->security->getUser()->hasRole('ROLE_SUPER_VISITOR')) {
+            return $this->redirectToRoute('back_access_denied', [
+                '_locale' => locale_get_default()
+            ]);
+        }
+    }
+
+    /**
+     * Anonymize all users contributions and remove before flush
+     */
+    public function anonymizeContributions($users)
+    {   
+        
+        // Assign user contribs to anonymous
+        $anonymous = $this->em->getRepository(User::class)->find(0);
+
+        foreach ($users as $user) {
+            
+            // If get situs, set them to anonymous
+            if ($user->getSitus()) {
+                foreach ($user->getSitus() as $situ) {
+                    $situ->setUser($anonymous);
+                }
+            }
+            // If get events, set them to anonymous
+            if ($user->getEvents()) {
+                foreach ($user->getEvents() as $event) {
+                    $event->setUser($anonymous);
+                }
+            }
+            // If get categories, set them to anonymous
+            if ($user->getCategories()) {
+                foreach ($user->getCategories() as $category) {
+                    $category->setUser($anonymous);
+                }
+            }
+            // If get translations, set them to anonymous
+            if ($user->getTranslations()) {
+                foreach ($user->getTranslations() as $translation) {
+                    $translation->setUser($anonymous);
+                }
+            }
+            // If recevied messages, set them to anonymous
+            if ($user->getRecipients()) {
+                foreach ($user->getSenders() as $message) {
+                    $message->setRecipientUser($anonymous);
+                }
+            }
+            // If sent messages, removed by orphanRemoval
+
+            // If get image, remove it
+            if($user->getImageFilename()) {
+                unlink($this->getParameter('user_img').'/'.$user->getImageFilename());
+            }
+
+            $this->em->remove($user);
+        }
+    }
+    
 }

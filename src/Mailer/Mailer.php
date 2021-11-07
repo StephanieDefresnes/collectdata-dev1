@@ -5,7 +5,7 @@ namespace App\Mailer;
 use App\Entity\Lang;
 use App\Entity\Situ;
 use App\Entity\User;
-use App\Service\UserService;
+use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Mime\Email;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
@@ -22,7 +22,7 @@ class Mailer
     private $parameters;
     private $router;
     private $translator;
-    private $userService;
+    private $userRepository;
     
     /**
      * Mailer constructor.
@@ -33,14 +33,14 @@ class Mailer
                                 ParameterBagInterface $parameters,
                                 TranslatorInterface $translator,
                                 UrlGeneratorInterface $router,
-                                UserService $userService)
+                                UserRepository $userRepository)
     {
         $this->em = $em;
         $this->mailer = $mailer;
         $this->parameters = $parameters;
         $this->router = $router;
         $this->translator = $translator;
-        $this->userService = $userService;
+        $this->userRepository = $userRepository;
     }
     
     public function sendInvitation(User $user, string $password)
@@ -90,7 +90,7 @@ class Mailer
     {
         $nameSite = $this->parameters->get('configuration')['name'];
         $sender = $this->parameters->get('configuration')['from_email'];
-        $moderators = $this->userService->getRoleByLang('MODERATOR', $situ->getLang());
+        $moderators = $this->userRepository->findRoleByLang('MODERATOR', $situ->getLang());
 
         if ($moderators) {
             foreach ($moderators as $moderator) {

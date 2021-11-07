@@ -4,10 +4,8 @@ namespace App\Messenger;
 
 use App\Entity\Lang;
 use App\Entity\Message;
-use App\Entity\Situ;
 use App\Entity\User;
-use App\Service\MessageService;
-use App\Service\UserService;
+use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -15,31 +13,29 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 class Messenger {
     
     private $em;
-    private $messageService;
     private $parameters;
     private $translator;
-    private $userService;
+    private $userRepository;
     
     /**
      * Messenger constructor.
      *
      */
     public function __construct(EntityManagerInterface $em,
-                                MessageService $messageService,
                                 ParameterBagInterface $parameters,
                                 TranslatorInterface $translator,
-                                UserService $userService)
+                                UserRepository $userRepository)
     {
         $this->em = $em;
         $this->messageService = $messageService;
         $this->parameters = $parameters;
         $this->translator = $translator;
-        $this->userService = $userService;
+        $this->userRepository = $userRepository;
     }
     
     public function sendModeratorAlert($entity, $data) {
         
-        $moderators = $this->userService->getRoleByLang('MODERATOR', $data->getLang());
+        $moderators = $this->userRepository->findRoleByLang('MODERATOR', $data->getLang());
         
         $author = $this->em->getRepository(User::class)->find($data->getUser()->getId());
 

@@ -6,9 +6,9 @@ use App\Entity\User;
 use App\Form\Back\User\UserBatchType;
 use App\Form\Back\User\UserUpdateFormType;
 use App\Manager\Back\UserManager;
+use App\Repository\UserRepository;
 use App\Service\LangService;
 use App\Service\SituService;
-use App\Service\UserService;
 use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -31,15 +31,13 @@ class UserController extends AbstractController
     private $situService;
     private $translator;
     private $userManager;
-    private $userService;
     
     public function __construct(EntityManagerInterface $em,
                                 LangService $langService,
                                 Security $security,
                                 SituService $situService,
                                 TranslatorInterface $translator,
-                                UserManager $userManager,
-                                UserService $userService)
+                                UserManager $userManager)
     {
         $this->em = $em;
         $this->langService = $langService;
@@ -47,15 +45,16 @@ class UserController extends AbstractController
         $this->situService = $situService;
         $this->translator = $translator;
         $this->userManager = $userManager;
-        $this->userService = $userService;
     }
 
     /**
      * @Route("/search", name="back_user_search", methods="GET|POST")
      */
-    public function allUsers(Request $request, Session $session)
+    public function allUsers(   Request $request,
+                                Session $session,
+                                UserRepository $userRepository)
     {
-        $users = $this->userService->getUsers();
+        $users = $userRepository->findUsers();
         
         $formBatch = $this->createForm(UserBatchType::class, null, [
             'action' => $this->generateUrl('back_user_search'),
@@ -97,7 +96,9 @@ class UserController extends AbstractController
     {
         $user = $this->em->getRepository(User::class)->find($id);
         if (!$user) {
-            return $this->redirectToRoute('back_not_found', ['_locale' => locale_get_default()]);
+            return $this->redirectToRoute('back_not_found', [
+                '_locale' => locale_get_default()
+            ]);
         }
         
         // Check permission
@@ -116,16 +117,15 @@ class UserController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             
             try {
-                // Super visitor filter
-                if ($this->security->getUser()->hasRole('ROLE_SUPER_VISITOR')) {
-                    return $this->redirectToRoute('back_access_denied', [
-                        '_locale' => locale_get_default()
-                    ]);
-                }
+                // Prevent SUPER_VISITOR flush
+                $this->userManager->preventSuperVisitor($user);
             
                 $this->em->flush();
-                $msg = $this->translator->trans('user.update.flash.success', [], 'back_messages');
+                
+                $msg = $this->translator
+                        ->trans('user.update.flash.success', [], 'back_messages');
                 $this->addFlash('success', $msg);
+                
             } catch (\Doctrine\DBAL\DBALException $e) {
                 $this->addFlash('warning', $e->getMessage());
             }
@@ -148,64 +148,19 @@ class UserController extends AbstractController
         
         // Check permission
         $this->denyAccessUnlessGranted('back_user_delete', $users);
-        
-        // Assign user contribs to anonymous
-        $anonymous = $this->em->getRepository(User::class)->find(0);
 
-        foreach ($users as $user) {
-
-            // If get situs, set them to anonymous
-            if ($user->getSitus()) {
-                foreach ($user->getSitus() as $situ) {
-                    $situ->setUser($anonymous);
-                }
-            }
-            // If get events, set them to anonymous
-            if ($user->getEvents()) {
-                foreach ($user->getEvents() as $event) {
-                    $event->setUser($anonymous);
-                }
-            }
-            // If get categories, set them to anonymous
-            if ($user->getCategories()) {
-                foreach ($user->getCategories() as $category) {
-                    $category->setUser($anonymous);
-                }
-            }
-            // If get translations, set them to anonymous
-            if ($user->getTranslations()) {
-                foreach ($user->getTranslations() as $translation) {
-                    $translation->setUser($anonymous);
-                }
-            }
-            // If recevied messages, set them to anonymous
-            if ($user->getRecipients()) {
-                foreach ($user->getSenders() as $message) {
-                    $message->setRecipientUser($anonymous);
-                }
-            }
-            // If sent messages, removed by orphanRemoval
-
-            // If get image, remove it
-            if($user->getImageFilename()) {
-                unlink($this->getParameter('user_img').'/'.$user->getImageFilename());
-            }
-
-            $this->em->remove($user);
-        }
+        // Replace contributions author
+        $this->userManager->anonymizeContributions($users);
 
         if (count($users) > 1) $type = 'users';
         else $type = 'user';
 
         try {
-            // Filter super visitor           
-            if ($this->security->getUser()->hasRole('ROLE_SUPER_VISITOR')) {
-                return $this->redirectToRoute('back_access_denied', [
-                    '_locale' => locale_get_default()
-                ]);
-            }
-
+            // Prevent SUPER_VISITOR flush
+            $this->userManager->preventSuperVisitor($user);
+            
             $this->em->flush();
+            
             $msg = $this->translator
                     ->trans('user.delete.flash.success.'. $type, [], 'back_messages');
             $this->addFlash('success', $msg);
@@ -239,14 +194,11 @@ class UserController extends AbstractController
         }
 
         try {
-            // Filter super visitor    
-            if ($this->security->getUser()->hasRole('ROLE_SUPER_VISITOR')) {
-                return $this->redirectToRoute('back_access_denied', [
-                    '_locale' => locale_get_default()
-                ]);
-            }
+            // Prevent SUPER_VISITOR flush
+            $this->userManager->preventSuperVisitor($user);
 
             $this->em->flush();
+            
             $msg = $this->translator
                     ->trans('user.permute.flash.success.'. $type, [], 'back_messages');
             $this->addFlash('success', $msg);
