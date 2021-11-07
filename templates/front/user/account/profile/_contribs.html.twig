@@ -17,15 +17,15 @@
         {% else %}{{ 'label.contribution.count'|trans({'%situs%' : countSitus }) }}{% endif %}
         </p>
 
-        {% if countSitus > 1 %}
+        {% if countSitus > 1 and user.langs|length > 1 %}
             {% for lang in situsLangs %}
             <div class="d-sm-flex justify-content-start">
                 <span class="text-secondary text-capitalize">{{ lang.langName }} :</span>
                 <span class="px-2">
-                {% if situsLangs|length  == 1 %}
+                {% if lang.situs == 1 %}
                     {{ 'label.contribution.single'|trans }}
                 {% else %}
-                    {{ 'label.contribution.count'|trans({'%situs%' : situsLangs})  }}
+                    {{ 'label.contribution.count'|trans({'%situs%' : lang.situs})  }}
                 {% endif %}
                 </span>
             </div>
