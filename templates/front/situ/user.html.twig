@@ -9,7 +9,7 @@
     {{ encore_entry_link_tags('app') }}
 {% endblock %}
 
-{% block title %}{{ 'contrib.title'|trans }}{% endblock %}
+{% block title %}{{ 'contrib.title'|trans({}, 'user_messages') }}{% endblock %}
 
 {% block content %}
     <div id="loader"></div>
@@ -30,7 +30,7 @@
 
             {% if app.user.situs is empty %}
             <div class="text-left mb-5 p-3 bg-white-70 text-secondary">
-                {{ 'contribs.empty'|trans }}
+                {{ 'label.contribution.empty'|trans }}
             </div>
             {% else %}
             <table id="dataTable-situs" class="shadow table table-borderless table-hover text-nowrap">
@@ -253,12 +253,12 @@
     <script>
         let path = { "locale" : "{{ locale }}" }
         let translations = {
-            "modalBtnRead" : "{{ 'action.read'|trans }}",
-            "modalBtnValid" : "{{ 'action.translate'|trans }}",
-            "deleteTitle" : "{{ 'contrib.delete.title'|trans }}",
-            "deleteQuestion" : "{{ 'contrib.delete.text'|trans }}",
-            "updateTitle" : "{{ 'contrib.update_validated.title'|trans }}",
-            "updateQuestion" : "{{ 'contrib.update_validated.question'|trans|raw }}",
+            "modalBtnRead" : "{{ 'action.read'|trans({}, 'user_messages') }}",
+            "modalBtnValid" : "{{ 'action.translate'|trans({}, 'user_messages')  }}",
+            "deleteTitle" : "{{ 'contrib.delete.title'|trans({}, 'user_messages')  }}",
+            "deleteQuestion" : "{{ 'contrib.delete.text'|trans({}, 'user_messages')  }}",
+            "updateTitle" : "{{ 'contrib.update_validated.title'|trans({}, 'user_messages')  }}",
+            "updateQuestion" : "{{ 'contrib.update_validated.question'|trans({}, 'user_messages') |raw }}",
             "no" : "{{ 'no'|trans }}",
             "yes" : "{{ 'yes'|trans }}",
         }
