@@ -2,20 +2,24 @@
 
 namespace App\Form\Front\Situ;
 
+use App\Entity\Category;
+use App\Entity\Event;
+use App\Entity\Lang;
 use App\Entity\Situ;
 use App\Form\Front\Situ\SituItemType;
+use App\Repository\CategoryRepository;
+use App\Repository\EventRepository;
 use App\Repository\LangRepository;
 use App\Service\EventService;
 use App\Service\CategoryService;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
-use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
@@ -27,19 +31,28 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 class SituFormType extends AbstractType
 {
     private $categoryService;
+    private $em;
     private $eventService;
+    private $categoryRepository;
+    private $eventRepository;
     private $langRepository;
     private $translator;
     
     public function __construct(CategoryService $categoryService,
+                                CategoryRepository $categoryRepository,
+                                EntityManagerInterface $em,
+                                EventRepository $eventRepository,
                                 EventService $eventService,
                                 LangRepository $langRepository,
                                 Security $security,
                                 TranslatorInterface $translator)
     {
+        $this->categoryRepository = $categoryRepository;
+        $this->em = $em;
+        $this->eventRepository = $eventRepository;
+        $this->langRepository = $langRepository;
         $this->categoryService = $categoryService;
         $this->eventService = $eventService;
-        $this->langRepository = $langRepository;
         $this->security = $security;
         $this->translator = $translator;
     }
@@ -49,7 +62,7 @@ class SituFormType extends AbstractType
         $user = $this->security->getUser();
         
         // Get User current lang
-        $userLocale = $this->langRepository->find($user->getLang());
+        $userLocale = $this->em->getRepository(Lang::class)->find($user->getLang());
         
         // Get Events by locale and by user events
         $GLOBALS['events'] = $this->eventService->getByLangIdAndUserLangId($userLocale);
@@ -61,7 +74,7 @@ class SituFormType extends AbstractType
         $builder->add('lang', EntityType::class, [
             'class' => 'App\Entity\Lang',
             'required' => false,
-            'label' => 'contrib.form.lang.label',
+            'label' => 'situ.lang',
             'choice_label' => function($lang, $key, $value) {
                 return html_entity_decode($lang->getName());
             },
@@ -75,6 +88,7 @@ class SituFormType extends AbstractType
             'choice_attr' => function($choice, $key, $value) {
                 return ['class' => 'first-letter text-dark'];
             },
+            'translation_domain' => 'messages'
         ]);
         
         /**
@@ -118,7 +132,7 @@ class SituFormType extends AbstractType
                          * we add not validated events of current user (validation on progress)
                          */
                         $form->add('event', EntityType::class, [
-                            'class' => 'App\Entity\Event',
+                            'class' => Event::class,
                             'attr' => ['class' => 'custom-select'],
                             'label' => 'contrib.form.event.label',
                             'placeholder' => 'contrib.form.event.placeholder',
@@ -151,7 +165,7 @@ class SituFormType extends AbstractType
                         ]);
                     } else {
                         $form->add('event', EntityType::class, [
-                            'class' => 'App\Entity\Event',
+                            'class' => Event::class,
                             'attr' => ['class' => 'custom-select'],
                             'label' => 'contrib.form.event.label',
                             'placeholder' => 'contrib.form.event.placeholder',
@@ -176,10 +190,14 @@ class SituFormType extends AbstractType
 
                 if ($event_id) {
                     
-                    // Get event lang id to load categories user not validated if exist
-                    $eventLang = $this->eventService->getEventLang($event_id);
-                    $categoriesLevel1 = $this->categoryService
-                                ->getByEventIdAndbyUserEvent($event_id, $eventLang);
+                    // Get event to also load categories user not yet validated if exist
+                    $event              = $this->em->getRepository(Event::class)
+                                            ->find($event_id);
+                    $categoriesLevel1   = $this->em->getRepository(Category::class)
+                                            ->findByEventAndByUserEvent(
+                                                    $event_id, 
+                                                    $event->getLang()->getId()
+                                                );
                     
                     if ($categoriesLevel1) {
                         /**
@@ -189,7 +207,7 @@ class SituFormType extends AbstractType
                          * current user categories not validated (validation on progress)
                          */
                         $form->add('categoryLevel1', EntityType::class, [
-                            'class' => 'App\Entity\Category',
+                            'class' => Category::class,
                             'attr' => ['class' => 'custom-select'],
                             'label' => 'contrib.form.category.level1.label',
                             'placeholder' => 'contrib.form.category.level1.placeholder',
@@ -222,7 +240,7 @@ class SituFormType extends AbstractType
                         ]);
                     } else {
                         $form->add('categoryLevel1', EntityType::class, [
-                            'class' => 'App\Entity\Category',
+                            'class' => Category::class,
                             'attr' => ['class' => 'custom-select'],
                             'label' => 'contrib.form.category.level1.label',
                             'choices' => $categoriesLevel1,
@@ -237,11 +255,14 @@ class SituFormType extends AbstractType
 
                 if ($categoryLevel1_id) {
                     
-                    // Get event lang id to load categories user not validated if exist
-                    $category_lang = $this->categoryService
-                                    ->getLangByCategoryId($categoryLevel1_id);
-                    $categoriesLevel2 = $this->categoryService
-                                ->getByParentIdAndUserParentId($categoryLevel1_id, $category_lang);
+                    // Get category lang id to also load categories user not validated if exist
+                    $category           = $this->em->getRepository(Category::class)
+                                            ->find($categoryLevel1_id);
+                    $categoriesLevel2   = $this->em->getRepository(Category::class)
+                                            ->findByParentAndUserParent(
+                                                $categoryLevel1_id,
+                                                $category->getLang()->getId()
+                                                );
                 
                     if ($categoriesLevel2) {
                         /**
@@ -251,7 +272,7 @@ class SituFormType extends AbstractType
                          * current user categories not validated (validation on progress)
                          */
                         $form->add('categoryLevel2', EntityType::class, [
-                            'class' => 'App\Entity\Category',
+                            'class' => Category::class,
                             'attr' => ['class' => 'custom-select'],
                             'label' => 'contrib.form.category.level2.label',
                             'placeholder' => 'contrib.form.category.level2.placeholder',
@@ -284,7 +305,7 @@ class SituFormType extends AbstractType
                         ]);
                     } else {
                         $form->add('categoryLevel2', EntityType::class, [
-                            'class' => 'App\Entity\Category',
+                            'class' => Category::class,
                             'attr' => ['class' => 'custom-select'],
                             'label' => 'contrib.form.category.level2.label',
                             'choices' => $categoriesLevel2,
@@ -345,15 +366,17 @@ class SituFormType extends AbstractType
                 'attr' => [
                     'data-id' => '',
                     'class' => 'mb-md-4',
-                    'placeholder' => 'contrib.form.situ.title_placeholder'
+                    'placeholder' => 'situ.title_placeholder'
                     ],
+                'translation_domain' => 'messages'
             ])
             ->add('description', TextareaType::class, [
                 'label' => 'label_dp.description',
                 'attr' => [
                     'rows' => '5',
-                    'placeholder' => 'contrib.form.situ.description_placeholder',
+                    'placeholder' => 'situ.description_placeholder',
                     ],
+                'translation_domain' => 'messages'
             ])
             ->add($builder->create('situItems' , CollectionType::class, [
                 'entry_type'   => SituItemType::class,

@@ -4,7 +4,6 @@ namespace App\Form\Front\Situ;
 
 use App\Entity\Event;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -15,9 +14,12 @@ class CreateEventType extends AbstractType
     {
         $builder
             ->add('title', TextType::class, [
-                'attr' => ['placeholder' => 'contrib.form.event.placeholder_add','class' => 'mb-0'],
+                'attr' => [
+                    'placeholder' => 'contrib.form.event.placeholder_add',
+                    'class' => 'mb-0'
+                ],
                 'row_attr' => ['class' => 'mb-0'],
-                'label' => 'label_dp.title',
+                'label' => false,
             ])
         ;
     }
@@ -26,7 +28,6 @@ class CreateEventType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => Event::class,
-            'translation_domain' => 'user_messages',
         ]);
     }
 }

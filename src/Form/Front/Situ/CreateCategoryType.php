@@ -15,16 +15,16 @@ class CreateCategoryType extends AbstractType
     {
         $builder
             ->add('title', TextType::class, [
-                'label' => 'label_dp.title',
-                'attr' => ['placeholder' => 'contrib.form.category.level2.title_placeholder'],
+                'label' => 'contrib.form.title',
+                'attr' => ['placeholder' => 'contrib.form.category.title_placeholder'],
             ])
             ->add('description', TextareaType::class, [
+                'label' => 'contrib.form.description',
                 'attr' => [
                     'rows' => '3',
-                    'placeholder' => 'contrib.form.category.level2.description_placeholder',
+                    'placeholder' => 'contrib.form.category.description_placeholder',
                     ],
                 'row_attr' => ['class' => 'mb-0'],
-                'label' => 'label_dp.description',
             ])
         ;
     }
@@ -33,7 +33,6 @@ class CreateCategoryType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => Category::class,
-            'translation_domain' => 'user_messages',
         ]);
     }
 }
