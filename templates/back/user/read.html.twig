@@ -188,7 +188,7 @@
                             <div class="d-sm-flex justify-content-start col-sm-8 line-12">
                                 {% if situs ==  0 %}{{ 'label.contribution.empty'|trans }}
                                 {% elseif situs == 1 %}{{ 'label.contribution.single'|trans }}
-                                {% else %}{{ situs }} {{ 'label.contribution.count'|trans({'%situs%' : situs }) }}{% endif %}
+                                {% else %}{{ 'label.contribution.count'|trans({'%situs%' : situs }) }}{% endif %}
                             </div>
                         </div>
                         {% if can_access %}
