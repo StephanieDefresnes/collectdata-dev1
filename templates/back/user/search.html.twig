@@ -53,7 +53,7 @@
                             <th class="pr-4" nowrap>{{ 'label.roles'|trans({}, 'messages') }}</th>
                             <th class="pr-4" nowrap>{{ 'label.translator'|trans({}, 'messages') }}</th>
                             <th class="pr-4" nowrap>{{ 'label.enabled'|trans({}, 'messages') }}</th>
-                            <th class="pr-4" nowrap>{{ 'label.contributions'|trans({}, 'messages') }}</th>
+                            <th class="pr-4" nowrap>{{ 'label.contributions.title'|trans({}, 'messages') }}</th>
                             <th class="pr-4" nowrap>{{ 'label.lang'|trans({}, 'messages') }}</th>
                             <th class="pr-4" nowrap>{{ 'label.note'|trans({}, 'messages') }}</th>
                             <th class="pr-4" nowrap>{{ 'label.date_login'|trans({}, 'messages') }}</th>
@@ -143,8 +143,15 @@
                                 {% endfor %}
                             </td>
                             <td>
-                                {% if user.langContributor %}
-                                    {{ 'yes'|trans({}, 'messages')  }}</p>
+                                {% if user.langContributor and user.contributorLangs %}
+                                    {% if (locale == 'ar') or (locale == 'he') or (locale == 'ur') %}
+                                        {% set contributorLangs = user.contributorLangs|reverse %}
+                                    {% else %}
+                                        {% set contributorLangs = user.contributorLangs|sort %}
+                                    {% endif %}
+                                    {% for lang in contributorLangs %}
+                                        <p class="mb-0 line-12">{{ lang.englishName }}</p>
+                                    {% endfor %}
                                 {% endif %}
                             </td>
                             <td>
@@ -262,8 +269,8 @@
                "user" : "{{ 'delete.title'|trans }}",
                "users" : "{{ 'user.delete.title_s'|trans }}",
                "warning" : "{{ 'delete.warning'|trans }}",
-               "no" : "{{ 'no'|trans }}",
-               "yes" : "{{ 'yes'|trans }}",
+               "no" : "{{ 'no'|trans({}, 'messages') }}",
+               "yes" : "{{ 'yes'|trans({}, 'messages') }}",
             }
         </script>
     {% endif %}
