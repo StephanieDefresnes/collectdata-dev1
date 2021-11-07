@@ -18,6 +18,19 @@ class StatusRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Status::class);
     }
+    
+    public function findUsualStatus()
+    {
+        $qb = $this->_em->createQueryBuilder();        
+        $qb->from(Status::class,'s')
+                ->select('s')
+                ->where($qb->expr()->neq('s.id', '?1'))
+                ->setParameters([
+                    1 => '-1',
+                ]);
+        
+        return $qb->getQuery()->getResult();
+    }
 
     // /**
     //  * @return Status[] Returns an array of Status objects

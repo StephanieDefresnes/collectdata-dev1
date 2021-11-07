@@ -5,6 +5,7 @@ namespace App\Repository;
 use App\Entity\Category;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Symfony\Component\Security\Core\Security;
 
 /**
  * @method Category|null find($id, $lockMode = null, $lockVersion = null)
@@ -14,9 +15,83 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class CategoryRepository extends ServiceEntityRepository
 {
-    public function __construct(ManagerRegistry $registry)
+    public function __construct(ManagerRegistry $registry, Security $security)
     {
         parent::__construct($registry, Category::class);
+        $this->security = $security;
+    }
+        
+    /**
+     * @return []   Returns an array of Categories Level1 objects
+     *              by event selected and user event category not yet validated
+     * 
+     * @param type $eventId
+     * @param type $langId
+     */
+    public function findByEventAndByUserEvent($eventId, $eventLangId)
+    {
+        $qb = $this->_em->createQueryBuilder();
+        
+        $eventCategories = $qb->expr()->andX(
+            $qb->expr()->eq('c.event', '?1'),
+            $qb->expr()->eq('c.validated', '?2')
+        );
+        
+        $eventCategoriesByUser = $qb->expr()->andX(
+            $qb->expr()->eq('c.event', '?1'),
+            $qb->expr()->eq('c.validated', '?3'),
+            $qb->expr()->eq('c.user', '?4'),
+            $qb->expr()->eq('c.lang', '?5')
+        );
+        
+        $qb->from(Category::class,'c')
+            ->select('c')
+            ->andWhere($qb->expr()->orX($eventCategories, $eventCategoriesByUser))
+            ->setParameters([
+                1 => $eventId,
+                2 => true,
+                3 => false,
+                4 => $this->security->getUser()->getId(),
+                5 => $eventLangId
+            ]);
+        
+        return $qb->getQuery()->getResult();
+    }
+        
+    /**
+     * @return []   Returns an array of Categories Level2 objects
+     *              by category selected and user parent category not yet validated
+     * 
+     * @param type $categoryId
+     * @param type $langId
+     */
+    public function findByParentAndUserParent($categoryId, $categoryLangId)
+    {        
+        $qb = $this->_em->createQueryBuilder();
+        
+        $parentCategories = $qb->expr()->andX(
+            $qb->expr()->eq('c.parent', '?1'),
+            $qb->expr()->eq('c.validated', '?2')
+        );
+        
+        $parentCategoriesByUser = $qb->expr()->andX(
+            $qb->expr()->eq('c.parent', '?1'),
+            $qb->expr()->eq('c.validated', '?3'),
+            $qb->expr()->eq('c.user', '?4'),
+            $qb->expr()->eq('c.lang', '?5')
+        );
+        
+        $qb->from(Category::class,'c')
+            ->select('c')
+            ->andWhere($qb->expr()->orX($parentCategories, $parentCategoriesByUser))
+            ->setParameters([
+                1 => $categoryId,
+                2 => true,
+                3 => false,
+                4 => $this->security->getUser()->getId(),
+                5 => $categoryLangId
+            ]);
+        return $qb->getQuery()->getResult();
     }
 
     // /**

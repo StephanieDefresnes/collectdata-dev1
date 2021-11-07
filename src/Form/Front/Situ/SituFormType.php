@@ -7,11 +7,6 @@ use App\Entity\Event;
 use App\Entity\Lang;
 use App\Entity\Situ;
 use App\Form\Front\Situ\SituItemType;
-use App\Repository\CategoryRepository;
-use App\Repository\EventRepository;
-use App\Repository\LangRepository;
-use App\Service\EventService;
-use App\Service\CategoryService;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -30,29 +25,14 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class SituFormType extends AbstractType
 {
-    private $categoryService;
     private $em;
-    private $eventService;
-    private $categoryRepository;
-    private $eventRepository;
-    private $langRepository;
     private $translator;
     
-    public function __construct(CategoryService $categoryService,
-                                CategoryRepository $categoryRepository,
-                                EntityManagerInterface $em,
-                                EventRepository $eventRepository,
-                                EventService $eventService,
-                                LangRepository $langRepository,
+    public function __construct(EntityManagerInterface $em,
                                 Security $security,
                                 TranslatorInterface $translator)
     {
-        $this->categoryRepository = $categoryRepository;
         $this->em = $em;
-        $this->eventRepository = $eventRepository;
-        $this->langRepository = $langRepository;
-        $this->categoryService = $categoryService;
-        $this->eventService = $eventService;
         $this->security = $security;
         $this->translator = $translator;
     }
@@ -61,18 +41,16 @@ class SituFormType extends AbstractType
     {
         $user = $this->security->getUser();
         
-        // Get User current lang
-        $userLocale = $this->em->getRepository(Lang::class)->find($user->getLang());
-        
-        // Get Events by locale and by user events
-        $GLOBALS['events'] = $this->eventService->getByLangIdAndUserLangId($userLocale);
+        // Get Events default by user lang
+        $GLOBALS['events'] = $this->em->getRepository(Event::class)
+                                ->findByLangAndUserLang($user->getLang());
         
         // Get User langs
         $userLangs = $user->getLangs();
             
         // Build choices with current and optional user land
         $builder->add('lang', EntityType::class, [
-            'class' => 'App\Entity\Lang',
+            'class' => Lang::class,
             'required' => false,
             'label' => 'situ.lang',
             'choice_label' => function($lang, $key, $value) {
@@ -122,7 +100,8 @@ class SituFormType extends AbstractType
                 
                 if ($lang_id) {
                     
-                    $events = $this->eventService->getByLangIdAndUserLangId($lang_id);
+                    $events = $this->em->getRepository(Event::class)
+                                ->findByLangAndUserLang($lang_id);
 
                     if ($events) {
                         /**
@@ -157,30 +136,22 @@ class SituFormType extends AbstractType
                     }
                 } else {
                     // Init field
-                    if (empty($GLOBALS['events'])) {
-                        $form->add('event', CreateEventType::class, [
-                            'attr' => ['class' => 'mt-1 mb-0'],
-                            'label' => 'contrib.form.event.label',
-                            'label_attr' => ['class' => 'pt-0'],
-                        ]);
-                    } else {
-                        $form->add('event', EntityType::class, [
-                            'class' => Event::class,
-                            'attr' => ['class' => 'custom-select'],
-                            'label' => 'contrib.form.event.label',
-                            'placeholder' => 'contrib.form.event.placeholder',
-                            'choices' => $GLOBALS['events'],
-                            'choice_label' => function($event, $key, $value) {
-                                return $event->getTitle();
-                            },
-                            'choice_attr' => function($choice, $key, $value) {
-                                if ($choice->getValidated() == 0)
-                                    return ['class' => 'text-dark to-validate'];
-                                else
-                                    return ['class' => 'text-dark'];
-                            },
-                        ]);
-                    }
+                    $form->add('event', EntityType::class, [
+                        'class' => Event::class,
+                        'attr' => ['class' => 'custom-select'],
+                        'label' => 'contrib.form.event.label',
+                        'placeholder' => 'contrib.form.event.placeholder',
+                        'choices' => $GLOBALS['events'],
+                        'choice_label' => function($event, $key, $value) {
+                            return $event->getTitle();
+                        },
+                        'choice_attr' => function($choice, $key, $value) {
+                            if ($choice->getValidated() == 0)
+                                return ['class' => 'text-dark to-validate'];
+                            else
+                                return ['class' => 'text-dark'];
+                        },
+                    ]);
                 }
             };
                 
@@ -260,8 +231,8 @@ class SituFormType extends AbstractType
                                             ->find($categoryLevel1_id);
                     $categoriesLevel2   = $this->em->getRepository(Category::class)
                                             ->findByParentAndUserParent(
-                                                $categoryLevel1_id,
-                                                $category->getLang()->getId()
+                                                    $categoryLevel1_id,
+                                                    $category->getLang()->getId()
                                                 );
                 
                     if ($categoriesLevel2) {

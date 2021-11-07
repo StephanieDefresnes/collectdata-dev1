@@ -333,16 +333,20 @@ class SituController extends AbstractController
             
             $data = $request->request->get('dataForm');
             
-            $categoryLevel1 = isset($data['categoryLevel1'])
-                    ? $categoryService->getDescriptionById($data['categoryLevel1']) : '';
+            $categoryLevel1Description = isset($data['categoryLevel1'])
+                    ? $this->em->getRepository(Category::class)
+                        ->find($data['categoryLevel1'])->getDescritption()
+                    : '';
             
-            $categoryLevel2 = isset($data['categoryLevel2'])
-                    ? $categoryService->getDescriptionById($data['categoryLevel2']) : '';
+            $categoryLevel1Description = isset($data['categoryLevel2'])
+                    ? $this->em->getRepository(Category::class)
+                        ->find($data['categoryLevel2'])->getDescritption()
+                    : '';
 
             return $this->json([
                 'success' => true,
-                'categoryLevel1' => $categoryLevel1,
-                'categoryLevel2' => $categoryLevel2,
+                'categoryLevel1' => $categoryLevel1Description,
+                'categoryLevel2' => $categoryLevel1Description,
             ]);
         }
     }
@@ -374,7 +378,8 @@ class SituController extends AbstractController
                                 ])
             ]);
         } else {
-            $situTranslated = $situService->searchTranslation($situId, $langId);
+            $situTranslated = $this->em->getRepository(Situ::class)
+                                ->findTranslations($situId, $langId);
             return new JsonResponse([
                 'success'  => true,
                 'situTranslated' => $situTranslated,

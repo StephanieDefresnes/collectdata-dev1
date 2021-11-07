@@ -3,6 +3,7 @@
 namespace App\Controller\Front;
 
 use App\Entity\Lang;
+use App\Entity\Situ;
 use App\Entity\User;
 use App\Form\Front\User\UserContactType;
 use App\Form\Front\User\UserUpdateFormType;
@@ -54,8 +55,8 @@ class UserController extends AbstractController
                 ->findOneBy(['slug' => $slug]);
         
         // Get Contribs count by lang
-        $situsLangs = $this->situService
-                ->countSitusByLangByUser($user->getId());
+        $situsLangs = $this->em->getRepository(Situ::class)
+                        ->findUserSitusCountByLang($user->getId());
         
         $form = $this->createForm(UserContactType::class);
         $form->handleRequest($request);
@@ -82,8 +83,8 @@ class UserController extends AbstractController
         $user = $this->security->getUser();
         
         // Get Contribs count by lang
-        $situsLangs = $this->situService
-                ->countSitusByLangByUser($this->getUser()->getId());
+        $situsLangs = $this->em->getRepository(Situ::class)
+                        ->findUserSitusCountByLang($user->getId());
         
         return $this->render('front/user/account/profile/index.html.twig', [
             'user' => $user,

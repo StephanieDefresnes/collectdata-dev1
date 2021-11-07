@@ -221,7 +221,7 @@ function ajaxGetData(name, dataForm) {
         data: {dataForm},
         success: function(data) {
             if (data[name])
-                $('#'+ name).find('.description').text(data[name].description)
+                $('#'+ name).find('.description').text(data[name])
                 toggleCollapse($('#'+ name), 'show')
         }
     })

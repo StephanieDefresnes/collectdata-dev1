@@ -14,8 +14,10 @@ class MessageService {
         $this->em = $em;
     }
     
-    /**
-     * Called in twig
+    /* === Called in twig === */
+    
+    /*
+     * back\block\_navbar.html.twig
      * 
      * @param type $userId
      */

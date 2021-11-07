@@ -3,7 +3,6 @@
 namespace App\Repository;
 
 use App\Entity\Event;
-use App\Entity\Lang;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\Security\Core\Security;
@@ -25,39 +24,36 @@ class EventRepository extends ServiceEntityRepository
     
     /**
      * @return []   Returns an array of Events objects
-     *              by locale and by user events
+     *              by lang selected and user events not validated yet
+     * 
+     * @param type $langId
+     * @return type
      */
-    public function findByLocaleLang()
-    {        
-        $user = $this->security->getUser();
+    public function findByLangAndUserLang($langId)
+    {
+        $qb = $this->_em->createQueryBuilder();
         
-        $default = $this->em->getRepository(Lang::class)->findOneBy(
-            ['englishName' => 'French']
+        $eventsLang = $qb->expr()->andX(
+            $qb->expr()->eq('e.lang', '?1'),
+            $qb->expr()->eq('e.validated', '?2')
         );
         
-        $userLangId = $user->getLangId() == '' ? $default->getId() : $user->getLangId();
-        
-        $qb =  $this->createQueryBuilder('c');
-        
-        $eventByLang = $qb->expr()->andX(
-            $qb->expr()->eq('c.lang', '?1'),
-            $qb->expr()->eq('c.validated', '?2')
+       $eventsLangByUser = $qb->expr()->andX(
+            $qb->expr()->eq('e.lang', '?1'),
+            $qb->expr()->eq('e.validated', '?3'),
+            $qb->expr()->eq('e.user', '?4')
         );
         
-        $eventByUser = $qb->expr()->andX(
-            $qb->expr()->eq('c.lang', '?1'),
-            $qb->expr()->eq('c.validated', '?3'),
-            $qb->expr()->eq('c.userId', '?4')
-        );
-        
-        $qb->andWhere($qb->expr()->orX($eventByLang, $eventByUser))
+        $qb->from(Event::class,'e')
+            ->select('e')
+            ->andWhere($qb->expr()->orX($eventsLang, $eventsLangByUser))
             ->setParameters([
-                1 => $userLangId,
+                1 => $langId,
                 2 => 1,
                 3 => 0,
-                4 => $user->getId(),
+                4 => $this->security->getUser()->getId(),
             ]);
-        return $qb->getQuery()->getResult();        
+        return $qb->getQuery()->getResult();
     }
     
     // /**
