@@ -14,6 +14,11 @@ class MessageService {
         $this->em = $em;
     }
     
+    /**
+     * Called in twig
+     * 
+     * @param type $userId
+     */
     public function getUnreadUserAlerts($userId) {
         
         return $this->em->createQueryBuilder()
@@ -27,7 +32,4 @@ class MessageService {
             ->getQuery()->getResult();
     }
     
-    public function getUser($userId) {
-        
-    }
 }
