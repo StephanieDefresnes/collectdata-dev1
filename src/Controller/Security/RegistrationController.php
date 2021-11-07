@@ -2,10 +2,9 @@
 
 namespace App\Controller\Security;
 
+use App\Entity\Lang;
 use App\Entity\User;
 use App\Form\Security\RegistrationFormType;
-use App\Repository\UserRepository;
-use App\Service\LangService;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
@@ -17,29 +16,25 @@ use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Address;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
-use Symfony\Component\String\Slugger\AsciiSlugger;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use SymfonyCasts\Bundle\VerifyEmail\Exception\VerifyEmailExceptionInterface;
 use SymfonyCasts\Bundle\VerifyEmail\VerifyEmailHelperInterface;
 
 class RegistrationController extends AbstractController
 {
-    private $entityManager;
-    private $langService;
+    private $em;
     private $mailer;
     private $parameters;
     private $translator;
     private $verifyEmailHelper;
 
-    public function __construct(EntityManagerInterface $manager,
-                                LangService $langService,
+    public function __construct(EntityManagerInterface $em,
                                 MailerInterface $mailer,
                                 ParameterBagInterface $parameters,
                                 TranslatorInterface $translator,
                                 VerifyEmailHelperInterface $helper)
     {
-        $this->entityManager = $manager;
-        $this->langService = $langService;
+        $this->em = $em;
         $this->mailer = $mailer;
         $this->parameters = $parameters;
         $this->translator = $translator;
@@ -83,20 +78,17 @@ class RegistrationController extends AbstractController
             $user->setRoles(array('ROLE_CONTRIBUTOR'));
             $user->setDateCreate(new \DateTime());
             
-            $slugger = new AsciiSlugger();
-            $user->setSlug($slugger->slug($form->get('name')->getData()));
-            
             $lang = $this->em->getRepository(Lang::class)->findOneBy(
-                ['lang' => locale_get_default()]
-            );
+                        ['lang' => locale_get_default()]
+                    );
             $user->setLang($lang);
             // Duplicate user current lang into langs
             $user->addLang($lang);
 
-            $this->entityManager->persist($user);
+            $this->em->persist($user);
             
             try {
-                $this->entityManager->flush();
+                $this->em->flush();
 
                 $nameSite = $this->parameters->get('configuration')['name'];
                 $sender = $this->parameters->get('configuration')['from_email'];
@@ -151,7 +143,7 @@ class RegistrationController extends AbstractController
     /**
      * @Route("/verify", name="registration_confirmation_route")
      */
-    public function verifyUserEmail(Request $request, UserRepository $userRepository): Response
+    public function verifyUserEmail(Request $request): Response
     {
         $id = $request->get('id');
         
@@ -160,7 +152,7 @@ class RegistrationController extends AbstractController
                 '_locale' => $this->parameters->get('locale')
             ]);
         }
-        $user = $userRepository->find($id);
+        $user = $this->em->getRepository(User::class)->find($id);
         if (null === $user) {
             return $this->redirectToRoute('front_home', [
                 '_locale' => $this->parameters->get('locale')
@@ -175,8 +167,8 @@ class RegistrationController extends AbstractController
             $user->setIsVerified(true);
             $user->setDateUpdate(new \DateTime());
 
-            $this->entityManager->persist($user);
-            $this->entityManager->flush();
+            $this->em->persist($user);
+            $this->em->flush();
 
             $msg = $this->translator->trans(
                 'registration.confirmed.success', [],

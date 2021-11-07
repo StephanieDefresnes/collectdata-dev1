@@ -9,6 +9,7 @@ use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -26,22 +27,20 @@ class RegistrationFormType extends AbstractType
                 'label_attr' => [
                     'class' => 'd-flex justify-content-start',
                 ],
-                'constraints' => [
-                    new NotBlank([
-                        'message' => 'unique_email',
-                    ]),
+                'row_attr' => [
+                    'class' => 'mb-0'
                 ],
+                'translation_domain' => 'messages'
             ])
             ->add('name', TextType::class, [
-                'label' => 'registration.label.name',
+                'label' => 'label.name',
                 'label_attr' => [
                     'class' => 'd-flex justify-content-start',
                 ],
-                'constraints' => [
-                    new NotBlank([
-                        'message' => 'name_not_blank',
-                    ]),
+                'row_attr' => [
+                    'class' => 'mb-0'
                 ],
+                'translation_domain' => 'messages'
             ])
             ->add('plainPassword', RepeatedType::class, [
                 'type' => PasswordType::class,
@@ -70,6 +69,9 @@ class RegistrationFormType extends AbstractType
                         'max' => 4096,
                     ]),
                 ],
+                'row_attr' => [
+                    'class' => 'mb-0'
+                ],
             ])
             ->add('agreeTerms', CheckboxType::class, [
                 'label' => 'registration.label.agree_terms',
@@ -81,9 +83,22 @@ class RegistrationFormType extends AbstractType
                         'message' => 'registration.agree_terms_is_true',
                     ]),
                 ],
+                'row_attr' => [
+                    'class' => 'mb-0'
+                ],
             ])
             ->add('captcha', ReCaptchaType::class, [
                 'type' => 'invisible'
+            ])
+            ->add('submit', SubmitType::class, [
+                'label' => 'action.validate',
+                'attr' => [
+                    'class' => 'btn-secondary px-5'
+                ],
+                'row_attr' => [
+                    'class' => 'mb-0'
+                ],
+                'translation_domain' => 'messages',
             ])
         ;
     }

@@ -6,7 +6,6 @@ use App\Entity\User;
 use App\Form\Back\User\UserBatchType;
 use App\Form\Back\User\UserUpdateFormType;
 use App\Manager\Back\UserManager;
-use App\Repository\UserRepository;
 use App\Service\LangService;
 use App\Service\SituService;
 use Doctrine\ORM\EntityManagerInterface;
@@ -50,11 +49,9 @@ class UserController extends AbstractController
     /**
      * @Route("/search", name="back_user_search", methods="GET|POST")
      */
-    public function allUsers(   Request $request,
-                                Session $session,
-                                UserRepository $userRepository)
+    public function allUsers(Request $request, Session $session)
     {
-        $users = $userRepository->findUsers();
+        $users = $this->em->getRepository(User::class)->findUsers();
         
         $formBatch = $this->createForm(UserBatchType::class, null, [
             'action' => $this->generateUrl('back_user_search'),

@@ -30,7 +30,14 @@
                     <h1 class="h3 mb-3 font-weight-normal d-flex justify-content-start">{{ 'registration.title'|trans }}</h1>
                     
                     {{ form_row(registrationForm.email) }}
+                    <div class="form-error mb-3">
+                        {{ form_errors(registrationForm.email) }}
+                    </div>
+                    
                     {{ form_row(registrationForm.name) }}
+                    <div class="form-error mb-3">
+                        {{ form_errors(registrationForm.name) }}
+                    </div>
                     
                     {% for password in registrationForm.plainPassword %}
                         <div class="form-group">
@@ -42,11 +49,16 @@
                                 </div>
                             </div>
                         </div>
-                        {{ form_errors(password) }}
+                        <div class="form-error mb-3">
+                            {{ form_errors(password) }}
+                        </div>
                     {% endfor %}
                     
                     <div class="d-flex justify-content-start">
                         {{ form_row(registrationForm.agreeTerms) }}
+                    </div>
+                    <div class="form-error mb-3">
+                        {{ form_errors(registrationForm.agreeTerms) }}
                     </div>
                     
                     <div id="comment" class="mx-2 px-3 pt-2 pb-3 bg-light rounded-lg line-12">
@@ -55,9 +67,7 @@
                     </div>
                     
                     <div class="mt-4 pt-2 text-center">
-                        <button class="btn btn-secondary px-5" type="submit">
-                            {{ 'button.validate'|trans }}
-                        </button>
+                        {{ form_row(registrationForm.submit) }}
                     </div>
                 {{ form_end(registrationForm) }}
             </div>

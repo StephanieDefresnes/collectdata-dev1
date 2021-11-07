@@ -2,20 +2,18 @@
 
 namespace App\Entity;
 
-use App\Entity\Category;
-use App\Entity\Event;
-use App\Entity\Situ;
 use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
-use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * @ORM\Entity(repositoryClass=UserRepository::class)
- * @UniqueEntity(fields={"email"}, message="registration.message.unique_email")
+ * @UniqueEntity(fields="email", message="unique_email")
+ * @UniqueEntity(fields="name", message="unique_name")
  */
 class User implements UserInterface
 {
@@ -58,7 +56,8 @@ class User implements UserInterface
     private $name;
 
     /**
-     * @ORM\Column(type="string", length=190, unique=true, nullable=true)
+     * @Gedmo\Slug(fields={"name"})
+     * @ORM\Column(type="string", length=190, unique=true)
      */
     private $slug;
 
@@ -326,13 +325,6 @@ class User implements UserInterface
     public function getSlug(): ?string
     {
         return $this->slug;
-    }
-
-    public function setSlug(string $slug): self
-    {
-        $this->slug = $slug;
-
-        return $this;
     }
     
     public function getImageFilename()
