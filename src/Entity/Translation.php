@@ -2,13 +2,10 @@
 
 namespace App\Entity;
 
-use App\Entity\TranslationField;
-use App\Entity\Status;
 use App\Repository\TranslationRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Serializer\Annotation\MaxDepth;
 
 /**
  * @ORM\Entity(repositoryClass=TranslationRepository::class)
@@ -38,12 +35,12 @@ class Translation
     private $referentId;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Lang", inversedBy="translations", fetch="EAGER")
+     * @ORM\ManyToOne(targetEntity=Lang::class, inversedBy="translations", fetch="EAGER")
      */
     private $lang;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Status", inversedBy="translations", fetch="EAGER")
+     * @ORM\ManyToOne(targetEntity=Status::class, inversedBy="translations", fetch="EAGER")
      */
     private $status;
 
@@ -63,7 +60,7 @@ class Translation
     private $dateStatus;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="translations", fetch="EAGER")
+     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="translations", fetch="EAGER")
      */
     private $user;
 

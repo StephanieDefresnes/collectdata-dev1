@@ -4,7 +4,6 @@ namespace App\Entity;
 
 use App\Repository\TranslationFieldRepository;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Serializer\Annotation\MaxDepth;
 
 /**
  * @ORM\Entity(repositoryClass=TranslationFieldRepository::class)
@@ -34,7 +33,7 @@ class TranslationField
     private $value;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Translation", inversedBy="fields")
+     * @ORM\ManyToOne(targetEntity=Translation::class, inversedBy="fields")
      */
     private $translation;
 

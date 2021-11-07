@@ -25,12 +25,12 @@ class Status
     private $name;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Translation",  mappedBy="status")
+     * @ORM\OneToMany(targetEntity=Translation::class,  mappedBy="status")
      */
     protected $translations;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Situ",  mappedBy="status")
+     * @ORM\OneToMany(targetEntity=Situ::class,  mappedBy="status")
      */
     protected $situs;
 

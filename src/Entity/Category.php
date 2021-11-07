@@ -35,7 +35,7 @@ class Category
     private $dateCreation;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="categories", fetch="EAGER")
+     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="categories", fetch="EAGER")
      */
     private $user;
 
@@ -68,18 +68,18 @@ class Category
     /**
      * @ORM\OneToMany(targetEntity=Situ::class, cascade={"persist"}, mappedBy="categoryLevel1", fetch="EAGER")
      */
-    private $situs1;
+    private $situsLevel1;
 
     /**
      * @ORM\OneToMany(targetEntity=Situ::class, cascade={"persist"}, mappedBy="categoryLevel2", fetch="EAGER")
      */
-    private $situs2;
+    private $situsLevel2;
 
     public function __construct()
     {
         $this->parents = new ArrayCollection();
-        $this->situs1 = new ArrayCollection();
-        $this->situs2 = new ArrayCollection();
+        $this->situsLevel1 = new ArrayCollection();
+        $this->situsLevel2 = new ArrayCollection();
     }
 
     public function __toString(): ?string
@@ -206,7 +206,7 @@ class Category
         return $this;
     }
 
-    public function removeParent(Situ $parent): self
+    public function removeParent(Category $parent): self
     {
         if ($this->parents->removeElement($parent)) {
             // set the owning side to null (unless already changed)
@@ -221,27 +221,27 @@ class Category
     /**
      * @return Collection|Situ[]
      */
-    public function getSitus1(): Collection
+    public function getSitusLevel1(): Collection
     {
-        return $this->situs1;
+        return $this->$situLevel1;
     }
 
-    public function addSitu1(Situ $situ1): self
+    public function addSituLevel1(Situ $situLevel1): self
     {
-        if (!$this->situs1->contains($situ1)) {
-            $this->situs1[] = $situ1;
-            $situ1->setCategory($this);
+        if (!$this->situsLevel1->contains($situLevel1)) {
+            $this->situsLevel1[] = $situLevel1;
+            $situLevel1->setCategory($this);
         }
 
         return $this;
     }
 
-    public function removeSitu1(Situ $situ1): self
+    public function removeSituLevel1(Situ $situLevel1): self
     {
-        if ($this->situs1->removeElement($situ1)) {
+        if ($this->situsLevel1->removeElement($situLevel1)) {
             // set the owning side to null (unless already changed)
-            if ($situ1->getCategory() === $this) {
-                $situ1->setCategory(null);
+            if ($situLevel1->getCategory() === $this) {
+                $situLevel1->setCategory(null);
             }
         }
 
@@ -251,27 +251,27 @@ class Category
     /**
      * @return Collection|Situ[]
      */
-    public function getSitus2(): Collection
+    public function getSitusLevel2(): Collection
     {
-        return $this->situs2;
+        return $this->$situLevel2;
     }
 
-    public function addSitu2(Situ $situ2): self
+    public function addSituLevel2(Situ $situLevel2): self
     {
-        if (!$this->situs2->contains($situ2)) {
-            $this->situs2[] = $situ2;
-            $situ2->setCategory($this);
+        if (!$this->situsLevel2->contains($situLevel2)) {
+            $this->situsLevel2[] = $situLevel2;
+            $situLevel2->setCategory($this);
         }
 
         return $this;
     }
 
-    public function removeSitu2(Situ $situ2): self
+    public function removeSituLevel2(Situ $situLevel2): self
     {
-        if ($this->situs2->removeElement($situ2)) {
+        if ($this->situsLevel2->removeElement($situLevel2)) {
             // set the owning side to null (unless already changed)
-            if ($situ2->getCategory() === $this) {
-                $situ2->setCategory(null);
+            if ($situLevel2->getCategory() === $this) {
+                $situLevel2->setCategory(null);
             }
         }
 

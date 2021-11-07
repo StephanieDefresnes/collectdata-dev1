@@ -25,7 +25,7 @@ class Event
     private $title;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="events", fetch="EAGER")
+     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="events", fetch="EAGER")
      */
     private $user;
 
@@ -35,7 +35,7 @@ class Event
     private $validated;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Lang", inversedBy="events")
+     * @ORM\ManyToOne(targetEntity=Lang::class, inversedBy="events")
      */
     private $lang;
 

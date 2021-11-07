@@ -2,14 +2,10 @@
 
 namespace App\Entity;
 
-use App\Entity\Event;
-use App\Entity\Category;
-use App\Entity\SituItem;
 use App\Repository\SituRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=SituRepository::class)
@@ -59,32 +55,32 @@ class Situ
     private $dateDeletion;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="situs", fetch="EAGER")
+     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="situs", fetch="EAGER")
      */
     private $user;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Status", inversedBy="situs", fetch="EAGER")
+     * @ORM\ManyToOne(targetEntity=Status::class, inversedBy="situs", fetch="EAGER")
      */
     private $status;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Lang", inversedBy="situs", fetch="EAGER")
+     * @ORM\ManyToOne(targetEntity=Lang::class, inversedBy="situs", fetch="EAGER")
      */
     private $lang;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Event", inversedBy="situs", fetch="EAGER")
+     * @ORM\ManyToOne(targetEntity=Event::class, inversedBy="situs", fetch="EAGER")
      */
     private $event;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Category", inversedBy="situs1", fetch="EAGER")
+     * @ORM\ManyToOne(targetEntity=Category::class, inversedBy="situsLevel1", fetch="EAGER")
      */
     private $categoryLevel1;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Category", inversedBy="situs2", fetch="EAGER")
+     * @ORM\ManyToOne(targetEntity=Category::class, inversedBy="situsLevel2", fetch="EAGER")
      */
     private $categoryLevel2;
 
@@ -99,12 +95,11 @@ class Situ
     private $translatedSituId;
 
     /**
-     * @ORM\OneToMany(
-     *      targetEntity=SituItem::class,
-     *      cascade={"persist", "remove"},
-     *      mappedBy="situ",
-     *      fetch="EXTRA_LAZY",
-     *      orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity=SituItem::class,
+     *                  cascade={"persist", "remove"},
+     *                  mappedBy="situ",
+     *                  fetch="EXTRA_LAZY",
+     *                  orphanRemoval=true)
      */
     protected $situItems;
 

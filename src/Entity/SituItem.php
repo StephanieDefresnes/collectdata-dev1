@@ -2,10 +2,7 @@
 
 namespace App\Entity;
 
-use App\Entity\Situ;
 use App\Repository\SituItemRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -36,7 +33,7 @@ class SituItem
     private $score;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Situ", inversedBy="situItems")
+     * @ORM\ManyToOne(targetEntity=Situ::class, inversedBy="situItems")
      */
     private $situ;
     
