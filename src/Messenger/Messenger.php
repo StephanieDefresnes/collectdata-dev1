@@ -3,7 +3,6 @@
 namespace App\Messenger;
 
 use App\Entity\Lang;
-use App\Entity\Message;
 use App\Entity\User;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -27,7 +26,6 @@ class Messenger {
                                 UserRepository $userRepository)
     {
         $this->em = $em;
-        $this->messageService = $messageService;
         $this->parameters = $parameters;
         $this->translator = $translator;
         $this->userRepository = $userRepository;
