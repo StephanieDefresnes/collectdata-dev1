@@ -39,13 +39,13 @@
                         <th class="d-none"></th>
                         <th class="py-2">{{ 'label.title'|trans }}</th>
                         <th class="py-2">{{ 'label.description'|trans }}</th>
-                        <th class="py-2">{{ 'status.date_creation'|trans }}</th>
+                        <th class="py-2">{{ 'label.date_creation'|trans }}</th>
                         <th class="py-2">{{ 'label.event'|trans }}</th>
-                        <th class="py-2">{{ 'label.catLevel1'|trans }}</th>
-                        <th class="py-2">{{ 'label.catLevel2'|trans }}</th>
+                        <th class="py-2">{{ 'label.categoryLevel1'|trans }}</th>
+                        <th class="py-2">{{ 'label.categoryLevel2'|trans }}</th>
                         <th class="py-2">{{ 'label.lang'|trans }}</th>
                         <th class="py-2">{{ 'status.title'|trans }}</th>
-                        <th class="cust-nowrap p-2 no-sort">{{ 'action.actions'|trans }}</th>
+                        <th class="cust-nowrap p-2 no-sort">{{ 'label.actions'|trans }}</th>
                         <th class="no-sort"></th>
                         <th class="no-sort"></th>
                         {% if app.user.langs|length > 1 %}<th class="no-sort"></th>{% endif %}
@@ -253,8 +253,8 @@
     <script>
         let path = { "locale" : "{{ locale }}" }
         let translations = {
-            "modalBtnRead" : "{{ 'action.read'|trans({}, 'user_messages') }}",
-            "modalBtnValid" : "{{ 'action.translate'|trans({}, 'user_messages')  }}",
+            "modalBtnRead" : "{{ 'action.read'|trans}}",
+            "modalBtnValid" : "{{ 'action.translate'|trans  }}",
             "deleteTitle" : "{{ 'contrib.delete.title'|trans({}, 'user_messages')  }}",
             "deleteQuestion" : "{{ 'contrib.delete.text'|trans({}, 'user_messages')  }}",
             "updateTitle" : "{{ 'contrib.update_validated.title'|trans({}, 'user_messages')  }}",

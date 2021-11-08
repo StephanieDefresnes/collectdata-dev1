@@ -744,8 +744,10 @@ $(function() {
         unvalidatedOption(this)
         initSelect2($(this))
         // When update Situ
-        $(this).parent().find('.select2-selection__rendered')
-                .addClass('selection-on')
+        if ($(this).val() != '') {
+            $(this).parent().find('.select2-selection__rendered')
+                    .addClass('selection-on')
+        }
     })
     
     // Hide adding events/categories button if must have to be created (choices empty)
