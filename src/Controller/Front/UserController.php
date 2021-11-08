@@ -8,18 +8,14 @@ use App\Entity\User;
 use App\Form\Front\User\UserContactType;
 use App\Form\Front\User\UserUpdateFormType;
 use App\Messenger\Messenger;
-use App\Service\LangService;
-use App\Service\SituService;
+use App\Service\FileUploader;
 use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Security;
-use Symfony\Component\String\Slugger\AsciiSlugger;
-use Symfony\Component\String\Slugger\SluggerInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
@@ -28,21 +24,15 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 class UserController extends AbstractController
 {    
     private $em;
-    private $langService;
     private $security;
-    private $situService;
     private $translator;
     
     public function __construct(EntityManagerInterface $em,
-                                LangService $langService,
                                 Security $security,
-                                SituService $situService,
                                 TranslatorInterface $translator)
     {
         $this->em = $em;
-        $this->langService = $langService;
         $this->security = $security;
-        $this->situService = $situService;
         $this->translator = $translator;
     }
 
@@ -96,8 +86,8 @@ class UserController extends AbstractController
      * @IsGranted("IS_AUTHENTICATED_FULLY")
      * @Route("/profile/edit", name="user_update", methods="GET|POST")
      */
-    public function update( Request $request,
-                            SluggerInterface $slugger): Response
+    public function update( FileUploader $fileUploader,
+                            Request $request): Response
     {        
         // Get current user
         $user = $this->security->getUser();
@@ -110,50 +100,22 @@ class UserController extends AbstractController
         
         if ($form->isSubmitted() && $form->isValid()) {
             
+            if ($request->request->get('removeImg')) {
+                $user->setImageFilename(null);
+                unlink($this->getParameter('user_img').'/'
+                        .$currentImage);
+            }
+            
             // Avatar
             $newImage = $form->get('imageFilename')->getData();
             
             if ($newImage) {
-                
-                $originalFilename = pathinfo(
-                        $newImage->getClientOriginalName(),
-                        PATHINFO_FILENAME
-                    );
-                $safeFilename = $slugger->slug($originalFilename);
-                $newFilename = $safeFilename.'-'.uniqid().'.'
-                        .$newImage->guessExtension();
-                
-                try {
-                    
-                    $newImage->move(
-                        $this->getParameter('user_img'),
-                        $newFilename
-                    );
-                    
-                    if ($currentImage) {
+                $newImageName = $fileUploader->upload($newImage);
+                $user->setImageFilename($newImageName);
+                if ($currentImage) {
                     unlink($this->getParameter('user_img').'/'
                             .$currentImage);
-                    }
-                    
-                } catch (FileException $e) {
-                    
-                    $msg = $this->translator->trans(
-                        'account.image.flash.add.error', [],
-                        'user_messages', $locale = locale_get_default()
-                    );
-                    $this->addFlash('error', $msg.PHP_EOL.$e->getMessage());
-
-                    return $this->redirectToRoute('user_update');
                 }
-                
-                $user->setImageFilename($newFilename);
-                
-            }
-            
-            // Slug user name
-            if ($user->getName() !== $form->get('name')->getData()) {
-                $slugger = new AsciiSlugger();
-                $user->setSlug($slugger->slug($user->getName()));
             }
             
             // Switch locale

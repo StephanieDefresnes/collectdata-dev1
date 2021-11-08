@@ -26,7 +26,9 @@
 
                         <div class="row mt-2 mb-3">
                             <div class="d-sm-flex justify-content-start col-sm-4 col-3">
-                                {{ form_label(form.imageFilename) }}
+                                <label for="user_update_form_imageFilename" class="pt-2">
+                                    {{ 'account.image.label'|trans }}
+                                </label>
                             </div>
                             <div class="col-sm-8 col-9">
                                 <div class="row row-img">
@@ -51,7 +53,9 @@
                                     <div class="form-error col-xl-8 col-lg-12 col-md-8">
                                         {{ form_errors(form.imageFilename) }}
                                     </div>
-                                    <div class="d-none">{{ form_widget(form.imageFilename) }}</div>
+                                    {{ form_widget(form.imageFilename) }}
+                                    <input id="removeImg" name="removeImg"
+                                           type="hidden" value="">
                                 </div>
                             </div>
                         </div>

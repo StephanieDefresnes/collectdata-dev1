@@ -124,6 +124,7 @@ $(function() {
             $('#defaultImg, .delete-img').addClass('d-none')
             $('.unupload-img').removeClass('d-none')
         }
+        $('#removeImg').val('')
     })
     
     // Change avatar, toggle anonymous/file user   
@@ -132,13 +133,14 @@ $(function() {
         if (!$(this).hasClass('no-img')) $('.delete-img').removeClass('d-none')
         $('#previewImg').addClass('d-none')
         $('#defaultImg').removeClass('d-none')
-        $('#user_update_form_imageFilename').val(null).trigger()
+        $('#user_update_form_imageFilename').val('')
+        $('#removeImg').val('')
     })    
     $('.delete-img').click(function() {
         $(this).addClass('d-none')
         $('.unupload-img, #defaultImg').addClass('d-none')
         $('#previewImg').attr('src', img['default']).removeClass('d-none')
-        $('#user_update_form_imageFilename').attr('value', '');
+        $('#removeImg').val(true)
     })
     
     /*

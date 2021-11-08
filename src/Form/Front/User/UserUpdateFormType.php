@@ -11,7 +11,6 @@ use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\CountryType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
-use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -34,12 +33,14 @@ class UserUpdateFormType extends AbstractType
     
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $langs = $this->em->getRepository(Lang::class)->findBy(['enabled' => 1]);
+        $langs = $this->em->getRepository(Lang::class)->findBy(['enabled' => true]);
         
         $builder
             ->add('imageFilename', FileType::class, [
-                'label' => 'account.image.label',
-                'label_attr' => ['class' => 'pt-2'],
+                'required' => false,
+                'attr' => ['class' => 'd-none'],
+                'label' => false,
+                'label_attr' => ['class' => 'd-none'],
                 'mapped' => false,
                 'multiple' => false,
                 'constraints' => [
@@ -54,10 +55,15 @@ class UserUpdateFormType extends AbstractType
                         'mimeTypesMessage' => 'image_mimeTypesMessage',
                     ])
                 ],
-                'required' => false,
             ])
             ->add('name', TextType::class, [
                 'label' => 'label_dp.name',
+                'constraints' => [
+                    new NotBlank([
+                        'message' => 'unique_name',
+                    ]),
+                ],
+                'translation_domain' => 'messages',
             ])
             ->add('email', EmailType::class, [
                 'label' => 'label_dp.email',
@@ -66,14 +72,14 @@ class UserUpdateFormType extends AbstractType
                         'message' => 'unique_email',
                     ]),
                 ],
+                'translation_domain' => 'messages',
             ])
             ->add('country', CountryType::class, [
                 'required' => false,
                 'label' => 'label_dp.country',
-                'attr' => [
-                    'class' => 'single-search',
-                ],
-                'placeholder' => 'multiple_search'
+                'attr' => ['class' => 'single-search',],
+                'placeholder' => 'multiple_search',
+                'translation_domain' => 'messages',
             ])
             ->add('lang', ChoiceType::class, [
                 'required' => false,
@@ -89,6 +95,7 @@ class UserUpdateFormType extends AbstractType
                     'class' => 'select-single',
                     'data-val' => '',
                 ],
+                'translation_domain' => 'messages',
             ])
             ->add('langs', EntityType::class, [
                 'required' => false,
@@ -99,20 +106,18 @@ class UserUpdateFormType extends AbstractType
                 'choice_label' => function ($lang) {
                     return html_entity_decode($lang->getName(), ENT_QUOTES, 'UTF-8');
                 },
-                'attr' => [
-                    'class' => 'form-control select-multiple'
-                ],
+                'attr' => ['class' => 'form-control select-multiple'],
+                'label_attr' => ['class' => 'line-11'],
             ])
             ->add('langContributor', CheckboxType::class, [
                 'required' => false,
-                'attr' => [
-                    'class' => 'custom-checkbox'
-                ],
+                'attr' => ['class' => 'custom-checkbox'],
                 'label' => false,
             ])
             ->add('contributorLangs', EntityType::class, [
                 'required' => false,
                 'class' => Lang::class,
+                'attr' => ['class' => 'form-control select-multiple'],
                 'label' => 'account.translator.translate',
                 'multiple' => true,
                 'choices' => $this->em->getRepository(Lang::class)
@@ -120,9 +125,6 @@ class UserUpdateFormType extends AbstractType
                 'choice_label' => function ($lang) {
                     return html_entity_decode($lang->getName(), ENT_QUOTES, 'UTF-8');
                 },
-                'attr' => [
-                    'class' => 'form-control select-multiple'
-                ],
             ])
         ;
     }
@@ -132,6 +134,7 @@ class UserUpdateFormType extends AbstractType
         $resolver->setDefaults([
             'data_class' => User::class,
             'translation_domain' => 'user_messages',
+            'allow_extra_fields' => true
         ]);
     }
 }
