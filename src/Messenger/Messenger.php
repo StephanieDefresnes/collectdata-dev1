@@ -3,6 +3,7 @@
 namespace App\Messenger;
 
 use App\Entity\Lang;
+use App\Entity\Message;
 use App\Entity\User;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -33,17 +34,21 @@ class Messenger {
     
     public function sendModeratorAlert($entity, $data) {
         
-        $moderators = $this->userRepository->findRoleByLang('MODERATOR', $data->getLang());
+        $moderators = $this->em->getRepository(User::class)
+                            ->findRoleByLang('MODERATOR', $data->getLang());
         
-        $author = $this->em->getRepository(User::class)->find($data->getUser()->getId());
+        $author = $this->em->getRepository(User::class)
+                        ->find($data->getUser()->getId());
 
         if (!$moderators) {
-            $moderators = $this->em->getRepository(User::class)->findBy(['id' => intval('-1')]);
+            $moderators = $this->em->getRepository(User::class)
+                                ->findBy(['id' => intval('-1')]);
         }
         
         foreach ($moderators as $moderator) {
 
-            $moderatorLang = $this->em->getRepository(Lang::class)->find($moderator->getLang());
+            $moderatorLang = $this->em->getRepository(Lang::class)
+                                    ->find($moderator->getLang());
 
             $subject = $this->translator->trans(
                 'back.alert.'.$entity, [
