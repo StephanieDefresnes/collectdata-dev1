@@ -51,8 +51,7 @@ class LangController extends AbstractController
         }
         
         try {
-            // Filter super visitor
-            $user = $this->security->getUser();            
+            // Filter super visitor           
             if ($user->hasRole('ROLE_SUPER_VISITOR')) {
                 return $this->redirectToRoute('back_access_denied', [
                     '_locale' => locale_get_default()
