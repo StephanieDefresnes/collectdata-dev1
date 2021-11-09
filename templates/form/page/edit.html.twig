@@ -92,12 +92,12 @@
 
 <div class="card-footer bg-light d-flex justify-content-center py-3">
     {{ form_widget(form.save, { 'attr': {
-        'class': route == 'back_content_edit' and page.id and lang_service.getLang(page.lang).enabled 
+        'class': route == 'back_content_edit' and page.id and render_service.getLang(page.lang).enabled 
             ? 'd-none' : 'btn-outline-primary px-3 mx-2' } }) }}
     
     {% if route == 'back_content_edit' and page.id %}
-        {% if lang_service.getLang(page.lang) in app.user.langs
-                or lang_service.getLang(page.lang) in app.user.contributorLangs %}
+        {% if render_service.getLang(page.lang) in app.user.langs
+                or render_service.getLang(page.lang) in app.user.contributorLangs %}
         {% else %}
             {% include "form/page/_users.html.twig" %}
         {% endif %}

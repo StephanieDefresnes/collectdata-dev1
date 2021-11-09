@@ -39,16 +39,16 @@
                                         </td>
                                         <td class="align-middle p-2">
                                             {% if alert.entity == 'situ'
-                                                and situ_service.getSitu(alert.entityId).statusId != 1
-                                                and situ_service.getSitu(alert.entityId).statusId != 2 %}
+                                                and render_service.getSitu(alert.entityId).statusId != 1
+                                                and render_service.getSitu(alert.entityId).statusId != 2 %}
                                                     <i class="far fa-check-circle text-success"></i>
                                             {% elseif alert.entity == 'event'
-                                                and event_service.getEvent(alert.entityId).statusId != 1
-                                                and event_service.getEvent(alert.entityId).statusId != 2 %}
+                                                and render_service.getEvent(alert.entityId).statusId != 1
+                                                and render_service.getEvent(alert.entityId).statusId != 2 %}
                                                     <i class="far fa-check-circle text-success"></i>
                                             {% elseif alert.entity == 'category'
-                                                and category_service.getCategory(alert.entityId).statusId != 1
-                                                and category_service.getCategory(alert.entityId).statusId != 2 %}
+                                                and render_service.getCategory(alert.entityId).statusId != 1
+                                                and render_service.getCategory(alert.entityId).statusId != 2 %}
                                                 <i class="far fa-check-circle text-success"></i>
                                             {% endif %}
                                         </td>

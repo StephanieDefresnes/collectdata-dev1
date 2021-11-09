@@ -1,6 +1,6 @@
 {% set route = app.request.get('_route') %}
 {% set locale = app.request.locale %}
-{% set alerts = message_service.getUnreadUserAlerts(app.user.id) %}
+{% set alerts = render_service.getUnreadUserAlerts(app.user.id) %}
 
 <nav class="navbar navbar-expand navbar-light bg-white topbar static-top shadow" translate="no">
 

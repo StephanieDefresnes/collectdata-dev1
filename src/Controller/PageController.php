@@ -5,8 +5,8 @@ namespace App\Controller;
 use App\Entity\Lang;
 use App\Entity\Page;
 use App\Entity\Status;
+use App\Repository\UserRepository;
 use App\Service\LangService;
-use App\Service\UserService;
 use App\Form\Page\PageFormType;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
@@ -51,9 +51,11 @@ class PageController extends AbstractController
                                 Security $security,
                                 SluggerInterface $slugger,
                                 TranslatorInterface $translator,
-                                UserService $userService,
+                                UserRepository $userRepository,
                                 $_locale, $id, $back = null): Response
     {
+        $user = $security->getUser();
+            
         $label = 'action.submit';
         $users = [];
         $action = 'submit';
@@ -79,7 +81,6 @@ class PageController extends AbstractController
             
             // If back & user langs contain page lang, user can valid page
             // else he attributes to lang contributor user
-            $user = $security->getUser();
             if ($back) {
                 $label = 'action.attribute';
                 foreach ($user->getLangs()->getValues() as $lang) {
@@ -93,7 +94,7 @@ class PageController extends AbstractController
                         ->findOneBy(['lang' => $page->getLang()]);
                 
                 // Array of users to attribute translation page in form
-                $users = $userService->getUsersLangContributorByLang($langPage);
+                $users = $userRepository->findLangContributors($langPage);
                 
             } else {
                 $referentPage = $this->getDoctrine()->getRepository(Page::class)
@@ -184,8 +185,7 @@ class PageController extends AbstractController
             
             try {
                 // Super visitor filter
-                $currentUser = $security->getUser();
-                if ($back && $currentUser->hasRole('ROLE_SUPER_VISITOR')) {
+                if ($back && $user->hasRole('ROLE_SUPER_VISITOR')) {
                     return $this->redirectToRoute('back_access_denied', [
                         '_locale' => locale_get_default()
                     ]);
