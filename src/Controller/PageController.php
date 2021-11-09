@@ -5,8 +5,7 @@ namespace App\Controller;
 use App\Entity\Lang;
 use App\Entity\Page;
 use App\Entity\Status;
-use App\Repository\UserRepository;
-use App\Service\LangService;
+use App\Entity\User;
 use App\Form\Page\PageFormType;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
@@ -46,12 +45,10 @@ class PageController extends AbstractController
      * @return Response
      */
     public function contentEdit(EntityManagerInterface $em,
-                                LangService $langService,
                                 Request $request,
                                 Security $security,
                                 SluggerInterface $slugger,
                                 TranslatorInterface $translator,
-                                UserRepository $userRepository,
                                 $_locale, $id, $back = null): Response
     {
         $user = $security->getUser();
@@ -70,7 +67,7 @@ class PageController extends AbstractController
         
         // Update or Create new Page
         if ($id) {
-            $page = $this->getDoctrine()->getRepository(Page::class)
+            $page = $em->getRepository(Page::class)
                     ->find($id);
             
             if (!$page) {
@@ -90,14 +87,15 @@ class PageController extends AbstractController
                 }
             
                 // Get lang contributor user for page
-                $langPage = $this->getDoctrine()->getRepository(Lang::class)
-                        ->findOneBy(['lang' => $page->getLang()]);
+                $langPage = $em->getRepository(Lang::class)
+                            ->findOneBy(['lang' => $page->getLang()]);
                 
                 // Array of users to attribute translation page in form
-                $users = $userRepository->findLangContributors($langPage);
+                $users = $em->getRepository(User::class)
+                            ->findLangContributors($langPage);
                 
             } else {
-                $referentPage = $this->getDoctrine()->getRepository(Page::class)
+                $referentPage = $em->getRepository(Page::class)
                         ->findOneBy([
                             'type' => $page->getType(),
                             'lang' => locale_get_default(),

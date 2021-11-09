@@ -6,8 +6,6 @@ use App\Entity\User;
 use App\Form\Back\User\UserBatchType;
 use App\Form\Back\User\UserUpdateFormType;
 use App\Manager\Back\UserManager;
-use App\Service\LangService;
-use App\Service\SituService;
 use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -25,23 +23,17 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 class UserController extends AbstractController
 {
     private $em;
-    private $langService;
     private $security;
-    private $situService;
     private $translator;
     private $userManager;
     
     public function __construct(EntityManagerInterface $em,
-                                LangService $langService,
                                 Security $security,
-                                SituService $situService,
                                 TranslatorInterface $translator,
                                 UserManager $userManager)
     {
         $this->em = $em;
-        $this->langService = $langService;
         $this->security = $security;
-        $this->situService = $situService;
         $this->translator = $translator;
         $this->userManager = $userManager;
     }

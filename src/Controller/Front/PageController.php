@@ -6,7 +6,6 @@ use App\Entity\Lang;
 use App\Entity\Page;
 use App\Form\Front\Contact\ContactType;
 use App\Mailer\Mailer;
-use App\Service\LangService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -17,7 +16,7 @@ class PageController extends AbstractController
     /**
      * @Route("/", name="index")
      */
-    public function index(EntityManagerInterface $em, LangService $langService)
+    public function index(EntityManagerInterface $em)
     {
         $langs = $em->getRepository(Lang::class)->findBy(['enabled' => true]);
         

@@ -9,8 +9,6 @@ use App\Form\Front\Situ\SituFormType;
 use App\Mailer\Mailer;
 use App\Manager\Front\SituManager;
 use App\Messenger\Messenger;
-use App\Service\CategoryService;
-use App\Service\SituService;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
@@ -326,8 +324,7 @@ class SituController extends AbstractController
      * @IsGranted("ROLE_CONTRIBUTOR")
      * @Route("/situ/ajaxGetData", methods="GET|POST")
      */
-    public function ajaxGetData(CategoryService $categoryService,
-                                Request $request): JsonResponse
+    public function ajaxGetData(Request $request): JsonResponse
     {
         if ($request->isXMLHttpRequest()) {
             
@@ -358,7 +355,7 @@ class SituController extends AbstractController
      * @IsGranted("ROLE_CONTRIBUTOR")
      * @Route("/situ/ajaxFindTranslation", methods="GET")
      */
-    public function ajaxFindTranslation(SituService $situService, Request $request)
+    public function ajaxFindTranslation(Request $request)
     {
         // Situ to translate
         $situId = $request->query->get('id');

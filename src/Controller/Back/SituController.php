@@ -9,7 +9,6 @@ use App\Entity\Situ;
 use App\Entity\Status;
 use App\Entity\User;
 use App\Form\Back\Situ\VerifySituFormType;
-use App\Service\LangService;
 use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -86,9 +85,7 @@ class SituController extends AbstractController
     /**
      * @Route("/verify/{id}", name="back_situ_verify", methods="GET|POST")
      */
-    public function verifySitu( Request $request,
-                                LangService $langService,
-                                $id): Response
+    public function verifySitu( Request $request, $id): Response
     {
         $situ = $this->em->getRepository(Situ::class)->find($id);
         
