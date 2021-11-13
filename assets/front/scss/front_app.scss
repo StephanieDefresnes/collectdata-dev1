@@ -475,6 +475,9 @@ body {
 /*
  * Custom classes
  */
+.text-small {
+    font-size: 90%;
+}
 .scale-12 {
     transform: scale(1.2);
 }
@@ -482,10 +485,10 @@ body {
     opacity: 0;
 }
 .line-11 {
-    line-height: 1.1;
+    line-height: 1.1 !important;
 }
 .line-12 {
-    line-height: 1.2;
+    line-height: 1.2 !important;
 }
 .pointer {
     cursor: pointer !important;
@@ -758,5 +761,8 @@ table {
                 padding-left: 0.25rem;
             }
         }
+    }
+    .text-left {
+        text-align: right !important;
     }
 }

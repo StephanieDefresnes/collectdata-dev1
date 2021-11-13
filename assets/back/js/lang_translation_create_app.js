@@ -53,6 +53,31 @@ function addField() {
     newElem.appendTo(collectionHolder)
 }
 
+function submitConfirm(button) {
+    button.confirm({
+        animation: 'scale',
+        closeAnimation: 'scale',
+        animateFromElement: false,
+        columnClass: 'col-lg-4 col-lg-offset-4 col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2',
+        typeAnimated: true,
+        title: translations['validateForm-title'],
+        content: '<p class="line-11">'+ translations['validateForm-content'] +'</p>',
+        buttons: {
+            cancel: {
+                text: translations['no'],
+                action: function () {}
+            },
+            confirm: {
+                text: translations['yes'],
+                btnClass: 'btn-primary',
+                action: function () {
+                    $('form').submit()
+                }
+            }
+        },
+    });
+}
+
 $(function() {
     
     // Init jQuery ui sortable on fields list item
@@ -91,5 +116,6 @@ $(function() {
         $('html, body').animate({ scrollTop: 0 });
     })
     
+    submitConfirm($('#create_translation_form_validate'))
     
 });

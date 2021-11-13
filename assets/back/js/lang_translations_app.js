@@ -24,10 +24,10 @@ function getConfirm() {
         // Set content
         content = '<ul>'
         $('tbody input:checkbox:checked').each(function() {
-            name = $('tbody input:checkbox:checked').parents('tr').find('td.name').text()
-            content += '<li class="d-sm-flex justify-content-start"><span class="px-2">'+ name +'</span>'
+            name = $(this).parents('tr').find('td.name').text()
+            content += '<li class="d-sm-flex justify-content-start"><span class="px-2">• '+ name +'</span>'
             
-            lang = $('tbody input:checkbox:checked').parents('tr').find('td.lang').text()
+            lang = $(this).parents('tr').find('td.lang').text()
             if (lang)
                 content += '<span class="text-uppercase">'+ lang +'</span>'
                 
@@ -35,10 +35,6 @@ function getConfirm() {
         })
         content += '</ul>'
                 +'<p class="line-11">'+ translations[value +'-confirms'] +'</p>'
-        
-        if (value === 'delete')
-            content += '<p class="line-11">'+ translations['warning'] +'</p>'
-
     }
     // Single row selected
     else {
