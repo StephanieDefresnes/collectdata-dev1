@@ -1,7 +1,14 @@
 {% trans_default_domain 'user_messages' %}
 
 {% set translatedSituId = route == 'translate_situ' ? situ.id : '' %}
-    
+
+<div id="flash_message" class="container" style="display:none">
+    <div class="alert alert-secondary alert-dismissible px-3 fade show" role="alert">
+        <span id="contentMessage"></span>
+        <span id="hideFlash" class="pl-4 text-secondary pointer"><i class="far fa-times-circle"></i></span>
+    </div>
+</div>
+
 {{ form_start(form) }}
     <div class="card my-4 mx-3 bg-none shadow">
 
@@ -45,7 +52,7 @@
             </div>
 
             <div id="event" class="formData form-row mb-4{{ langs|length != 1 ? ' d-none on-load'}}">
-                <div class="col-lg-5 col-md-5 mb-md-0 mb-1 pt-md-1">
+                <div class="d-flex justify-content-start col-lg-5 col-md-5 mb-md-0 mb-1 pt-md-1">
                     {{ form_label(form.event) }}
                 </div>
                 <div class="col-lg-7 col-md-7">
@@ -54,21 +61,21 @@
                             {{ form_widget(form.event) }}
                             {{ form_errors(form.event) }}
                         </div>
-                        <div id="add-event" class="col-1 pt-1 pl-md-2 text-center colBtn">
-                            <span id="add-event-btn" class="btnAdd mt-1 text-light" data-id="event">
-                                <i class="fas fa-plus-circle"></i>
-                            </span>
+                        <div id="add-event" class="col-1 px-0 pt-1 text-center colBtn">
+                            {{ form_widget(form.addEvent) }}
                         </div>
                     </div>
                 </div>
             </div>
 
             <div id="categoryLevel1" class="formData form-row mb-4 d-none on-load">
-                <div class="col-lg-5 col-md-5 mb-md-0 mb-1 pt-md-1">
-                    <div id="headingOne" class="pointer">
-                        <div data-toggle="collapse" data-target="#collapseOne"
-                             aria-expanded="false" aria-controls="collapseOne">
-                            {{ form_label(form.categoryLevel1, null, { 'label_attr': {'class': 'pointer'} }) }}
+                <div class="d-flex justify-content-start col-lg-5 col-md-5 mb-md-0 mb-1 pt-md-1">
+                    <div id="heading-categoryLevel1" class="linkCollapse">
+                        <div data-toggle="collapse" data-target="#collapse-categoryLevel1"
+                             aria-expanded="false" aria-controls="collapse-categoryLevel1">
+                            {{ form_label(form.categoryLevel1,
+                                                'contrib.form.category.level2.label'|trans,
+                                                { 'label_attr': {'class': 'pointer'} }) }}
                             <span class="infoCollapse d-none small"><i class="fas fa-question-circle"></i></span>
                         </div>
                     </div>
@@ -79,15 +86,12 @@
                             {{ form_widget(form.categoryLevel1) }}
                             {{ form_errors(form.categoryLevel1) }}
                         </div>
-                        <div id="add-categoryLevel1" class="col-1 pt-1 pl-md-2 text-center colBtn">
-                            <span id="add-categoryLevel1-btn" class="btnAdd mt-1 text-light"
-                                  data-id="categoryLevel1">
-                                <i class="fas fa-plus-circle"></i>
-                            </span>
+                        <div id="add-categoryLevel1" class="col-1 px-0 pt-1 text-center colBtn">
+                            {{ form_widget(form.addCategoryLevel1) }}
                         </div>
                     </div>
-                    <div id="collapseOne" class="pt-2 small infoCollapse d-none collapse"
-                        aria-labelledby="headingOne" data-parent="#details">
+                    <div id="collapse-categoryLevel1" class="pt-2 small infoCollapse d-none collapse"
+                        aria-labelledby="heading-categoryLevel1" data-parent="#details">
                         <div class="d-block font-weight-bold">
                             {{ 'label_dp.description'|trans({}, 'messages')  }}
                         </div>
@@ -99,11 +103,13 @@
             </div>
 
             <div id="categoryLevel2" class="formData form-row mb-4 d-none on-load">
-                <div class="col-lg-5 col-md-5 mb-md-0 mb-1 pt-md-1 col-cat">
-                    <div id="headingTwo" class="pointer">
-                        <div data-toggle="collapse" data-target="#collapseTwo"
-                             aria-expanded="false" aria-controls="collapseTwo">
-                            {{ form_label(form.categoryLevel2, null, { 'label_attr': {'class': 'pointer'} }) }}
+                <div class="d-flex justify-content-start col-lg-5 col-md-5 mb-md-0 mb-1 pt-md-1">
+                    <div id="heading-categoryLevel2" class="linkCollapse">
+                        <div data-toggle="collapse" data-target="#collapse-categoryLevel2"
+                             aria-expanded="false" aria-controls="collapse-categoryLevel2">
+                            {{ form_label(form.categoryLevel2,
+                                                'contrib.form.category.level2.label'|trans,
+                                                { 'label_attr': {'class': 'pointer'} }) }}
                             <span class="infoCollapse d-none small"><i class="fas fa-question-circle"></i></span>
                         </div>
                     </div>
@@ -114,20 +120,18 @@
                             {{ form_widget(form.categoryLevel2) }}
                             {{ form_errors(form.categoryLevel2) }}
                         </div>
-                        <div id="add-categoryLevel2" class="col-1 pt-1 pl-md-2 text-center colBtn">
-                            <span id="add-categoryLevel2-btn" class="btnAdd mt-1 text-light"
-                                  data-id="categoryLevel2">
-                                <i class="fas fa-plus-circle"></i>
-                            </span>
+                        <div id="add-categoryLevel2" class="col-1 px-0 pt-1 {#pl-md-2 #}text-center colBtn">
+                            {{ form_widget(form.addCategoryLevel2) }}
                         </div>
                     </div>
-                    <div id="collapseTwo" class="pt-2 small infoCollapse d-none collapse"
-                        aria-labelledby="headingTwo" data-parent="#details">
+                    <div id="collapse-categoryLevel2" class="pt-2 small infoCollapse d-none collapse"
+                        aria-labelledby="heading-categoryLevel2" data-parent="#details">
                         <div class="d-block font-weight-bold">
                             {{ 'label_dp.description'|trans({}, 'messages')  }}
                         </div>
                         <div class="mt-1 px-3 line-11 first-letter description">
                             {{ situ.categoryLevel2 ? situ.categoryLevel2.description }}
+                            <div class="text-right updateCategory"></div>
                         </div>
                     </div>
                 </div>
@@ -173,14 +177,31 @@
                     
         {{ form_widget(form.translatedSituId, {'value': translatedSituId} ) }}
 
-        <div class="card-footer bg-light d-flex justify-content-center{{ route == 'create_situ' ? ' d-none' }}">
-            <div id="save" class="btn btn-outline-primary px-3 mx-2">
-                {{ 'action.save'|trans({}, 'messages') }}
-            </div>
-            <div id="submit" class="btn btn-primary px-4 mx-2">
-                {{ 'action.submit'|trans({}, 'messages') }}
-            </div>
+        <div class="card-footer bg-light text-center{{ route == 'create_situ' ? ' d-none' }}">
+            {{ form_widget(form.save) }}
+            {{ form_widget(form.submit) }}
         </div>
 
+    </div>
+        
+    <div class="modal fade" id="editEntity" data-backdrop="static" data-keyboard="false"
+         tabindex="-1" aria-labelledby="editEntityLabel" aria-hidden="true"
+         data-entity="" data-id="" style="z-index: 10001">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header d-flex justify-content-start bg-dark text-white">
+                    <h5 class="modal-title"></h5>
+                </div>
+                <div class="modal-body"></div>
+                <div class="modal-footer d-flex justify-content-center py-2 bg-light">
+                    <span class="btn btn-secondary btnModal modalCancel">
+                        {{ 'action.cancel'|trans({}, 'messages') }}
+                    </span>
+                    <span class="btn btn-primary btnModal modalValidate">
+                        {{ 'action.validate'|trans({}, 'messages') }}
+                    </span>
+                </div>
+            </div>
+        </div>
     </div>
 {{ form_end(form) }}

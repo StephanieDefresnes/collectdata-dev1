@@ -12,6 +12,12 @@ class CreateEventType extends AbstractType
 {    
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $data = $options['data'];
+        
+        $label = $data ? 'contrib.form.event.placeholder_add' : false;
+        $title = $data ? $data->getTitle() : '';
+        $style = $data ? 'text-secondary' : '';
+        
         $builder
             ->add('title', TextType::class, [
                 'attr' => [
@@ -19,7 +25,9 @@ class CreateEventType extends AbstractType
                     'class' => 'mb-0'
                 ],
                 'row_attr' => ['class' => 'mb-0'],
-                'label' => false,
+                'label' => $label,
+                'label_attr' => ['class' => $style],
+                'empty_data' => $title,
             ])
         ;
     }
@@ -28,6 +36,7 @@ class CreateEventType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => Event::class,
+            'data' => null,
         ]);
     }
 }
