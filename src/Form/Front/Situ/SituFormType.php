@@ -41,20 +41,28 @@ class SituFormType extends AbstractType
     
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        /**
-         * ManyToOne relation fields
-         */
         $user = $this->security->getUser();
         
-        // Get Events default by user lang
+        // Get default Events by user lang
         $GLOBALS['events'] = $this->em->getRepository(Event::class)
                                 ->findByLang($user->getLang());
         
         // Get User langs
         $userLangs = $user->getLangs();
+        
+        /* 
+         * == ManyToOne fields ==
+         */
+        
+        // Config add Buttons
+        $addButtonOptions = [
+            'attr' => ['class' => 'btnAdd mt-1 px-0'],
+            'label_html' => true,
+            'label' => '<i class="fas fa-plus-circle bg-none text-light text-small"></i>',
+        ];
             
-        // Build choices with current and optional user land
         $builder
+            // Build choices with current and optional user land
             ->add('lang', EntityType::class, [
                 'class' => Lang::class,
                 'required' => false,
@@ -73,23 +81,15 @@ class SituFormType extends AbstractType
                 },
                 'translation_domain' => 'messages'
             ])
-            ->add('addEvent', ButtonType::class, [
-                'attr' => ['class' => 'btnAdd mt-1 px-0'],
-                'label_html' => true,
-                'label' => '<i class="fas fa-plus-circle bg-none text-light text-small"></i>',
-            ])
-            ->add('addCategoryLevel1', ButtonType::class, [
-                'attr' => ['class' => 'btnAdd mt-1 px-0'],
-                'label_html' => true,
-                'label' => '<i class="fas fa-plus-circle bg-none text-light text-small"></i>',
-            ])
-            ->add('addCategoryLevel2', ButtonType::class, [
-                'attr' => ['class' => 'btnAdd mt-1 px-0'],
-                'label_html' => true,
-                'label' => '<i class="fas fa-plus-circle bg-none text-light text-small"></i>',
-            ])
+            // Buttons to add user own data
+            ->add('addEvent', ButtonType::class, $addButtonOptions)
+            ->add('addCategoryLevel1', ButtonType::class,$addButtonOptions)
+            ->add('addCategoryLevel2', ButtonType::class, $addButtonOptions)
         ;
                 
+        /**
+         * Dynamic fields depending on user action results
+         */
         $formCreateEvent = function (FormInterface $form, $data = null) {
             $form->add('event', CreateEventType::class, [
                 'row_attr' => ['class' => 'mb-0'],
@@ -119,6 +119,16 @@ class SituFormType extends AbstractType
         };
         
         /**
+         * The submission of this complex form (for simple user experience)
+         * requires multiple conditions for the requested data to be valid.
+         * 
+         *  - The PRE_SET_DATA sends the data according to the requested value
+         *  - The PRE_SUBMIT checks that the submitted data conforms to the form fields
+         * 
+         * So form needs to check conformity fields depending on user actions
+         */
+        
+        /**
          * If no optional language neither event, create event and its categories
          * else user can select or create if necessary
          */
@@ -130,8 +140,27 @@ class SituFormType extends AbstractType
             $formSelectEvent = function (FormInterface $form, $lang_id)
                                     use (   $formCreateEvent,
                                             $formCreateCategory ) {
-                if ($lang_id) {
-                    
+                
+                // Init event with default value (necessary if userLangs == 1)
+                if (is_null($lang_id)) {
+                    $form->add('event', EntityType::class, [
+                        'class' => Event::class,
+                        'attr' => ['class' => 'custom-select colForm'],
+                        'label' => 'contrib.form.event.label',
+                        'placeholder' => 'contrib.form.event.placeholder',
+                        'choices' => $GLOBALS['events'],
+                        'choice_label' => function($event, $key, $value) {
+                            return $event->getTitle();
+                        },
+                        'choice_attr' => function($choice, $key, $value) {
+                            if ($choice->getValidated() == 0)
+                                return ['class' => 'text-dark to-validate'];
+                            else
+                                return ['class' => 'text-dark'];
+                        },
+                    ]);
+                } else {
+
                     // Get events depending lang
                     // and also load events user not yet validated if exist
                     $events = $this->em->getRepository(Event::class)
@@ -166,33 +195,27 @@ class SituFormType extends AbstractType
                         $formCreateCategory($form, 'categoryLevel1');
                         $formCreateCategory($form, 'categoryLevel2');
                     }
-                } else {
-                    // Init field
-                    $form->add('event', EntityType::class, [
-                        'class' => Event::class,
-                        'attr' => ['class' => 'custom-select colForm'],
-                        'label' => 'contrib.form.event.label',
-                        'placeholder' => 'contrib.form.event.placeholder',
-                        'choices' => $GLOBALS['events'],
-                        'choice_label' => function($event, $key, $value) {
-                            return $event->getTitle();
-                        },
-                        'choice_attr' => function($choice, $key, $value) {
-                            if ($choice->getValidated() == 0)
-                                return ['class' => 'text-dark to-validate'];
-                            else
-                                return ['class' => 'text-dark'];
-                        },
-                    ]);
                 }
             };
                 
             $formSelectCategoryLevel1 = function (FormInterface $form, $event_id)
-                                            use ($formCreateCategory) { 
-                
+                                            use ($formCreateCategory) {
                 $categoriesLevel1 = [];
-
-                if ($event_id) {
+                
+                // Init categoryLevel1 with empty choices
+                if (is_null($event_id)) {
+                    $form->add('categoryLevel1', EntityType::class, [
+                        'class' => Category::class,
+                        'attr' => ['class' => 'custom-select colForm'],
+                        'label' => 'contrib.form.category.level1.label',
+                        'choices' => $categoriesLevel1,
+                    ]);                   
+                } elseif (is_numeric($event_id))  {
+                
+                    /*
+                     * Form submission checks $event_id value
+                     *  - $event_id must be numeric when $categoriesLevel1 is a select
+                     */
                     
                     // Get event to also load categories user not yet validated if exist
                     $event = $this->em->getRepository(Event::class)
@@ -203,7 +226,6 @@ class SituFormType extends AbstractType
                                                     $event_id, 
                                                     $event->getLang()->getId()
                                                 );
-                    
                     if ($categoriesLevel1) {
                         /**
                          * If categories exist, give choices
@@ -233,22 +255,32 @@ class SituFormType extends AbstractType
                         $formCreateCategory($form, 'categoryLevel2');
                     }
                 } else {
-                    // Init field
-                    $form->add('categoryLevel1', EntityType::class, [
-                        'class' => Category::class,
-                        'attr' => ['class' => 'custom-select colForm'],
-                        'label' => 'contrib.form.category.level1.label',
-                        'choices' => $categoriesLevel1,
-                    ]);
+                    /***
+                     *  - $categoryLevel1_id is an array because categoriesLevel1 is input + textarea
+                     */
+                    $formCreateCategory($form, 'categoryLevel1');
+                    $formCreateCategory($form, 'categoryLevel2'); 
                 }
             };
                 
             $formSelectCategoryLevel2 = function (FormInterface $form, $categoryLevel1_id)
                                             use ($formCreateCategory) { 
-                
                 $categoriesLevel2 = [];
-
-                if ($categoryLevel1_id) {
+                
+                // Init categoryLevel2 with empty choices
+                if (is_null($categoryLevel1_id)) {
+                    $form->add('categoryLevel2', EntityType::class, [
+                        'class' => Category::class,
+                        'attr' => ['class' => 'custom-select colForm'],
+                        'label' => 'contrib.form.category.level2.label',
+                        'choices' => $categoriesLevel2,
+                    ]);
+                } elseif (is_numeric($categoryLevel1_id))  {
+                
+                    /***
+                     * Form submission checks $categoryLevel1_id value
+                     *  - $categoryLevel1_id must be numeric when $categoriesLevel1 is a select
+                     */
                     
                     // Get category to also load categories child user not yet validated if exist
                     $category           = $this->em->getRepository(Category::class)
@@ -288,41 +320,45 @@ class SituFormType extends AbstractType
                         $formCreateCategory($form, 'categoryLevel2');
                     }
                 } else {
-                    // Init field
-                    $form->add('categoryLevel2', EntityType::class, [
-                        'class' => Category::class,
-                        'attr' => ['class' => 'custom-select colForm'],
-                        'label' => 'contrib.form.category.level2.label',
-                        'choices' => $categoriesLevel2,
-                    ]);
+                    /***
+                     *  - $categoryLevel1_id is an array because categoryLevel2 is input + textarea
+                     */
+                    $formCreateCategory($form, 'categoryLevel2');
                 }
             };
             
             $builder
+                /**
+                 * The PRE_SET_DATA sends the data according to the requested value
+                 */
                 ->addEventListener(
                     FormEvents::PRE_SET_DATA,
                     function (FormEvent $form) use ($formSelectEvent) {
-                        $langId = $form->getData()->getLang();
-                        $lang_id = $langId ? $langId->getId() : null;
+                        $lang = $form->getData()->getLang();
+                        $lang_id = $lang ? $lang->getId() : null;
                         $formSelectEvent($form->getForm(), $lang_id);
                     }
                 )
                 ->addEventListener(
                     FormEvents::PRE_SET_DATA,
                     function (FormEvent $form) use ($formSelectCategoryLevel1) {
-                        $eventId = $form->getData()->getEvent();
-                        $event_id = $eventId ? $eventId->getId() : null;
+                        $event = $form->getData()->getEvent();
+                        $event_id = $event ? $event->getId() : null;
                         $formSelectCategoryLevel1($form->getForm(), $event_id);
                     }
                 )
                 ->addEventListener(
                     FormEvents::PRE_SET_DATA,
                     function (FormEvent $form) use ($formSelectCategoryLevel2) {
-                        $categoryLevel1Id = $form->getData()->getCategoryLevel1();
-                        $categoryLevel1_id = $categoryLevel1Id ? $categoryLevel1Id->getId() : null;
+                        $categoryLevel1 = $form->getData()->getCategoryLevel1();
+                        $categoryLevel1_id = $categoryLevel1 ? $categoryLevel1->getId() : null;
                         $formSelectCategoryLevel2($form->getForm(), $categoryLevel1_id);
                     }
                 )
+                /**
+                 * The PRE_SUBMIT allocate fields depending on user actions
+                 * & it will check that the submitted data are conform to the form fields
+                 */
                 ->addEventListener(
                     FormEvents::PRE_SUBMIT,
                     function (FormEvent $event) use (   $formSelectEvent,
@@ -339,10 +375,23 @@ class SituFormType extends AbstractType
                             $formSelectEvent($form, $data['lang']);
                         }
                         if (array_key_exists('event', $data)) {
-                            $formSelectCategoryLevel1($form, $data['event']);
+                            // Need to be checked for a valid data sumbitted
+                            if (is_numeric($data['event'])) {
+                                $formSelectCategoryLevel1($form, $data['event']);
+                            } else {
+                                $formCreateEvent($form);
+                                $formCreateCategory($form, 'categoryLevel1');
+                                $formCreateCategory($form, 'categoryLevel2');
+                            }
                         }
                         if (array_key_exists('categoryLevel1', $data)) {
-                            $formSelectCategoryLevel2($form, $data['categoryLevel1']);
+                            // Need to be checked for a valid data sumbitted
+                            if (is_numeric($data['categoryLevel1'])) {
+                                $formSelectCategoryLevel2($form, $data['categoryLevel1']);
+                            } else {
+                                $formCreateCategory($form, 'categoryLevel1');
+                                $formCreateCategory($form, 'categoryLevel2');
+                            }
                         }
                         
                         // On click JS event
@@ -359,7 +408,7 @@ class SituFormType extends AbstractType
                             $formCreateCategory($form, 'categoryLevel2');
                         }
                         
-                        // On update JS request
+                        // On update JS request, set fields to modal view
                         if (array_key_exists('edit-event', $data)) {
                             $event = $this->em->getRepository(Event::class)
                                             ->find($data['edit-event']);
@@ -367,11 +416,13 @@ class SituFormType extends AbstractType
                         }
                         if (array_key_exists('edit-categoryLevel1', $data)
                                 || array_key_exists('edit-categoryLevel2', $data)) {
+                            
                             $entity = array_key_exists('edit-categoryLevel1', $data)
                                     ? 'categoryLevel1' : 'categoryLevel2';
                             $id = $entity === 'categoryLevel1'
                                     ? $data['edit-categoryLevel1']
                                     : $data['edit-categoryLevel2'];
+                            
                             $category = $this->em->getRepository(Category::class)
                                             ->find($id);
                             $formEditEntity($form, $entity, $category);
@@ -381,8 +432,8 @@ class SituFormType extends AbstractType
             ;
         };
             
-        /**
-         *  Situ fields
+        /*
+         * == Situ fields ==
          */
         $builder
             ->add('title', TextType::class, [
