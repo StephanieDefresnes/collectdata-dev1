@@ -863,6 +863,8 @@ $(function() {
                             .children('div').each(function() {
                                 $(this).css('opacity',0); 
                             })
+                    // Remove next edit entity buttons
+                    $(obj).find('.editEntity').remove()
                 })
         // Hide useless info collapse
         toggleInfoCollapse('hide', $(this))
