@@ -45,9 +45,9 @@ class Lang
     protected $langUsers;
 
     /**
-     * @ORM\ManyToMany(targetEntity=User::class, inversedBy="langs")
-    */
-    protected $users;
+     * @ORM\ManyToMany(targetEntity=User::class, mappedBy="langs")
+     */
+    private $users;
 
     /**
     * @ORM\OneToMany(targetEntity=Event::class, cascade={"persist"}, mappedBy="lang")
@@ -72,7 +72,7 @@ class Lang
     public function __construct()
     {
         $this->langUsers = new ArrayCollection();
-        $this->users = new ArrayCollection();
+//        $this->users = new ArrayCollection();
         $this->events = new ArrayCollection();
         $this->categories = new ArrayCollection();
         $this->situs = new ArrayCollection();
@@ -81,7 +81,7 @@ class Lang
     public function __toString()
     {
         return $this->getLang();
-        return $this->getUsers();
+//        return $this->getUsers();
     }
 
     
@@ -145,13 +145,32 @@ class Lang
     {
         return $this->langUsers;
     }
-    
+
     /**
      * @return Collection|User[]
      */
     public function getUsers(): Collection
     {
         return $this->users;
+    }
+
+    public function addUser(User $user): self
+    {
+        if (!$this->users->contains($user)) {
+            $this->users[] = $user;
+            $user->addLang($this);
+        }
+
+        return $this;
+    }
+
+    public function removeUser(User $user): self
+    {
+        if ($this->users->removeElement($user)) {
+            $user->removeLang($this);
+        }
+
+        return $this;
     }
 
     /**

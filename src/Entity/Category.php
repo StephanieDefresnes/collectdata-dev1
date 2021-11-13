@@ -51,27 +51,27 @@ class Category
     private $lang;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Event::class, inversedBy="categories")
+     * @ORM\ManyToOne(targetEntity=Event::class, inversedBy="categories", fetch="EAGER")
      */
     private $event;
     
     /**
-     * @ORM\ManyToOne(targetEntity=Category::class, inversedBy="parents")
+     * @ORM\ManyToOne(targetEntity=Category::class, inversedBy="parents", fetch="EAGER")
      */
     private $parent;
 
     /**
-     * @ORM\OneToMany(targetEntity=Category::class, cascade={"persist"}, mappedBy="parent", fetch="EAGER")
+     * @ORM\OneToMany(targetEntity=Category::class, cascade={"persist"}, mappedBy="parent", fetch="EXTRA_LAZY")
      */
     private $parents;
 
     /**
-     * @ORM\OneToMany(targetEntity=Situ::class, cascade={"persist"}, mappedBy="categoryLevel1", fetch="EAGER")
+     * @ORM\OneToMany(targetEntity=Situ::class, cascade={"persist"}, mappedBy="categoryLevel1", fetch="EXTRA_LAZY")
      */
     private $situsLevel1;
 
     /**
-     * @ORM\OneToMany(targetEntity=Situ::class, cascade={"persist"}, mappedBy="categoryLevel2", fetch="EAGER")
+     * @ORM\OneToMany(targetEntity=Situ::class, cascade={"persist"}, mappedBy="categoryLevel2", fetch="EXTRA_LAZY")
      */
     private $situsLevel2;
 
@@ -164,7 +164,7 @@ class Category
         return $this;
     }
 
-    public function getEvent(): ?int
+    public function getEvent(): ?Event
     {
         return $this->event;
     }
@@ -176,7 +176,7 @@ class Category
         return $this;
     }
 
-    public function getParent(): ?int
+    public function getParent(): ?Category
     {
         return $this->parent;
     }
@@ -223,7 +223,7 @@ class Category
      */
     public function getSitusLevel1(): Collection
     {
-        return $this->$situLevel1;
+        return $this->situsLevel1;
     }
 
     public function addSituLevel1(Situ $situLevel1): self
@@ -253,7 +253,7 @@ class Category
      */
     public function getSitusLevel2(): Collection
     {
-        return $this->$situLevel2;
+        return $this->situsLevel2;
     }
 
     public function addSituLevel2(Situ $situLevel2): self

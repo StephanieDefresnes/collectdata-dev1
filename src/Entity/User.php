@@ -123,27 +123,27 @@ class User implements UserInterface
     private $isVerified = false;
 
     /**
-    * @ORM\OneToMany(targetEntity=Situ::class, cascade={"persist"}, mappedBy="user")
+    * @ORM\OneToMany(targetEntity=Situ::class, cascade={"persist"}, mappedBy="user", fetch="EXTRA_LAZY")
     */
     private $situs;
 
     /**
-    * @ORM\OneToMany(targetEntity=Event::class, cascade={"persist"}, mappedBy="user")
+    * @ORM\OneToMany(targetEntity=Event::class, cascade={"persist"}, mappedBy="user", fetch="EXTRA_LAZY")
     */
     private $events;
 
     /**
-    * @ORM\OneToMany(targetEntity=Category::class, cascade={"persist"}, mappedBy="user")
+    * @ORM\OneToMany(targetEntity=Category::class, cascade={"persist"}, mappedBy="user", fetch="EXTRA_LAZY")
     */
     private $categories;
 
     /**
-    * @ORM\OneToMany(targetEntity=Translation::class, cascade={"persist"}, mappedBy="user")
+    * @ORM\OneToMany(targetEntity=Translation::class, cascade={"persist"}, mappedBy="user", fetch="EXTRA_LAZY")
     */
     private $translations;
 
     /**
-     * @ORM\OneToMany(targetEntity=Message::class, mappedBy="recipientUser")
+     * @ORM\OneToMany(targetEntity=Message::class, mappedBy="recipientUser", fetch="EXTRA_LAZY")
      */
     private $recipients;
     
@@ -160,13 +160,18 @@ class User implements UserInterface
     private $country;
 
     /**
-     * @ORM\OneToMany(targetEntity=Page::class, mappedBy="User")
+     * @ORM\OneToMany(targetEntity=Page::class, mappedBy="user")
      */
     private $pages;
+//
+//    /**
+//     * @ORM\OneToMany(targetEntity=Page::class, mappedBy="User")
+//     */
+//    private $pages;
 
     public function __construct()
     {
-        $this->langs = new ArrayCollection();
+//        $this->langs = new ArrayCollection();
         $this->contributorLangs = new ArrayCollection();
         $this->situs = new ArrayCollection();
         $this->events = new ArrayCollection();
@@ -174,7 +179,7 @@ class User implements UserInterface
         $this->senders = new ArrayCollection();
         $this->recipients = new ArrayCollection();
         $this->translations = new ArrayCollection();
-        $this->pages = new ArrayCollection();
+//        $this->pages = new ArrayCollection();
     }
 
     public function __toString()
@@ -410,30 +415,30 @@ class User implements UserInterface
 
         return $this;
     }
-    
-    /**
-     * @return Collection|Lang[]
-     */
-    public function getLangs(): Collection
-    {
-        return $this->langs;
-    }
-     
-    public function addLang(Lang $lang): self
-    {
-        $this->langs[] = $lang;
-        
-        return $this;
-    }
-
-    public function removeLang(Lang $lang): self
-    {
-        if ($this->langs->contains($lang)) {
-            $this->langs->removeElement($lang);
-        }
-        
-        return $this;
-    }
+//    
+//    /**
+//     * @return Collection|Lang[]
+//     */
+//    public function getLangs(): Collection
+//    {
+//        return $this->langs;
+//    }
+//     
+//    public function addLang(Lang $lang): self
+//    {
+//        $this->langs[] = $lang;
+//        
+//        return $this;
+//    }
+//
+//    public function removeLang(Lang $lang): self
+//    {
+//        if ($this->langs->contains($lang)) {
+//            $this->langs->removeElement($lang);
+//        }
+//        
+//        return $this;
+//    }
 
     public function getLangContributor(): ?bool
     {
@@ -568,11 +573,32 @@ class User implements UserInterface
         }
         return $this;
     }
-    
+
     /**
-     * @return Collection|Category[]
+     * @return Collection|Lang[]
      */
-    public function getCategories(): Collection
+    public function getLangs(): Collection
+    {
+        return $this->langs;
+    }
+
+    public function addLang(Lang $lang): self
+    {
+        if (!$this->langs->contains($lang)) {
+            $this->langs[] = $lang;
+        }
+
+        return $this;
+    }
+
+    public function removeLang(Lang $lang): self
+    {
+        $this->langs->removeElement($lang);
+
+        return $this;
+    }
+    
+    public function getCategories()
     {
         return $this->categories;
     }

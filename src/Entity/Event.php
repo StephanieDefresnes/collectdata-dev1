@@ -40,12 +40,12 @@ class Event
     private $lang;
 
     /**
-     * @ORM\OneToMany(targetEntity=Category::class, mappedBy="event", fetch="EAGER")
+     * @ORM\OneToMany(targetEntity=Category::class, mappedBy="event", fetch="EXTRA_LAZY")
      */
     private $categories;
 
     /**
-    * @ORM\OneToMany(targetEntity=Situ::class, cascade={"persist"}, mappedBy="event", fetch="EAGER")
+    * @ORM\OneToMany(targetEntity=Situ::class, cascade={"persist"}, mappedBy="event", fetch="EXTRA_LAZY")
     */
     protected $situs;
 
