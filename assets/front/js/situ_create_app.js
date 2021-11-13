@@ -158,7 +158,7 @@ function loadSelectData($form, data, selectId, nextSelectId) {
             // Show card-header loader
             nextSelectParent.addClass('on-load')
                     .children('div').each(function() {
-                        $(this).css({ opacity: 0}); 
+                        $(this).css('opacity', 0); 
                     })
             if (nextSelectParent.hasClass('d-none'))
                 nextSelectParent.removeClass('d-none')
@@ -240,7 +240,7 @@ function loadSelectData($form, data, selectId, nextSelectId) {
                 } else {
                     nextSelectParent.addClass('d-none on-load')
                             .children('div').each(function() {
-                                $(this).css({ opacity: 0}); 
+                                $(this).css('opacity', 0); 
                             })
                 }
                 footerHeight()
@@ -664,7 +664,7 @@ function updateSitu() {
 
     // Show all card sections
     $('#event, #categoryLevel1, #categoryLevel2, .card-body, .card-footer')
-            .removeClass('d-none').animate({ opacity: 1}, 250)
+            .removeClass('d-none').css('opacity', 1)
     
     // Header fields
     $('.formData').each(function() {
@@ -680,11 +680,6 @@ function updateSitu() {
         // Show data
         if ($(this).attr('id') != 'lang')
             getData($(this).attr('id'), $(this).find('select').val())
-    })
-    
-    // Show collapsed
-    $('.infoCollapse').each(function() {
-        if ($(this).hasClass('d-none')) $(this).removeClass('d-none')
     })
     
     // Check SituItems
@@ -859,13 +854,13 @@ $(function() {
         // Show current & next header loaders
         $(this).parents('.formData').addClass('on-load')
                 .children('div').each(function() {
-                    $(this).css({ opacity: 0}); 
+                    $(this).css('opacity', 0); 
                 })
         $(this).parents('.formData').addClass('on-load')
                 .nextAll().each(function(i, obj){
                     $(obj).addClass('on-load')
                             .children('div').each(function() {
-                                $(this).css({ opacity: 0}); 
+                                $(this).css('opacity',0); 
                             })
                 })
         // Hide useless info collapse
