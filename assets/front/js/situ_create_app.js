@@ -824,7 +824,8 @@ $(function() {
             }
 
             // Hide next header field
-            $(this).parents('.formData').nextAll().addClass('d-none')
+            if ($(this).is('select'))
+                $(this).parents('.formData').nextAll().addClass('d-none')
 
             // Show card body on select categoryLevel2
             if ($(this).attr('id') == 'situ_form_categoryLevel2') {
