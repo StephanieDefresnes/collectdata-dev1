@@ -7,11 +7,11 @@ require('datatables.net-bs4/js/dataTables.bootstrap4.min.js');
 const lang = require('../../datatables.json')
 
 // Search if translations exist
-function translationRequest(id, langId) {
+function translationRequest(situId, langId) {
     $.ajax({
         url: "/"+ path['locale'] +"/situ/ajaxFindTranslation",
         method: 'GET',
-        data: { id: id, langId: langId},
+        data: { situId: situId, langId: langId},
         success: function(data) {
             if (data.success) {
                 if ($('#valid').hasClass('createTranslation'))

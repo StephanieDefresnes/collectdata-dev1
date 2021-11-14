@@ -728,8 +728,9 @@ function updateSitu() {
  * Translate situ : load translation lang & show event field
  */
 function loadTranslation(langId) {
-    $('#situ_form_lang').val(langId).trigger('change')
-         .parent().find('.select2-selection__rendered').addClass('selection-on')
+    $('#situ_form_lang').val(null).trigger('change')
+//    $('#situ_form_lang').val(langId).trigger('change')
+//         .parent().find('.select2-selection__rendered').addClass('selection-on')
  
     let dataExist = setInterval(function() {
         if ($('#situ_form_event option').length) {
@@ -775,24 +776,6 @@ $(function() {
     $('.colDataLang').each(function(){
         if (!$(this).children().is('select')) $(this).next().find('.btnAdd').hide()
     })
-    
-    /**
-     * When translate situ
-     */
-    if ($('#translation-situ').length == 1) {
-    
-        loadTranslation($('#situ').attr('data-lang'))
-
-        // Show info
-        $('#details').find('.infoCollapse').each(function() {
-            $(this).addClass('d-none')
-        })
-        // Show situItems depending on Situ to translate
-        let itemsLength = $('#initialSituItems').attr('data-initial')
-        for(var i = 1; i < itemsLength; i++) {
-            addSituItem()
-        }
-    }
     
     /**
      * Load events/categories or create them if choice is empty
@@ -887,6 +870,27 @@ $(function() {
     })
     
     /**
+     * When translate situ
+     */
+    if ($('#loader').hasClass('translateSitu')) {
+        
+        // Load lang to set events
+        $('#situ_form_lang').val($('#situ').attr('data-lang')).trigger('change')
+                .parent().find('.select2-selection__rendered').addClass('selection-on')
+        
+        // Then hide loader
+        $(document).ajaxComplete(function () {
+            $('#loader').removeClass('d-block')
+        });
+        
+        // Show situItems depending on Situ to translate
+        let itemsLength = $('#initialSituItems').attr('data-initial')
+        for(var i = 1; i < itemsLength; i++) {
+            addSituItem()
+        }
+    }
+    
+    /**
      * Then..
      */
     // Show card-body when fill categoryLevel2 description
@@ -897,8 +901,12 @@ $(function() {
     })
     
     // Add SituItem until 4
-    $('#add-itemSitu-link').click(function () {
+    $('#add-itemSitu-link').click(function() {
         addSituItem()
-    }) 
+    })
+    
+    $('.card-footer > button').bind('click', function() {
+        $('#loader').show()
+    })
     
 })
