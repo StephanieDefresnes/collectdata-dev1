@@ -32,10 +32,13 @@ class CategoryController extends AbstractController
         if ($request->isXMLHttpRequest()) {
             
             $data = $request->request->get('data');
+            if (array_key_exists('categoryLevel1', $data)) {
+                $categoryId = $data['categoryLevel1'];
+            }
+            if (array_key_exists('categoryLevel2', $data)) {
+                $categoryId = $data['categoryLevel2'];
+            }
             
-            $categoryId = isset($data['categoryLevel1'])
-                            ? $data['categoryLevel1']
-                            : $data['categoryLevel2'];
             $id = null;
             
             $description = $this->getCategory($categoryId)->getDescription();

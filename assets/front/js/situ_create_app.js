@@ -790,7 +790,7 @@ $(function() {
         // Show situItems depending on Situ to translate
         let itemsLength = $('#initialSituItems').attr('data-initial')
         for(var i = 1; i < itemsLength; i++) {
-            $('#add-itemSitu-link').trigger('click')
+            addSituItem()
         }
     }
     

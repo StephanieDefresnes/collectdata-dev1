@@ -353,21 +353,21 @@ class SituController extends AbstractController
      * 
      * @IsGranted("IS_AUTHENTICATED_FULLY")
      * @IsGranted("ROLE_CONTRIBUTOR")
-     * @Route("/situ/ajaxFindTranslation", methods="GET")
+     * @Route("/situ/ajaxFindTranslation", name="situ_find_translation", methods="GET")
      */
     public function ajaxFindTranslation(Request $request)
     {
         // Situ to translate
-        $situId = $request->query->get('id');
+        $situId = $request->query->get('situId');
+        $situ = $this->em->getRepository(Situ::class)->find($situId);
         
-        // Lang wanted
+        // Translation lang
         $langId = $request->query->get('langId');
+        $lang = $this->em->getRepository(Lang::class)->find($langId);
         
-        $situData = $this->em->getRepository(Situ::class)->find($situId);
-        $langData = $this->em->getRepository(Lang::class)->find($langId);
-        
-        // If wanted lang is Lang situ to translate or wanted lang is not enabled
-        if ($langId === $situData->getLang()->getId() || !$langData->getEnabled()) {
+        if ($lang === $situ->getLang() || false === $lang->getEnabled()) {
+            // If lang is Lang situ to translate or wanted lang is not enabled
+            // (if the user tries to tamper with the form)
             return new JsonResponse([
                 'success' => false,
                 'redirect' => $this->generateUrl('access_denied', [

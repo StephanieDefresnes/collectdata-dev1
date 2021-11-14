@@ -25,6 +25,7 @@
                         {{ 'contrib.form.to'|trans }}
                         <span class="text-capitalize">{{ lang.name|raw }}</span>
                         <img src="{{ asset('img/flag/'~ lang.lang ~'.jpg') }}"
+                             width="20" height="13"
                              alt="{{ lang.lang }}" class="translation-flag mx-1 border">
                     {% endif %}
                 </h5>
@@ -38,10 +39,10 @@
             <div id="lang" class="formData form-row mt-1 mb-4{%
                         if (langs|length == 1 and route == 'create_situ')
                         or route == 'translate_situ' %} d-none{% endif %}">
-                <div class="col-lg-5 col-md-5 mb-md-0 mb-1 pt-md-1">
+                <div class="{{ route == 'create_situ' ? 'col-md-5' : 'col-md-6' }} mb-md-0 mb-1 pt-md-1">
                     {{ form_label(form.lang) }}
                 </div>
-                <div class="col-lg-4 col-md-4 col-sm-7 col-8">
+                <div class="{{ route == 'create_situ' ? 'col-md-4' : 'col-md-6' }} col-sm-7 col-8">
                     <div class="form-row">
                         <div id="form-lang" class="col-md-12">
                             {{ form_widget(form.lang) }}
@@ -51,11 +52,11 @@
                 </div>
             </div>
                         
-            <div id="event" class="formData form-row mb-4{{ langs|length != 1 ? ' d-none on-load'}}">
-                <div class="d-flex justify-content-start col-lg-5 col-md-5 mb-md-0 mb-1 pt-md-1">
+            <div id="event" class="formData form-row mb-4{{ langs|length != 1 and route == 'create_situ' ? ' d-none on-load'}}">
+                <div class="d-flex justify-content-start {{ route == 'create_situ' ? 'col-md-5' : 'col-md-6' }} mb-md-0 mb-1 pt-md-1">
                     {{ form_label(form.event) }}
                 </div>
-                <div class="col-lg-7 col-md-7">
+                <div class="{{ route == 'create_situ' ? 'col-md-7' : 'col-md-6' }}">
                     <div class="form-row">
                         <div id="form-event" class="col-11 colDataLang">
                             {{ form_widget(form.event) }}
@@ -69,7 +70,7 @@
             </div>
                         
             <div id="categoryLevel1" class="formData form-row mb-4 d-none on-load">
-                <div class="d-flex justify-content-start col-lg-5 col-md-5 mb-md-0 mb-1 pt-md-1">
+                <div class="d-flex justify-content-start {{ route == 'create_situ' ? 'col-md-5' : 'col-md-6' }} mb-md-0 mb-1 pt-md-1">
                     <div id="heading-categoryLevel1" class="linkCollapse">
                         <div data-toggle="collapse" data-target="#collapse-categoryLevel1"
                              aria-expanded="false" aria-controls="collapse-categoryLevel1">
@@ -80,7 +81,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-lg-7 col-md-7">
+                <div class="{{ route == 'create_situ' ? 'col-md-7' : 'col-md-6' }}">
                     <div class="form-row">
                         <div id="form-categoryLevel1" class="col-11 colDataLang colData">
                             {{ form_widget(form.categoryLevel1) }}
@@ -103,7 +104,7 @@
             </div>
                         
             <div id="categoryLevel2" class="formData form-row mb-4 d-none on-load">
-                <div class="d-flex justify-content-start col-lg-5 col-md-5 mb-md-0 mb-1 pt-md-1">
+                <div class="d-flex justify-content-start {{ route == 'create_situ' ? 'col-md-5' : 'col-md-6' }} mb-md-0 mb-1 pt-md-1">
                     <div id="heading-categoryLevel2" class="linkCollapse">
                         <div data-toggle="collapse" data-target="#collapse-categoryLevel2"
                              aria-expanded="false" aria-controls="collapse-categoryLevel2">
@@ -114,7 +115,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-lg-7 col-md-7">
+                <div class="{{ route == 'create_situ' ? 'col-md-7' : 'col-md-6' }}">
                     <div class="form-row">
                         <div id="form-categoryLevel2" class="col-11 colDataLang colData">
                             {{ form_widget(form.categoryLevel2) }}
@@ -143,7 +144,9 @@
             <h2 class="h5 font-weight-normal">{{ 'contrib.form.situ.label'|trans }}</h2>
 
             {{ form_row(form.title) }}
+            {{ form_errors(form.title) }}
             {{ form_row(form.description) }} 
+            {{ form_errors(form.description) }} 
 
             <div id="form-items" class="pt-4" data-count="{{ situ ? situ.situItems|length : '' }}">
 
