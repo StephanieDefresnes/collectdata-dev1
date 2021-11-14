@@ -163,9 +163,9 @@ class Mailer
                 ->from(new Address($sender, $nameSite))
                 ->to(new Address($this->parameters->get('configuration')['to_admin']))
                 ->subject($subject)
-                ->htmlTemplate('back/email/situ/validate.html.twig')
+                ->htmlTemplate('email/back/situ/validate.html.twig')
                 ->context([
-                    'user' => $moderator->getName(),
+                    'user' => $nameSite,
                     'moderator_url' => $url,
                     'alert' => $alert,
                 ])
