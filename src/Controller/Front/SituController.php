@@ -261,7 +261,7 @@ class SituController extends AbstractController
         $situData = $this->em->getRepository(Situ::class)->find($situId);
         
         // Translation lang
-        $langData = $this->em->getRepository(Lang::class)->find($langId);
+        $lang = $this->em->getRepository(Lang::class)->find($langId);
         
         // Form
         $situ = new Situ();
@@ -270,10 +270,11 @@ class SituController extends AbstractController
         
         return $this->render('front/situ/new/translate.html.twig', [
             'defaultLang' => $defaultLang,
-            'form' => $formSitu->createView(),
-            'lang' => $langData,
+            'form' => $form->createView(),
+            'lang' => $lang,
             'langs' => $langs,
-            'situ' => $situData,
+            'situ' => $situ,
+            'situData' => $situData,
         ]);
     }
     

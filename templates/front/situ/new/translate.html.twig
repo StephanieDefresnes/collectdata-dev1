@@ -12,7 +12,7 @@
 {% endblock %}
 
 {% block content %}
-    <div id="loader" class="d-block"></div>
+    <div id="loader" class="translateSitu d-block"></div>
         
     {% block banner%}
     <div class="mt-3 mb-3 pt-5">
@@ -32,10 +32,10 @@
                     <div class="d-flex justify-content-center">
                         <h5 class="mb-2 pb-1">
                             {{ 'contrib.form.from'|trans }}
-                            <span class="text-capitalize">{{ situ.lang.name|raw }}</span>
-                            <img src="{{ asset('img/flag/'~ situ.lang.lang ~'.jpg') }}"
+                            <span class="text-capitalize">{{ situData.lang.name|raw }}</span>
+                            <img src="{{ asset('img/flag/'~ situData.lang.lang ~'.jpg') }}"
                                  width="20" height="13"
-                                 alt="{{ situ.lang.lang }}" class="translation-flag mx-1 border">
+                                 alt="{{ situData.lang.lang }}" class="translation-flag mx-1 border">
                         </h5>
                     </div>
                 </div>
@@ -46,7 +46,7 @@
                         <div class="col-md-12 mb-2 pt-1">
                             <span class="font-weight-bolder">
                                 {{ 'label_dp.event'|trans({}, 'messages') }}</span>
-                            {{ situ.event.title }}
+                            {{ situData.event.title }}
                         </div>
                     </div>
 
@@ -59,7 +59,7 @@
                                          aria-expanded="false" aria-controls="initialCollapseOne">
                                         <span class="font-weight-bolder">
                                             {{ 'label_dp.categoryLevel1'|trans({}, 'messages') }}</span>
-                                        {{ situ.categoryLevel1.title }}
+                                        {{ situData.categoryLevel1.title }}
                                         <span class="infoCollapse small">
                                             <i class="fas fa-question-circle"></i>
                                         </span>
@@ -71,7 +71,7 @@
                                         {{ 'label_dp.description'|trans({}, 'messages') }}
                                     </div>
                                     <div class="mt-1 px-3 line-11 first-letter description">
-                                        {{ situ.categoryLevel1.description }}
+                                        {{ situData.categoryLevel1.description }}
                                     </div>
                                 </div>
                             </div>
@@ -84,7 +84,7 @@
                                          aria-expanded="false" aria-controls="initialCollapseTwo">
                                         <span class="font-weight-bolder">
                                             {{ 'label_dp.categoryLevel2'|trans({}, 'messages') }}</span>
-                                        {{ situ.categoryLevel2.title }}
+                                        {{ situData.categoryLevel2.title }}
                                         <span class="infoCollapse small">
                                             <i class="fas fa-question-circle"></i>
                                         </span>
@@ -96,7 +96,7 @@
                                         {{ 'label_dp.description'|trans({}, 'messages') }}
                                     </div>
                                     <div class="mt-1 px-3 line-11 first-letter description">
-                                        {{ situ.categoryLevel2.description }}
+                                        {{ situData.categoryLevel2.description }}
                                     </div>
                                 </div>
                             </div>
@@ -110,14 +110,14 @@
                     <h2 class="h5 font-weight-normal">{{ 'contrib.form.situ.label'|trans }}</h2>
 
                     <h6 class="h6 mb-2 pb-1 font-weight-bolder">{{ 'label_dp.title'|trans({}, 'messages') }}</h6>
-                    <div class="h-title mb-3 first-letter">{{ situ.title }}</div>
+                    <div class="h-title mb-3 first-letter">{{ situData.title }}</div>
 
                     <h6 class="h6 font-weight-bolder">{{ 'label_dp.description'|trans({}, 'messages') }}</h6>
-                    <div class="h-description mb-4 pt-1 first-letter">{{ situ.description }}</div>
+                    <div class="h-description mb-4 pt-1 first-letter">{{ situData.description }}</div>
 
-                    <div id="initialSituItems" data-initial="{{ situ.situItems|length }}">
+                    <div id="initialSituItems" data-initial="{{ situData.situItems|length }}">
                         <h2 class="h5 font-weight-normal pt-4 pb-1 mb-3">{{ 'contrib.form.item.label'|trans }}</h2>
-                        {% for item in situ.situItems %}
+                        {% for item in situData.situItems %}
                             {% if item.score != 0 %}
                                 <legend class="col-12 px-0 border-top border-secondary col-form-label">{{ 'contrib.form.item.label_item'|trans }}</legend>
                                 <h6 class="h6 font-weight-bolder pt-2 pb-4 mb-score">
@@ -131,11 +131,7 @@
                                 </h6>
                             {% endif %}
                             <div class="h-title mb-4 first-letter">{{ item.title }}</div>
-                            <div class="h-description {#{% if item.score == 0 
-                                 %}mb-4{% else %}mb-3{%
-                                 endif %}#} first-letter">{{ item.description }}</div>
-                            {% if item.score == 0 %}
-                            {% endif %}
+                            <div class="h-description first-letter">{{ item.description }}</div>
                         {% endfor %}
                     </div>
                 </div>
@@ -159,14 +155,7 @@
             "locale" : "{{ locale }}",
         }
         let translations = {
-            "flashError" : "{{ 'contrib.table.edit.flash.error'|trans }}",
-            "srOnly-error" : "{{ 'contrib.form.sr_only.error'|trans }}",
             "toValidate" : "{{ 'contrib.form.to_validate'|trans }}",
-            "event-titlePlaceholder" : "{{ 'contrib.form.event.placeholder_add'|trans }}",
-            "categoryLevel1-titlePlaceholder" : "{{ 'contrib.form.category.title_placeholder'|trans }}",
-            "categoryLevel2-titlePlaceholder" : "{{ 'contrib.form.category.title_placeholder'|trans }}",
-            "categoryLevel1-descriptionPlaceholder" : "{{ 'contrib.form.category.description_placeholder'|trans }}",
-            "categoryLevel2-descriptionPlaceholder" : "{{ 'contrib.form.category.description_placeholder'|trans }}",
             "deleteItem-title" : "{{ 'contrib.form.item.remove.title'|trans }}",
             "deleteItem-content" : "{{ 'contrib.form.item.remove.confirm'|trans }}",
             "yes" : "{{ 'yes'|trans({}, 'messages') }}",
@@ -177,11 +166,10 @@
             "formError" : "{{ 'contrib.form.error'|trans }}",
             "update" : "{{ 'action.edit'|trans({}, 'messages') }}",
             "eventUpdate" : "{{ 'contrib.form.event.update.title'|trans }}",
-            "categoryLevel1Update" : "{{ 'contrib.form.category.level1.update.title'|trans }}",
-            "categoryLevel2Update" : "{{ 'contrib.form.category.level2.update.title'|trans }}",
-            "updateAlert-warning" : "{{ 'alert.warning'|trans }}",
-            "updateAlert-success" : "{{ 'alert.success'|trans }}",
+            "categoryLevel1Update" : "{{ 'contrib.form.categoryLevel1.update.title'|trans }}",
+            "categoryLevel2Update" : "{{ 'contrib.form.categoryLevel2.update.title'|trans }}",
+            "updateAlert-warning" : "{{ 'alert.warning'|trans({}, 'messages') }}",
+            "updateAlert-success" : "{{ 'alert.success'|trans({}, 'messages') }}",
         }
-        
     </script>
 {% endblock %}
