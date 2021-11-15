@@ -59,10 +59,10 @@ class SituVoter extends Voter
         throw new \LogicException('This code should not be reached!');
     }
 
-    private function canDelete(Situ $situ, User $user)
+    private function canDelete(Situ $subject, User $user)
     {
         // Only situ author can delete situ
-        if ($user !== $situ->getUser()) { return false; }
+        if ($user !== $subject->getUser()) { return false; }
         return true;
     }
 
@@ -82,10 +82,10 @@ class SituVoter extends Voter
         return true;
     }
 
-    private function canUpdate(Situ $situ, User $user)
+    private function canUpdate(Situ $subject, User $user)
     {
         // Only situ author can delete situ
-        if ($user !== $situ->getUser()) { return false; }
+        if ($user !== $subject->getUser()) { return false; }
         return true;
     }
 
@@ -97,10 +97,10 @@ class SituVoter extends Voter
         return true;
     }
 
-    private function canValidation(Situ $situ, User $user)
+    private function canValidation(Situ $subject, User $user)
     {
         // Only situ author can delete situ
-        if ($user !== $situ->getUser()) { return false; }
+        if ($user !== $subject->getUser()) { return false; }
         return true;
     }
 }
