@@ -17,3 +17,4 @@ framework:
         log: true
 
     default_locale: fr
+    error_controller: App\Controller\Security\ErrorController::notFound
