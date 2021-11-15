@@ -144,7 +144,7 @@
                             
                             {% if situ.status.id == 1 %}
                                 <td class="width-max-26 px-0">
-                                    <a href="{{ path('validation_situ_request', { 'situ': situ.id }) }}"
+                                    <a href="{{ path('validation_situ', { 'situ': situ.id }) }}"
                                        class="btn btn-outline-success btn-sm pcx-2"
                                        data-toggle="tooltip" data-placement="left"
                                        title="{{ 'action.validation'|trans }}"
@@ -154,7 +154,7 @@
                                 </td>
                             {% elseif situ.status.id == 2 %}
                                 <td class="width-max-26 px-0">
-                                    <a href="{{ path('read_situ', { 'situ': situ.id }) ~'?preview' }}"
+                                    <a href="{{ path('read_situ', { 'situ': situ.id, 'preview': 'preview' }) }}"
                                        class="btn btn-outline-secondary btn-sm px-1"
                                        data-toggle="tooltip" data-placement="left"
                                        title="{{ 'action.preview'|trans }}"
@@ -208,16 +208,16 @@
                     </div>
                     <div class="modal-body text-secondary pb-4">
                         <p class="mb-1">{{ 'contrib.translation.modal.text'|trans ({}, 'user_messages')}}</p>
-                        <p data-id="" class="situ-title text-center font-weight-bold text-capitalize"></p>
+                        <p data-id="" data-status="" class="situ-title text-center font-weight-bold text-capitalize"></p>
                         <div class="row mt-4 mb-2">
-                            <div class="col-md-6 offset-md-3 text-capitalize">
+                            <div class="col-md-6 offset-md-3">
                                 <select id="translateLangs" class="form-control">
                                     <option value="" class="d-none">
                                         {{ 'multiple_search'|trans }}
                                     </option>
                                     {% for lang in app.user.langs %}
                                         <option value="{{ lang.id }}">
-                                            {{ lang.name|raw }}
+                                            {{ lang.name|raw}}
                                         </option>
                                     {% endfor %}
                                 </select>
@@ -228,13 +228,14 @@
                                 <span class="sr-only">Loading...</span>
                             </div>
                         </div>
+                        <div id="mulptiple"></div>
                         <p id="result" class="text-center mt-3 mb-0 d-none">
                             <span class="success">{{ 'contrib.translation.modal.result.success'|trans({}, 'user_messages') }}</span>
                             <span class="error">{{ 'contrib.translation.modal.result.error'|trans({}, 'user_messages') }}</span>
                         </p>
                     </div>
                     <div class="modal-footer">
-                        <button id="valid" class="btn btn-primary d-none" data-id=""></button>
+                        <button id="valid" class="btn btn-primary d-none" data-id="" data-status=""></button>
                         <button class="cancel btn btn-secondary">
                             {{ 'action.cancel'|trans }}
                         </button>
@@ -253,12 +254,13 @@
     <script>
         let path = { "locale" : "{{ locale }}" }
         let translations = {
-            "modalBtnRead" : "{{ 'action.read'|trans}}",
-            "modalBtnValid" : "{{ 'action.translate'|trans  }}",
-            "deleteTitle" : "{{ 'contrib.delete.title'|trans({}, 'user_messages')  }}",
-            "deleteQuestion" : "{{ 'contrib.delete.text'|trans({}, 'user_messages')  }}",
-            "updateTitle" : "{{ 'contrib.update_validated.title'|trans({}, 'user_messages')  }}",
-            "updateQuestion" : "{{ 'contrib.update_validated.question'|trans({}, 'user_messages') |raw }}",
+            "modalBtnRead" : "{{ 'action.read'|trans }}",
+            "modalBtnValid" : "{{ 'action.translate'|trans }}",
+            "modalMultiple" : "{{ 'contrib.translation.modal.result.multiple'|trans({}, 'user_messages') }}",
+            "deleteTitle" : "{{ 'contrib.delete.title'|trans({}, 'user_messages') }}",
+            "deleteQuestion" : "{{ 'contrib.delete.text'|trans({}, 'user_messages') }}",
+            "updateTitle" : "{{ 'contrib.update_validated.title'|trans({}, 'user_messages') }}",
+            "updateQuestion" : "{{ 'contrib.update_validated.question'|trans({}, 'user_messages')|raw }}",
             "no" : "{{ 'no'|trans }}",
             "yes" : "{{ 'yes'|trans }}",
         }

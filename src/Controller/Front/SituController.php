@@ -72,7 +72,7 @@ class SituController extends AbstractController
     }
     
     /**
-     * @Route("/read/{situ}", name="read_situ", methods="GET")
+     * @Route("/read/{situ}/{preview}", defaults={"preview" = null}, name="read_situ", methods="GET")
      */
     public function readSitu(Situ $situ): Response
     {
@@ -95,7 +95,7 @@ class SituController extends AbstractController
     /**
      * @IsGranted("IS_AUTHENTICATED_FULLY")
      * @IsGranted("ROLE_CONTRIBUTOR")
-     * @Route("/validation/{situ}", name="validation_situ_request", methods="GET|POST")
+     * @Route("/validation/{situ}", name="validation_situ", methods="GET|POST")
      */
     function validationSituRequest(Situ $situ): Response
     {

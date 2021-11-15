@@ -1,10 +1,42 @@
 // css
 import '../scss/situ_user_app.scss'
+import 'select2/src/scss/core.scss';
+import 'select2-theme-bootstrap4/dist/select2-bootstrap.min.css'
 
 // js
 require('datatables.net/js/jquery.dataTables.min.js');
 require('datatables.net-bs4/js/dataTables.bootstrap4.min.js');
 const lang = require('../../datatables.json')
+require('select2')
+
+function initSelect2(select) {
+    $(select).select2({
+        minimumResultsForSearch: Infinity,
+        width: 'resolve'
+    });
+}
+
+// Create a translation
+function situTranslate(button) {
+    let title = button.parents('tr').find('.situ-title').attr('data-original-title')
+    let langId = button.attr('data-lang')
+
+    $('#translateModal .situ-title')
+            .text(title)
+            .attr('data-id', button.parents('tr').attr('data-id'))
+    $('#translateLangs').select2('destroy')
+    $('#translateLangs option').each(function() {
+        if ($(this).val() != '') {
+            if ($(this).val() == langId) $(this).prop('disabled', true)
+            else $(this).prop('disabled', false)
+        }
+    })
+    initSelect2($('#translateLangs'))
+
+    $('#translateLangs').val('')
+    if ($('#spinner').hasClass('show')) $('#spinner').removeClass('show')
+    $('#translateModal').modal('show')
+}
 
 // Search if translations exist
 function translationRequest(situId, langId) {
@@ -19,6 +51,7 @@ function translationRequest(situId, langId) {
                 if ($('#valid').hasClass('readTranslation'))
                     $('#valid').removeClass('readTranslation')
                 verifyTranslatedSitu(data['situTranslated'])
+                console.log(data['situTranslated'])
             } else {
                 location.href = data.redirect;
             }
@@ -27,6 +60,11 @@ function translationRequest(situId, langId) {
 }
 
 // Load modal to read existing translation or create it
+// Result can be empty, user can translate
+// Result can be single, user can read situ on buntton click
+// Result can be multiple, for example :
+//  one on validation requested, and one refused, corrected than on validation requested again
+//  than user can read each one on link click
 function verifyTranslatedSitu(data) {
     if (data.length == 0) {
         if ($('#result').find('.success').hasClass('d-none'))
@@ -34,16 +72,29 @@ function verifyTranslatedSitu(data) {
         $('#result').find('.error').addClass('d-none')
         $('#valid').text(translations['modalBtnValid'])
                 .removeClass('d-none').addClass('createTranslation')
-    } else {
+        $('#mulptiple').empty()
+        $('#result').removeClass('d-none')
+    } else if (data.length == 1) {
         $('#valid').attr('data-id', data[0]['id'])
+        $('#valid').attr('data-status', data[0]['statusId'])
         if ($('#result').find('.error').hasClass('d-none'))
             $('#result').find('.error').removeClass('d-none')
         $('#result').find('.success').addClass('d-none')
         $('#valid').text(translations['modalBtnRead'])
-                .removeClass('d-none').addClass('readTranslation')                        
+                .removeClass('d-none').addClass('readTranslation')  
+        $('#mulptiple').empty()
+        $('#result').removeClass('d-none')                      
+    } else {
+        $('#mulptiple').append(translations['modalMultiple'])
+        for (let i = 0; i < data.length; i++) {
+            let preview = data[i]['statusId'] == 2 ? '/preview' : ''
+            let link = '<p class="mb-0">'
+                    + '<a href ="'+'/'+ path['locale'] +'/read/'+ data[i]['id'] + preview +'">'
+                    + data[i]['title'] +' - '+ translations['modalBtnRead'] +'</a></p>'
+            $('#mulptiple').append(link)
+        }
     }
     $('#spinner').removeClass('show')
-    $('#result').removeClass('d-none')
 }
 
 // jQuery confirm for update & delete situ action
@@ -123,6 +174,9 @@ $(document).ready(function() {
         },
         
     });
+    
+    // Init select2
+    initSelect2($('#translateLangs'))
 
     // Reset search filter
     let table = $('#dataTable-situs').DataTable()
@@ -152,25 +206,7 @@ $(document).ready(function() {
      */
     // Show modal with data situ to translate and hide language choice if is situ langId
     $('.situTranslate').click(function() {
-        let title = $(this).parents('tr').find('.situ-title').attr('data-original-title')
-        let langId = $(this).attr('data-lang')
-        
-        $('#translateModal .situ-title')
-                .text(title)
-                .attr('data-id', $(this).parents('tr').attr('data-id'))
-        
-        $('#translateLangs option').each(function() {
-            if ($(this).val() != '') {
-                if ($(this).val() == langId) $(this).addClass('d-none')
-                else {
-                    if ($(this).hasClass('d-none')) $(this).removeClass('d-none')
-                }
-            }
-        })
-        
-        $('#translateLangs').val('')
-        if ($('#spinner').hasClass('show')) $('#spinner').removeClass('show')
-        $('#translateModal').modal('show')
+        situTranslate($(this))
     })
     
     // Search if translations exist
@@ -178,6 +214,7 @@ $(document).ready(function() {
         $('#translateLangs').val('')
     }).change(function() {
         let situId = $('#translateModal .situ-title').attr('data-id') 
+        $('#mulptiple').empty()
         $('#result, #valid').addClass('d-none')
         $('#spinner').addClass('show')
         translationRequest(situId, $(this).val())
@@ -186,12 +223,14 @@ $(document).ready(function() {
     // Read existing translation or create it
     $('#valid').click(function() {
         $('#loader').show()
+        $('#mulptiple').empty()
         if ($(this).hasClass('createTranslation')) {            
             location.href = '/'+ path['locale'] 
                     +'/translate/'+ $('#translateModal .situ-title').attr('data-id')
                     +'/'+ $('#translateLangs').val();            
         } else {
-            location.href = '/'+ path['locale'] +'/read/'+ $(this).attr('data-id') +'?preview';
+            let preview = $(this).attr('data-status') == 2 ? '/preview' : ''
+            location.href = '/'+ path['locale'] +'/read/'+ $(this).attr('data-id') + preview;
         }
     })
     
@@ -199,6 +238,7 @@ $(document).ready(function() {
     $('#translateModal .cancel').click(function() {
         $('#translateModal').modal('hide')
         $('#result, #valid').addClass('d-none')
+        $('#mulptiple').empty()
     })
     
 });

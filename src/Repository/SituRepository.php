@@ -57,6 +57,8 @@ class SituRepository extends ServiceEntityRepository
     
     /**
      * @return []   Returns an array transation situs
+     *              if validation requested or validated
+     *              **join because of Invalid PathExpression on situ.status
      * 
      * @param type $situId
      * @param type $langId
@@ -66,16 +68,19 @@ class SituRepository extends ServiceEntityRepository
     {
         $qb = $this->_em->createQueryBuilder();        
         $qb->from(Situ::class,'situ')
-            ->select('situ.id')
+            ->select('situ.id, situ.title, status.id as statusId')
+            ->leftJoin(Status::class, 'status', 'WITH', 'situ.status=status.id')
             ->where('situ.translatedSituId = ?1')
             ->andWhere('situ.lang = ?2')
             ->andWhere($qb->expr()->neq('situ.status', '?3'))
             ->andWhere($qb->expr()->neq('situ.status', '?4'))
+            ->andWhere($qb->expr()->neq('situ.status', '?5'))
             ->setParameters([
                 1 => $situId,
                 2 => $langId,
-                3 => $this->_em->getRepository(Status::class)->find(4),
-                4 => $this->_em->getRepository(Status::class)->find(5)
+                3 => $this->_em->getRepository(Status::class)->find(1),
+                4 => $this->_em->getRepository(Status::class)->find(4),
+                5 => $this->_em->getRepository(Status::class)->find(5)
             ]);
         
         return $qb->getQuery()->getResult();
