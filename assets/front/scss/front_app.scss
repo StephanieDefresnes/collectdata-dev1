@@ -460,6 +460,9 @@ body {
         display: flex !important;
     }
 }
+.is-invalid {
+    background-color: #fff0f0 !important;
+}
 
 // Fontawesome
 .fa, .fas {
