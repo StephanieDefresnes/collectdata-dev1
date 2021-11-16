@@ -9,11 +9,14 @@ use App\Form\Front\Situ\SituFormType;
 use App\Mailer\Mailer;
 use App\Manager\Front\SituManager;
 use App\Messenger\Messenger;
-use Doctrine\Common\Collections\ArrayCollection;
+use App\Service\SituEditor;
 use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
+use Symfony\Component\Form\FormEvents;
+use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -31,6 +34,7 @@ class SituController extends AbstractController
     private $messenger;
     private $parameters;
     private $security;
+    private $situEditor;
     private $situManager;
     private $translator;
     
@@ -39,6 +43,7 @@ class SituController extends AbstractController
                                 Messenger $messenger,
                                 ParameterBagInterface $parameters,
                                 Security $security,
+                                SituEditor $situEditor,
                                 SituManager $situManager, 
                                 TranslatorInterface $translator)
     {
@@ -47,6 +52,7 @@ class SituController extends AbstractController
         $this->messenger = $messenger;
         $this->parameters = $parameters;
         $this->security = $security;
+        $this->situEditor = $situEditor;
         $this->situManager = $situManager;
         $this->translator = $translator;
     }
@@ -74,18 +80,11 @@ class SituController extends AbstractController
     /**
      * @Route("/read/{situ}/{preview}", defaults={"preview" = null}, name="read_situ", methods="GET")
      */
-    public function readSitu(Situ $situ): Response
-    {
-        $notFoundRoute = $this->redirectToRoute('not_found', ['_locale' => locale_get_default()]);
-        
-        if (!$situ) return $notFoundRoute;
-        
-        // Only user can read a contribution requested to validate (with preview mode)
-        if ($situ->getStatus()->getId() === 2 && isset($_GET['preview'])) {
-            if (!$this->security->getUser()) return $notFoundRoute;
-        }
-        // None can read a contribution except validated
-        else if ($situ->getStatus()->getId() !== 3) return $notFoundRoute;
+    public function read(Situ $situ, $preview): Response
+    {   
+        // Check permission
+        $subject = ['situ' => $situ, 'preview' => $preview];
+        $this->denyAccessUnlessGranted('read_situ', $subject);
         
         return $this->render('front/situ/read.html.twig', [
             'situ' => $situ,
@@ -97,17 +96,10 @@ class SituController extends AbstractController
      * @IsGranted("ROLE_CONTRIBUTOR")
      * @Route("/validation/{situ}", name="validation_situ", methods="GET|POST")
      */
-    function validationSituRequest(Situ $situ): Response
+    function validation(Situ $situ): Response
     {
-        // Current user
-        $user = $this->security->getUser();
-        
-        // Only situ author can request situ validation 
-        if ($user !== $situ->getUser()) {
-            return $this->redirectToRoute('access_denied', [
-                '_locale' => locale_get_default(),
-            ]);
-        }
+        // Check permission
+        $this->denyAccessUnlessGranted('validation_situ', $situ);
         
         $situ->setDateSubmission(new \DateTime('now'));
         $situ->setStatus($this->em->getRepository(Status::class)->find(2));
@@ -141,17 +133,10 @@ class SituController extends AbstractController
      * @IsGranted("ROLE_CONTRIBUTOR")
      * @Route("/delete/{situ}", name="delete_situ", methods="GET|POST")
      */
-    function deleteSitu(Situ $situ): Response
-    {
-        // Current user
-        $user = $this->security->getUser();
-        
-        // Only situ author can delete situ
-        if ($user->getId() !== $situ->getUser()) {
-            return $this->redirectToRoute('access_denied', [
-                '_locale' => locale_get_default(),
-            ]);
-        }
+    function delete(Situ $situ): Response
+    {        
+        // Check permission
+        $this->denyAccessUnlessGranted('delete_situ', $situ);
             
         $situ->setDateDeletion(new \DateTime('now'));
         $situ->setStatus($this->em->getRepository(Status::class)->find(5));
@@ -185,7 +170,7 @@ class SituController extends AbstractController
      * @IsGranted("ROLE_CONTRIBUTOR")
      * @Route("/contrib/{id}", defaults={"id" = null}, name="create_situ", methods="GET|POST")
      */
-    public function createSitu(Request $request, $id): Response
+    public function create(Request $request, $id): Response
     {
         $defaultLang = $this->em->getRepository(Lang::class)
                 ->findOneBy(['lang' => $this->parameters->get('locale')])
@@ -195,30 +180,19 @@ class SituController extends AbstractController
         $user = $this->security->getUser();
         $langs = $user->getLangs()->getValues();
                 
-        // Update or Create new Situ
         if ($id) {
             
             $situ = $this->em->getRepository(Situ::class)->find($id);
         
-            // Only situ author can update situ
-            if (!$situ) {
-                return $this->redirectToRoute('not_found', ['_locale' => locale_get_default()]);
-            }
+            // Check permission
+            $this->denyAccessUnlessGranted('create_situ', $situ);
             
             // If validation requested return to preview
             if ($situ->getStatus()->getId() === 2) {
                 return $this->redirectToRoute('read_situ', [
                     '_locale' => locale_get_default(),
                     'situ' => $situ->getId(),
-                    'preview' => ''
-                ]);
-            }
-        
-            // Only situ author can update situ
-            if (($situ->getStatus()->getId() === 1 || $situ->getStatus()->getId() === 3)
-                    && $situ->getUser() !== $user) {
-                return $this->redirectToRoute('access_denied', [
-                    '_locale' => locale_get_default(),
+                    'p' => 'preview'
                 ]);
             }
             
@@ -226,13 +200,26 @@ class SituController extends AbstractController
             $situ = new Situ();
         }
         
-        $originalItems = new ArrayCollection();
-        foreach ($situ->getSituItems() as $item) {
-            $originalItems->add($item);
-        }
-        
+        // Form
         $form = $this->createForm(SituFormType::class, $situ);
         $form->handleRequest($request);
+        
+        /**
+         * isSubmitted() method is used by dynamics fields
+         * So when user really submits form, we use isClicked() method
+         * to get data requested
+         */
+        if ($form->get('save')->isClicked() || $form->get('submit')->isClicked()) {
+            
+            $result = $this->situManager->validationForm($request);
+            
+            if (true !== $result) {
+                $form->addError(new FormError($result));
+            } else {
+                $url = $this->situEditor->setSitu($form, $request, $id);
+                return $this->redirect($url);
+            }
+        }
         
         return $this->render('front/situ/new/create.html.twig', [
             'defaultLang' => $defaultLang,
@@ -248,8 +235,8 @@ class SituController extends AbstractController
      * @IsGranted("ROLE_CONTRIBUTOR")
      * @Route("/translate/{situId}/{langId}", name="translate_situ", methods="GET|POST")
      */
-    public function translateSitu(Request $request, $situId, $langId): Response
-    {
+    public function translate(Request $request, $situId, $langId): Response
+    {        
         $defaultLang = $this->em->getRepository(Lang::class)
                 ->findOneBy(['lang' => $this->parameters->get('locale')])
                 ->getId();
@@ -263,10 +250,31 @@ class SituController extends AbstractController
         // Translation lang
         $lang = $this->em->getRepository(Lang::class)->find($langId);
         
+        // Check permission
+        $subject = ['situ' => $situData, 'lang' => $lang];
+        $this->denyAccessUnlessGranted('translate_situ', $subject);
+        
         // Form
         $situ = new Situ();
-        $formSitu = $this->createForm(SituFormType::class, $situ);
-        $formSitu->handleRequest($request);
+        $form = $this->createForm(SituFormType::class, $situ);
+        $form->handleRequest($request);
+        
+        /**
+         * isSubmitted() method is used by dynamics fields
+         * So when user really submits form, we use isClicked() method
+         * to get data requested
+         */
+        if ($form->get('save')->isClicked() || $form->get('submit')->isClicked()) {
+            
+            $result = $this->situManager->validationForm($request);
+            
+            if (true !== $result) {
+                $form->addError(new FormError($result));
+            } else {
+                $url = $this->situEditor->setSitu($form, $request, $id);
+                return $this->redirect($url);
+            }
+        }
         
         return $this->render('front/situ/new/translate.html.twig', [
             'defaultLang' => $defaultLang,
@@ -276,77 +284,6 @@ class SituController extends AbstractController
             'situ' => $situ,
             'situData' => $situData,
         ]);
-    }
-    
-    /**
-     * Situ creation by ajax because of alternative of create event & category
-     * instead of choose them with dynamic form events
-     * 
-     * @IsGranted("IS_AUTHENTICATED_FULLY")
-     * @IsGranted("ROLE_CONTRIBUTOR")
-     * @Route("/situ/ajaxCreate", methods="GET|POST")
-     */
-    public function ajaxCreate(Request $request)
-    {   
-        $result = $this->situManager->setData($request);
-        $situ = $result['situ'];
-        
-        $this->em->persist($situ);
-        
-        try {       
-            $this->em->flush();
-
-            if ($result['update']) { $actionSuccess = 'success_update'; }
-            else { $actionSuccess = 'success'; }
-
-            $msg = $this->translator->trans(
-                        'contrib.form.'. $result['action'] .'.flash.'. $actionSuccess, [],
-                        'user_messages', $locale = locale_get_default()
-                        );
-            $request->getSession()->getFlashBag()->add('success', $msg);
-
-            return $this->json(['success' => true]);
-
-        } catch (\Doctrine\DBAL\DBALException $e) {
-            $msg = $this->translator->trans(
-                        'contrib.form.'. $result['action'] .'.flash.error', [],
-                        'user_messages', $locale = locale_get_default()
-                        );
-            $this->addFlash('error', $msg.PHP_EOL.$e->getMessage());
-
-            return $this->json(['success' => false]);
-        }
-    }
-    
-    /**
-     * Load Category description on select with dynamic form events
-     * 
-     * @IsGranted("IS_AUTHENTICATED_FULLY")
-     * @IsGranted("ROLE_CONTRIBUTOR")
-     * @Route("/situ/ajaxGetData", methods="GET|POST")
-     */
-    public function ajaxGetData(Request $request): JsonResponse
-    {
-        if ($request->isXMLHttpRequest()) {
-            
-            $data = $request->request->get('dataForm');
-            
-            $categoryLevel1Description = isset($data['categoryLevel1'])
-                    ? $this->em->getRepository(Category::class)
-                        ->find($data['categoryLevel1'])->getDescritption()
-                    : '';
-            
-            $categoryLevel1Description = isset($data['categoryLevel2'])
-                    ? $this->em->getRepository(Category::class)
-                        ->find($data['categoryLevel2'])->getDescritption()
-                    : '';
-
-            return $this->json([
-                'success' => true,
-                'categoryLevel1' => $categoryLevel1Description,
-                'categoryLevel2' => $categoryLevel1Description,
-            ]);
-        }
     }
     
     /**

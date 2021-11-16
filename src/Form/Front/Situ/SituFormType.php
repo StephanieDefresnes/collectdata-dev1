@@ -7,6 +7,7 @@ use App\Entity\Event;
 use App\Entity\Lang;
 use App\Entity\Situ;
 use App\Form\Front\Situ\SituItemType;
+use App\Manager\Front\SituManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -18,8 +19,9 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
+use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Security\Core\Security;
@@ -28,14 +30,17 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 class SituFormType extends AbstractType
 {
     private $em;
+    private $situManager;
     private $translator;
     
     public function __construct(EntityManagerInterface $em,
                                 Security $security,
+                                SituManager $situManager,
                                 TranslatorInterface $translator)
     {
         $this->em = $em;
         $this->security = $security;
+        $this->situManager = $situManager;
         $this->translator = $translator;
     }
     
@@ -59,6 +64,7 @@ class SituFormType extends AbstractType
             'attr' => ['class' => 'btnAdd mt-1 px-0'],
             'label_html' => true,
             'label' => '<i class="fas fa-plus-circle bg-none text-light text-small"></i>',
+            'translation_domain' => false,
         ];
             
         $builder
@@ -103,7 +109,7 @@ class SituFormType extends AbstractType
         $formCreateCategory = function (FormInterface $form, $entity, $data = null) {
             $form->add($entity, CreateCategoryType::class, [
                 'attr' => ['class' => 'mt-1 colForm'],
-                'label' => '',
+                'label' => 'contrib.form.'. $entity .'.label',
                 'label_attr' => ['class' => 'pt-0'],
                 'data' => $data,
             ]); 
@@ -207,7 +213,8 @@ class SituFormType extends AbstractType
                     $form->add('categoryLevel1', EntityType::class, [
                         'class' => Category::class,
                         'attr' => ['class' => 'custom-select colForm'],
-                        'label' => 'contrib.form.category.level1.label',
+                        'label' => 'contrib.form.categoryLevel1.label',
+                        'label_attr' => ['class' => 'pointer'],
                         'choices' => $categoriesLevel1,
                     ]);                   
                 } elseif (is_numeric($event_id))  {
@@ -236,8 +243,9 @@ class SituFormType extends AbstractType
                         $form->add('categoryLevel1', EntityType::class, [
                             'class' => Category::class,
                             'attr' => ['class' => 'custom-select colForm'],
-                            'label' => 'contrib.form.category.level1.label',
-                            'placeholder' => 'contrib.form.category.level1.placeholder',
+                            'label' => 'contrib.form.categoryLevel1.label',
+                            'label_attr' => ['class' => 'pointer'],
+                            'placeholder' => 'contrib.form.categoryLevel1.placeholder',
                             'choices' => $categoriesLevel1,
                             'choice_label' => function($category, $key, $value) {
                                 return $category->getTitle();
@@ -272,7 +280,8 @@ class SituFormType extends AbstractType
                     $form->add('categoryLevel2', EntityType::class, [
                         'class' => Category::class,
                         'attr' => ['class' => 'custom-select colForm'],
-                        'label' => 'contrib.form.category.level2.label',
+                        'label' => 'contrib.form.categoryLevel2.label',
+                        'label_attr' => ['class' => 'pointer'],
                         'choices' => $categoriesLevel2,
                     ]);
                 } elseif (is_numeric($categoryLevel1_id))  {
@@ -302,8 +311,9 @@ class SituFormType extends AbstractType
                         $form->add('categoryLevel2', EntityType::class, [
                             'class' => Category::class,
                             'attr' => ['class' => 'custom-select colForm'],
-                            'label' => 'contrib.form.category.level2.label',
-                            'placeholder' => 'contrib.form.category.level2.placeholder',
+                            'label' => 'contrib.form.categoryLevel2.label',
+                            'label_attr' => ['class' => 'pointer'],
+                            'placeholder' => 'contrib.form.categoryLevel2.placeholder',
                             'choices' => $categoriesLevel2,
                             'choice_label' => function($category, $key, $value) {
                                 return $category->getTitle();
@@ -482,6 +492,9 @@ class SituFormType extends AbstractType
             'allow_extra_fields' => true,
             'data_class' => Situ::class,
             'translation_domain' => 'user_messages',
+            'attr' => [
+                'novalidate' => 'novalidate', // comment to reactivate the html5 validation
+            ]
         ]);
     }
 }
