@@ -34,7 +34,9 @@
 
         <div id="details" class="card-header accordion py-4 pl-4 bg-secondary-80 text-white">
 
-            <div id="form-error"></div>
+            <div id="form-error">
+                {{ form_errors(form) }}
+            </div>
 
             <div id="lang" class="formData form-row mt-1 mb-4{%
                         if (langs|length == 1 and route == 'create_situ')
@@ -46,7 +48,6 @@
                     <div class="form-row">
                         <div id="form-lang" class="col-md-12">
                             {{ form_widget(form.lang) }}
-                            {{ form_errors(form.lang) }}
                         </div>
                     </div>
                 </div>
@@ -60,7 +61,6 @@
                     <div class="form-row">
                         <div id="form-event" class="col-11 colDataLang">
                             {{ form_widget(form.event) }}
-                            {{ form_errors(form.event) }}
                         </div>
                         <div id="add-event" class="col-1 px-0 pt-1 text-center colBtn">
                             {{ form_widget(form.addEvent) }}
@@ -74,7 +74,7 @@
                     <div id="heading-categoryLevel1" class="linkCollapse">
                         <div data-toggle="collapse" data-target="#collapse-categoryLevel1"
                              aria-expanded="false" aria-controls="collapse-categoryLevel1">
-                            {{ form_label(form.categoryLevel1, null, { 'label_attr': {'class': 'pointer'} }) }}
+                            {{ form_label(form.categoryLevel1) }}
                             <span class="infoCollapse d-none small"><i class="fas fa-question-circle"></i></span>
                         </div>
                     </div>
@@ -83,7 +83,6 @@
                     <div class="form-row">
                         <div id="form-categoryLevel1" class="col-11 colDataLang colData">
                             {{ form_widget(form.categoryLevel1) }}
-                            {{ form_errors(form.categoryLevel1) }}
                         </div>
                         <div id="add-categoryLevel1" class="col-1 px-0 pt-1 text-center colBtn">
                             {{ form_widget(form.addCategoryLevel1) }}
@@ -106,7 +105,7 @@
                     <div id="heading-categoryLevel2" class="linkCollapse">
                         <div data-toggle="collapse" data-target="#collapse-categoryLevel2"
                              aria-expanded="false" aria-controls="collapse-categoryLevel2">
-                            {{ form_label(form.categoryLevel2, null, { 'label_attr': {'class': 'pointer'} }) }}
+                            {{ form_label(form.categoryLevel2) }}
                             <span class="infoCollapse d-none small"><i class="fas fa-question-circle"></i></span>
                         </div>
                     </div>
@@ -115,7 +114,6 @@
                     <div class="form-row">
                         <div id="form-categoryLevel2" class="col-11 colDataLang colData">
                             {{ form_widget(form.categoryLevel2) }}
-                            {{ form_errors(form.categoryLevel2) }}
                         </div>
                         <div id="add-categoryLevel2" class="col-1 px-0 pt-1 text-center colBtn">
                             {{ form_widget(form.addCategoryLevel2) }}
