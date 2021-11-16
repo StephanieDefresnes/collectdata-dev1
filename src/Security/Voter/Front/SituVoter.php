@@ -84,7 +84,7 @@ class SituVoter extends Voter
 
     private function canUpdate(Situ $subject, User $user)
     {
-        // Only situ author can delete situ
+        // Only situ author can update situ
         if ($user !== $subject->getUser()) { return false; }
         return true;
     }
@@ -99,7 +99,7 @@ class SituVoter extends Voter
 
     private function canValidation(Situ $subject, User $user)
     {
-        // Only situ author can delete situ
+        // Only situ author can request validation
         if ($user !== $subject->getUser()) { return false; }
         return true;
     }
