@@ -678,8 +678,11 @@ function updateSitu() {
         })
         
         // Show data
-        if ($(this).attr('id') != 'lang')
-            getData($(this).attr('id'), $(this).find('select').val())
+        if ($(this).attr('id') != 'lang') {
+            let value = $(this).find('select').val()
+            console.log(value)
+            if (value) getData($(this).attr('id'), value)
+        }
     })
     
     // Check SituItems
@@ -724,20 +727,38 @@ function updateSitu() {
     if (collectionHolder.find('.situItem').length == 4) $('#add-situItem').hide()
 }
 
-/**
- * Translate situ : load translation lang & show event field
- */
-function loadTranslation(langId) {
-    $('#situ_form_lang').val(null).trigger('change')
-//    $('#situ_form_lang').val(langId).trigger('change')
-//         .parent().find('.select2-selection__rendered').addClass('selection-on')
- 
-    let dataExist = setInterval(function() {
-        if ($('#situ_form_event option').length) {
-            $('#loader').removeClass('d-block')
-            clearInterval(dataExist)
+// Add BS error class to empty field if ErrorForm exist
+function checkForm() {
+    $('form').find('.form-control').each(function() {
+        if ($(this).attr('id') != 'situ_form_situItems_0_score') {
+            if ($(this).val() == '') {
+                if (!$(this).is('select')) $(this).addClass('is-invalid')
+                else {
+                    if ($(this).attr('data-select2-id') !== undefined) {
+                        $(this).parent().find('.select2-selection__rendered')
+                            .addClass('is-invalid')
+                    } else {
+                        $(this).addClass('is-invalid')
+                    }
+
+                }
+            } else {
+                if (!$(this).is('select')) {
+                    if ($(this).hasClass('is-invalid')) $(this).removeClass('is-invalid')
+                } else {
+                    if ($(this).attr('data-select2-id') !== undefined) {
+                        if ($(this).parent().find('.select2-selection__rendered')
+                            .hasClass('is-invalid')) {
+                            $(this).parent().find('.select2-selection__rendered')
+                                .removeClass('is-invalid')
+                        }
+                    } else {
+                        if ($(this).hasClass('is-invalid')) $(this).removeClass('is-invalid')
+                    }
+                }
+            }
         }
-    }, 50);
+    })
 }
 
 $(function() {
@@ -799,13 +820,9 @@ $(function() {
             
             // Event or Category data
             let divId = $(this).parents('.formData').attr('id')
-            if (divId != 'lang') {
                 // Get & show data
-                if ($(this).val() != '') {
-                    getData(divId, $(this).val())
-                }
-            }
-
+            if (divId != 'lang' && $(this).val() != '')
+                getData(divId, $(this).val())
             // Hide next header field
             if ($(this).is('select'))
                 $(this).parents('.formData').nextAll().addClass('d-none')
@@ -891,6 +908,17 @@ $(function() {
     }
     
     /**
+     * Error management
+     */
+    if ($('#form-error > .alert').length !== 0) {
+        $('.formData').each(function() {
+            if ($(this).hasClass('on-load')) $(this).removeClass('on-load')
+        })
+        checkForm()
+        $('#loader').hide()
+    }
+    
+    /**
      * Then..
      */
     // Show card-body when fill categoryLevel2 description
@@ -907,6 +935,7 @@ $(function() {
     
     $('.card-footer > button').bind('click', function() {
         $('#loader').show()
+        $('#form-error').empty()
     })
     
 })
