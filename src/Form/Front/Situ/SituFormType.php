@@ -7,7 +7,6 @@ use App\Entity\Event;
 use App\Entity\Lang;
 use App\Entity\Situ;
 use App\Form\Front\Situ\SituItemType;
-use App\Manager\Front\SituManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -21,7 +20,6 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormEvent;
-use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Security\Core\Security;
@@ -30,17 +28,14 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 class SituFormType extends AbstractType
 {
     private $em;
-    private $situManager;
     private $translator;
     
     public function __construct(EntityManagerInterface $em,
                                 Security $security,
-                                SituManager $situManager,
                                 TranslatorInterface $translator)
     {
         $this->em = $em;
         $this->security = $security;
-        $this->situManager = $situManager;
         $this->translator = $translator;
     }
     
@@ -493,7 +488,7 @@ class SituFormType extends AbstractType
             'data_class' => Situ::class,
             'translation_domain' => 'user_messages',
             'attr' => [
-                'novalidate' => 'novalidate', // comment to reactivate the html5 validation
+                'novalidate' => 'novalidate', // comment me to reactivate the html5 validation!
             ]
         ]);
     }
