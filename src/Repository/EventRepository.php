@@ -49,8 +49,8 @@ class EventRepository extends ServiceEntityRepository
             ->andWhere($qb->expr()->orX($eventsLang, $eventsLangByUser))
             ->setParameters([
                 1 => $langId,
-                2 => 1,
-                3 => 0,
+                2 => true,
+                3 => false,
                 4 => $this->security->getUser()->getId(),
             ]);
         return $qb->getQuery()->getResult();
