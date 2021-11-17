@@ -1,6 +1,7 @@
 {% trans_default_domain 'messages' %}
 {% extends "back/layout.html.twig" %}
 {% set locale = app.request.locale %}
+{% set template = 'read' %}
 
 {% block title %}{{ 'contrib.situ.read.title'|trans({}, 'back_messages') }}{% endblock %}
 
@@ -19,7 +20,7 @@
                 <h1 class="h3 mb-0 text-gray-800">{{ 'contrib.situ.read.title'|trans({}, 'back_messages') }}</h1>
             </div>
             <div class="col-md-6 d-sm-flex justify-content-end">
-                {% if situ.status.id== 5 %}
+                {% if situ.status.id == 5 %}
                     <a href="{{ path('back_situ_remove', { 'situ': situ.id }) }}"
                        id="confirmDelete" class="btn btn-danger mx-2 pt-1">
                         {{ 'action.delete_definitively'|trans }}
@@ -35,7 +36,7 @@
         
         <div class="row">
             
-            <div id="situ-data" class="col-lg-6 mx-auto mb-4">
+            <div id="situ-data" class="col-lg-8 mx-auto mb-4">
                 
                 <div class="card shadow">
 
@@ -66,190 +67,8 @@
                     </div>
 
                     <div class="card-body p-4">
-
-                        <div class="row mb-3" translate="no">
-                            <div class="col-md-4 font-weight-bold">
-                                {{ 'label_dp.lang'|trans }}
-                            </div>
-                            <div class="col-md-8 first-letter">
-                                {{ situ.lang.englishName }}
-                            </div>
-                        </div>
-
-                        {% if situ.initialSitu == 0 %}
-                            <div class="row mb-3" translate="no">
-                                <div class="col-md-4 font-weight-bold">
-                                    {{ 'contrib.situ.verify.data.translated'|trans }}
-                                </div>
-                                <div class="col-md-8 first-letter">
-                                    <span id="initial-id" class="id">{{ situ.translatedSituId }}</span>
-                                    <a href="{{ path('back_situ_read', { 'id': situ.translatedSituId }) }}"
-                                       target="_blank"
-                                       data-toggle="tooltip" data-placement="right"
-                                       title="{{ 'action.read'|trans }}">
-                                        <i class="fas fa-eye"></i>
-                                    </a>
-                                </div>
-                            </div>
-                        {% else %}
-                            {% set translations = render_service.getTranslations(situ.id) %}
-                            {% if translations %}
-                                <div class="row mb-3" translate="no">
-                                    <div class="col-md-4 font-weight-bold">
-                                        {{ 'label_dp.translation_s'|trans }}
-                                    </div>
-                                    <div class="col-md-8 first-letter">
-                                        {% for translation in translations %}
-                                            <span class="id">{{ translation.id }}</span>
-                                            <a href="{{ path('back_situ_read', { 'id': translation.id }) }}"
-                                               data-toggle="tooltip" data-placement="right"
-                                               title="{{ 'action.read'|trans }}">
-                                                <i class="fas fa-eye"></i>
-                                            </a>
-                                            {% if not loop.last %} - {% endif %}
-                                        {% endfor %}
-                                    </div>
-                                </div>
-                            {% endif %}
-                        {% endif %}
-
-                        <div class="row mb-3">
-                            <div class="col-md-4 font-weight-bold" translate="no">
-                                {{ 'label_dp.event'|trans }}
-                            </div>
-                            <div class="col-md-8 first-letter">
-                                {{ situ.event.title }}
-                                {% if situ.event.validated == 0 %}
-                                    <span class="pl-0 pr-3" translate="no">
-                                        {{ 'contrib.situ.verify.data.to_validate'|trans }}
-                                    </span>
-                                {% endif %}
-                            </div>
-                        </div>
-
-                        <div class="accordion" id="details">
-
-                            <div class="row mb-3">
-                                <div class="col-md-4 font-weight-bold" translate="no">
-                                    {{ 'label_dp.categoryLevel1'|trans }}
-                                </div>
-                                <div class="col-md-8 first-letter">
-                                    <span id="headingCatLv1">
-                                        <span class="pl-0 pr-3 pointer" data-toggle="collapse"
-                                              data-target="#collapseCatLv1" aria-expanded="false" aria-controls="collapseCatLv1">
-                                            {{ situ.categoryLevel1.title }}
-                                            {% if situ.categoryLevel1.validated == 0 %}
-                                                <span translate="no">{{ 'contrib.situ.verify.data.to_validate'|trans }}</span>
-                                            {% endif %}
-                                            <small class="align-text-bottom"><i class="fas fa-question-circle"></i></small>
-                                        </span>
-                                    </span>
-                                    <div id="collapseCatLv1" class="mt-1 small collapse"
-                                         aria-labelledby="headingCatLv1" data-parent="#details">
-                                        <div class="d-block font-weight-bold" translate="no">{{ 'label_dp.description'|trans }}</div>
-                                        <div class="mt-1 px-3 line-11 first-letter">{{ situ.categoryLevel1.description }}</div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="row pb-1">
-                                <div class="col-md-4 font-weight-bold" translate="no">
-                                    {{ 'label_dp.categoryLevel2'|trans }}
-                                </div>
-                                <div class="col-md-8 first-letter mb-1 pb-2">
-                                    <span id="headingCatLv2">
-                                        <span class="pl-0 pr-3 pointer" data-toggle="collapse"
-                                              data-target="#collapseCatLv2" aria-expanded="false" aria-controls="collapseCatLv2">
-                                            {{ situ.categoryLevel2.title }}
-                                            {% if situ.categoryLevel2.validated == 0 %}
-                                                <span translate="no">{{ 'contrib.situ.verify.data.to_validate'|trans }}</span>
-                                            {% endif %}
-                                            <small class="align-text-bottom"><i class="fas fa-question-circle"></i></small>
-                                        </span>
-                                    </span>
-                                    <div id="collapseCatLv2" class="mt-1 small collapse"
-                                         aria-labelledby="headingCatLv2" data-parent="#details">
-                                        <div class="d-block font-weight-bold" translate="no">{{ 'label_dp.description'|trans }}</div>
-                                        <div class="mt-1 px-3 line-11 first-letter">{{ situ.categoryLevel2.description }}</div>
-                                    </div>
-                                </div>
-                            </div>
-
-                        </div>
-
-                        <h2 class="h5 font-weight-normal mt-2 pt-4" translate="no">
-                            {{ 'label.situ'|trans }}
-                        </h2>
-
-                        <div class="row">
-                            <div class="col-12 mb-1 font-weight-bold" translate="no">
-                                {{ 'label_dp.title'|trans }}
-                            </div>
-                            <div class="col-12 mb-3 px-4">
-                                <div class="line-11 first-letter h-title">{{ situ.title }}</div>
-                            </div>
-                        </div>
-
-                        <div class="row">
-                            <div class="col-12 mb-1 font-weight-bold" translate="no">
-                                {{ 'label_dp.description'|trans }}
-                            </div>
-                            <div class="col-12 mb-3 px-4">
-                                <div class="line-11 first-letter h-description">{{ situ.description }}</div>
-                            </div>
-                        </div>
-
-                        <div class="row">
-                            {% for item in situ.situItems %}
-                                <div class="col-12">
-                                    {% if item.score == 0 %}
-                                        <h2 class="h5 font-weight-normal" translate="no">
-                                            {{ 'contrib.situ.verify.data.item.label'|trans({}, 'back_messages')  }}
-                                        </h2>
-                                    {% else %}
-                                        {% if loop.index == 2 %}
-                                            <h2 class="h5 mb-3 font-weight-normal" translate="no">
-                                                {% if situ.situItems|length > 2 %}
-                                                {{ 'contrib.situ.verify.data.item.label_items'|trans({}, 'back_messages')  }}
-                                                {% else %}
-                                                {{ 'contrib.situ.verify.data.item.label_item'|trans({}, 'back_messages')  }}
-                                                {% endif %}
-                                            </h2>
-                                        {% endif %}
-                                        <div class="mb-3 font-weight-bold" translate="no">
-                                            {{ 'contrib.situ.verify.data.item.score.title'|trans({}, 'back_messages')  }}
-                                            {% if item.score == 1 %}
-                                                <span class="text-info">
-                                                    {{ 'situ.item.info'|trans }}
-                                                </span>
-                                            {% elseif item.score == 2 %}
-                                                <span class="text-warning">
-                                                    {{ 'situ.item.warning'|trans }}
-                                                </span>
-                                            {% else %}
-                                                <span class="text-danger">
-                                                    {{ 'situ.item.danger'|trans }}
-                                                </span>
-                                            {% endif %}
-                                        </div>
-                                    {% endif %}
-                                </div>
-                                <div class="col-12 mb-1 font-weight-bold" translate="no">
-                                    {{ 'label_dp.title'|trans }}
-                                </div>
-                                <div class="col-12 mb-3 px-4 line-11 first-letter h-title">
-                                    {{ item.title }}
-                                </div>
-                                <div class="col-12 mb-1 font-weight-bold" translate="no">
-                                    {{ 'label_dp.description'|trans }}
-                                </div>
-                                <div class="col-12 px-5 line-11 first-letter h-description pb-4{% if loop.index != 1
-                                     and loop.last == false %} border-bottom{% endif %}
-                                     {% if loop.first == true %} mb-3{% elseif loop.last == false %} mb-4{% endif %}">
-                                    {{ item.description }}
-                                </div>
-                            {% endfor %}
-                        </div>
+                        
+                        {{ include('back/situ/_models/situ.html.twig') }}
 
                     </div>
                 </div>

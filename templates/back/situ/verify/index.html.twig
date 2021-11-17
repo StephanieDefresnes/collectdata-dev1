@@ -29,11 +29,13 @@
         <div class="row">
             
             <div id="situ-data" class="col-lg-6 mb-3" translate="no">
-                {% include "back/situ/verify/_data.html.twig" %}
+                {% set template = 'data' %}
+                {{ include ('back/situ/verify/_data.html.twig', {template: 'template'}) }}
             </div>
             
             <div id="situ" data-id="{{ situ.id }}" class="col-lg-6 h-adjust">
-                {% include "back/situ/verify/_form.html.twig" %}
+                {% set template = 'form' %}
+                {{ include ('back/situ/verify/_form.html.twig', {template: 'template'}) }}
             </div>
             
         </div>
@@ -69,7 +71,7 @@
             "translationRefuse" : "{{ 'contrib.situ.verify.form.modal.refuse.comment.conflict.validated'|trans }}",
             
             {% for translation in situsTranslated %}
-                {% if translation.statusId == 3 %}
+                {% if translation.status.id == 3 %}
                     "translationRead" : "{{ 'contrib.situ.verify.form.modal.refuse.comment.conflict.read'|trans }}",
                     "translationPath" : "/{{ authorLang }}/read/{{ translation.id }}",
                 {% endif %}
