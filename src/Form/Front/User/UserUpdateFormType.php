@@ -121,7 +121,7 @@ class UserUpdateFormType extends AbstractType
                 'label' => 'account.translator.translate',
                 'multiple' => true,
                 'choices' => $this->em->getRepository(Lang::class)
-                    ->findByAllExcept($this->parameters->get('locale')),
+                    ->findAllExcept($this->parameters->get('locale')),
                 'choice_label' => function ($lang) {
                     return html_entity_decode($lang->getName(), ENT_QUOTES, 'UTF-8');
                 },

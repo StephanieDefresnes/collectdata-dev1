@@ -22,7 +22,7 @@ class LangRepository extends ServiceEntityRepository
     /**
      * @return Lang[] Returns an array of Lang objects except param
      */
-    public function findByAllExcept($lang)
+    public function findAllExcept($lang)
     {
         return $this->createQueryBuilder('l')
             ->andWhere('l.lang != ?1')
