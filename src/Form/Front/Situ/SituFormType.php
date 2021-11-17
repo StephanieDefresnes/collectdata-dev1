@@ -45,7 +45,7 @@ class SituFormType extends AbstractType
         
         // Get default Events by user lang
         $GLOBALS['events'] = $this->em->getRepository(Event::class)
-                                ->findByLang($user->getLang());
+                                ->findByLangAndUser($user->getLang());
         
         // Get User langs
         $userLangs = $user->getLangs();
@@ -165,7 +165,7 @@ class SituFormType extends AbstractType
                     // Get events depending lang
                     // and also load events user not yet validated if exist
                     $events = $this->em->getRepository(Event::class)
-                                ->findByLang($lang_id);
+                                ->findByLangAndUser($lang_id);
 
                     if ($events) {
                         /**
@@ -224,7 +224,7 @@ class SituFormType extends AbstractType
                                 ->find($event_id);
                     // Get categoriesLevel1 depending event
                     $categoriesLevel1 = $this->em->getRepository(Category::class)
-                                            ->findByEventAndByUserEvent(
+                                            ->findByEventAndUser(
                                                     $event_id, 
                                                     $event->getLang()->getId()
                                                 );
@@ -291,7 +291,7 @@ class SituFormType extends AbstractType
                                             ->find($categoryLevel1_id);
                     // Get categoriesLevel2 depending category parent
                     $categoriesLevel2   = $this->em->getRepository(Category::class)
-                                            ->findByParentAndUserParent(
+                                            ->findByParentAndUser(
                                                     $categoryLevel1_id,
                                                     $category->getLang()->getId()
                                                 );

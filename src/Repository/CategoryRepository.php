@@ -28,7 +28,7 @@ class CategoryRepository extends ServiceEntityRepository
      * @param type $eventId
      * @param type $langId
      */
-    public function findByEventAndByUserEvent($eventId, $eventLangId)
+    public function findByEventAndUser($eventId, $eventLangId)
     {
         $qb = $this->_em->createQueryBuilder();
         
@@ -65,7 +65,7 @@ class CategoryRepository extends ServiceEntityRepository
      * @param type $categoryId
      * @param type $langId
      */
-    public function findByParentAndUserParent($categoryId, $categoryLangId)
+    public function findByParentAndUser($categoryId, $categoryLangId)
     {        
         $qb = $this->_em->createQueryBuilder();
         

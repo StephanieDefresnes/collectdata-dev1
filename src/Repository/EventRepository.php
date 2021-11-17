@@ -29,7 +29,7 @@ class EventRepository extends ServiceEntityRepository
      * @param type $langId
      * @return type
      */
-    public function findByLangAndUserLang($langId)
+    public function findByLangAndUser($langId)
     {
         $qb = $this->_em->createQueryBuilder();
         
