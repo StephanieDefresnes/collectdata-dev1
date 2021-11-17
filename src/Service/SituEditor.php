@@ -76,6 +76,7 @@ class SituEditor {
             $statusRequest = $this->em->getRepository(Status::class)->find(2);
             $situ->setDateSubmission($dateNow);
             $action = 'submit';
+            if ($id) { $success = 'success'; }
         }
 
         if (array_key_exists('lang', $situRequest)) {

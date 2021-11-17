@@ -176,7 +176,9 @@
 
         <div class="card-footer bg-light text-center{{ route == 'create_situ' ? ' d-none' }}">
             {{ form_widget(form.save) }}
-            {{ form_widget(form.submit) }}
+            <span id="modalSubmit" class="btn btn-primary">
+                {{ 'action.submit'|trans({}, 'messages') }}
+            </span>
         </div>
 
     </div>
@@ -201,4 +203,7 @@
             </div>
         </div>
     </div>
+                    
+    {% include 'front/situ/new/_form/_confirm.html.twig' %}
+    
 {{ form_end(form) }}

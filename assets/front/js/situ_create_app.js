@@ -680,7 +680,6 @@ function updateSitu() {
         // Show data
         if ($(this).attr('id') != 'lang') {
             let value = $(this).find('select').val()
-            console.log(value)
             if (value) getData($(this).attr('id'), value)
         }
     })
@@ -759,6 +758,72 @@ function checkForm() {
             }
         }
     })
+}
+
+// Set values to submit
+function modalSubmit() {
+    $('#modalLang').text(
+            $('#situ_form_lang option[value="'+$('#situ_form_lang').val()+'"]')
+                .text()
+            )
+    
+    let eventInput = $('#form-event').find('input').val()
+    let eventTitle = eventInput === undefined 
+                                ?  $('#situ_form_event option[value="'+$('#situ_form_event').val()+'"]').text()
+                                : eventInput
+    $('#modalEvent').text(eventTitle)
+    
+    let categoryLevel1Input = $('#form-categoryLevel1').find('textarea').val()
+    let categoryLevel1Title = categoryLevel1Input === undefined 
+                                ? $('#situ_form_categoryLevel1 option[value="'+$('#situ_form_categoryLevel1').val()+'"]').text()
+                                : categoryLevel1Input
+    $('#modalCategoryLevel1-title').text(categoryLevel1Title)
+    let categoryLevel1Text = $('#form-categoryLevel1').find('textarea').val()
+    let categoryLevel1Description = categoryLevel1Text === undefined 
+                                ? $('#categoryLevel1 .description').text()
+                                : categoryLevel1Text
+    $('#modalCategoryLevel1-description').text(categoryLevel1Description)
+    
+    let categoryLevel2Input = $('#form-categoryLevel2').find('textarea').val()
+    let categoryLevel2Title = categoryLevel2Input === undefined 
+                                ? $('#situ_form_categoryLevel2 option[value="'+$('#situ_form_categoryLevel2').val()+'"]').text()
+                                : categoryLevel2Input
+    $('#modalCategoryLevel2-title').text(categoryLevel2Title)
+    let categoryLevel2Text = $('#form-categoryLevel2').find('textarea').val()
+    let categoryLevel2Description = categoryLevel2Text === undefined 
+                                ? $('#categoryLevel2 .description').text()
+                                : categoryLevel2Text
+    $('#modalCategoryLevel2-description').text(categoryLevel2Description)
+    
+    $('#modalTitle').text($('#situ_form_title').val())
+    $('#modalDescription').text($('#situ_form_description').val())
+    
+    $('#situItems').find('.situItem').each(function(index) {
+        if (index == 0) {
+            $('#modalSuccess .title').text($('#situ_form_situItems_0_title').val())
+            $('#modalSuccess .description').text($('#situ_form_situItems_0_description').val())
+        } else {
+            let prototype = $('#modalSituItems').attr('data-prototype')
+            
+            let scoreValue =
+                    $('#situ_form_situItems_'+ index +'_score option[value="'
+                            +$('#situ_form_situItems_'+ index +'_score').val()
+                        +'"]').attr('class')
+            scoreValue = scoreValue.replace('selectable ', '').replace(' selected', '')
+                
+            let item = prototype.replace(/__item__/g, translations["item"])
+                    .replace(/__scoreTitle__/g, translations["scoreTitle"])
+                    .replace(/__score__/g, scoreValue)
+                    .replace(/__scoreText__/g, translations[scoreValue+"Item"])
+                    .replace(/__titleItem__/g, translations["titleItem"])
+                    .replace(/__title__/g, $('#situ_form_situItems_'+ index +'_title').val())
+                    .replace(/__descriptionItem__/g, translations["descriptionItem"])
+                    .replace(/__description__/g,$('#situ_form_situItems_'+ index +'_description').val())
+            $('#optionScore').append(item)
+        }
+    })
+    
+    $('#confirmSubmit').modal('show')
 }
 
 $(function() {
@@ -919,6 +984,17 @@ $(function() {
     }
     
     /**
+     * Confirm submit
+     */
+    $('#modalSubmit').click(function() {
+        modalSubmit()
+    })
+    $('#cancelSubmit').bind('click', function() {
+        $('#optionScore').empty()
+    })
+    
+    
+    /**
      * Then..
      */
     // Show card-body when fill categoryLevel2 description
@@ -934,7 +1010,7 @@ $(function() {
     })
     
     $('.card-footer > button').bind('click', function() {
-        $('#loader').show()
+        $('#loader').show() // Comment if html5 browser is disabled (attr novalidate)
         $('#form-error').empty()
     })
     

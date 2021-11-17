@@ -22,7 +22,7 @@ class CreateCategoryType extends AbstractType
             ->add('title', TextType::class, [
                 'label' => 'contrib.form.title',
                 'label_attr' => ['class' => $style],
-                'attr' => ['placeholder' => 'contrib.form.category.title_placeholder'],
+                'attr' => ['placeholder' => 'contrib.form.category_title_placeholder'],
                 'empty_data' => $title,
             ])
             ->add('description', TextareaType::class, [
@@ -30,7 +30,7 @@ class CreateCategoryType extends AbstractType
                 'label_attr' => ['class' => $style],
                 'attr' => [
                     'rows' => '3',
-                    'placeholder' => 'contrib.form.category.description_placeholder',
+                    'placeholder' => 'contrib.form.category_description_placeholder',
                     ],
                 'row_attr' => ['class' => 'mb-0'],
                 'empty_data' => $description,

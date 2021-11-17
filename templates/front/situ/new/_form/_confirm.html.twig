@@ -1,0 +1,125 @@
+{% trans_default_domain 'messages' %}
+<div class="modal{# fade#}" id="confirmSubmit" {#style="display:block"#}
+     data-backdrop="static" data-keyboard="false" tabindex="-1"
+     aria-labelledby="staticConfirmSubmit" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header bg-dark text-white">
+                <h5 class="modal-title" id="staticConfirmSubmit">
+                    {{ 'contrib.form.submit.confirm'|trans({}, 'user_messages') }}
+                </h5>
+            </div>
+            <div class="modal-body">
+                <div class="row mb-2 {%
+                        if (langs|length == 1 and route == 'create_situ') %} d-none{% endif %}">
+                    <div class="col-md-4 text-secondary">
+                        {{ 'label_dp.lang'|trans }}
+                    </div>
+                    <div id="modalLang" class="col-md-8 text-capitalize">
+                    </div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-md-4 text-secondary">
+                        {{ 'label_dp.event'|trans }}
+                    </div>
+                    <div id="modalEvent" class="col-8 first-letter">
+                    </div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-md-4 text-secondary">
+                        {{ 'label_dp.categoryLevel1'|trans }}
+                    </div>
+                    <div class="col-md-8">
+                        <div class="row">
+                            <div id="modalCategoryLevel1-title" class="col-12 first-letter">
+                            </div>
+                            <div id="modalCategoryLevel1-description" class="col-12 small line-11">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-md-4 text-secondary">
+                        {{ 'label_dp.categoryLevel2'|trans }}
+                    </div>
+                    <div class="col-md-8">
+                        <div class="row">
+                            <div id="modalCategoryLevel2-title" class="col-12 first-letter">
+                            </div>
+                            <div id="modalCategoryLevel2-description" class="col-12 small line-11">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row mt-3">
+                    <div class="col-12 h5 text-secondary font-weight-bolder">
+                        {{ 'contrib.form.situ.label'|trans({}, 'user_messages') }}
+                    </div>
+                </div>
+                    
+                <div class="row mb-2">
+                    <div class="col-12 text-secondary line-11">
+                        {{ 'label_dp.title'|trans }}
+                    </div>
+                    <div id="modalTitle" class="col">
+                    </div>
+                </div>
+                <div class="row mb-4">
+                    <div class="col-12 text-secondary line-11">
+                        {{ 'label_dp.description'|trans }}
+                    </div>
+                    <div id="modalDescription" class="col-12">
+                    </div>
+                </div>
+
+                <div class="row mb-2">
+                    <div id="modalSituItems" class="col-12"
+                         data-prototype="<div class='row mt-3 pt-2 border-top'>
+                                            <div class='col-12 text-secondary font-weight-bold'>__item__</div>
+                                            <div class='col-12'>
+                                                <h6 class='d-flex justify-content-start mb-1'>
+                                                    <span class='text-secondary'>__scoreTitle__</span>
+                                                    <span class='px-2 font-weight-bolder __score__'>__scoreText__</span>
+                                                </h6>
+                                                <div class='row'>
+                                                    <div class='col-12 text-secondary'>__titleItem__</div>
+                                                    <div class='col-12 mb-1 title first-letter line-11'>__title__</div>
+                                                    <div class='col-12 text-secondary'>__descriptionItem__</div>
+                                                    <div class='col-12 description first-letter line-11'>__description__</div>
+                                                </div>
+                                            </div>
+                                        </div>">
+
+                        <div id="modalSuccess" class="row mb-3">
+                            <div class="col-12 h5 text-secondary font-weight-bold">
+                                {{ 'contrib.form.item.label'|trans({}, 'user_messages') }}
+                            </div>
+                            <div class="col-12">
+                                <div class="row">
+                                    <div class="col-12 text-secondary">
+                                        {{ 'label_dp.title'|trans }}
+                                    </div>
+                                    <div class="col-12 mb-1 title first-letter line-11"> </div>
+                                    <div class="col-12 text-secondary">
+                                        {{ 'label_dp.description'|trans }}
+                                    </div>
+                                    <div class="col-12 description first-letter line-11"> </div>
+                            </div>
+                            </div>
+                        </div>
+                            
+                        <div id="optionScore"></div>
+
+                    </div>
+
+                </div>         
+            </div>
+            <div class="modal-footer d-flex justify-content-end py-1 bg-light">
+                <button type="button" id="cancelSubmit" class="btn btn-secondary" data-dismiss="modal">
+                    {{ 'action.cancel'|trans }}
+                </button>
+                {{ form_widget(form.submit) }}
+            </div>
+        </div>
+    </div>
+</div>

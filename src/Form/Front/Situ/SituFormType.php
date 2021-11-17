@@ -473,7 +473,7 @@ class SituFormType extends AbstractType
                 'translation_domain' => 'messages',
             ])
             ->add('submit', SubmitType::class, [
-                'label' => 'action.submit',
+                'label' => 'action.confirm',
                 'attr' => ['class' => 'btn-primary px-4 mx-2'],
                 'row_attr' => ['class' => 'mb-0'],
                 'translation_domain' => 'messages',
