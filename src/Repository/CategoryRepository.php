@@ -28,7 +28,7 @@ class CategoryRepository extends ServiceEntityRepository
      * @param type $eventId
      * @param type $langId
      */
-    public function findByEventAndUser($eventId, $eventLangId)
+    public function findByEventAndUser($eventId)
     {
         $qb = $this->_em->createQueryBuilder();
         
@@ -40,8 +40,7 @@ class CategoryRepository extends ServiceEntityRepository
         $eventCategoriesByUser = $qb->expr()->andX(
             $qb->expr()->eq('c.event', '?1'),
             $qb->expr()->eq('c.validated', '?3'),
-            $qb->expr()->eq('c.user', '?4'),
-            $qb->expr()->eq('c.lang', '?5')
+            $qb->expr()->eq('c.user', '?4')
         );
         
         $qb->from(Category::class,'c')
@@ -51,8 +50,7 @@ class CategoryRepository extends ServiceEntityRepository
                 1 => $eventId,
                 2 => true,
                 3 => false,
-                4 => $this->security->getUser()->getId(),
-                5 => $eventLangId
+                4 => $this->security->getUser()->getId()
             ]);
         
         return $qb->getQuery()->getResult();
@@ -65,7 +63,7 @@ class CategoryRepository extends ServiceEntityRepository
      * @param type $categoryId
      * @param type $langId
      */
-    public function findByParentAndUser($categoryId, $categoryLangId)
+    public function findByParentAndUser($categoryId)
     {        
         $qb = $this->_em->createQueryBuilder();
         
@@ -77,8 +75,7 @@ class CategoryRepository extends ServiceEntityRepository
         $parentCategoriesByUser = $qb->expr()->andX(
             $qb->expr()->eq('c.parent', '?1'),
             $qb->expr()->eq('c.validated', '?3'),
-            $qb->expr()->eq('c.user', '?4'),
-            $qb->expr()->eq('c.lang', '?5')
+            $qb->expr()->eq('c.user', '?4')
         );
         
         $qb->from(Category::class,'c')
@@ -88,8 +85,7 @@ class CategoryRepository extends ServiceEntityRepository
                 1 => $categoryId,
                 2 => true,
                 3 => false,
-                4 => $this->security->getUser()->getId(),
-                5 => $categoryLangId
+                4 => $this->security->getUser()->getId()
             ]);
         return $qb->getQuery()->getResult();
     }

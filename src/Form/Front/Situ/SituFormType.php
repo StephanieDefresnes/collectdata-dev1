@@ -219,15 +219,9 @@ class SituFormType extends AbstractType
                      *  - $event_id must be numeric when $categoriesLevel1 is a select
                      */
                     
-                    // Get event to also load categories user not yet validated if exist
-                    $event = $this->em->getRepository(Event::class)
-                                ->find($event_id);
                     // Get categoriesLevel1 depending event
                     $categoriesLevel1 = $this->em->getRepository(Category::class)
-                                            ->findByEventAndUser(
-                                                    $event_id, 
-                                                    $event->getLang()->getId()
-                                                );
+                                            ->findByEventAndUser($event_id);
                     if ($categoriesLevel1) {
                         /**
                          * If categories exist, give choices
@@ -286,15 +280,9 @@ class SituFormType extends AbstractType
                      *  - $categoryLevel1_id must be numeric when $categoriesLevel1 is a select
                      */
                     
-                    // Get category to also load categories child user not yet validated if exist
-                    $category           = $this->em->getRepository(Category::class)
-                                            ->find($categoryLevel1_id);
                     // Get categoriesLevel2 depending category parent
                     $categoriesLevel2   = $this->em->getRepository(Category::class)
-                                            ->findByParentAndUser(
-                                                    $categoryLevel1_id,
-                                                    $category->getLang()->getId()
-                                                );
+                                            ->findByParentAndUser($categoryLevel1_id);
                 
                     if ($categoriesLevel2) {
                         /**
