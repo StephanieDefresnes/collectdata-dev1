@@ -32,13 +32,9 @@ class SituItemType extends AbstractType {
                 },
                 'choice_attr' => function($choice, $key, $value) {
                     if ($value == 0) {
-                        return [
-                            'class' => 'd-none',
-                            'data-id' => $value,
-                            'selected' => true,
-                        ];
+                        return ['selected' => true];
                     }
-                    return ['class' => 'selectable text-'.$key, 'data-id' => $value];
+                    return ['class' => 'text-'.$key];
                 },
             ])
             ->add('title', TextType::class, [

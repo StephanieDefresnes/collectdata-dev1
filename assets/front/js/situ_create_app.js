@@ -459,38 +459,26 @@ const collectionHolder = $('#situItems')
 
 // Disable score already selected
 function updateScore(collectionHolder, newElem) {
-    let select = newElem.find('select')
-    
-    // To hide value success
-    if (select.attr('id') !== 'situ_form_situItems_0_score') {
-        select.find('option').each(function() {
-            if ($(this).attr('data-id') == 0) {
-                $(this).removeAttr('selected')
-            }
-        })
-    }
-            
-    // timeout because of situItems dynamic adding
-    let values = [],
+    let select = newElem.find('select'),
+        values = [],
+        // timeout because of situItems dynamic adding
         timeout = setTimeout(function(){
-        $(collectionHolder).find('select').each(function() {
-            if ($(this).val() != '' && $(this).val() != 0) {
-                values.push($(this).val())
+            $(collectionHolder).find('select').each(function() {
+                if ($(this).val() != '') values.push($(this).val())
+            })
+            // Ckeck all except first situItem (success score)
+            if (select.attr('id') !== 'situ_form_situItems_0_score') {
+                if (values.length > 0) {
+                    select.find('option').each(function() {
+                        // If value selected disabled it from newElem
+                        if (values.includes($(this).val())) {
+                            $(this).addClass('bg-readonly').prop('disabled', true)
+                            clearTimeout(timeout)
+                        }
+                    })
+                }
             }
-        })
-        // Ckeck all except first situItem (success score)
-        if (select.attr('id') !== 'situ_form_situItems_0_score') {
-            if (values.length > 0) {
-                select.find('option').each(function() {
-                    // If value selected disabled it from newElem
-                    if (values.includes($(this).attr('data-id'))) {
-                        $(this).addClass('bg-readonly').prop('disabled', true)
-                        clearTimeout(timeout)
-                    }
-                })
-            }
-        }
-    }, 500);
+        }, 500);
 }
 
 // Delete situItem with confirm alert
@@ -572,6 +560,11 @@ function toggleClassSelection(newElem) {
 // Update all options for each score when adding a new situItem
 function newScore() {
     collectionHolder.find('select').each(function() {
+        
+        if ($(this).attr('id') != 'situ_form_situItems_0_score' )
+            $(this).find('option[value="0"]').remove()
+        
+        
         let newValue = '', oldValue = ''
         $(this).on('focus', function () { oldValue = this.value })
                 .change(function(){
@@ -595,9 +588,8 @@ function checkScores(newValue, oldValue) {
         if ($(this).hasClass('onSelect')) {
             $(this).find('option').each(function() {
                 // If reset selection
-                if ($(this).hasClass('selectable')
-                        && oldValue != ''
-                        && $(this).attr('data-id') == oldValue
+                if (oldValue != ''
+                        && $(this).val() == oldValue
                         && $(this).hasClass('selected')) {
                     $(this).removeClass('selected')
                 }
@@ -606,13 +598,13 @@ function checkScores(newValue, oldValue) {
         // Any else Score selection
         else {
             $(this).find('option').each(function() {
-                if ($(this).hasClass('selectable')) {
+                if ($(this).val() != 0) {
                     // Disable selected option from current Score selection
-                    if ($(this).attr('data-id') == newValue && newValue != '') {
+                    if ($(this).val() == newValue && newValue != '') {
                         $(this).addClass('bg-readonly').prop('disabled', true)
                     }
                     // Enable unselected option from current Score selection
-                    if ($(this).attr('data-id') == oldValue && oldValue != '') {
+                    if ($(this).val() == oldValue && oldValue != '') {
                         $(this).removeClass('bg-readonly').prop('disabled', false)
                     }
                 }
@@ -697,6 +689,7 @@ function updateSitu() {
             $(this).addClass('selection-on')
             
             let value = $(this).val()
+            let id = $(this).attr('id')
             
             $(this).find('option').each(function() {
                 if ($(this).val() == value)
@@ -839,10 +832,9 @@ $(function() {
     $('body').tooltip({ selector: '.editEntity'})
     
     // When update Situ
-    if ($('#situ').attr('data-id') != '') {
-        updateSitu()
+    if ($('#situ').attr('data-id')) updateSitu()
     // Create SituItem once required
-    } else {
+    else {
         addSituItem()
         $('#loader').hide()
     }
