@@ -476,9 +476,9 @@ class SituFormType extends AbstractType
             'allow_extra_fields' => true,
             'data_class' => Situ::class,
             'translation_domain' => 'user_messages',
-            'attr' => [
-                'novalidate' => 'novalidate', // comment me to reactivate the html5 validation!
-            ]
+//            'attr' => [
+//                'novalidate' => 'novalidate', // comment me to reactivate the html5 validation!
+//            ]
         ]);
     }
 }
