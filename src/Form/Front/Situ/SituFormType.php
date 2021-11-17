@@ -88,8 +88,9 @@ class SituFormType extends AbstractType
             ->add('addCategoryLevel2', ButtonType::class, $addButtonOptions)
         ;
                 
-        /**
+        /*****
          * Dynamic fields depending on user action results
+         *  - $data used with $formEditEntity to load values in form rendering
          */
         $formCreateEvent = function (FormInterface $form, $data = null) {
             $form->add('event', CreateEventType::class, [
