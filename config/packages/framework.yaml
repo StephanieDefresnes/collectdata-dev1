@@ -10,6 +10,8 @@ framework:
         handler_id: null
         cookie_secure: auto
         cookie_samesite: lax
+    serializer:
+        circular_reference_handler: App\Utils\CircularReferenceHandler
 
     #esi: true
     #fragments: true
