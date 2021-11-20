@@ -18,13 +18,9 @@ use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-/**
- * @Route("/{_locale<%app_locales%>}")
- */
 class SituController extends AbstractController
 {
     private $em;
@@ -278,7 +274,6 @@ class SituController extends AbstractController
      * 
      * @IsGranted("IS_AUTHENTICATED_FULLY")
      * @IsGranted("ROLE_CONTRIBUTOR")
-     * @Route("/situ/ajaxFindTranslation", methods="GET")
      */
     public function ajaxFindTranslation(Request $request)
     {

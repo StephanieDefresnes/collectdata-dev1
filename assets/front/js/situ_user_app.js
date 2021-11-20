@@ -41,7 +41,7 @@ function situTranslate(button) {
 // Search if translations exist
 function translationRequest(situId, langId) {
     $.ajax({
-        url: "/"+ path['locale'] +"/situ/ajaxFindTranslation",
+        url: '/ajaxFindTranslation',
         method: 'GET',
         data: { situId: situId, langId: langId},
         success: function(data) {

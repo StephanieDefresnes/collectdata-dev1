@@ -5,7 +5,6 @@ namespace App\Controller\Front;
 use App\Repository\LangRepository;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Routing\Annotation\Route;
 
 class LangController extends AbstractController
 {    
@@ -18,7 +17,6 @@ class LangController extends AbstractController
     
     /**
      * @IsGranted("IS_AUTHENTICATED_FULLY")
-     * @Route("/{_locale<%app_locales%>}/ajaxLangEnabled", methods="GET|POST")
      */
     public function ajaxLangEnabled()
     {

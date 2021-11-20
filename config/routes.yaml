@@ -15,6 +15,9 @@ ajaxUpdateCategory:
 
 # Event
 ## back
+ajaxEventEnable:
+    path:       /ajaxEventEnable
+    controller: App\Controller\Back\EventController::ajaxEventEnable
 back_event_read:
     path:       /{_locale}/back/event/read/{event}
     controller: App\Controller\Back\EventController::read
@@ -42,6 +45,10 @@ back_lang_permute_enabled:
     methods:    ['GET', 'POST']
     requirements:
         id:     '\d+'
+## front
+ajaxLangEnabled:
+    path:       /ajaxLangEnabled
+    controller: App\Controller\Front\LangController::ajaxLangEnabled
 
 # Page
 ## back
@@ -123,6 +130,9 @@ back_situ_verify:
     requirements:
         id:     '\d+'
 ## front
+ajaxFindTranslation:
+    path:       /ajaxFindTranslation
+    controller: App\Controller\Front\SituController::ajaxFindTranslation
 all_situs:
     path:       /{_locale}/contribs
     controller: App\Controller\Front\SituController::index

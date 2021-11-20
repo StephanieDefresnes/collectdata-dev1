@@ -7,13 +7,11 @@ use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 
 /**
  * @IsGranted("IS_AUTHENTICATED_FULLY")
- * @Route("/{_locale<%app_locales%>}/back/event")
  */
 class EventController extends AbstractController
 {
@@ -53,10 +51,7 @@ class EventController extends AbstractController
         ]);
     }
     
-    /**
-     * @Route("/ajaxEnable", methods="GET|POST")
-     */
-    public function ajaxEnable(Request $request)
+    public function ajaxEventEnable(Request $request)
     {
         if ($request->isXMLHttpRequest()) {
             
