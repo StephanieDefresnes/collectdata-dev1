@@ -27,9 +27,6 @@ class EventController extends AbstractController
         $this->translator = $translator;
     }
     
-    /**
-     * @Route("/search", name="back_event_search")
-     */
     public function allEvents()
     {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
@@ -41,9 +38,6 @@ class EventController extends AbstractController
         ]);
     }
     
-    /**
-     * @Route("/read/{event}", name="back_event_read")
-     */
     public function read(Event $event)
     {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');

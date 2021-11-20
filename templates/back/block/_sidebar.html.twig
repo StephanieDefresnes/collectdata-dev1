@@ -91,10 +91,10 @@
                             'back_lang_search',
                             'back_translation_forms',
                             'back_translation_clean',
-                            'back_translation_create',
+                            'back_translation_form',
                             'back_translation_generate_list',
                             'back_translation_site',
-                            'back_translation_situ_create',
+                            'back_translation_create',
                             'back_translation_verify'] ?' active' }}">
         <a class="nav-link collapsed pb-1" href="#" data-toggle="collapse" data-target="#collapseLang"
             aria-expanded="true" aria-controls="collapseLang">
@@ -105,10 +105,10 @@
                                                     'back_lang_search',
                                                     'back_translation_forms',
                                                     'back_translation_clean',
-                                                    'back_translation_create',
+                                                    'back_translation_form',
                                                     'back_translation_generate_list',
                                                     'back_translation_site',
-                                                    'back_translation_situ_create',
+                                                    'back_translation_create',
                                                     'back_translation_verify'] ? ' show' }}"
              aria-labelledby="headingLang" data-parent="#accordionSidebar">
             <div class="bg-white mb-1 py-2 collapse-inner rounded">
@@ -119,13 +119,13 @@
                 {% if is_granted('ROLE_SUPER_VISITOR')  %}
                 <a class="collapse-item{{ route in [
                                             'back_translation_forms',
-                                            'back_translation_create'] ? ' active' }}"
+                                            'back_translation_form'] ? ' active' }}"
                    href="{{ path('back_translation_forms') }}">
                     {{ 'lang.translation.form.title'|trans({}, 'back_messages') }}
                 </a>
                 <a class="collapse-item{{ route in [
                                             'back_translation_site',
-                                            'back_translation_situ_create',
+                                            'back_translation_create',
                                             'back_translation_verify'] ? ' active' }}"
                    href="{{ path('back_translation_site') }}">
                     {{ 'lang.translation.title'|trans({}, 'back_messages') }}

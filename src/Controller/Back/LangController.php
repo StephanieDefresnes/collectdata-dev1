@@ -8,20 +8,15 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Symfony\Component\Security\Core\Security;
 
 /**
  * @IsGranted("IS_AUTHENTICATED_FULLY")
- * @Route("/{_locale<%app_locales%>}/back/lang")
  */
 class LangController extends AbstractController
 {    
-    /**
-     * @Route("/search", name="back_lang_search", methods="GET|POST")
-     */
-    public function search(EntityManagerInterface $em)
+    public function allLangs(EntityManagerInterface $em)
     {        
         $langs = $em->getRepository(Lang::class)->findAll();
         
@@ -30,9 +25,6 @@ class LangController extends AbstractController
         ]);
     }
     
-    /**
-     * @Route("/permute/enabled/{id}", name="back_lang_permute_enabled", methods="GET|POST")
-     */
     public function permuteEnabled( EntityManagerInterface $em,
                                     TranslatorInterface $translatorInterface,
                                     Request $request,

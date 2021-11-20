@@ -12,7 +12,6 @@ use Symfony\Component\Security\Core\Security;
 
 /**
  * @IsGranted("IS_AUTHENTICATED_FULLY")
- * @Route("/{_locale<%app_locales%>}/back")
  */
 class MessageController extends AbstractController
 {
@@ -26,9 +25,6 @@ class MessageController extends AbstractController
         $this->security = $security;
     }
     
-    /**
-     * @Route("/my-alerts", name="back_user_alerts")
-     */
     public function index(): Response
     {
         // Current user
@@ -44,9 +40,6 @@ class MessageController extends AbstractController
         ]);
     }
     
-    /**
-     * @Route("/follow-alert/{id}", name="follow_alert")
-     */
     public function followAlert($id)
     {        
         $alert = $this->em->getRepository(Message::class)->find($id);

@@ -11,14 +11,11 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\Session\Session;
-use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * @IsGranted("IS_AUTHENTICATED_FULLY")
- * @Route("/{_locale<%app_locales%>}/back/user")
  */
 class UserController extends AbstractController
 {
@@ -38,10 +35,7 @@ class UserController extends AbstractController
         $this->userManager = $userManager;
     }
 
-    /**
-     * @Route("/search", name="back_user_search", methods="GET|POST")
-     */
-    public function allUsers(Request $request, Session $session)
+    public function allUsers(Request $request)
     {
         $users = $this->em->getRepository(User::class)->findUsers();
         
@@ -60,9 +54,6 @@ class UserController extends AbstractController
         ]);
     }
 
-    /**
-     * @Route("/read/{id}", name="back_user_read", methods="GET")
-     */
     public function read($id): Response
     {
         $user = $this->em->getRepository(User::class)->find($id);
@@ -79,7 +70,6 @@ class UserController extends AbstractController
 
     /**
      * @IsGranted("ROLE_ADMIN")
-     * @Route("/update/{id}", name="back_user_update", methods="GET|POST")
      */
     public function update(Request $request, $id): Response
     {
@@ -129,7 +119,6 @@ class UserController extends AbstractController
 
     /**
      * @IsGranted("ROLE_ADMIN")
-     * @Route("/delete", name="back_user_delete", methods="GET|POST")
      */
     public function delete(Request $request): Response
     {   
@@ -160,9 +149,6 @@ class UserController extends AbstractController
         return $this->redirectToRoute('back_user_search');
     }
     
-    /**
-     * @Route("/permute/enabled", name="back_user_permute_enabled", methods="GET")
-     */
     public function permuteEnabled(Request $request): Response
     {     
         $users = $this->userManager->getUsers();

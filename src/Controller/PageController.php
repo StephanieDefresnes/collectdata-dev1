@@ -14,8 +14,6 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Security;
-use Symfony\Component\String\Slugger\AsciiSlugger;
-use Symfony\Component\String\Slugger\SluggerInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
@@ -47,7 +45,6 @@ class PageController extends AbstractController
     public function contentEdit(EntityManagerInterface $em,
                                 Request $request,
                                 Security $security,
-                                SluggerInterface $slugger,
                                 TranslatorInterface $translator,
                                 $_locale, $id, $back = null): Response
     {
@@ -120,10 +117,6 @@ class PageController extends AbstractController
         
         if ($form->isSubmitted() && $form->isValid()) {
             
-            // Slug title
-            $slugger = new AsciiSlugger();
-            $page->setSlug($slugger->slug($form->get('title')->getData()));
-            
             if ($back) {
                 foreach ($originalContents as $content) {
                     if (false === $page->getPageContents()->contains($content)) {
@@ -143,13 +136,13 @@ class PageController extends AbstractController
                 if ($back) {
                     $page->setUser(null);
                     $url = $this->redirectToRoute('back_content_edit', [
-                        'locale' => locale_get_default(),
+                        '_locale' => locale_get_default(),
                         'back' => 'back',
                         'id' => $page->getId(),
                     ]);
                 } else {
                     $url = $this->redirectToRoute('front_content_edit', [
-                        'locale' => locale_get_default(),
+                        '_locale' => locale_get_default(),
                         'id' => $page->getId(),
                     ]);
                 }

@@ -14,7 +14,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Address;
-use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use SymfonyCasts\Bundle\VerifyEmail\Exception\VerifyEmailExceptionInterface;
@@ -41,9 +40,6 @@ class RegistrationController extends AbstractController
         $this->verifyEmailHelper = $helper;
     }
 
-    /**
-     * @Route("/{_locale<%app_locales%>}/register", name="app_register")
-     */
     public function register(   Request $request,
                                 UserPasswordEncoderInterface $passwordEncoder): Response
     {
@@ -140,9 +136,6 @@ class RegistrationController extends AbstractController
         ]);
     }
 
-    /**
-     * @Route("/verify", name="registration_confirmation_route")
-     */
     public function verifyUserEmail(Request $request): Response
     {
         $id = $request->get('id');

@@ -9,13 +9,9 @@ use App\Mailer\Mailer;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Routing\Annotation\Route;
 
 class PageController extends AbstractController
 {
-    /**
-     * @Route("/", name="index")
-     */
     public function index(EntityManagerInterface $em)
     {
         $langs = $em->getRepository(Lang::class)->findBy(['enabled' => true]);
@@ -25,9 +21,6 @@ class PageController extends AbstractController
         ]);
     }
     
-    /**
-     * @Route("/{_locale<%app_locales%>}", name="front_home")
-     */
     public function home()
     {
         $page = $this->getDoctrine()->getRepository(Page::class)
@@ -38,9 +31,6 @@ class PageController extends AbstractController
         ]);
     }
     
-    /**
-     * @Route("/{_locale<%app_locales%>}/contact", name="front_contact")
-     */
     public function contact(Request $request, Mailer $mailer)
     {
         $form = $this->createForm(ContactType::class);
@@ -67,9 +57,6 @@ class PageController extends AbstractController
         ]);
     }
     
-    /**
-     * @Route("/{_locale<%app_locales%>}/contact/sent", name="front_contact_confirm")
-     */
     public function contactConfirm()
     {        
         return $this->render('front/page/contact/confirm.html.twig');

@@ -55,9 +55,6 @@ class SituController extends AbstractController
         $this->translator = $translator;
     }
     
-    /**
-     * @Route("/contribs", name="all_situs")
-     */
     public function index(): Response
     {
         return $this->render('front/situ/index.html.twig', [
@@ -68,16 +65,12 @@ class SituController extends AbstractController
     /**
      * @IsGranted("IS_AUTHENTICATED_FULLY")
      * @IsGranted("ROLE_CONTRIBUTOR")
-     * @Route("/my-contribs", name="user_situs", methods="GET")
      */
     public function getUserSitus()
     {
         return $this->render('front/situ/user.html.twig');
     }
     
-    /**
-     * @Route("/read/{situ}/{preview}", defaults={"preview" = null}, name="read_situ", methods="GET")
-     */
     public function read(Situ $situ, $preview): Response
     {   
         // Check permission
@@ -92,7 +85,6 @@ class SituController extends AbstractController
     /**
      * @IsGranted("IS_AUTHENTICATED_FULLY")
      * @IsGranted("ROLE_CONTRIBUTOR")
-     * @Route("/validation/{situ}", name="validation_situ", methods="GET|POST")
      */
     function validation(Situ $situ): Response
     {
@@ -129,7 +121,6 @@ class SituController extends AbstractController
     /**
      * @IsGranted("IS_AUTHENTICATED_FULLY")
      * @IsGranted("ROLE_CONTRIBUTOR")
-     * @Route("/delete/{situ}", name="delete_situ", methods="GET|POST")
      */
     function delete(Situ $situ): Response
     {        
@@ -166,7 +157,6 @@ class SituController extends AbstractController
     /**
      * @IsGranted("IS_AUTHENTICATED_FULLY")
      * @IsGranted("ROLE_CONTRIBUTOR")
-     * @Route("/contrib/{id}", defaults={"id" = null}, name="create_situ", methods="GET|POST")
      */
     public function create(Request $request, $id): Response
     {
@@ -231,7 +221,6 @@ class SituController extends AbstractController
     /**
      * @IsGranted("IS_AUTHENTICATED_FULLY")
      * @IsGranted("ROLE_CONTRIBUTOR")
-     * @Route("/translate/{situId}/{langId}", name="translate_situ", methods="GET|POST")
      */
     public function translate(Request $request, $situId, $langId): Response
     {        
@@ -289,7 +278,7 @@ class SituController extends AbstractController
      * 
      * @IsGranted("IS_AUTHENTICATED_FULLY")
      * @IsGranted("ROLE_CONTRIBUTOR")
-     * @Route("/situ/ajaxFindTranslation", name="situ_find_translation", methods="GET")
+     * @Route("/situ/ajaxFindTranslation", methods="GET")
      */
     public function ajaxFindTranslation(Request $request)
     {

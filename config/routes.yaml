@@ -1,24 +1,318 @@
-back_translation_situ_create:
-    path:       /{_locale}/{back}/translation/{referentId}/{langId}/{id}
-    controller: App\Controller\TranslationController::createTranslate
+# Category
+## back
+back_categories:
+    path:       /{_locale}/back/category/search
+    controller: App\Controller\Back\CategoryController::allCategories
+## front
+ajaxGetCategory:
+    path:       /ajaxGetCategory
+    controller: App\Controller\Front\CategoryController::ajaxGetCategory
     methods:    ['GET', 'POST']
-    defaults:
-        id: null
-front_translation_create:
-    path:       /{_locale}/translation/{referentId}/{langId}/{id}
-    controller: App\Controller\TranslationController::createTranslate
+ajaxUpdateCategory:
+    path:       /ajaxUpdateCategory
+    controller: App\Controller\Front\CategoryController::ajaxUpdateCategory
     methods:    ['GET', 'POST']
-    defaults:
-        id: null
+
+# Event
+## back
+back_event_read:
+    path:       /{_locale}/back/event/read/{event}
+    controller: App\Controller\Back\EventController::read
+back_event_search:
+    path:       /{_locale}/back/event/search
+    controller: App\Controller\Back\EventController::allEvents
+## front
+ajaxGetEvent:
+    path:       /ajaxGetEvent
+    controller: App\Controller\Front\CategoryController::ajaxGetEvent
+    methods:    ['GET', 'POST']
+ajaxUpdateEvent:
+    path:       /ajaxUpdateEvent
+    controller: App\Controller\Front\CategoryController::ajaxUpdateEvent
+    methods:    ['GET', 'POST']
+
+# Lang
+## back
+back_lang_search:
+    path:       /{_locale}/back/lang/search
+    controller: App\Controller\Back\LangController::allLangs
+back_lang_permute_enabled:
+    path:       /{_locale}/back/lang/permute/enabled/{id}
+    controller: App\Controller\Back\LangController::permuteEnabled
+    methods:    ['GET', 'POST']
+    requirements:
+        id:     '\d+'
+
+# Page
+## back
+back_home:
+    path:       /{_locale}/back
+    controller: App\Controller\Back\PageController::dashboard
 back_content_edit:
     path:       /{_locale}/{back}/content/{id}
     controller: App\Controller\PageController::contentEdit
     methods:    ['GET', 'POST']
     defaults:
         id: null
+back_content_search:
+    path:       /{_locale}/back/content/all
+    controller: App\Controller\Back\PageController::contentList
+## front
+index:
+    path:       /
+    controller: App\Controller\Front\PageController::index
+front_home:
+    path:       /{_locale}
+    controller: App\Controller\Front\PageController::home
+front_contact:
+    path:       /{_locale}/contact
+    controller: App\Controller\Front\PageController::contact
+front_contact_confirm:
+    path:       /{_locale}/contact/sent
+    controller: App\Controller\Front\PageController::contactConfirm
 front_content_edit:
     path:       /{_locale}/content/{id}
     controller: App\Controller\PageController::contentEdit
     methods:    ['GET', 'POST']
     requirements:
         id:     '\d+'
+
+# Message
+## back
+back_user_alerts:
+    path:       /{_locale}/back/my-alerts
+    controller: App\Controller\Back\MessageController::index
+back_follow_alert:
+    path:       /{_locale}/back/follow-alert/{id}
+    controller: App\Controller\Back\MessageController::followAlert
+    methods:    ['GET', 'POST']
+    requirements:
+        id:     '\d+'
+## front
+message:
+    path:       /{_locale}/message
+    controller: App\Controller\Front\MessageController::index
+
+# Situ
+## back
+ajaxValidation:
+    path:       /{_locale}/back/situ/ajaxValidation
+    controller: App\Controller\Back\SituController::ajaxValidation
+    methods:    ['GET', 'POST']
+back_situs_search:
+    path:       /{_locale}/back/situ/search
+    controller: App\Controller\Back\SituController::allSitus
+back_situ_read:
+    path:       /{_locale}/back/situ/read/{id}
+    controller: App\Controller\Back\SituController::read
+    requirements:
+        id:     '\d+'
+back_situ_remove:
+    path:       /{_locale}/back/situ/removeSitu/{situ}
+    controller: App\Controller\Back\SituController::removeDefinitelySitu
+    methods:    ['GET', 'POST']
+    requirements:
+        situ:     '\d+'
+back_situs_validation:
+    path:       /{_locale}/back/situ/validation
+    controller: App\Controller\Back\SituController::situsToValidate
+    methods:    ['GET']
+back_situ_verify:
+    path:       /{_locale}/back/situ/verify/{id}
+    controller: App\Controller\Back\SituController::verifySitu
+    requirements:
+        id:     '\d+'
+## front
+all_situs:
+    path:       /{_locale}/contribs
+    controller: App\Controller\Front\SituController::index
+create_situ:
+    path:       /{_locale}/contrib/{id}
+    controller: App\Controller\Front\SituController::create
+    methods:    ['GET', 'POST']
+    defaults:
+        id:     null
+delete_situ:
+    path:       /{_locale}/delete/{situ}
+    controller: App\Controller\Front\SituController::delete
+    methods:    ['GET', 'POST']
+    requirements:
+        situ:     '\d+'
+read_situ:
+    path:       /{_locale}/read/{situ}/{preview}
+    controller: App\Controller\Front\SituController::read
+    methods:    ['GET']
+    defaults:
+        preview: null
+    requirements:
+        situ:     '\d+'
+translate_situ:
+    path:       /{_locale}/retranslate/{situId}/{langId}
+    controller: App\Controller\Front\SituController::translate
+    methods:    ['GET', 'POST']
+    requirements:
+        langId: '\d+'
+        situId: '\d+'
+validation_situ:
+    path:       /{_locale}/validation/{situ}
+    controller: App\Controller\Front\SituController::validation
+    methods:    ['GET', 'POST']
+    requirements:
+        situ:     '\d+'
+user_situs:
+    path:       /{_locale}/my-contribs
+    controller: App\Controller\Front\SituController::getUserSitus
+    
+# Translation
+## back
+back_translation_clean:
+    path:       /{_locale}/back/translation/clean
+    controller: App\Controller\Back\TranslationController::seachFilesToClean
+back_translation_create:
+    path:       /{_locale}/{back}/translation/create/{referentId}/{langId}/{id}
+    controller: App\Controller\TranslationController::createTranslation
+    methods:    ['GET', 'POST']
+    defaults:
+        id:     null
+back_translation_delete:
+    path:       /{_locale}/back/translation/delete
+    controller: App\Controller\Back\TranslationController::delete
+back_translation_form:
+    path:       /{_locale}/back/translation/form/{id}
+    controller: App\Controller\Back\TranslationController::createTranslationForm
+    methods:    ['GET', 'POST']
+    defaults:
+        id:     null
+back_translation_form_clone:
+    path:       /{_locale}/back/translation/cloneForm/{id}
+    controller: App\Controller\Back\TranslationController::cloneTranslationForm
+    methods:    ['GET', 'POST']
+    defaults:
+        id:     null
+back_translation_forms:
+    path:       /{_locale}/back/translation/forms
+    controller: App\Controller\Back\TranslationController::searchForms
+    methods:    ['GET', 'POST']
+back_translation_generate:
+    path:       /{_locale}/back/translation/generateYaml/{translation}
+    controller: App\Controller\Back\TranslationController::generateYaml
+    methods:    ['GET', 'POST']
+    requirements:
+        translation: '\d+'
+back_translation_generate_list:
+    path:       /{_locale}/back/translation/generate
+    controller: App\Controller\Back\TranslationController::searchTranslationsGenerate
+back_translation_permute_enabled:
+    path:       /{_locale}/back/translation/permute/enabled
+    controller: App\Controller\Back\TranslationController::permuteEnabled
+back_translation_remove:
+    path:       /{_locale}/back/translation/removeFile/{file}
+    controller: App\Controller\Back\TranslationController::removeFile
+back_translation_site:
+    path:       /{_locale}/back/translation/site
+    controller: App\Controller\Back\TranslationController::searchTranslations
+    methods:    ['GET', 'POST']
+back_translation_verify:
+    path:       /{_locale}/back/translation/verify/{translation}
+    controller: App\Controller\Back\TranslationController::verifyContrib
+    methods:    ['GET', 'POST']
+    requirements:
+        translation: '\d+'
+## front
+front_translation_create:
+    path:       /{_locale}/translation/create/{referentId}/{langId}/{id}
+    controller: App\Controller\TranslationController::createTranslation
+    methods:    ['GET', 'POST']
+    defaults:
+        id:     null
+user_translations:
+    path:       /{_locale}/my-translations
+    controller: App\Controller\Front\TranslationController::index
+    
+# User
+## back
+back_user_delete:
+    path:       /{_locale}/back/user/delete
+    controller: App\Controller\Back\UserController::delete
+back_user_permute_enabled:
+    path:       /{_locale}/back/user/permute/enabled
+    controller: App\Controller\Back\UserController::permuteEnabled
+back_user_read:
+    path:       /{_locale}/back/user/read/{id}
+    controller: App\Controller\Back\UserController::read
+    methods:    ['GET']
+    requirements:
+        id:     '\d+'
+back_user_search:
+    path:       /{_locale}/back/user/search
+    controller: App\Controller\Back\UserController::allUsers
+back_user_update:
+    path:       /{_locale}/back/user/update/{id}
+    controller: App\Controller\Back\UserController::update
+    methods:    ['GET', 'POST']
+    requirements:
+        id:     '\d+'
+## front
+user_account:
+    path:       /{_locale}/profile
+    controller: App\Controller\Front\UserController::read
+user_update:
+    path:       /{_locale}/profile/edit
+    controller: App\Controller\Front\UserController::update
+user_visit:
+    path:       /{_locale}/visit/{slug}
+    controller: App\Controller\Front\UserController::visit
+    methods:    ['GET']
+    requirements:
+        slug:   '\d+'
+
+## == Security == ##
+# Error
+## back
+back_access_denied:
+    path:       /{_locale}/back/403
+    controller: App\Controller\Security\ErrorController::backAccessDenied
+back_not_found:
+    path:       /{_locale}/back/404
+    controller: App\Controller\Security\ErrorController::backNotFound
+## front
+access_denied:
+    path:       /{_locale}/403
+    controller: App\Controller\Security\ErrorController::accessDenied
+    methods:    ['GET', 'POST']
+error:
+    path:       /{_locale}/error
+    controller: App\Controller\Security\ErrorController::error
+    methods:    ['GET']
+not_found:
+    path:       /{_locale}/404
+    controller: App\Controller\Security\ErrorController::notFound
+
+# Registration
+app_register:
+    path:       /{_locale}/register
+    controller: App\Controller\Security\RegistrationController::register
+registration_confirmation_route:
+    path:       /{_locale}/verify
+    controller: App\Controller\Security\RegistrationController::verifyUserEmail
+
+# Reset Password
+app_forgot_password_request:
+    path:       /{_locale}/reset-password
+    controller: App\Controller\Security\ResetPasswordController::request
+app_check_email:
+    path:       /{_locale}/reset-password/check-email
+    controller: App\Controller\Security\ResetPasswordController::checkEmail
+app_reset_password:
+    path:       /{_locale}/reset-password/reset/{token}
+    controller: App\Controller\Security\ResetPasswordController::reset
+    requirements:
+        token:  .+
+
+# Security
+app_login:
+    path:       /{_locale}/login
+    controller: App\Controller\Security\SecurityController::login
+app_logout:
+    path:       /{_locale}/logout
+    controller: App\Controller\Security\SecurityController::logout

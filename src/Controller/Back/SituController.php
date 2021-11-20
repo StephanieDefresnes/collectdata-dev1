@@ -15,13 +15,11 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * @IsGranted("IS_AUTHENTICATED_FULLY")
- * @Route("/{_locale<%app_locales%>}/back/situ")
  */
 class SituController extends AbstractController
 {
@@ -38,9 +36,6 @@ class SituController extends AbstractController
         $this->translator = $translator;
     }
     
-    /**
-     * @Route("/search", name="back_situs_search")
-     */
     public function allSitus(): Response
     {   
         $situs = $this->em->getRepository(Situ::class)
@@ -51,9 +46,6 @@ class SituController extends AbstractController
         ]);
     }
     
-    /**
-     * @Route("/read/{id}", name="back_situ_read", methods="GET")
-     */
     public function read($id): Response
     {
         $situ = $this->em->getRepository(Situ::class)->find($id);
@@ -69,9 +61,6 @@ class SituController extends AbstractController
         ]);
     }
     
-    /**
-     * @Route("/validation", name="back_situs_validation", methods="GET")
-     */
     public function situsToValidate()
     {
         $situs = $this->em->getRepository(Situ::class)
@@ -82,9 +71,6 @@ class SituController extends AbstractController
         ]);
     }
     
-    /**
-     * @Route("/verify/{id}", name="back_situ_verify", methods="GET|POST")
-     */
     public function verifySitu( Request $request, $id): Response
     {
         $situ = $this->em->getRepository(Situ::class)->find($id);
@@ -148,9 +134,6 @@ class SituController extends AbstractController
         ]);
     }
     
-    /**
-     * @Route("/ajaxValidation", methods="GET|POST")
-     */
     public function ajaxValidation(): JsonResponse
     {        
         // Get request data
@@ -246,9 +229,6 @@ class SituController extends AbstractController
         }
     }
     
-    /**
-     * @Route("/removeSitu/{situ}", name="back_situ_remove", methods="GET|POST")
-     */
     function removeDefinitelySitu(Situ $situ)
     {
         if ($situ->getStatus()->getId() !== 5) {

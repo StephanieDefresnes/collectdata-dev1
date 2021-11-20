@@ -7,7 +7,6 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class EventController extends AbstractController
@@ -24,8 +23,6 @@ class EventController extends AbstractController
     
     /**
      * Load Event validated value on updating situ
-     * 
-     * @Route("/ajaxGetEvent", methods="GET|POST")
      */
     public function ajaxGetEvent(Request $request): JsonResponse
     {
@@ -48,8 +45,6 @@ class EventController extends AbstractController
     
     /**
      * Update Event after submitting modal on new situ templates
-     * 
-     * @Route("/ajaxUpdateEvent", methods="GET|POST")
      */
     public function ajaxUpdateEvent(Request $request): JsonResponse
     {
@@ -89,6 +84,9 @@ class EventController extends AbstractController
         }
     }
     
+    /**
+     * Called in twig
+     */
     private function getEvent($id)
     {
         return $this->em->getRepository(Event::class)->find($id);

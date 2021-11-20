@@ -7,7 +7,6 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class CategoryController extends AbstractController
@@ -24,8 +23,6 @@ class CategoryController extends AbstractController
     
     /**
      * Load Category description on select dynamic situ form
-     * 
-     * @Route("/ajaxGetCategory", methods="GET|POST")
      */
     public function ajaxGetCategory(Request $request): JsonResponse
     {
@@ -58,8 +55,6 @@ class CategoryController extends AbstractController
     
     /**
      * Update Category after submitting modal on new situ templates
-     * 
-     * @Route("/ajaxUpdateCategory", methods="GET|POST")
      */
     public function ajaxUpdateCategory(Request $request): JsonResponse
     {
@@ -102,6 +97,9 @@ class CategoryController extends AbstractController
         }
     }
     
+    /**
+     * Called in twig
+     */
     private function getCategory($id)
     {
         return $this->em->getRepository(Category::class)->find($id);

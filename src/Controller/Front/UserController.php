@@ -37,35 +37,7 @@ class UserController extends AbstractController
     }
 
     /**
-     * @Route("/visit/{slug}", name="user_visit", methods="GET")
-     */
-    public function visit(Messenger $messenger, Request $request, $slug): Response
-    {
-        $user = $this->em->getRepository(User::class)
-                ->findOneBy(['slug' => $slug]);
-        
-        // Get Contribs count by lang
-        $situsLangs = $this->em->getRepository(Situ::class)
-                        ->findUserSitusCountByLang($user->getId());
-        
-        $form = $this->createForm(UserContactType::class);
-        $form->handleRequest($request);
-        
-        if($form->isSubmitted() && $form->isValid()) {
-            
-            // TODO messenger
-        }
-        
-        return $this->render('front/user/account/profile/index.html.twig', [
-            'form' => $form->createView(),
-            'user' => $user,
-            'situsLangs' => $situsLangs,
-        ]);
-    }
-
-    /**
      * @IsGranted("IS_AUTHENTICATED_FULLY")
-     * @Route("/profile", name="user_account", methods="GET")
      */
     public function read(Request $request): Response
     {
@@ -84,7 +56,6 @@ class UserController extends AbstractController
 
     /**
      * @IsGranted("IS_AUTHENTICATED_FULLY")
-     * @Route("/profile/edit", name="user_update", methods="GET|POST")
      */
     public function update( FileUploader $fileUploader,
                             Request $request): Response
@@ -167,17 +138,28 @@ class UserController extends AbstractController
             'form' => $form->createView(),
         ]);
     }
-    
 
-    /**
-     * @IsGranted("IS_AUTHENTICATED_FULLY")
-     * @Route("/ajaxLangEnabled", methods="GET|POST")
-     */
-    public function ajaxLangEnabled()
+    public function visit(Messenger $messenger, Request $request, $slug): Response
     {
-        return $this->json([
-            'success' => true,
-            'langs' => $this->em->getRepository(Lang::class)->findBy(['enabled' => 1])
+        $user = $this->em->getRepository(User::class)
+                ->findOneBy(['slug' => $slug]);
+        
+        // Get Contribs count by lang
+        $situsLangs = $this->em->getRepository(Situ::class)
+                        ->findUserSitusCountByLang($user->getId());
+        
+        $form = $this->createForm(UserContactType::class);
+        $form->handleRequest($request);
+        
+        if($form->isSubmitted() && $form->isValid()) {
+            
+            // TODO messenger
+        }
+        
+        return $this->render('front/user/account/profile/index.html.twig', [
+            'form' => $form->createView(),
+            'user' => $user,
+            'situsLangs' => $situsLangs,
         ]);
     }
     
