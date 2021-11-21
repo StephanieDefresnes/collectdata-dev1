@@ -6,15 +6,16 @@ use App\Entity\Event;
 use App\Entity\Category;
 use App\Entity\Lang;
 use App\Entity\Situ;
-use App\Entity\Status;
 use App\Entity\User;
 use App\Form\Back\Situ\VerifySituFormType;
+use App\Service\SituValidator;
 use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
@@ -25,15 +26,21 @@ class SituController extends AbstractController
 {
     private $em;
     private $security;
+    private $situValidator;
     private $translator;
+    private $urlGenerator;
     
     public function __construct(EntityManagerInterface $em,
+                                Security $security,
+                                SituValidator $situValidator,
                                 TranslatorInterface $translator,
-                                Security $security)
+                                UrlGeneratorInterface $urlGenerator)
     {
         $this->em = $em;
         $this->security = $security;
+        $this->situValidator = $situValidator;
         $this->translator = $translator;
+        $this->urlGenerator = $urlGenerator;
     }
     
     public function allSitus(): Response
@@ -92,7 +99,7 @@ class SituController extends AbstractController
                 'id' => $situ->getId(),
             ]);
             
-        } else {        
+        } else {
             $situInitial = '';
             $situsTranslated = '';
             
@@ -134,98 +141,45 @@ class SituController extends AbstractController
         ]);
     }
     
-    public function ajaxValidation(): JsonResponse
+    public function ajaxSituValidation(): JsonResponse
     {        
         // Get request data
         $request = $this->get('request_stack')->getCurrentRequest();
-        $dataForm = $request->request->all();        
-        $data = $dataForm['dataForm'];
+        $data = $request->request->all();
+
+        $result = $this->situValidator->situValidation($data['dataForm']);
         
-        $situ = $this->em->getRepository(Situ::class)->find($data['id']);
-        
-        $situ->setStatus($this->em->getRepository(Status::class)->find($data['statusId']));
-        
-        if ($data['action'] === 'validation') {
+        if (true == $result['success']) {
             
-            $situ->setDateValidation(new \DateTime('now'));
-            
-            if ($this->checkValidation('event', $data['eventId'], $data['eventValidated']) === 'validated') {
-                // todo notification (alert)
-            }
-            if ($this->checkValidation('categoryLevel1', $data['categoryLevel1Id'], $data['categoryLevel1Validated']) === 'validated') {
-                // todo notification (alert)
-            }
-            if ($this->checkValidation('categoryLevel2', $data['categoryLevel2Id'], $data['categoryLevel2Validated']) === 'validated') {
-                // todo notification (alert)
-            }
-            
-            // notification validation (message)
-            
-        } else {
-            
-            $comment = $data['comment'];
-            
-            // notification refuse (message)
-        }
-            
-        try {
             // Filter super visitor
             $user = $this->security->getUser();            
             if ($user->hasRole('ROLE_SUPER_VISITOR')) {
-                return $this->redirectToRoute('back_access_denied', [
-                    '_locale' => locale_get_default()
+                return $this->json([
+                    'success' => true,
+                    'redirection' => $this->urlGenerator->generate('back_access_denied',[
+                                        '_locale' => locale_get_default(),
+                                    ]),
                 ]);
             }
             
-            $this->em->flush();
-            
-            // processing notification (mail)
-
             $msg = $this->translator->trans(
-                        'contrib.situ.verify.form.modal.'. $data['action'] .'.flash.success', [],
+                        'contrib.situ.verify.form.modal.'. $data['dataForm']['action'] .'.flash.success', [],
                         'back_messages', $locale = locale_get_default()
                         );
 
             $request->getSession()->getFlashBag()->add('success', $msg);
-
+            
             return $this->json([
                 'success' => true,
-                'redirection' => $this->redirectToRoute('back_situs_validation',
-                        ['_locale' => locale_get_default()]),
+                'redirection' => $this->urlGenerator->generate('back_situs_validation',[
+                                    '_locale' => locale_get_default(),
+                                ]),
             ]);
-
-        } catch (\Doctrine\DBAL\DBALException $e) {
-            $this->addFlash('warning', $e->getMessage());
-        }
-    }    
-    
-    public function checkValidation($entity, $id, $validated)
-    {
-        $request = $this->get('request_stack')->getCurrentRequest();
-        
-        if ($entity === 'event') $class = Event::class;
-        else $class = Category::class;
-        
-        $classId = $this->em->getRepository($class)->find($id);
-        
-        if ($classId->getValidated() === false && $validated === 1) {
-            $classId->setValidated(true);
-            
-            try {
-                $this->em->flush();
-
-                $msg = $this->translator->trans(
-                            'contrib.'. $entity .'.validation.flash.success', [],
-                            'back_messages', $locale = locale_get_default()
-                            );
-                $request->getSession()->getFlashBag()->add('success', $msg);
-                
-                return 'validated';
-                
-            } catch (\Doctrine\DBAL\DBALException $e) {
-                return $e->getMessage();
-            }
-            
+        } else {
+            $request->getSession()->getFlashBag()->add('warning', $result['msg']);
+            return $this->json([
+                'success' => false,
+            ]);
         }
     }
     

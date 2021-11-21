@@ -66,11 +66,12 @@ function checkValidation() {
 
 function situValidation(dataForm) {
     $.ajax({
-        url: "/"+ path['locale'] +"/back/situ/ajaxValidation",
+        url: "/"+ path['locale'] +"/back/situ/ajaxSituValidation",
         method: 'POST',
         data: {dataForm},
         success: function(data) {
-            location.href = data['redirection']['targetUrl'];
+            if (data.success) location.href = data['redirection'];
+            else location.reload();
         }
     })
 }

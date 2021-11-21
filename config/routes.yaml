@@ -102,9 +102,9 @@ message:
 
 # Situ
 ## back
-ajaxValidation:
-    path:       /{_locale}/back/situ/ajaxValidation
-    controller: App\Controller\Back\SituController::ajaxValidation
+ajaxSituValidation:
+    path:       /{_locale}/back/situ/ajaxSituValidation
+    controller: App\Controller\Back\SituController::ajaxSituValidation
     methods:    ['GET', 'POST']
 back_situs_search:
     path:       /{_locale}/back/situ/search
