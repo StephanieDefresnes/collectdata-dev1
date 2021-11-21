@@ -27,11 +27,11 @@ back_event_search:
 ## front
 ajaxGetEvent:
     path:       /front/ajaxGetEvent
-    controller: App\Controller\Front\CategoryController::ajaxGetEvent
+    controller: App\Controller\Front\EventController::ajaxGetEvent
     methods:    ['GET', 'POST']
 ajaxUpdateEvent:
     path:       /front/ajaxUpdateEvent
-    controller: App\Controller\Front\CategoryController::ajaxUpdateEvent
+    controller: App\Controller\Front\EventController::ajaxUpdateEvent
     methods:    ['GET', 'POST']
 
 # Lang
