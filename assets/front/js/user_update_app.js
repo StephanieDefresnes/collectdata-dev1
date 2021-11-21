@@ -22,7 +22,7 @@ function removeLangtoOptions(value) {
 function unSelectLocal(previousValue, newValue) {
     // Get enabled langs
     $.ajax({
-        url: '/ajaxLangEnabled',
+        url: '/front/ajaxLangEnabled',
         method: 'POST',
         success: function(data) {
 

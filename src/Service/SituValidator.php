@@ -27,14 +27,23 @@ class SituValidator {
             
             $situ->setDateValidation(new \DateTime('now'));
             
-            if ($this->checkValidation('event', $data['eventId'], $data['eventValidated']) === 'validated') {
-                // todo notification (alert)
+            if ($data['eventValidated'] === '1') {
+                $event = $this->em->getRepository(Event::class)->find($data['eventId']);
+                if ($event->getValidated() === false) $event->setValidated(true);
             }
-            if ($this->checkValidation('categoryLevel1', $data['categoryLevel1Id'], $data['categoryLevel1Validated']) === 'validated') {
-                // todo notification (alert)
+            if ($data['categoryLevel1Validated'] === '1') {
+                $categoryLevel1 = $this->em->getRepository(Category::class)
+                                        ->find($data['categoryLevel1Id']);
+                if ($categoryLevel1->getValidated() === false) {
+                    $categoryLevel1->setValidated(true);
+                }
             }
-            if ($this->checkValidation('categoryLevel2', $data['categoryLevel2Id'], $data['categoryLevel2Validated']) === 'validated') {
-                // todo notification (alert)
+            if ($data['categoryLevel2Validated'] === '1') {
+                $categoryLevel2 = $this->em->getRepository(Category::class)
+                                        ->find($data['categoryLevel2Id']);
+                if ($categoryLevel2->getValidated() === false) {
+                    $categoryLevel2->setValidated(true);
+                }
             }
             
             // notification validation (message)
@@ -59,28 +68,6 @@ class SituValidator {
         }
         
         return $result;
-    }
-    
-    public function checkValidation($entity, $id, $validated)
-    {
-        $request = $this->get('request_stack')->getCurrentRequest();
-        
-        if ($entity === 'event') $class = Event::class;
-        else $class = Category::class;
-        
-        $classId = $this->em->getRepository($class)->find($id);
-        
-        if ($classId->getValidated() === false && $validated === 1) {
-            $classId->setValidated(true);
-            
-            try {
-                $this->em->flush();                
-                return 'validated';
-                
-            } catch (\Doctrine\DBAL\DBALException $e) {
-                return $e->getMessage();
-            }
-        }
     }
     
 }

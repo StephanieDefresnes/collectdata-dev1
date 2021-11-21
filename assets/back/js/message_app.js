@@ -28,7 +28,7 @@ function addUnreadAlert(message) {
 // Search if alter exist
 function permuteScanned(id) {
     $.ajax({
-        url: "/message/ajaxPermuteScanned",
+        url: '/message/ajaxPermuteScanned',
         method: 'POST',
         data: { id: id },
         success: function(data) {

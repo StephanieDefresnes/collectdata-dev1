@@ -41,7 +41,7 @@ function situTranslate(button) {
 // Search if translations exist
 function translationRequest(situId, langId) {
     $.ajax({
-        url: '/ajaxFindTranslation',
+        url: '/situ/ajaxFindTranslation',
         method: 'GET',
         data: { situId: situId, langId: langId},
         success: function(data) {
@@ -51,7 +51,6 @@ function translationRequest(situId, langId) {
                 if ($('#valid').hasClass('readTranslation'))
                     $('#valid').removeClass('readTranslation')
                 verifyTranslatedSitu(data['situTranslated'])
-                console.log(data['situTranslated'])
             } else {
                 location.href = data.redirect;
             }

@@ -81,10 +81,10 @@ function getData(name, value) {
     let data, url, categoryLevel1, categoryLevel2
             
     if (name == 'event') {
-        url = '/ajaxGetEvent'
+        url = '/front/ajaxGetEvent'
         data = {'event': value}
     } else {
-        url = '/ajaxGetCategory'
+        url = '/front/ajaxGetCategory'
         
         if (name == 'categoryLevel1') categoryLevel1 = value
         else categoryLevel2 = value
@@ -390,8 +390,8 @@ function setFlash(type, msg) {
 function updateEntity() {
     let type, data = {},
         url = $('#editEntity').attr('data-entity') === 'event'
-                    ? '/ajaxUpdateEvent'
-                    : '/ajaxUpdateCategory',
+                    ? '/front/ajaxUpdateEvent'
+                    : '/front/ajaxUpdateCategory',
         entity = $('#editEntity').attr('data-entity'),
         id = $('#editEntity').attr('data-id')
 

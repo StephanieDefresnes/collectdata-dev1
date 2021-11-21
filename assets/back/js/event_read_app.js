@@ -59,7 +59,7 @@ function resetFilter(table) {
 // Enable event
 function ajaxEnable(id) {
     $.ajax({
-        url: '/ajaxEventEnable',
+        url: '/back/ajaxEventEnable',
         method: 'POST',
         data: { id: id },
         success: function(data) {

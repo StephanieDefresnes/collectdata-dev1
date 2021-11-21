@@ -66,7 +66,7 @@ function checkValidation() {
 
 function situValidation(dataForm) {
     $.ajax({
-        url: "/"+ path['locale'] +"/back/situ/ajaxSituValidation",
+        url: '/back/ajaxSituValidation',
         method: 'POST',
         data: {dataForm},
         success: function(data) {

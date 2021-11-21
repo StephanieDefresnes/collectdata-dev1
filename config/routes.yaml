@@ -5,18 +5,18 @@ back_categories:
     controller: App\Controller\Back\CategoryController::allCategories
 ## front
 ajaxGetCategory:
-    path:       /ajaxGetCategory
+    path:       /front/ajaxGetCategory
     controller: App\Controller\Front\CategoryController::ajaxGetCategory
     methods:    ['GET', 'POST']
 ajaxUpdateCategory:
-    path:       /ajaxUpdateCategory
+    path:       /front/ajaxUpdateCategory
     controller: App\Controller\Front\CategoryController::ajaxUpdateCategory
     methods:    ['GET', 'POST']
 
 # Event
 ## back
 ajaxEventEnable:
-    path:       /ajaxEventEnable
+    path:       /back/ajaxEventEnable
     controller: App\Controller\Back\EventController::ajaxEventEnable
 back_event_read:
     path:       /{_locale}/back/event/read/{event}
@@ -26,11 +26,11 @@ back_event_search:
     controller: App\Controller\Back\EventController::allEvents
 ## front
 ajaxGetEvent:
-    path:       /ajaxGetEvent
+    path:       /front/ajaxGetEvent
     controller: App\Controller\Front\CategoryController::ajaxGetEvent
     methods:    ['GET', 'POST']
 ajaxUpdateEvent:
-    path:       /ajaxUpdateEvent
+    path:       /front/ajaxUpdateEvent
     controller: App\Controller\Front\CategoryController::ajaxUpdateEvent
     methods:    ['GET', 'POST']
 
@@ -47,8 +47,27 @@ back_lang_permute_enabled:
         id:     '\d+'
 ## front
 ajaxLangEnabled:
-    path:       /ajaxLangEnabled
+    path:       /front/ajaxLangEnabled
     controller: App\Controller\Front\LangController::ajaxLangEnabled
+
+# Message
+ajaxMessageScan:
+    path:       /message/ajaxPermuteScanned
+    controller: App\Controller\MessageController::ajaxPermuteScanned
+## back
+back_user_alerts:
+    path:       /{_locale}/back/my-alerts
+    controller: App\Controller\Back\MessageController::index
+back_follow_alert:
+    path:       /{_locale}/back/follow-alert/{id}
+    controller: App\Controller\Back\MessageController::followAlert
+    methods:    ['GET', 'POST']
+    requirements:
+        id:     '\d+'
+## front
+message:
+    path:       /{_locale}/message
+    controller: App\Controller\Front\MessageController::index
 
 # Page
 ## back
@@ -84,26 +103,10 @@ front_content_edit:
     requirements:
         id:     '\d+'
 
-# Message
-## back
-back_user_alerts:
-    path:       /{_locale}/back/my-alerts
-    controller: App\Controller\Back\MessageController::index
-back_follow_alert:
-    path:       /{_locale}/back/follow-alert/{id}
-    controller: App\Controller\Back\MessageController::followAlert
-    methods:    ['GET', 'POST']
-    requirements:
-        id:     '\d+'
-## front
-message:
-    path:       /{_locale}/message
-    controller: App\Controller\Front\MessageController::index
-
 # Situ
 ## back
 ajaxSituValidation:
-    path:       /{_locale}/back/situ/ajaxSituValidation
+    path:       /back/ajaxSituValidation
     controller: App\Controller\Back\SituController::ajaxSituValidation
     methods:    ['GET', 'POST']
 back_situs_search:
@@ -131,7 +134,7 @@ back_situ_verify:
         id:     '\d+'
 ## front
 ajaxFindTranslation:
-    path:       /ajaxFindTranslation
+    path:       /situ/ajaxFindTranslation
     controller: App\Controller\Front\SituController::ajaxFindTranslation
 all_situs:
     path:       /{_locale}/contribs
