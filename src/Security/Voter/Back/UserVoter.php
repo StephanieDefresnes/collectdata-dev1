@@ -62,95 +62,99 @@ class UserVoter extends Voter
 
     private function canUpdate(User $subject, User $user)
     {
-        if ($this->security->isGranted('ROLE_SUPER_ADMIN')
-                || $this->security->isGranted('ROLE_SUPER_VISITOR')) {
-            return true;
+        // Only SUPREME ADMIN can update SUPER_ADMIN/VISITOR
+        if ($this->security->isGranted("ROLE_SUPER_ADMIN")
+            && $subject->hasRole("ROLE_SUPER_ADMIN")
+            && $subject->hasRole("ROLE_SUPER_VISITOR")
+            && $user->getId() !== $this->supremeAdminId)
+        {
+            return false;
         }
         
-        if ($this->security->isGranted('ROLE_ADMIN')) {
-            // ADMIN can update MODERATOR only
-            if ($subject->hasRole("ROLE_SUPER_ADMIN")
+        // ADMIN can update MODERATOR & CONTRIBUTOR only
+        if ($this->security->isGranted("ROLE_ADMIN")
+            && (!$this->security->isGranted("ROLE_SUPER_ADMIN")
+                || !$this->security->isGranted("ROLE_SUPER_VISITOR"))
+            && ($subject->hasRole("ROLE_SUPER_ADMIN")
                 || $subject->hasRole("ROLE_SUPER_VISITOR")
                 || $subject->hasRole("ROLE_ADMIN")
                 || ($subject->hasRole("ROLE_MODERATOR")
                     && ($subject->hasRole("ROLE_SUPER_ADMIN")
                         || $subject->hasRole("ROLE_SUPER_VISITOR")
-                        || $subject->hasRole("ROLE_ADMIN")))
-                    ) {
+                        || $subject->hasRole("ROLE_ADMIN")))))
+        {
+            return false;
+        }
+        return true;
+    }
+
+    private function canDelete(array $subject, User $current)
+    {
+        foreach ($subject as $user) {
+            
+            // None can delete SUPREME ADMIN
+            if ($user->getId() === $this->supremeAdminId)
+            {
+                return false;
+            }
+            
+            // Only SUPREME ADMIN can delete SUPER_ADMIN/VISITOR
+            if ($this->security->isGranted("ROLE_SUPER_ADMIN")
+                && $user->hasRole("ROLE_SUPER_ADMIN")
+                && $user->hasRole("ROLE_SUPER_VISITOR")
+                && $current->getId() !== $this->supremeAdminId)
+            {
+                return false;
+            }
+            
+            // ADMIN can delete MODERATOR and CONTRIBUTOR only
+            if ($this->security->isGranted("ROLE_ADMIN")
+                    && (!$this->security->isGranted('ROLE_SUPER_ADMIN')
+                        || !$this->security->isGranted('ROLE_SUPER_VISITOR'))
+                    && ($user->hasRole("ROLE_SUPER_ADMIN")
+                        || $user->hasRole("ROLE_SUPER_VISITOR")
+                        || $user->hasRole("ROLE_ADMIN")
+                        || ($user->hasRole("ROLE_MODERATOR")
+                            && ($user->hasRole("ROLE_SUPER_ADMIN")
+                                    || $user->hasRole("ROLE_SUPER_VISITOR")
+                                    || $user->hasRole("ROLE_ADMIN"))))) {
                 return false;
             }
         }
         return true;
     }
-
-    private function canDelete(array $subject, User $user)
-    {
-        foreach ($subject as $user) {
-                
-            if ($this->security->isGranted('ROLE_SUPER_ADMIN')) {
-                return true;
-            }
-            // ROLE_SUPER_VISITOR can access to page (but filtered before pushing)
-            if ($this->security->isGranted('ROLE_SUPER_VISITOR')) {
-                return true;
-            }
-            
-            if (!$this->security->isGranted('ROLE_ADMIN')) {
-                
-                if ($user->hasRole("ROLE_SUPER_ADMIN")
-                    || $user->hasRole("ROLE_SUPER_VISITOR")
-                    || $user->hasRole("ROLE_ADMIN")
-                    || ($user->hasRole("ROLE_MODERATOR")
-                        // ADMIN can permute MODERATOR only
-                        && (($user->hasRole("ROLE_SUPER_ADMIN")
-                                || $user->hasRole("ROLE_SUPER_VISITOR")
-                                || $user->hasRole("ROLE_ADMIN"))
-                            || !$this->security->isGranted('ROLE_ADMIN')))) {
-                    return false;
-                }
-            }
-        }
-        return true;
-    }
     
-    private function canPermuteEnabled(array $subject, User $user)
+    private function canPermuteEnabled(array $subject, User $current)
     {
         foreach ($subject as $user) {
-                
-            if (!$this->security->isGranted('ROLE_SUPER_ADMIN')) {
-                
-                // ROLE_SUPER_VISITOR can access to page (but filtered before pushing)
-                if ($this->security->isGranted('ROLE_SUPER_VISITOR')) {
-                    return true;
-                }
             
-                // ADMIN can permute MODERATOR & CONTRIBUTOR only
-                if ($this->security->isGranted('ROLE_ADMIN')) {
-                    
-                    if ($user->hasRole("ROLE_SUPER_ADMIN")
-                        || $user->hasRole("ROLE_SUPER_VISITOR")
-                        || $user->hasRole("ROLE_ADMIN")) {
-                        return false;
-                    }
-                }
-                // MODERATOR can permute CONTRIBUTOR only
-                else {                    
-                    if ($user->hasRole("ROLE_SUPER_ADMIN")
+            // None can permute SUPREME ADMIN
+            if ($user->getId() === $this->supremeAdminId)
+            {
+                return false;
+            }
+            
+            // Only SUPREME ADMIN can permute SUPER_ADMIN/VISITOR
+            if ($this->security->isGranted("ROLE_SUPER_ADMIN")
+                && $user->hasRole("ROLE_SUPER_ADMIN")
+                && $user->hasRole("ROLE_SUPER_VISITOR")
+                && $user->getId() !== $this->supremeAdminId)
+            {
+                return false;
+            }
+            
+            // ADMIN can permute MODERATOR and CONTRIBUTOR only
+            if ($this->security->isGranted('ROLE_ADMIN')
+                    && (!$this->security->isGranted('ROLE_SUPER_ADMIN')
+                        || !$this->security->isGranted('ROLE_SUPER_VISITOR'))
+                    && ($user->hasRole("ROLE_SUPER_ADMIN")
                         || $user->hasRole("ROLE_SUPER_VISITOR")
                         || $user->hasRole("ROLE_ADMIN")
-                        || $user->hasRole("ROLE_MODERATOR")) {
-                        return false;
-                    }
-                }
-            }
-            // SUPER ADMIN only
-            else {
-                // Only SUPREME_ADMIN can permute SUPER_VISITOR/ADMIN
-                if ($this->security->getUser()->getId() !== $this->supremeAdminId
-                    && ($user->hasRole('ROLE_SUPER_ADMIN')
-                        || $user->hasRole("ROLE_SUPER_VISITOR"))) {
-                    
-                }
+                        || ($user->hasRole("ROLE_MODERATOR")
+                            && ($user->hasRole("ROLE_SUPER_ADMIN")
+                                    || $user->hasRole("ROLE_SUPER_VISITOR")
+                                    || $user->hasRole("ROLE_ADMIN"))))) {
+                return false;
             }
         }
         return true;
