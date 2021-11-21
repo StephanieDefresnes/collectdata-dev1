@@ -74,6 +74,11 @@ class Message
      */
     private $scanned;
 
+    /**
+     * @ORM\Column(type="string", length=190, nullable=true)
+     */
+    private $url;
+
     public function __construct()
     {
         $this->dateCreate = new \DateTime();
@@ -212,6 +217,18 @@ class Message
     public function setScanned(bool $scanned): self
     {
         $this->scanned = $scanned;
+
+        return $this;
+    }
+
+    public function getUrl(): ?string
+    {
+        return $this->url;
+    }
+
+    public function setUrl(?string $url): self
+    {
+        $this->url = $url;
 
         return $this;
     }
