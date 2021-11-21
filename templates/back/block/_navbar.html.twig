@@ -28,23 +28,20 @@
                {% if alerts %} data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"{% endif %}
                class="nav-link dropdown-toggle" id="alertsDropdown" role="button">
                 <i class="fas fa-bell fa-fw"></i>
-                {% if alerts %}
-                    <span class="badge badge-danger badge-counter"
-                          id="countAlert">{{ alerts|length }}</span>
-                {% endif %}
+                <span class="badge badge-danger badge-counter{{ not alerts ? ' d-none'}}"
+                      id="countAlert">{{ alerts|length }}</span>
             </a>
             <!-- Dropdown - Alerts -->
-            {% if alerts %}
-            <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in"
+            <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in{{ not alerts ? ' d-none'}}"
                 aria-labelledby="alertsDropdown" id="alerts_dropdown">
                 
                 <h6 class="dropdown-header">
-                    {{ 'message.alert.title'|trans }}
+                    {{ 'message.alert.title'|trans({}, 'messenger_messages') }}
                 </h6>
                 
                 {% for alert in alerts %}
                     <a class="dropdown-item d-flex align-items-center"
-                       href="{{ path('follow_alert', { 'id': alert.id }) }}"
+                       href="{{ path('back_follow_alert', { 'id': alert.id }) }}"
                        id="{{ alert.id }}">
                         
                         <div class="mr-3 position-relative">
@@ -79,7 +76,6 @@
                 </a>
                 
             </div>
-            {% endif %}
         </li>
 
         <!-- Nav Item - Messages -->

@@ -2,7 +2,7 @@
 {% extends "back/layout.html.twig" %}
 {% set locale = app.request.locale %}
 
-{% block title %}{{ 'back.alert.title'|trans }}{% endblock %}
+{% block title %}{{ 'message.alert.title'|trans }}{% endblock %}
 
 {% block stylesheets %}
     {{ parent() }}
@@ -15,7 +15,7 @@
     <div class="container-fluid pt-4">
         
         <div class="d-sm-flex justify-content-between mb-4">
-            <h1 class="h3 mb-0 text-gray-800">{{ 'back.alert.title'|trans }}</h1>
+            <h1 class="h3 mb-0 text-gray-800">{{ 'message.alert.title'|trans }}</h1>
         </div>
         
         <div class="row">
@@ -37,19 +37,21 @@
                                                 <i class="fas fa-hands"></i>
                                             </div>
                                         </td>
-                                        <td class="align-middle p-2">
-                                            {% if alert.entity == 'situ'
-                                                and render_service.getSitu(alert.entityId).statusId != 1
-                                                and render_service.getSitu(alert.entityId).statusId != 2 %}
+                                        <td class="p-2 align-middle">
+                                            {% if alert.reported == false %}
+                                                {% if alert.entity == 'situ'
+                                                    and render_service.getSitu(alert.entityId).status.id != 1
+                                                    and render_service.getSitu(alert.entityId).status.id != 2 %}
+                                                        <i class="far fa-check-circle text-success"></i>
+                                                {% elseif alert.entity == 'event'
+                                                    and render_service.getEvent(alert.entityId).status.id != 1
+                                                    and render_service.getEvent(alert.entityId).status.id != 2 %}
+                                                        <i class="far fa-check-circle text-success"></i>
+                                                {% elseif alert.entity == 'category'
+                                                    and render_service.getCategory(alert.entityId).status.id != 1
+                                                    and render_service.getCategory(alert.entityId).status.id != 2 %}
                                                     <i class="far fa-check-circle text-success"></i>
-                                            {% elseif alert.entity == 'event'
-                                                and render_service.getEvent(alert.entityId).statusId != 1
-                                                and render_service.getEvent(alert.entityId).statusId != 2 %}
-                                                    <i class="far fa-check-circle text-success"></i>
-                                            {% elseif alert.entity == 'category'
-                                                and render_service.getCategory(alert.entityId).statusId != 1
-                                                and render_service.getCategory(alert.entityId).statusId != 2 %}
-                                                <i class="far fa-check-circle text-success"></i>
+                                                {% endif %}
                                             {% endif %}
                                         </td>
                                         <td class="p-2">{{ alert.subject|raw }}<br>
@@ -58,8 +60,12 @@
                                                     |format_datetime('full', 'short', locale=locale)
                                                     |capitalize }}</p>
                                         </td>
-                                        <td class="p-2">{{ alert.text|raw }}</td>
-                                        <td class="p-2">
+                                        <td class="p-2 align-middle">
+                                            {% if alert.url %}
+                                                <a href="{{ alert.url|raw }}">{{ 'message.alert.read'|trans }}</a>
+                                            {% endif %}
+                                        </td>
+                                        <td class="pb-3 px-4 align-middle">
                                             <div class="form-group">
                                                 <div class="form-check">
                                                     <input type="checkbox" id="message_scanned_{{ alert.id }}"
@@ -75,6 +81,9 @@
                                                                 : 'read.no'|trans }}">
                                                 </div>
                                             </div>
+                                            <div class="spinner-border text-primary spinner-border-sm d-none" role="status">
+                                                <span class="sr-only">Loading...</span>
+                                             </div>
                                         </td>
                                     </tr>
                                 {% endfor %}

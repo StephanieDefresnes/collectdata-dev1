@@ -8,7 +8,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 
 class MessageController extends AbstractController
-{
+{    
     public function ajaxPermuteScanned(Request $request, EntityManagerInterface $em)
     {
         if ($request->isXMLHttpRequest()) {
@@ -23,7 +23,15 @@ class MessageController extends AbstractController
             
             try {
                 $em->flush();
-                return $this->json(['success' => true, 'message' => $message]);
+            
+                $result = [
+                    'id' => $message->getId(),
+                    'dateCreate' => $message->getDateCreate(),
+                    'scanned' => $message->getScanned(),
+                    'subject' => $message->getSubject(),
+                ];
+                
+                return $this->json(['success' => true, 'message' => $result]);
             } catch (\Doctrine\DBAL\DBALException $e) {
                 
                 $msg = $this->translator->trans(
