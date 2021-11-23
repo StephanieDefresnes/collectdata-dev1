@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Security\Voter\Front;
+namespace App\Security\Voter;
 
 use App\Entity\Situ;
 use App\Entity\User;

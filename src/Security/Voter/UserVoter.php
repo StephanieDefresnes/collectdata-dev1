@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Security\Voter\Back;
+namespace App\Security\Voter;
 
 use App\Entity\User;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
