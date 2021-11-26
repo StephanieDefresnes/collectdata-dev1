@@ -15,7 +15,9 @@ class LangController extends AbstractController
     }
     
     /**
-     * @IsGranted("IS_AUTHENTICATED_FULLY")
+     * Method called by UserUpdateFrom / JS
+     * 
+     * @return type
      */
     public function ajaxLangEnabled()
     {
