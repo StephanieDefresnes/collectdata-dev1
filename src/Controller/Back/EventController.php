@@ -3,12 +3,12 @@
 namespace App\Controller\Back;
 
 use App\Entity\Event;
+use App\Messager\Messager;
 use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Contracts\Translation\TranslatorInterface;
-
 
 /**
  * @IsGranted("IS_AUTHENTICATED_FULLY")
@@ -27,8 +27,6 @@ class EventController extends AbstractController
     
     public function allEvents()
     {
-        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
-        
         $events = $this->em->getRepository(Event::class)->findAll();
         
         return $this->render('back/event/search.html.twig', [
@@ -38,8 +36,6 @@ class EventController extends AbstractController
     
     public function read(Event $event)
     {
-        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
-            
         if (!$event) {
             return $this->redirectToRoute('back_not_found', [
                 '_locale' => locale_get_default()
@@ -51,7 +47,8 @@ class EventController extends AbstractController
         ]);
     }
     
-    public function ajaxEventEnable(Request $request)
+    public function ajaxEventEnable(Request $request,
+                                    Messager $messager)
     {
         if ($request->isXMLHttpRequest()) {
             
@@ -64,6 +61,8 @@ class EventController extends AbstractController
             
             try {
                 $this->em->flush();
+                $messager->sendUserAlert('validation', 'event', $event);
+                
                 return $this->json(['success' => true]);
             } catch (Exception $ex) {
                 $msg = $this->translator

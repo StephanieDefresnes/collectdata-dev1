@@ -2,10 +2,12 @@
 
 namespace App\Controller\Back;
 
+use App\Entity\Category;
+use App\Messager\Messager;
 use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
@@ -23,11 +25,57 @@ class CategoryController extends AbstractController
         $this->translator = $translator;
     }
     
-    public function allCategories(): Response
-    {        
-        return $this->render('back/category/index.html.twig', [
-            'controller_name' => 'CategoryController',
+    public function allCategories()
+    {
+        $categories = $this->em->getRepository(Category::class)->findAll();
+        
+        return $this->render('back/category/search.html.twig', [
+            'categories' => $categories,
         ]);
+    }
+    
+    public function read(Category $category)
+    {
+        if (!$category) {
+            return $this->redirectToRoute('back_not_found', [
+                '_locale' => locale_get_default()
+            ]);
+        }
+        
+        return $this->render('back/category/read.html.twig', [
+            'category' => $category,
+        ]);
+    }
+    
+    public function ajaxCategoryEnable( Request $request,
+                                        Messager $messager)
+    {
+        if ($request->isXMLHttpRequest()) {
+            
+            $id = $request->request->get('id');
+            $category = $this->em->getRepository(Category::class)->find($id);
+            
+            if ($category->getValidated() === false) $category->setValidated(true);
+
+            $this->em->persist($category);
+            
+            try {
+                $this->em->flush();
+                
+                $categoryLevel = $category->getEvent()
+                                    ? 'categoryLevel1'
+                                    : 'categoryLevel2';
+                $messager->sendUserAlert('validation', $categoryLevel, $category);
+                
+                return $this->json(['success' => true]);
+            } catch (Exception $ex) {
+                $msg = $this->translator
+                        ->trans('contrib.category.validation.flash.error', [],
+                                'back_messages', $locale = locale_get_default());
+                $this->addFlash('error', $msg);
+                return $this->json(['success' => false]);
+            }
+        }
     }
     
 }

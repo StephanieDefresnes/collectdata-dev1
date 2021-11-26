@@ -1,5 +1,5 @@
 // css
-import '../scss/event_read_app.scss';
+import '../scss/category_event_read_app.scss';
 
 // js
 require('datatables.net/js/jquery.dataTables.min.js');
@@ -57,9 +57,11 @@ function resetFilter(table) {
 }
 
 // Enable event
-function ajaxEnable(id) {
+function ajaxEnable(id, button) {
+    let url = button.hasClass('enableEvent')
+                ? '/back/ajaxEventEnable' : '/back/ajaxCategoryEnable'
     $.ajax({
-        url: '/back/ajaxEventEnable',
+        url: url,
         method: 'POST',
         data: { id: id },
         success: function(data) {
@@ -68,6 +70,9 @@ function ajaxEnable(id) {
             } else {
                 location.reload();
             }
+            if ($('#enableData').hasClass('d-none'))
+                $('#enableData').removeClass('d-none')
+            $('#enable-row > .spinner-border').addClass('d-none')
         }
     })
 }
@@ -86,15 +91,17 @@ $(function() {
     
     // Datatables configuration
     setDatatable($('#dataTableCategories'))
-    setDatatable($('#dataTableSitus'))
+    if ($('#situs').lenght == 1) setDatatable($('#dataTableSitus'))
 
     // Reset search filter
     resetFilter($('#dataTableCategories'))
-    resetFilter($('#dataTableSitus'))
+    if ($('#situs').lenght == 1) resetFilter($('#dataTableSitus'))
     
     
-    $('#enableEvent').click(function() {
-        ajaxEnable($(this).attr('data-id'))
+    $('#enableData').click(function() {
+        $(this).addClass('d-none')
+        $('#enable-row > .spinner-border').removeClass('d-none')
+        ajaxEnable($(this).attr('data-id'), $(this))
     })
     
     

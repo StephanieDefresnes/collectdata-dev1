@@ -1,20 +1,4 @@
 @import '~datatables.net-bs4/css/dataTables.bootstrap4.css';
-
-.more {
-    display: inline-block;
-    width: 10px;
-    height: 10px;
-    background-image: url('~@fortawesome/fontawesome-free/svgs/solid/caret-up.svg') !important;
-    background-position: right center !important;
-    background-repeat: no-repeat;
-    background-size: 10px;
-    opacity: 0.5;
-}
-.collapsed {
-    & .more {
-        background-image: url('~@fortawesome/fontawesome-free/svgs/solid/caret-down.svg') !important;            
-    }           
-}
 table.dataTable > tbody > tr {
     height: 36px !important;
 }

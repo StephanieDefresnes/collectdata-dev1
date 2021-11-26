@@ -1,8 +1,14 @@
 # Category
 ## back
+ajaxCategoryEnable:
+    path:       /back/ajaxCategoryEnable
+    controller: App\Controller\Back\CategoryController::ajaxCategoryEnable
 back_categories:
     path:       /{_locale}/back/category/search
     controller: App\Controller\Back\CategoryController::allCategories
+back_category_read:
+    path:       /{_locale}/back/category/read/{category}
+    controller: App\Controller\Back\CategoryController::read
 ## front
 ajaxGetCategory:
     path:       /front/ajaxGetCategory
