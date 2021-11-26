@@ -61,7 +61,6 @@ class FunctionRender {
      * Entity Lang
      * 
      * back\page\content\edit.html.twig
-     * form\page\edit.html.twig
      * front\translation\page.html.twig
      * front\translation\search\_pages.html.twig
      * 
@@ -79,15 +78,19 @@ class FunctionRender {
      * 
      * @param type $userId
      */
-    public function getUnreadUserAlerts($userId) {
+    public function getUnreadUserMessages($userId, $type, $admin) {
         
         return $this->em->createQueryBuilder()
             ->from(Message::class,'m')
             ->select('m')
             ->andWhere('m.scanned = ?1')
             ->andWhere('m.recipientUser = ?2')
-            ->setParameter(1, 0)
+            ->andWhere('m.type = ?3')
+            ->andWhere('m.admin = ?4')
+            ->setParameter(1, false)
             ->setParameter(2, $userId)
+            ->setParameter(3, $type)
+            ->setParameter(4, $admin)
             ->addOrderBy('m.dateCreate', 'DESC')
             ->getQuery()->getResult();
     }
@@ -102,6 +105,17 @@ class FunctionRender {
      */
     public function getSitu($situId) {
         return $this->em->getRepository(Situ::class)->find($situId);
+    }
+    
+    /**
+     *  back\situ\read.html.twig
+     * 
+     * @param type $situId
+     * @return type Get translations read situ
+     */
+    public function getTranslations($situId) {
+        return $this->em->getRepository(Situ::class)
+                ->findby(['translatedSituId' => $situId]);
     }
     
     /**

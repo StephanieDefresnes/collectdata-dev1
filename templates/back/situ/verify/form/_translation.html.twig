@@ -79,11 +79,11 @@
                             <!-- ContentTabs -->
                             <div class="col-xl-9 col-lg-8 col-md-7 col-sm-9 col-8">
                                 <div class="tab-content" id="v-pills-tabContent">
-                                    {% for situ in situsTranslated %}
+                                    {% for translation in situsTranslated %}
                                         <div class="tab-pane fade{{ translation.id == situ.id ? ' show active' }}"
                                              id="v-pills-{{ translation.id }}"
                                              role="tabpanel" aria-labelledby="v-pills-{{ translation.id }}-tab">
-                                            
+                                            {% set situ = translation %}
                                             {{ include('back/situ/_models/situ.html.twig') }}
                                             
                                         </div>
