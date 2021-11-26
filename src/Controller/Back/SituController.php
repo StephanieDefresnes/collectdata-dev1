@@ -92,7 +92,7 @@ class SituController extends AbstractController
                     'contrib.situ.verify.error',['%id%' => $situ->getId()],
                     'back_messages', $locale = locale_get_default()
                 );
-            $this->addFlash('error', $msg);
+            $this->addFlash('warning', $msg);
             
             return $this->redirectToRoute('back_situ_read', [
                 '_locale' => locale_get_default(),
