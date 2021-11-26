@@ -7,7 +7,6 @@ use App\Entity\Situ;
 use App\Entity\User;
 use App\Form\Front\User\UserContactType;
 use App\Form\Front\User\UserUpdateFormType;
-use App\Messenger\Messenger;
 use App\Service\FileUploader;
 use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
@@ -139,7 +138,7 @@ class UserController extends AbstractController
         ]);
     }
 
-    public function visit(Messenger $messenger, Request $request, $slug): Response
+    public function visit(Request $request, $slug): Response
     {
         $user = $this->em->getRepository(User::class)
                 ->findOneBy(['slug' => $slug]);
