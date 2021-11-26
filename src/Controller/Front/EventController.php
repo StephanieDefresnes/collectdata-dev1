@@ -83,12 +83,4 @@ class EventController extends AbstractController
             }
         }
     }
-    
-    /**
-     * Called in twig
-     */
-    private function getEvent($id)
-    {
-        return $this->em->getRepository(Event::class)->find($id);
-    }
 }

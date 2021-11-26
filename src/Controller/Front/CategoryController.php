@@ -96,12 +96,4 @@ class CategoryController extends AbstractController
             }
         }
     }
-    
-    /**
-     * Called in twig
-     */
-    private function getCategory($id)
-    {
-        return $this->em->getRepository(Category::class)->find($id);
-    }
 }

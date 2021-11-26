@@ -3,7 +3,6 @@
 namespace App\Controller\Front;
 
 use App\Repository\LangRepository;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class LangController extends AbstractController
