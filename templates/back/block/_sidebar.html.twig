@@ -44,7 +44,9 @@
                                     'back_situ_verify',
                                     'back_situs_validation',
                                     'back_event_search',
-                                    'back_categories'] ? ' active' }}">
+                                    'back_event_read',
+                                    'back_categories',
+                                    'back_category_read'] ? ' active' }}">
         <a class="nav-link collapsed pb-1" href="#" data-toggle="collapse" data-target="#collapseContrib"
             aria-expanded="true" aria-controls="collapseContrib">
             <i class="fas fa-list-ul"></i>
@@ -57,7 +59,8 @@
                                                         'back_situs_validation',
                                                         'back_event_search',
                                                         'back_event_read',
-                                                        'back_categories'] ? ' show' }}"
+                                                        'back_categories',
+                                                        'back_category_read'] ? ' show' }}"
              aria-labelledby="headingContrib" data-parent="#accordionSidebar">
             
             <div class="bg-white mb-1 py-2 collapse-inner rounded">
@@ -77,7 +80,9 @@
                    href="{{ path('back_event_search') }}">
                     {{ 'label.events'|trans }}
                 </a>
-                <a class="collapse-item{{ route == 'back_categories' ? ' active' }}"
+                <a class="collapse-item{{ route in [
+                                            'back_categories',
+                                            'back_category_read'] ? ' active' }}"
                    href="{{ path('back_categories') }}">
                     {{ 'label.categoriesLevel1'|trans }}
                 </a>
