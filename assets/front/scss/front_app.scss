@@ -91,6 +91,14 @@ a:focus,
     background-color: transparent;
     z-index: 999;
 }
+.icon-circle {
+    height: 2.5rem;
+    width: 2.5rem;
+    border-radius: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
 
 // Override Bootstrap and custom class for navbar
 body {
