@@ -104,28 +104,16 @@ class MessageController extends AbstractController
         $message->setScanned(true);
         $this->em->persist($message);
         
-        $id = $message->getEntityId();
-        $backParams = [
-                'back' => 'back',
-                'id' => $id,
-                '_locale' => locale_get_default()
-            ];
-        $frontParams = [
-                'id' => $id,
-                '_locale' => locale_get_default()
-            ];
-        
-        if ('situ' === $message->getEntity()) {
-            $situ = $this->em->getRepository(Situ::class)
-                        ->find($message->getEntityId());
-        }
-        
         // Case alert
         if ('alert' === $message->getType()) {
             
             if ($message->getAdmin()) {
                 
-                $params = $backParams;
+                $params = [
+                    'back' => 'back',
+                    'id' => $message->getEntityId(),
+                    '_locale' => locale_get_default()
+                ];
                 
                 switch ($message->getEntity()) {
                     case 'situ':
@@ -143,9 +131,11 @@ class MessageController extends AbstractController
                 }
             } else {
                 if ('situ' === $message->getEntity()) {
+                    
                     $route = 'read_situ';           
                     $params = [
-                        'slug' => $situ->getSlug(),
+                        'slug' => $this->em->getRepository(Situ::class)
+                                        ->find($message->getEntityId())->getSlug(),
                         '_locale' => locale_get_default()
                     ];
                 } else {
@@ -159,19 +149,25 @@ class MessageController extends AbstractController
         }
         // Case envelope
         else {
+            $id = $message->getId();
             if ($message->getAdmin()) {
                 $route = 'back_envelope_read';
-                $params = $backParams;
+                $params = [
+                    'back' => 'back',
+                    'id' => $id,
+                    '_locale' => locale_get_default()
+                ];
             } else {
                 $route = 'front_envelope_read';
-                $params = $frontParams;
+                $params = [
+                    'id' => $id,
+                    '_locale' => locale_get_default()
+                ];
             }
         }
 
         try {
-            $this->em->flush();            
-            return $this->redirectToRoute($route, $params);
-            
+            $this->em->flush();  
         } catch (\Doctrine\DBAL\DBALException $e) {
             $this->addFlash('warning', $e->getMessage());
             
@@ -180,10 +176,9 @@ class MessageController extends AbstractController
 
             $route = $refererParams['_route']; 
             $params = $this->refererService->getParamsArray($refererParams);
-
-            return $this->redirectToRoute($route, $params);
         }
         
+        return $this->redirectToRoute($route, $params);
     }
     
     public function ajaxPermuteScanned(Request $request)
