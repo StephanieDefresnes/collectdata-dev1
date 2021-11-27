@@ -99,7 +99,7 @@
                                     <tbody class="bg-white">
                                         {% for category in event.categories %}
                                         <tr>
-                                            <td class="px-2 align-middle">{{ category.id }}</td>
+                                            <td class="px-2 align-middle" translate="no">{{ category.id }}</td>
                                             <td class="px-2 align-middle text-capitalize">{{ category.title|u.truncate(20, '...') }}</td>
                                             <td class="px-2 align-middle" translate="no">
                                                 {{ category.validated ? 'yes'|trans({}, 'messages') : 'no'|trans({}, 'messages') }}
@@ -145,7 +145,7 @@
                                     <tbody class="bg-white">
                                         {% for situ in event.situs %}
                                         <tr>
-                                            <td class="px-2 align-middle">{{ situ.id }}</td>
+                                            <td class="px-2 align-middle" translate="no">{{ situ.id }}</td>
                                             <td class="px-2 align-middle text-capitalize">{{ situ.title|u.truncate(20, '...') }}</td>
                                             <td class="px-2 align-middle" translate="no">
                                                 {% if situ.status.id == 4 %}

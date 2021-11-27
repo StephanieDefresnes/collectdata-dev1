@@ -141,7 +141,7 @@
                                         {% if category.event %}
                                             {% for parent in category.parents %}
                                             <tr>
-                                                <td class="px-2 align-middle">{{ parent.id }}</td>
+                                                <td class="px-2 align-middle" translate="no">{{ parent.id }}</td>
                                                 <td class="px-2 align-middle text-capitalize">{{ parent.title|u.truncate(20, '...') }}</td>
                                                 <td class="px-2 align-middle" translate="no">
                                                     {{ parent.validated ? 'yes'|trans({}, 'messages') : 'no'|trans({}, 'messages') }}
@@ -215,7 +215,7 @@
                                     <tbody class="bg-white">
                                         {% for situ in category.situsLevel1 %}
                                         <tr>
-                                            <td class="px-2 align-middle">{{ situ.id }}</td>
+                                            <td class="px-2 align-middle" translate="no">{{ situ.id }}</td>
                                             <td class="px-2 align-middle text-capitalize">{{ situ.title|u.truncate(20, '...') }}</td>
                                             <td class="px-2 align-middle" translate="no">
                                                 {% if situ.status.id == 4 %}

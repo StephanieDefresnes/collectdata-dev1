@@ -226,6 +226,9 @@ th.cust-nowrap {
     color: #fff !important;
 }
 
+// Override GGTranslate
+table td font { vertical-align: unset !important; }
+
 /*
  * sb admin 2
  */
