@@ -27,7 +27,9 @@ class CategoryController extends AbstractController
     
     public function allCategories()
     {
-        $categories = $this->em->getRepository(Category::class)->findAll();
+        // Get Categories Level 1
+        $categories = $this->em->getRepository(Category::class)
+                            ->findBy(['parent' => null]);
         
         return $this->render('back/category/search.html.twig', [
             'categories' => $categories,
