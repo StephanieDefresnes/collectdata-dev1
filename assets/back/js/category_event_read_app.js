@@ -26,14 +26,12 @@ function setDatatable(table) {
             // Add class to load reset button search
             $('#'+ name +'_filter input').addClass('search')
             
-            // Hide search if only 2 pages
-            if (table.dataTable().fnSettings().fnRecordsTotal() <= 20) {
-               $('#'+ name +'_search').hide()
-            }
-            
-            // Hide pagination if only one page
+            // Hide pagination & search if only one page
             if (table.dataTable().fnSettings().fnRecordsTotal() <= 10) {
                $('#'+ name +'_pagination .dataTables_paginate').hide()
+            }
+            if (table.dataTable().fnSettings().fnRecordsTotal() <= 10) {
+               $('#'+ name +'_search').hide()
             }
         }
     })
@@ -77,7 +75,7 @@ function ajaxEnable(id, button) {
     })
 }
 
-// GG translate
+// GG translate (hidden if locale == category or event lang)
 function resetGGT() {
     let dataExist = setInterval(function() {
         if ($('iframe').length) {
