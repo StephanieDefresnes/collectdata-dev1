@@ -1,9 +1,9 @@
 {% trans_default_domain 'messenger_messages' %}
 
-<table id="dataTable-list" class="table table-sm text-nowrap{{ route == 'front'
+<table id="dataTable-list" class="table table-sm text-nowrap{{ route == 'front_envelopes'
     ? ' table-borderless table-hover mb-0' }}">
     <thead class="d-none"><tr><th></th><th></th><th></th><th></th><th></th></tr></thead>
-    <tbody class="{{ route == 'front' ? 'bg-white-80' : 'bg-white'}} text-dark">
+    <tbody class="{{ route == 'front_envelopes' ? 'bg-white-80' : 'bg-white'}} text-dark">
         {% for envelope in envelopes|reverse %}
             {% set done = 0 %}
             {% if envelope.admin and envelope.reported == false %}

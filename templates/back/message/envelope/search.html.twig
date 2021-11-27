@@ -26,7 +26,6 @@
                         {% if envelopes is empty %}
                             {{ 'message.envelope.table.empty'|trans }}
                         {% else %}
-                            {% set route = 'back' %}
                             {% include 'block/message/_envelopes.html.twig' %}
                         {% endif %}
                     </div>
