@@ -4,6 +4,7 @@ namespace App\Form\Page;
 
 use App\Entity\Lang;
 use App\Entity\Page;
+use App\Manager\Back\PageManager;
 use App\Form\Page\ContentType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Form\AbstractType;
@@ -12,15 +13,21 @@ use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormEvents;
+use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\FormError;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class PageFormType extends AbstractType
 { 
     private $em;
+    private $pageManager;
     
-    public function __construct(EntityManagerInterface $em)
+    public function __construct(EntityManagerInterface $em,
+                                PageManager $pageManager)
     {
         $this->em = $em;
+        $this->pageManager = $pageManager;
     }
     
     public function buildForm(FormBuilderInterface $builder, array $options)
@@ -45,6 +52,7 @@ class PageFormType extends AbstractType
                     'choice_value' => 'lang',
                     'choice_label' => 'englishName',
                     'placeholder' => 'action.select',
+                    'translation_domain' => 'messages'
                 ])
             ;
         }
@@ -53,6 +61,7 @@ class PageFormType extends AbstractType
             ->add('title', TextType::class, [
                 'required' => false,
                 'label' => 'label.title',
+                'translation_domain' => 'messages'
             ])
             ->add($builder->create('pageContents' , CollectionType::class, [
                     'entry_type'   => ContentType::class,
@@ -64,11 +73,12 @@ class PageFormType extends AbstractType
                 ])
             )
             ->add('save', SubmitType::class, [
-                    'label' => 'action.save',
-                    'row_attr' => [
-                        'class' => 'mb-0'
-                    ],
-                ])
+                'label' => 'action.save',
+                'row_attr' => [
+                    'class' => 'mb-0'
+                ],
+                'translation_domain' => 'messages'
+            ])
             ->add('action', SubmitType::class, [
                 'label' => $options['label'],
                 'attr' => [
@@ -77,6 +87,7 @@ class PageFormType extends AbstractType
                 'row_attr' => [
                     'class' => 'mb-0'
                 ],
+                'translation_domain' => 'messages'
             ])
         ;
         if ($options['label'] === 'action.attribute') {
@@ -87,8 +98,15 @@ class PageFormType extends AbstractType
                 'label_attr' => ['class' => 'd-lg-inline d-none px-2'],
                 'choices' => $options['users'],
                 'choice_label' => 'name',
-                'placeholder' => 'action.select'
-            ]);
+                'placeholder' => 'action.select',
+                'translation_domain' => 'messages'
+            ])
+            ->addEventListener(FormEvents::POST_SUBMIT, function (FormEvent $event) {            
+                $result = $this->pageManager->validationAttribute($event->getForm());
+                if (true !== $result) {
+                    $event->getForm()->addError(new FormError($result));
+                }
+            });
         }
     }
 

@@ -67,7 +67,7 @@
                                 </a>
                             </td>
                             <td class="px-2">
-                                {{ page.enabled == 0 ? 'no'|trans : 'yes'|trans }}
+                                {{ page.enabled == 0 ? 'no'|trans({}, 'messages')  : 'yes'|trans({}, 'messages')  }}
                             </td>
                             <td class="px-2 text-uppercase">
                                 {{ page.lang }}
@@ -76,7 +76,7 @@
                                 {{ page.user ? page.user.name }}
                             </td>
                             <td class="px-2">
-                                {% set type = 'content.form.page.type.choice.'~page.type %}
+                                {% set type = 'content.form.page.type.choice.'~ page.type %}
                                 {{ type|trans  }}
                             </td>
                             <td class="px-2">

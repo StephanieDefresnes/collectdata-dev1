@@ -50,16 +50,20 @@ class PageController extends AbstractController
     {
         $user = $security->getUser();
             
-        $label = 'action.submit';
-        $users = [];
         $action = 'submit';
-        $referentPage;
+        $label = 'action.submit';
+        $referentPage = '';
+        $users = [];
         
         if ($back) {
             $this->denyAccessUnlessGranted('ROLE_SUPER_VISITOR');
             // Route back_content_edit & default $label 
             $label = 'action.validate';
             $action = 'validate';
+            
+            $template = 'back/page/content/edit.html.twig';
+        } else {
+            $template = 'front/translation/page.html.twig';
         }
         
         // Update or Create new Page
@@ -67,7 +71,7 @@ class PageController extends AbstractController
             $page = $em->getRepository(Page::class)
                     ->find($id);
             
-            if (!$page) {
+            if (!$page && $back) {
                 return $this->redirectToRoute('back_not_found', [
                     '_locale' => locale_get_default()
                 ]);
@@ -195,17 +199,10 @@ class PageController extends AbstractController
             return $url;
         }
         
-        if ($back) {
-            return $this->render('back/page/content/edit.html.twig', [
-                'form' => $form->createView(),
-                'page' => $page,
-            ]);
-        } else {
-            return $this->render('front/translation/page.html.twig', [
-                'form' => $form->createView(),
-                'page' => $page,
-                'referentPage' => $referentPage,
-            ]);
-        }
+        return $this->render($template, [
+            'form' => $form->createView(),
+            'page' => $page,
+            'referentPage' => $referentPage,
+        ]);
     }
 }

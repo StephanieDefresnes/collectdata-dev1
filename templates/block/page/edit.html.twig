@@ -1,12 +1,13 @@
 {% trans_default_domain 'back_messages' %}
 
 {{ form_start(form) }}
-{{ form_errors(form) }}
 
 <div id="page" class="card-body{{ route == 'front_content_edit' ? ' bg-white-80' }}">
     
+    {{ form_errors(form) }}
+    
     {% if route == 'back_content_edit' %}
-        {% include 'form/page/_lang_type.html.twig' %}
+        {% include 'block/page/_lang_type.html.twig' %}
     {% endif %}
     
     <div class="row">
@@ -99,7 +100,7 @@
         {% if render_service.getLang(page.lang) in app.user.langs
                 or render_service.getLang(page.lang) in app.user.contributorLangs %}
         {% else %}
-            {% include "form/page/_users.html.twig" %}
+            {% include "block/page/_users.html.twig" %}
         {% endif %}
     {% endif %}
     

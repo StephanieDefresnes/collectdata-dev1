@@ -109,7 +109,7 @@ back_content_edit:
     defaults:
         id: null
 back_content_search:
-    path:       /{_locale}/back/content/all
+    path:       /{_locale}/back/contents
     controller: App\Controller\Back\PageController::contentList
 ## front
 index:
