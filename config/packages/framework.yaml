@@ -19,4 +19,7 @@ framework:
         log: true
 
     default_locale: fr
-    error_controller: App\Controller\Security\ErrorController::notFound
+    assets:
+        base_urls:
+            - '%env(BASE_URL)%'
+#    error_controller: App\Controller\Security\ErrorController::notFound

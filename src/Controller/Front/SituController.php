@@ -8,7 +8,7 @@ use App\Entity\Status;
 use App\Form\Front\Situ\SituFormType;
 use App\Mailer\Mailer;
 use App\Manager\Front\SituManager;
-use App\Messenger\Messenger;
+use App\Messager\Messager;
 use App\Service\SituEditor;
 use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
@@ -25,7 +25,7 @@ class SituController extends AbstractController
 {
     private $em;
     private $mailer;
-    private $messenger;
+    private $messager;
     private $parameters;
     private $security;
     private $situEditor;
@@ -34,7 +34,7 @@ class SituController extends AbstractController
     
     public function __construct(EntityManagerInterface $em,
                                 Mailer $mailer,
-                                Messenger $messenger,
+                                Messager $messager,
                                 ParameterBagInterface $parameters,
                                 Security $security,
                                 SituEditor $situEditor,
@@ -43,7 +43,7 @@ class SituController extends AbstractController
     {
         $this->em = $em;
         $this->mailer = $mailer;
-        $this->messenger = $messenger;
+        $this->messager = $messager;
         $this->parameters = $parameters;
         $this->security = $security;
         $this->situEditor = $situEditor;
@@ -67,13 +67,70 @@ class SituController extends AbstractController
         return $this->render('front/situ/user.html.twig');
     }
     
-    public function read(Situ $situ, $preview): Response
-    {   
-        // Check permission
-        $subject = ['situ' => $situ, 'preview' => $preview];
-        $this->denyAccessUnlessGranted('read_situ', $subject);
+    /**
+     * @IsGranted("IS_AUTHENTICATED_FULLY")
+     * @IsGranted("ROLE_CONTRIBUTOR")
+     */
+    public function create(Request $request, $id): Response
+    {
+        $defaultLang = $this->em->getRepository(Lang::class)
+                ->findOneBy(['lang' => $this->parameters->get('locale')])
+                ->getId();
         
-        return $this->render('front/situ/read.html.twig', [
+        // Current user
+        $user = $this->security->getUser();
+        $langs = $user->getLangs()->getValues();
+                
+        if ($id) {
+            
+            $situ = $this->em->getRepository(Situ::class)->find($id);
+        
+            // Check permission
+            $this->denyAccessUnlessGranted('create_situ', $situ);
+            
+            // If validation requested return to preview
+            if ($situ->getStatus()->getId() === 2) {
+                return $this->redirectToRoute('read_situ', [
+                    '_locale' => locale_get_default(),
+                    'slug' => $situ->getSlug(),
+                    'p' => 'preview'
+                ]);
+            }
+            
+        } else {
+            $situ = new Situ();
+        }
+        
+        // Form
+        $form = $this->createForm(SituFormType::class, $situ);
+        $form->handleRequest($request);
+        
+        /**
+         * isSubmitted() method is used by dynamics fields
+         * So when user really submits form, we use isClicked() method
+         * to get data requested
+         */
+        if ($form->get('save')->isClicked() || $form->get('submit')->isClicked()) {
+            
+            $result = $this->situManager->validationForm($request);
+            
+            if (true !== $result) {
+                $form->addError(new FormError($result));
+            } else {
+                if ('submit' === $form->getClickedButton()->getName()) {
+        //            $this->mailer->sendModeratorSituValidate($situ);
+                    $this->messager->sendModeratorAlert('submission', 'situ', $situ);
+                }
+                
+                $url = $this->situEditor->setSitu($form, $request, $id);
+                return $this->redirect($url);
+            }
+        }
+        
+        return $this->render('front/situ/new/create.html.twig', [
+            'defaultLang' => $defaultLang,
+            'form' => $form->createView(),
+            'langs' => $langs,
             'situ' => $situ,
         ]);
     }
@@ -82,44 +139,8 @@ class SituController extends AbstractController
      * @IsGranted("IS_AUTHENTICATED_FULLY")
      * @IsGranted("ROLE_CONTRIBUTOR")
      */
-    function validation(Situ $situ): Response
-    {
-        // Check permission
-        $this->denyAccessUnlessGranted('validation_situ', $situ);
-        
-        $situ->setDateSubmission(new \DateTime('now'));
-        $situ->setStatus($this->em->getRepository(Status::class)->find(2));
-        $this->em->persist($situ);
-            
-        try {
-            $this->em->flush();
-
-            $this->mailer->sendModeratorSituValidate($situ);
-            $this->messenger->sendModeratorAlert('situ', $situ);
-            
-            $msg = $this->translator->trans(
-                    'contrib.form.submit.flash.success', [],
-                    'user_messages', $locale = locale_get_default()
-                );
-            $this->addFlash('success', $msg);
-            
-        } catch (\Doctrine\DBAL\DBALException $e) {
-            
-            $msg = $this->translator->trans(
-                    'contrib.form.submit.flash.error', [],
-                    'user_messages', $locale = locale_get_default()
-                );
-            $this->addFlash('warning', $msg.PHP_EOL.$e->getMessage());
-        }
-        return $this->redirectToRoute('user_situs', ['_locale' => locale_get_default()]);
-    }
-    
-    /**
-     * @IsGranted("IS_AUTHENTICATED_FULLY")
-     * @IsGranted("ROLE_CONTRIBUTOR")
-     */
     function delete(Situ $situ): Response
-    {        
+    {
         // Check permission
         $this->denyAccessUnlessGranted('delete_situ', $situ);
             
@@ -151,68 +172,20 @@ class SituController extends AbstractController
     }
     
     /**
-     * @IsGranted("IS_AUTHENTICATED_FULLY")
-     * @IsGranted("ROLE_CONTRIBUTOR")
+     * Read validated situ, or on validation in preview mode
      */
-    public function create(Request $request, $id): Response
-    {
-        $defaultLang = $this->em->getRepository(Lang::class)
-                ->findOneBy(['lang' => $this->parameters->get('locale')])
-                ->getId();
+    public function read($slug, $preview): Response
+    {   
+        $situ = $this->em->getRepository(Situ::class)->findOneBy(['slug' => $slug]);
         
-        // Current user
-        $user = $this->security->getUser();
-        $langs = $user->getLangs()->getValues();
-                
-        if ($id) {
-            
-            $situ = $this->em->getRepository(Situ::class)->find($id);
+        // Check permission
+        $subject = ['situ' => $situ, 'preview' => $preview];
+        $this->denyAccessUnlessGranted('read_situ', $subject);
         
-            // Check permission
-            $this->denyAccessUnlessGranted('create_situ', $situ);
-            
-            // If validation requested return to preview
-            if ($situ->getStatus()->getId() === 2) {
-                return $this->redirectToRoute('read_situ', [
-                    '_locale' => locale_get_default(),
-                    'situ' => $situ->getId(),
-                    'p' => 'preview'
-                ]);
-            }
-            
-        } else {
-            $situ = new Situ();
-        }
-        
-        // Form
-        $form = $this->createForm(SituFormType::class, $situ);
-        $form->handleRequest($request);
-        
-        /**
-         * isSubmitted() method is used by dynamics fields
-         * So when user really submits form, we use isClicked() method
-         * to get data requested
-         */
-        if ($form->get('save')->isClicked() || $form->get('submit')->isClicked()) {
-            
-            $result = $this->situManager->validationForm($request);
-            
-            if (true !== $result) {
-                $form->addError(new FormError($result));
-            } else {
-                $url = $this->situEditor->setSitu($form, $request, $id);
-                return $this->redirect($url);
-            }
-        }
-        
-        return $this->render('front/situ/new/create.html.twig', [
-            'defaultLang' => $defaultLang,
-            'form' => $form->createView(),
-            'langs' => $langs,
+        return $this->render('front/situ/read.html.twig', [
             'situ' => $situ,
         ]);
     }
-    
 
     /**
      * @IsGranted("IS_AUTHENTICATED_FULLY")
@@ -267,6 +240,42 @@ class SituController extends AbstractController
             'situ' => $situ,
             'situData' => $situData,
         ]);
+    }
+    
+    /**
+     * @IsGranted("IS_AUTHENTICATED_FULLY")
+     * @IsGranted("ROLE_CONTRIBUTOR")
+     */
+    function validation(Situ $situ): Response
+    {
+        // Check permission
+        $this->denyAccessUnlessGranted('validation_situ', $situ);
+        
+        $situ->setDateSubmission(new \DateTime('now'));
+        $situ->setStatus($this->em->getRepository(Status::class)->find(2));
+        $this->em->persist($situ);
+            
+        try {
+            $this->em->flush();
+
+//            $this->mailer->sendModeratorSituValidate($situ);
+            $this->messager->sendModeratorAlert('submission', 'situ', $situ);
+            
+            $msg = $this->translator->trans(
+                    'contrib.form.submit.flash.success', [],
+                    'user_messages', $locale = locale_get_default()
+                );
+            $this->addFlash('success', $msg);
+            
+        } catch (\Doctrine\DBAL\DBALException $e) {
+            
+            $msg = $this->translator->trans(
+                    'contrib.form.submit.flash.error', [],
+                    'user_messages', $locale = locale_get_default()
+                );
+            $this->addFlash('warning', $msg.PHP_EOL.$e->getMessage());
+        }
+        return $this->redirectToRoute('user_situs', ['_locale' => locale_get_default()]);
     }
     
     /**

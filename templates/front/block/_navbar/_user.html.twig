@@ -1,51 +1,8 @@
 <ul class="navbar-nav">
 {% if app.user %}
-    <li class="nav-item mx-md-0 mx-sm-4 mx-0 px-md-0 px-sm-2 px-0 dropdown no-hover">
-        <a class="nav-link line-12 dropdown-toggle" href="#" id="dropdown_alert" 
-           data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            <span class="badge badge-light border border-dark rounded-pill">10</span>
-            <i class="fas fa-bell"></i>
-            <span class="{#{% if ...%}#}ml-2 {#{% endif %}#}d-md-none d-inline">
-                {{ 'message.alert.title'|trans({}, 'messenger_messages') }}
-            </span>
-        </a>
-        <ul class="dropdown-menu dropdown-menu-right pt-md-4 pt-0 border-0" aria-labelledby="dropdown_alert">
-            <li class="dropdown-item bg-dark-95">
-                <a class="text-white" href="">
-                    {{ 'front.alert.situ'|trans({}, 'messenger_messages') }}
-                </a>
-            </li>
-            <div class="dropdown-divider m-0"></div>
-            <li class="dropdown-item bg-dark-95">
-                <a href="">
-                    {{ 'message.alert.title_all'|trans({}, 'messenger_messages') }}
-                </a>
-            </li>
-        </ul>
-    </li>
-    <li class="nav-item mx-md-0 mx-sm-4 mx-0 px-md-0 px-sm-2 px-0 dropdown no-hover">
-        <a class="nav-link line-12 dropdown-toggle" href="#" id="dropdown_envelope" 
-           data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            <span class="badge badge-light border border-dark rounded-pill">2</span>
-            <i class="fas fa-envelope"></i>
-            <span class="{#{% if ...%}#}ml-2 {#{% endif %}#}d-md-none d-inline">
-                {{ 'message.envelope.title'|trans({}, 'messenger_messages') }}
-            </span>
-        </a>
-        <ul class="dropdown-menu dropdown-menu-right pt-md-4 pt-0 border-0" aria-labelledby="dropdown_envelope">
-            <li class="dropdown-item bg-dark-95">
-                <a class="text-white" href="">
-                    {{ 'message.envelope.new'|trans({}, 'messenger_messages') }}
-                </a>
-            </li>
-            <div class="dropdown-divider m-0"></div>
-            <li class="dropdown-item bg-dark-95">
-                <a href="">
-                    {{ 'message.envelope.title_all'|trans({}, 'messenger_messages') }}
-                </a>
-            </li>
-        </ul>
-    </li>
+    
+    {% include 'front/block/_navbar/_message.html.twig' %}
+    
     <li class="nav-item mx-md-0 mx-sm-4 mx-0 px-md-0 px-sm-2 px-0 dropdown{{ route in ['back_home', 'user_account'] ? ' active' }}">
         <a class="nav-link line-12 dropdown-toggle" id="dropdown_account" 
            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">

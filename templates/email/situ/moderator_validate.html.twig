@@ -9,15 +9,17 @@
         <img src="{{ absolute_url(asset('img/flp_1000x260.jpg')) }}" alt="">
             
         <div class="content">
-            {{ 'invitation.message'|trans({
+            
+            {{ alert|raw|nl2br }}
+            
+            {{ 'situ.validate.message'|trans({
                     '%user%': user,
-                    '%email%': user.email,
-                    '%password%': password,
-                    '%confirmation_url%': confirmation_url,
+                    '%moderate_url%': moderator_url,
                     '%website_url%': app.request.schemeAndHttpHost,
                     '%website_name%': name_site
-                }, 'back_messages')|raw|nl2br
+                }, 'email_messages')|raw|nl2br
             }}
+            
         </div>
             
     </div>

@@ -1,0 +1,61 @@
+{% set alerts = render_service.getUnreadUserMessages(app.user, 'alert', 0) %}
+<li class="nav-item mx-md-0 mx-sm-4 mx-0 px-md-0 px-sm-2 px-0 dropdown no-hover">
+    <a href="{{ alerts ? '#' : path('front_alerts') }}"
+       {% if alerts %} data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"{% endif %}
+       class="nav-link line-12 dropdown-toggle" id="alertsDropdown">
+        <span class="badge badge-light border border-dark rounded-pill{{ not alerts ? ' d-none'}}"
+              id="alertsCount">
+            {{ alerts|length }}
+        </span>
+        <i class="fas fa-bell"></i>
+        <span class="ml-2 d-md-none d-inline">
+            {{ 'message.alert.title'|trans({}, 'messenger_messages') }}
+        </span>
+    </a>
+    <ul class="dropdown-menu dropdown-menu-right pt-md-4 pt-0 border-0"
+         id="alerts_dropdown" aria-labelledby="alertsDropdown">
+        {% for alert in alerts %}
+        <li class="dropdown-item bg-dark-95" id="{{ alert.id }}">
+            <a class="text-white" href="{{ path('follow_message', { 'id': alert.id }) }}">
+                {{ alert.subject|raw }}
+            </a>
+        </li>
+        {% endfor %}
+        <li class="dropdown-item bg-dark-95 border-top">
+            <a href="{{ path('front_alerts') }}" id="alertsList">
+                {{ 'message.alert.title_all'|trans({}, 'messenger_messages') }}
+            </a>
+        </li>
+    </ul>
+</li>
+
+{% set envelopes = render_service.getUnreadUserMessages(app.user, 'envelope', 0) %}
+<li class="nav-item mx-md-0 mx-sm-4 mx-0 px-md-0 px-sm-2 px-0 dropdown no-hover">
+    <a href="{{ envelopes ? '#' : path('front_envelopes') }}"
+       {% if envelopes %} data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"{% endif %}
+       class="nav-link line-12 dropdown-toggle" id="envelopesDropdown">
+        <span class="badge badge-light border border-dark rounded-pill{{ not envelopes ? ' d-none'}}"
+              id="envelopesCount">
+            {{ envelopes|length }}
+        </span>
+        <i class="fas fa-envelope"></i>
+        <span class="ml-2 d-md-none d-inline">
+            {{ 'message.envelope.title'|trans({}, 'messenger_messages') }}
+        </span>
+    </a>
+    <ul class="dropdown-menu dropdown-menu-right pt-md-4 pt-0 border-0"
+         id="envelopes_dropdown" aria-labelledby="envelopesDropdown">
+        {% for envelope in envelopes %}
+        <li class="dropdown-item bg-dark-95" id="{{ envelope.id }}">
+            <a class="text-white" href="{{ path('follow_message', { 'id': envelope.id }) }}">
+                {{ 'message.envelope.new'|trans({'%sender%': envelope.senderUser.name }, 'messenger_messages') }}
+            </a>
+        </li>
+        {% endfor %}
+        <li class="dropdown-item bg-dark-95 border-top">
+            <a href="{{ path('front_envelopes') }}" id="envelopesList">
+                {{ 'message.envelope.title_all'|trans({}, 'messenger_messages') }}
+            </a>
+        </li>
+    </ul>
+</li>

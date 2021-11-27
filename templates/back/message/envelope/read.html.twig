@@ -1,0 +1,31 @@
+{% extends "back/layout.html.twig" %}
+{% trans_default_domain 'messenger_messages' %}
+{% set title = 'message.read.title'|trans({ '%user%': message.senderUser.name }) %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {{ encore_entry_link_tags('message_app', null, 'backApp') }}
+ {% endblock %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block content %}
+    <div class="container-fluid pt-4">
+        
+        <div class="d-sm-flex justify-content-between mb-4">
+            <h1 class="h3 mb-0 text-gray-800">{{ title }}</h1>
+        </div>
+        
+        <div class="row">
+            <div class="col-12">
+                <div class="card shadow mb-4">
+
+                    <div class="card-body pb-3">
+                        {% include 'block/message/_envelope.html.twig' %}
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

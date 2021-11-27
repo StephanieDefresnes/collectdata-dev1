@@ -1,0 +1,52 @@
+{% trans_default_domain 'messenger_messages' %}
+{% extends "front/layout.html.twig" %}
+{% set locale = app.request.locale %}
+
+{% block title %}{{ 'message.envelope.title'|trans }}{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {{ encore_entry_link_tags('message_app', null, 'frontApp') }}
+    {{ encore_entry_link_tags('app') }}
+ {% endblock %}
+
+{% block content %}
+    <div id="loader"></div>
+        
+    {% block banner%}
+    <div class="d-flex justify-content-start mt-3 mb-5 pt-5">
+        <h1 class="h3 text-white">{{ 'message.envelope.title'|trans }}</h1>
+    </div>
+    {% endblock %}
+        
+    <div class="row">
+        <div class="col-md-10 mx-auto">
+            <div class="card bg-secondary-50">
+                <div id="messages" class="envelopes card-body text-white front-dataTable">
+                {% if envelopes is empty %}
+                    <div class="p-3 bg-white-70 text-dark">
+                        {{ 'message.envelope.table.empty'|trans }}
+                    </div>
+                {% else %}
+                    {% set route = 'front' %}
+                    {% include 'block/message/_envelopes.html.twig' %}
+                {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+                        
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {{ encore_entry_script_tags('message_app', null, 'frontApp') }}
+    <script>
+        let path = { "locale" : "{{ locale }}" }
+        let translations = {
+            "readNo" : "{{ 'read.no'|trans }}",
+            "readYes" : "{{ 'read.yes'|trans }}",
+            "envelopeNew" : "{{ 'message.envelope.new'|trans }}",
+        }
+    </script>
+{% endblock %}

@@ -1,0 +1,68 @@
+{% trans_default_domain 'messenger_messages' %}
+
+<table id="dataTable-list" class="table table-sm table-hover text-nowrap">
+    <thead class="d-none"><tr><th></th><th></th><th></th><th></th><th></th><th></th></tr></thead>
+    <tbody class="bg-white-80">
+        {% for alert in alerts|reverse %}
+            {% set done = 0 %}
+            {% if alert.admin  and (alert.entity == 'situ'
+                and ((not alert.reported and render_service.getSitu(alert.entityId).status.id != 2)
+                    or (alert.reported
+                        and (render_service.getSitu(alert.entityId).status.id == 4
+                            or render_service.getSitu(alert.entityId).status.id == 5)))) %}
+                {% set done = 1 %}
+            {% endif %}
+            <tr id="{{ alert.id }}">
+                <td class="p-2 align-middle">
+                    <div class="icon-circle bg-{{ alert.channel }} text-white">
+                        <i class="fas fa-hands"></i>
+                    </div>
+                </td>
+                <td class="p-2">{{ alert.subject|raw }}<br>
+                    <p class="mb-0 small">{{ alert.dateCreate is empty ? ''
+                        : alert.dateCreate
+                            |format_datetime('full', 'short', locale=locale)
+                            |capitalize }}</p>
+                </td>
+                <td class="{{ alert.admin ? 'p-2 text-center align-middle' : 'p-0'}}"
+                {% if alert.admin and done == 1 %}data-toggle="tooltip" data-placement="left"
+                    title="{{ 'contrib.situ.verify.done'|trans({}, 'back_messages') }}"{% endif %}>
+                    {% if alert.admin and done == 1 %}
+                        <i class="far fa-check-circle text-success"></i>{% endif %}
+                </td>
+                <td class="p-2 align-middle">
+                    {% if alert.admin or (not alert.admin and alert.entity == 'situ') %}
+                    <a href="{{ path('follow_message', { 'id': alert.id }) }}">
+                        {{ 'message.read.link'|trans }}
+                    </a>
+                    {% endif %}
+                </td>
+                <td class="pb-3 px-4 align-middle">
+                    <div class="form-group">
+                        <div class="form-check">
+                            <input type="checkbox" id="message_scanned_{{ alert.id }}"
+                                   name="message_scanned_{{ alert.id }}"
+                                   class="custom-checkbox form-check-input"
+                                   value="{{ alert.scanned }}"{% if alert.scanned == 0 %} checked="checked"{% endif %}
+                                   data-toggle="tooltip" data-placement="left"
+                                   title="{{ alert.scanned == 0
+                                        ? 'read.yes'|trans
+                                        : 'read.no'|trans }}">
+                        </div>
+                    </div>
+                    <div class="spinner-border text-primary spinner-border-sm d-none" role="status">
+                        <span class="sr-only">Loading...</span>
+                     </div>
+                </td>
+                <td class="p-2 align-middle">
+                    <a href="{{ path('remove_message', { 'id': alert.id }) }}"
+                       class="messageDelete btn border-0 btn-sm"
+                       data-toggle="tooltip" data-placement="left"
+                       title="{{ 'action.delete'|trans({}, 'messages') }}">
+                        <i class="far fa-trash-alt"></i>
+                    </a>
+                </td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>

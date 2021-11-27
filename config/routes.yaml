@@ -60,20 +60,42 @@ ajaxLangEnabled:
 ajaxMessageScan:
     path:       /message/ajaxPermuteScanned
     controller: App\Controller\MessageController::ajaxPermuteScanned
-## back
-back_user_alerts:
-    path:       /{_locale}/back/my-alerts
-    controller: App\Controller\Back\MessageController::index
-back_follow_alert:
-    path:       /{_locale}/back/follow-alert/{id}
-    controller: App\Controller\Back\MessageController::followAlert
+follow_message:
+    path:       /{_locale}/follow-message/{id}
+    controller: App\Controller\MessageController::followMessage
     methods:    ['GET', 'POST']
     requirements:
         id:     '\d+'
+remove_message:
+    path:       /message/remove/{id}
+    controller: App\Controller\MessageController::removeMessage
+    methods:    ['GET', 'POST']
+    requirements:
+        id:     '\d+'
+## back
+back_alerts:
+    path:       /{_locale}/{back}/my-alerts
+    controller: App\Controller\MessageController::alerts
+back_envelopes:
+    path:       /{_locale}/{back}/my-messages
+    controller: App\Controller\MessageController::envelopes
+back_envelope_read:
+    path:       /{_locale}/{back}/message/read/{id}
+    controller: App\Controller\MessageController::readEnvelope
+    requirements:
+        id:     '\d+'
 ## front
-message:
-    path:       /{_locale}/message
-    controller: App\Controller\Front\MessageController::index
+front_alerts:
+    path:       /{_locale}/my-alerts
+    controller: App\Controller\MessageController::alerts
+front_envelopes:
+    path:       /{_locale}/my-messages
+    controller: App\Controller\MessageController::envelopes
+front_envelope_read:
+    path:       /{_locale}/message/read/{id}
+    controller: App\Controller\MessageController::readEnvelope
+    requirements:
+        id:     '\d+'
 
 # Page
 ## back
@@ -158,15 +180,13 @@ delete_situ:
     requirements:
         situ:     '\d+'
 read_situ:
-    path:       /{_locale}/read/{situ}/{preview}
+    path:       /{_locale}/read/{slug}/{preview}
     controller: App\Controller\Front\SituController::read
     methods:    ['GET']
     defaults:
         preview: null
-    requirements:
-        situ:     '\d+'
 translate_situ:
-    path:       /{_locale}/retranslate/{situId}/{langId}
+    path:       /{_locale}/translate/{situId}/{langId}
     controller: App\Controller\Front\SituController::translate
     methods:    ['GET', 'POST']
     requirements:
@@ -282,8 +302,6 @@ user_visit:
     path:       /{_locale}/visit/{slug}
     controller: App\Controller\Front\UserController::visit
     methods:    ['GET']
-    requirements:
-        slug:   '\d+'
 
 ## == Security == ##
 # Error

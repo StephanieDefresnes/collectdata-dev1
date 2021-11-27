@@ -2,7 +2,7 @@
 {% extends "back/layout.html.twig" %}
 {% set locale = app.request.locale %}
 
-{% block title %}{{ 'message.alert.title'|trans }}{% endblock %}
+{% block title %}{{ 'message.envelope.title'|trans }}{% endblock %}
 
 {% block stylesheets %}
     {{ parent() }}
@@ -15,19 +15,20 @@
     <div class="container-fluid pt-4">
         
         <div class="d-sm-flex justify-content-between mb-4">
-            <h1 class="h3 mb-0 text-gray-800">{{ 'message.alert.title'|trans }}</h1>
+            <h1 class="h3 mb-0 text-gray-800">{{ 'message.envelope.title'|trans }}</h1>
         </div>
         
         <div class="row">
             <div class="col-12">
                 <div class="card shadow mb-4">
 
-                    <div id="messages" class="alerts card-body pb-3 back-dataTable">
-                    {% if alerts is empty %}
-                        {{ 'message.alert.table.empty'|trans }}
-                    {% else %}
-                        {% include 'block/message/_alerts.html.twig' %}
-                    {% endif %}
+                    <div id="messages" class="envelopes card-body pb-3 back-dataTable">
+                        {% if envelopes is empty %}
+                            {{ 'message.envelope.table.empty'|trans }}
+                        {% else %}
+                            {% set route = 'back' %}
+                            {% include 'block/message/_envelopes.html.twig' %}
+                        {% endif %}
                     </div>
                     
                 </div>

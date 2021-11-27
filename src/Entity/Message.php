@@ -23,7 +23,12 @@ class Message
     private $type;
 
     /**
-     * @ORM\Column(type="string", length=190)
+     * @ORM\Column(type="boolean")
+     */
+    private $admin;
+
+    /**
+     * @ORM\Column(type="string", length=190, nullable=true)
      */
     private $channel;
 
@@ -40,7 +45,7 @@ class Message
     private $recipientUser;
 
     /**
-     * @ORM\Column(type="string", length=190)
+     * @ORM\Column(type="string", length=190, nullable=true)
      */
     private $subject;
 
@@ -65,7 +70,7 @@ class Message
     private $dateCreate;
 
     /**
-     * @ORM\Column(type="boolean")
+     * @ORM\Column(type="boolean", nullable=true)
      */
     private $reported;
 
@@ -101,12 +106,24 @@ class Message
         return $this;
     }
 
+    public function getAdmin(): ?bool
+    {
+        return $this->admin;
+    }
+
+    public function setAdmin(bool $admin): self
+    {
+        $this->admin = $admin;
+
+        return $this;
+    }
+
     public function getChannel(): ?string
     {
         return $this->channel;
     }
 
-    public function setChannel(string $channel): self
+    public function setChannel(?string $channel): self
     {
         $this->channel = $channel;
 
@@ -142,7 +159,7 @@ class Message
         return $this->subject;
     }
 
-    public function setSubject(string $subject): self
+    public function setSubject(?string $subject): self
     {
         $this->subject = $subject;
 
@@ -202,7 +219,7 @@ class Message
         return $this->reported;
     }
 
-    public function setReported(bool $reported): self
+    public function setReported(?bool $reported): self
     {
         $this->reported = $reported;
 

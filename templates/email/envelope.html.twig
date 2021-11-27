@@ -12,11 +12,11 @@
             
             {{ alert|raw|nl2br }}
             
-            {{ 'situ.email.message'|trans({
+            {{ 'message.envelope.content'|trans({
                     '%user%': user,
-                    '%moderate_url%': moderator_url,
-                    '%website_url%': app.request.schemeAndHttpHost,
-                    '%website_name%': name_site
+                    '%url%': url,
+                    '%website_name%': name_site,
+                    '%website_url%': app.request.schemeAndHttpHost
                 }, 'email_messages')|raw|nl2br
             }}
             

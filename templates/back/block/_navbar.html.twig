@@ -1,6 +1,7 @@
 {% set route = app.request.get('_route') %}
 {% set locale = app.request.locale %}
-{% set alerts = render_service.getUnreadUserAlerts(app.user.id) %}
+{% set alerts = render_service.getUnreadUserMessages(app.user, 'alert', 1) %}
+{% set envelopes = render_service.getUnreadUserMessages(app.user, 'envelop', 1) %}
 
 <nav class="navbar navbar-expand navbar-light bg-white topbar static-top shadow" translate="no">
 
@@ -24,12 +25,12 @@
 
         <!-- Nav Item - Alerts -->
         <li class="nav-item dropdown no-arrow mx-1">
-            <a href="{{ alerts ? '#' : path('back_user_alerts') }}"
+            <a href="{{ alerts ? '#' : path('back_alerts', { 'back': 'back' }) }}"
                {% if alerts %} data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"{% endif %}
                class="nav-link dropdown-toggle" id="alertsDropdown" role="button">
                 <i class="fas fa-bell fa-fw"></i>
                 <span class="badge badge-danger badge-counter{{ not alerts ? ' d-none'}}"
-                      id="countAlert">{{ alerts|length }}</span>
+                      id="alertsCount">{{ alerts|length }}</span>
             </a>
             <!-- Dropdown - Alerts -->
             <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in{{ not alerts ? ' d-none'}}"
@@ -41,7 +42,7 @@
                 
                 {% for alert in alerts %}
                     <a class="dropdown-item d-flex align-items-center"
-                       href="{{ path('back_follow_alert', { 'id': alert.id }) }}"
+                       href="{{ path('follow_message', { 'back': 'back', 'id': alert.id }) }}"
                        id="{{ alert.id }}">
                         
                         <div class="mr-3 position-relative">
@@ -70,7 +71,8 @@
                     </a>
                 {% endfor %}
                 
-                <a href="{{ path('back_user_alerts') }}"
+                <a href="{{ path('back_alerts', { 'back': 'back' }) }}"
+                   id="alertsList"
                    class="dropdown-item text-center small text-gray-500">
                     {{ 'message.alert.title_all'|trans({}, 'messenger_messages') }}
                 </a>
@@ -78,45 +80,60 @@
             </div>
         </li>
 
-        <!-- Nav Item - Messages -->
+        <!-- Nav Item - Envelopes -->
         <li class="nav-item dropdown no-arrow mx-1">
-            <a class="nav-link dropdown-toggle" href="#" id="messagesDropdown" role="button"
-                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <a href="{{ envelopes ? '#' : path('back_envelopes', { 'back': 'back' }) }}"
+               {% if envelopes %} data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"{% endif %}
+               class="nav-link dropdown-toggle" id="envelopesDropdown" role="button">
                 <i class="fas fa-envelope fa-fw"></i>
-                <!-- Counter - Messages -->
-                <span class="badge badge-danger badge-counter">7</span>
+                <span class="badge badge-danger badge-counter{{ not envelopes ? ' d-none'}}"
+                      id="envelopesCount">{{ envelopes|length }}</span>
             </a>
-            <!-- Dropdown - Messages -->
-            <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in"
-                aria-labelledby="messagesDropdown">
+            <!-- Dropdown - Envelopes -->
+            <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in{{ not alerts ? ' d-none'}}"
+                aria-labelledby="envelopesDropdown" id="envelopes_dropdown">
+                
                 <h6 class="dropdown-header">
-                    {{ 'message.envelope.title'|trans({}, 'messenger_messages') }}
+                    {{ 'message.alert.title'|trans({}, 'messenger_messages') }}
                 </h6>
-                <a class="dropdown-item d-flex align-items-center" href="#">
-                    <div class="dropdown-list-image mr-3">
-                        <img class="rounded-circle" src=""
-                            alt="...">
-                    </div>
-                    <div>
-                        <div class="text-truncate">Last month's report looks great, I am very happy with
-                            the progress so far, keep up the good work!</div>
-                        <div class="small text-gray-500">Morgan Alvarez · 2d</div>
-                    </div>
-                </a>
-                <a class="dropdown-item d-flex align-items-center" href="#">
-                    <div class="dropdown-list-image mr-3">
-                        <img class="rounded-circle" src="https://source.unsplash.com/Mv9hjnEUHR4/60x60"
-                            alt="...">
-                    </div>
-                    <div>
-                        <div class="text-truncate">Am I a good boy? The reason I ask is because someone
-                            told me that people say this to all dogs, even if they aren't good...</div>
-                        <div class="small text-gray-500">Chicken the Dog · 2w</div>
-                    </div>
-                </a>
-                <a class="dropdown-item text-center small text-gray-500" href="#">
+                
+                {% for envelope in envelopes %}
+                    <a class="dropdown-item d-flex align-items-center"
+                       href="{{ path('follow_message', { 'back': 'back', 'id': alert.id }) }}"
+                       id="{{ alert.id }}">
+                        
+                        <div class="mr-3 position-relative">
+                            <div class="icon-circle bg-{{ envelope.scanned == 1
+                                    ? 'secondary' : envelope.channel }} text-white">
+                                {% if envelope.entity == 'situ'
+                                    or envelope.entity == 'event'
+                                    or envelope.entity == 'categoryLevel1'
+                                    or envelope.entity == 'categoryLevel21'
+                                %}<i class="fas fa-hands"></i>{%
+                                elseif envelope.channel == 'warning' %}<i class="fas fa-exclamation-triangle"></i>{%
+                                elseif envelope.channel == 'dannger' %}<i class="fas fa-radiation"></i>{% endif %}
+                            </div>
+                        </div>
+                            
+                        <div>
+                            <div class="small text-gray-500">
+                                {{ envelope.dateCreate is empty ? ''
+                                    : envelope.dateCreate
+                                        |format_datetime('full', 'short', locale=locale)
+                                        |capitalize }}
+                            </div>
+                            {{ envelope.subject|raw }}
+                        </div>
+                        
+                    </a>
+                {% endfor %}
+                
+                <a href="{{ path('back_envelopes', { 'back': 'back' }) }}"
+                   class="dropdown-item text-center small text-gray-500"
+                   id="envelopesList">
                     {{ 'message.envelope.title_all'|trans({}, 'messenger_messages') }}
                 </a>
+                
             </div>
         </li>
 
