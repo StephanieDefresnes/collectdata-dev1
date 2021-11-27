@@ -15,9 +15,9 @@ function setDatatable(table) {
             url: '//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/'
                     + lang[$('html').attr('lang')] +'.json',
         },
-        dom: '<"d-flex justify-content-start row"<"#'+ name +'_search.col-auto"f>>'
+        dom: '<"d-flex justify-content-start row"<"#'+ name +'_search.col-auto mt-2"f>>'
                 +'<"table-responsive border"t>'
-                +'<"d-flex justify-content-end"<"#'+ name +'_pagination.col-md-6 mt-1"p>>',
+                +'<"d-flex justify-content-end"<"#'+ name +'_pagination.col-md-6 mt-2 p-0"p>>',
         'columnDefs': [{
             targets: 'no-sort',
             orderable: false,
