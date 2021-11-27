@@ -91,11 +91,11 @@ $(function() {
     
     // Datatables configuration
     setDatatable($('#dataTableCategories'))
-    if ($('#situs').lenght == 1) setDatatable($('#dataTableSitus'))
+    if ($('#situs').length == 1) setDatatable($('#dataTableSitus'))
 
     // Reset search filter
     resetFilter($('#dataTableCategories'))
-    if ($('#situs').lenght == 1) resetFilter($('#dataTableSitus'))
+    if ($('#situs').length == 1) resetFilter($('#dataTableSitus'))
     
     
     $('#enableData').click(function() {
