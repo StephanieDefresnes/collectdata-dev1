@@ -11,6 +11,9 @@
             "./config/packages/stof_doctrine_extensions.yaml"
         ]
     },
+    "beberlei/doctrineextensions": {
+        "version": "v1.3.0"
+    },
     "behat/transliterator": {
         "version": "v1.3.0"
     },

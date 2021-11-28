@@ -84,8 +84,8 @@ Encore
         pattern: /\.(png|jpg|jpeg)$/
     })
     .addEntry('back_app', './assets/back/js/back_app.js')
-    .addEntry('index_app', './assets/back/js/index_app.js')
     .addEntry('category_event_read_app', './assets/back/js/category_event_read_app.js')
+    .addEntry('dashboard_app', './assets/back/js/dashboard_app.js')
     .addEntry('lang_translation_clean_app', './assets/back/js/lang_translation_clean_app.js')
     .addEntry('lang_translation_create_app', './assets/back/js/lang_translation_create_app.js')
     .addEntry('lang_translation_site_app', './assets/back/js/lang_translation_site_app.js')

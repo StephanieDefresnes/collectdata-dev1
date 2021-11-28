@@ -99,6 +99,9 @@ front_envelope_read:
 
 # Page
 ## back
+ajaxDataChart:
+    path:       /back/ajaxDataChart
+    controller: App\Controller\Back\PageController::ajaxDataChart
 back_home:
     path:       /{_locale}/back
     controller: App\Controller\Back\PageController::dashboard

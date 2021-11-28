@@ -1,0 +1,95 @@
+{% extends 'back/layout.html.twig' %}
+{% trans_default_domain 'back_messages' %}
+
+{% block title %}{{ 'label.dashboard'|trans({}, 'messages') }}{% endblock %}
+
+{% block content %}
+    <div class="container-fluid pt-4">
+        
+        <div class="d-sm-flex align-items-center justify-content-between mb-4">
+            <h1 class="h3 mb-0 text-gray-800">{{ 'label.dashboard'|trans({}, 'messages') }}</h1>
+        </div>
+        
+        <div class="row">
+
+            <div class="col-12">
+
+                <!-- Area Chart -->
+                <div class="card shadow mb-4">
+                    <div class="card-header py-3">
+                        <h6 class="m-0 font-weight-bold text-primary">
+                            {{ 'dashboard.area.title'|trans }}
+                        </h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="chart-area">
+                            <canvas id="situsMonthChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="col-12">
+                <div class="row">
+
+                    <div class="col-xl-8 col-lg-7">
+
+                        <!-- Bar Chart -->
+                        <div class="card shadow mb-4">
+                            <div class="card-header py-3">
+                                <h6 class="m-0 font-weight-bold text-primary">
+                                    {{ 'dashboard.bar.title'|trans }}
+                                </h6>
+                            </div>
+                            <div class="card-body">
+                                <div class="chart-bar">
+                                    <canvas id="usersLangChart"></canvas>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="col-xl-4 col-lg-5">
+
+                        <!-- Donut Chart -->
+                        <div class="card shadow mb-4">
+                            <!-- Card Header - Dropdown -->
+                            <div class="card-header py-3">
+                                <h6 class="m-0 font-weight-bold text-primary">
+                                    {{ 'dashboard.donut.title'|trans }}
+                                </h6>
+                            </div>
+                            <!-- Card Body -->
+                            <div class="card-body">
+                                <div class="chart-pie">
+                                    <canvas id="situsLangChart"></canvas>
+                                </div>
+                                <div class="mt-3 pt-2 pb-1 line-11 small">
+                                    {{ 'dashboard.donut.text'|trans }}
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+                    
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        let translations = {
+            "contributions" : "{{ 'label_dp.contribution.title'|trans({}, 'messages') }}",
+            "users" : "{{ 'label_dp.users'|trans({}, 'messages') }}",
+        }
+    </script>
+    <script src="{{ asset('d3-scale-chromatic/d3-color.v1.min.js') }}"></script>
+    <script src="{{ asset('d3-scale-chromatic/d3-interpolate.v1.min.js') }}"></script>
+    <script src="{{ asset('d3-scale-chromatic/d3-scale-chromatic.v1.min.js') }}"></script>
+    {{ encore_entry_script_tags('dashboard_app', null, 'backApp') }}
+{% endblock %}

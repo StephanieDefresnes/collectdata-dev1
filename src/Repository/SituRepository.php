@@ -85,6 +85,25 @@ class SituRepository extends ServiceEntityRepository
         
         return $qb->getQuery()->getResult();
     }
+    
+    /**
+     * @return []   Returns an array of situs length for last 12 last months
+     */
+    public function findSitusCountByMonth()
+    {
+        return $this->_em->createQueryBuilder()
+            ->from(Situ::class,'situ')
+            ->select("  count(situ.id)      situs,
+                        date_format(situ.dateValidation, '%y') situYear,
+                        date_format(situ.dateValidation, '%M') situMonth")
+            ->groupBy('situMonth')
+            ->orderBy('situ.dateValidation', 'ASC')
+            ->andWhere('situ.status = ?1')
+            ->setMaxResults(12)
+            ->setParameter(1, 3)
+            ->getQuery()
+            ->getScalarResult();
+    }
 
     // /**
     //  * @return Situ[] Returns an array of Situ objects
