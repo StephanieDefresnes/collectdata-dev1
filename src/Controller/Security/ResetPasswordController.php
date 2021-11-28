@@ -171,7 +171,8 @@ class ResetPasswordController extends AbstractController
             return $this->redirectToRoute('app_check_email');
         }
         
-        $userLang = $this->em->getRepository(Lang::class)->find($user->getLangId());
+        $userLang = $this->getDoctrine()->getRepository(Lang::class)
+                        ->find($user->getLangId());
         
         $subject = $this->translator->trans(
             'reset_password.email.subject', [],
