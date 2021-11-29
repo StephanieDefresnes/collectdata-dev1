@@ -42,7 +42,7 @@
                 
                 {% for alert in alerts %}
                     <a class="dropdown-item d-flex align-items-center"
-                       href="{{ path('follow_message', { 'back': 'back', 'id': alert.id }) }}"
+                       href="{{ path('follow_message', {'id': alert.id }) }}"
                        id="{{ alert.id }}">
                         
                         <div class="mr-3 position-relative">
@@ -99,7 +99,7 @@
                 
                 {% for envelope in envelopes %}
                     <a class="dropdown-item d-flex align-items-center"
-                       href="{{ path('follow_message', { 'back': 'back', 'id': alert.id }) }}"
+                       href="{{ path('follow_message', { 'id': alert.id }) }}"
                        id="{{ alert.id }}">
                         
                         <div class="mr-3 position-relative">
