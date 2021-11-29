@@ -49,107 +49,75 @@ class Mailer
         $nameSite = $this->parameters->get('configuration')['name'];
         $sender = $this->parameters->get('configuration')['from_email'];
         $moderators = $this->userRepository->findRoleByLang('MODERATOR', $situ->getLang());
+        
+        $situId = $situ->getId();
 
         if ($moderators) {
             foreach ($moderators as $moderator) {
-                
-                $moderatorLang = $this->em->getRepository(Lang::class)->find($moderator->getLang());
-            
-                $subject = $this->translator->trans(
-                    'situ.validate.email.subject', [
-                        '%id%' => $situ->getId(),
-                    ],
-                    'email_messages',
-                    $locale = $moderatorLang->getLang()
+                $this->validationMail(
+                        $situId,
+                        $moderator->getLang()->getLang(),
+                        $moderator->getEmail(),
+                        $moderator->getName()
                 );
-
-                $url = $this->router->generate(
-                    'back_situ_verify',
-                    [
-                        '_locale' => $moderatorLang->getLang(),
-                        'situ' => $situ->getId(),
-                    ],
-                    UrlGeneratorInterface::ABSOLUTE_URL
-                );
-
-                $email = (new TemplatedEmail())
-                    ->from(new Address($sender, $nameSite))
-                    ->to(new Address($moderator->getEmail()))
-                    ->cc(new Address($this->parameters->get('configuration')['to_admin']))
-                    ->subject($subject)
-                    ->htmlTemplate('email/back/situ/validate.html.twig')
-                    ->context([
-                        'user' => $moderator->getName(),
-                        'moderator_url' => $url,
-                        'alert' => '',
-                    ])
-                ;
-
-                try {
-                    $this->mailer->send($email);
-                } catch (TransportExceptionInterface $e) {
-                    throw $e->getResponse()->getStatusCode();
-                    // some error prevented the email sending; display an
-                    // error message or try to resend the message
-                }
             }
         } else {
-            
-            $subject = $this->translator->trans(
-                'situ.validate.email.subject', [
-                    '%id%' => $situ->getId(),
-                ],
-                'email_messages', $locale = $this->parameters->get('locale')
-            );
-
-            $url = $this->router->generate(
-                'back_situ_verify',
-                [
-                    '_locale' => $this->parameters->get('locale'),
-                    'id' => $situ->getId(),
-                ],
-                UrlGeneratorInterface::ABSOLUTE_URL
-            );
-
-            $alert =  $this->translator->trans(
+            $alert = $this->translator->trans(
                 'situ.no_moderator', [],
                 'email_messages',
                 $locale = $this->parameters->get('locale')
             );
             
-            $email = (new TemplatedEmail())
-                ->from(new Address($sender, $nameSite))
-                ->to(new Address($this->parameters->get('configuration')['to_admin']))
-                ->subject($subject)
-                ->htmlTemplate('email/situ/moderator_validate.html.twig')
-                ->context([
-                    'user' => $nameSite,
-                    'moderator_url' => $url,
-                    'alert' => $alert,
-                ])
-            ;
-
-            try {
-                $this->mailer->send($email);
-            } catch (TransportExceptionInterface $e) {
-                throw $e->getResponse()->getStatusCode();
-                // some error prevented the email sending; display an
-                // error message or try to resend the message
-            }
+            $this->validationMail(
+                    $situId,
+                    $this->parameters->get('locale'),
+                    $this->parameters->get('configuration')['to_admin'],
+                    $moderator->getName(),
+                    $alert
+            );
         }
+    }
+    
+    private function validationMail($situId, $userLang, $recipient, $userName, $alert = null)
+    {
+        $subject = $this->translator->trans(
+            'situ.validate.email.subject', [
+                '%id%' => $situId,
+            ],
+            'email_messages',
+            $locale = $userLang
+        );
+        $template = 'email/situ/moderator_validate.html.twig';
+        
+        $url = $this->router->generate(
+            'back_situ_verify',
+            [
+                '_locale' => $userLang,
+                'id' => $situId,
+            ],
+            UrlGeneratorInterface::ABSOLUTE_URL
+        );
+        $context = [
+            'url' => $url,
+            'user' => $userName,
+            'url' => $url,
+            'alert' => $alert ? $alert : '',
+            'website_name' => $this->parameters->get('configuration')['name'],
+        ];
+        
+        $this->sendEMail($recipient, $subject, $template, $context);
     }
     
     public function sendUserMessage(Message $message, User $user)
     {
-        $nameSite = $this->parameters->get('configuration')['name'];
-        $sender = $this->parameters->get('configuration')['from_email'];
-        
+        $recipient = $user->getEmail();
         $subject = $this->translator->trans(
             'message.envelope.subject', [
                 '%website_name%' => $this->parameters->get('configuration')['name'],
                 ],
             'email_messages', $locale = $this->parameters->get('locale')
         );
+        $template = 'email/envelope.html.twig';
         
         $url = $this->router->generate(
             'front_envelope_read', [
@@ -158,39 +126,25 @@ class Mailer
             ],
             UrlGeneratorInterface::ABSOLUTE_URL
         );
-            
-        $email = (new TemplatedEmail())
-            ->from(new Address($sender, $nameSite))
-            ->to(new Address($user->getEmail()))
-            ->subject($subject)
-            ->htmlTemplate('email/envelope.html.twig')
-            ->context([
-                'url' => $url,
-                'user' => $user->getName(),
-                'website_name' => $nameSite,
-            ])
-        ;
-
-        try {
-            $this->mailer->send($email);
-        } catch (TransportExceptionInterface $e) {
-            throw $e->getResponse()->getStatusCode();
-            // some error prevented the email sending; display an
-            // error message or try to resend the message
-        }
+        $context = [
+            'url' => $url,
+            'user' => $user->getName(),
+            'website_name' => $this->parameters->get('configuration')['name'],
+        ];
+        
+        $this->sendEMail($recipient, $subject, $template, $context);
     }
     
     public function sendUserSituValidation(Situ $situ, User $user)
     {
-        $nameSite = $this->parameters->get('configuration')['name'];
-        $sender = $this->parameters->get('configuration')['from_email'];
-        
+        $recipient = $user->getEmail();
         $subject = $this->translator->trans(
             'situ.validation.subject', [
                 '%website_name%' => $this->parameters->get('configuration')['name'],
                 ],
-            'email_messages', $locale = $this->parameters->get('locale')
+            'email_messages', $locale = $user->getLang()->getLang()
         );
+        $template = 'email/situ/contributor_validation.html.twig';
         
         $url = $this->router->generate(
             'read_situ',
@@ -200,17 +154,26 @@ class Mailer
             ],
             UrlGeneratorInterface::ABSOLUTE_URL
         );
+        $context = [
+            'url' => $url,
+            'user' => $user->getName(),
+            'website_name' => $this->parameters->get('configuration')['name'],
+        ];
+        
+        $this->sendEMail($recipient, $subject, $template, $context);
+    }
+    
+    private function sendEMail($recipient, $subject, $template, $context)
+    {
+        $nameSite = $this->parameters->get('configuration')['name'];
+        $sender = $this->parameters->get('configuration')['from_email'];
             
         $email = (new TemplatedEmail())
             ->from(new Address($sender, $nameSite))
-            ->to(new Address($user->getEmail()))
+            ->to(new Address($recipient))
             ->subject($subject)
-            ->htmlTemplate('email/situ/contributor_validation.html')
-            ->context([
-                'url' => $url,
-                'user' => $user->getName(),
-                'website_name' => $nameSite,
-            ])
+            ->htmlTemplate($template)
+            ->context($context)
         ;
 
         try {
@@ -220,6 +183,7 @@ class Mailer
             // some error prevented the email sending; display an
             // error message or try to resend the message
         }
+        
     }
     
     public function sendEmailContact($contactFormData)

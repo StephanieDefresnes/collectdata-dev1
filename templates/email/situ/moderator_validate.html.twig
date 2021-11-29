@@ -10,11 +10,9 @@
             
         <div class="content">
             
-            {{ alert|raw|nl2br }}
-            
-            {{ 'situ.validate.message'|trans({
+            {{ 'situ.validation.message'|trans({
                     '%user%': user,
-                    '%moderate_url%': moderator_url,
+                    '%url%': url,
                     '%website_url%': app.request.schemeAndHttpHost,
                     '%website_name%': name_site
                 }, 'email_messages')|raw|nl2br

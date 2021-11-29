@@ -222,7 +222,7 @@ class Messager {
         }
 
         // Persist Message
-        $this->message( $admin, 'envelope',
+        return $this->message( $admin, 'envelope',
                         $sender, $recipient,
                         $subject, $text, null,
                         $entity, $entityId,

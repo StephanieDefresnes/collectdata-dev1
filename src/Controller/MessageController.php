@@ -110,7 +110,6 @@ class MessageController extends AbstractController
             if ($message->getAdmin()) {
                 
                 $params = [
-                    'back' => 'back',
                     'id' => $message->getEntityId(),
                     '_locale' => locale_get_default()
                 ];
