@@ -105,6 +105,9 @@ ajaxDataChart:
 back_home:
     path:       /{_locale}/back
     controller: App\Controller\Back\PageController::dashboard
+dashboard:
+    path:       /{_locale}/back/index
+    controller: App\Controller\Back\PageController::index
 back_content_edit:
     path:       /{_locale}/{back}/content/{id}
     controller: App\Controller\PageController::contentEdit
@@ -113,7 +116,7 @@ back_content_edit:
         id: null
 back_content_search:
     path:       /{_locale}/back/contents
-    controller: App\Controller\Back\PageController::contentList
+    controller: App\Controller\Back\PageController::allContents
 ## front
 index:
     path:       /
@@ -324,6 +327,9 @@ error:
     path:       /{_locale}/error
     controller: App\Controller\Security\ErrorController::error
     methods:    ['GET']
+lang_error:
+    path:       /{_locale}/bad-lang/{lang}
+    controller: App\Controller\Security\ErrorController::langError
 not_found:
     path:       /{_locale}/404
     controller: App\Controller\Security\ErrorController::notFound
