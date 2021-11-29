@@ -689,7 +689,6 @@ function updateSitu() {
             $(this).addClass('selection-on')
             
             let value = $(this).val()
-            let id = $(this).attr('id')
             
             $(this).find('option').each(function() {
                 if ($(this).val() == value)
@@ -714,6 +713,8 @@ function updateSitu() {
         $('.removeSituItem').each(function() {
             removeSituItem($(this))
         })
+        
+        $('#loader').hide()
     }
     // Add button display
     if (collectionHolder.find('.situItem').length == 4) $('#add-situItem').hide()
@@ -760,30 +761,30 @@ function modalSubmit() {
                 .text()
             )
     
-    let eventInput = $('#form-event').find('input').val()
-    let eventTitle = eventInput === undefined 
+    let eventInput = $('#form-event').find('input').val(),
+        eventTitle = eventInput === undefined 
                                 ?  $('#situ_form_event option[value="'+$('#situ_form_event').val()+'"]').text()
                                 : eventInput
     $('#modalEvent').text(eventTitle)
     
-    let categoryLevel1Input = $('#form-categoryLevel1').find('textarea').val()
-    let categoryLevel1Title = categoryLevel1Input === undefined 
+    let categoryLevel1Input = $('#form-categoryLevel1').find('textarea').val(),
+        categoryLevel1Title = categoryLevel1Input === undefined 
                                 ? $('#situ_form_categoryLevel1 option[value="'+$('#situ_form_categoryLevel1').val()+'"]').text()
                                 : categoryLevel1Input
     $('#modalCategoryLevel1-title').text(categoryLevel1Title)
-    let categoryLevel1Text = $('#form-categoryLevel1').find('textarea').val()
-    let categoryLevel1Description = categoryLevel1Text === undefined 
+    let categoryLevel1Text = $('#form-categoryLevel1').find('textarea').val(),
+        categoryLevel1Description = categoryLevel1Text === undefined 
                                 ? $('#categoryLevel1 .description').text()
                                 : categoryLevel1Text
     $('#modalCategoryLevel1-description').text(categoryLevel1Description)
     
-    let categoryLevel2Input = $('#form-categoryLevel2').find('textarea').val()
-    let categoryLevel2Title = categoryLevel2Input === undefined 
+    let categoryLevel2Input = $('#form-categoryLevel2').find('textarea').val(),
+        categoryLevel2Title = categoryLevel2Input === undefined 
                                 ? $('#situ_form_categoryLevel2 option[value="'+$('#situ_form_categoryLevel2').val()+'"]').text()
                                 : categoryLevel2Input
     $('#modalCategoryLevel2-title').text(categoryLevel2Title)
-    let categoryLevel2Text = $('#form-categoryLevel2').find('textarea').val()
-    let categoryLevel2Description = categoryLevel2Text === undefined 
+    let categoryLevel2Text = $('#form-categoryLevel2').find('textarea').val(),
+        categoryLevel2Description = categoryLevel2Text === undefined 
                                 ? $('#categoryLevel2 .description').text()
                                 : categoryLevel2Text
     $('#modalCategoryLevel2-description').text(categoryLevel2Description)
@@ -821,10 +822,6 @@ function modalSubmit() {
 
 $(function() {
     
-    // Preselect user lang if no optional exists
-    if ($('#situ_form_lang option').length <= 2)    
-        $('#situ_form_lang').val($('#situ').attr('data-default')).trigger('change')
-    
     // Debug focus
     $('.form-control').unbind('blur')
     
@@ -833,8 +830,8 @@ $(function() {
     
     // When update Situ
     if ($('#situ').attr('data-id')) updateSitu()
-    // Create SituItem once required
     else {
+        // Create SituItem once required
         addSituItem()
         $('#loader').hide()
     }
