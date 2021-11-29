@@ -16,21 +16,29 @@
     <div class="container-fluid pt-4">
         
         <div class="row d-sm-flex justify-content-between mb-4" translate="no">
-            <div class="col-md-6">
-                <h1 class="h3 mb-0 text-gray-800">{{ 'contrib.situ.read.title'|trans({}, 'back_messages') }}</h1>
+            <div class="{{ situ.status.id == 5 ? 'col-lg-5' : 'col-md-6'}}">
+                <h1 class="h3 {{ situ.status.id == 5 ? 'mb-lg-0' : 'mb-md-0'}}" text-gray-800">
+                    {{ 'contrib.situ.read.title'|trans({}, 'back_messages') }}
+                </h1>
             </div>
-            <div class="col-md-6 d-sm-flex justify-content-end">
-                {% if situ.status.id == 5 %}
-                    <a href="{{ path('back_situ_remove', { 'situ': situ.id }) }}"
-                       id="confirmDelete" class="btn btn-danger mx-2 pt-1">
-                        {{ 'action.delete_definitively'|trans }}
-                    </a>
-                {% endif %}
-                <a href="{{ path('back_situs_search') }}"
-                   class="btn btn-secondary mx-2 pt-1">
-                    <i class="fas fa-reply"></i>
-                    {{ 'action.back_list'|trans }}
-                </a>
+            <div class="{{ situ.status.id == 5 ? 'col-lg-7' : 'col-md-6'}}">
+                <div class="d-sm-flex justify-content-end">
+                    {% if situ.status.id == 5 %}
+                    <div>
+                        <a href="{{ path('back_situ_remove', { 'situ': situ.id }) }}"
+                           id="confirmDelete" class="btn btn-danger mx-2 pt-1">
+                            {{ 'action.delete_definitively'|trans }}
+                        </a>
+                    </div>
+                    {% endif %}
+                    <div>
+                        <a href="{{ path('back_situs_search') }}"
+                           class="btn btn-secondary mx-2 pt-1 align-middle text-nowrap">
+                            <i class="fas fa-reply"></i>
+                            {{ 'action.back_list'|trans }}
+                        </a>
+                    </div>
+                </div>
             </div>
         </div>
         
@@ -53,7 +61,9 @@
                             {% if locale != situ.lang.lang %}
                                 <div class="col-md-auto mct-1px">
                                     <div class="row ggt-row float-right">
-                                        <div class="col-auto px-1 mt-1"><i class="fas fa-globe-americas"></i></div>
+                                        <div class="col-auto px-1 mt-1">
+                                            <i class="fas fa-globe-americas"></i>
+                                        </div>
                                         <div class="col-auto px-0">
                                             <div id="GGT"></div>
                                         </div>

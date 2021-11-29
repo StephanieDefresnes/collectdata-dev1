@@ -53,48 +53,49 @@
                 </thead>
                 <tbody class="small bg-white-80">
                 {% for situ in app.user.situs %}
-                    {% if situ.status.id != 5 %}
+                    {# not access to deleted situ and situ.lang wich isn't in user.langs #}
+                    {% if situ.status.id != 5 and situ.lang in app.user.langs %}
                         <tr data-id="{{ situ.id }}">
-                            
+
                             <td class="d-none">{{ situ.id }}</td>
-                            
+
                             <th class="text-capitalize pt-3 situ-title"
                                 scope="row" data-toggle="tooltip" data-placement="right" title="{{ situ.title }}">
                                 {{ situ.title|u.truncate(20, '...') }}
                             </th>
-                            
+
                             <td class="text-capitalize pt-3"
                                 data-toggle="tooltip" data-placement="right" title="{{ situ.description }}">
                                 {{ situ.description|u.truncate(20, '...') }}
                             </td>
-                            
+
                             <td class="pt-3"
                                 data-toggle="tooltip" data-placement="right" title="{{ situ.dateCreation is empty ? '' : situ.dateCreation|format_datetime('short', 'short', locale=locale) }}">
                                 {{ situ.dateCreation|format_datetime('short', 'none', locale=locale) }}
                             </td>
-                            
+
                             <td class="text-capitalize pt-3"
                                 data-toggle="tooltip" data-placement="right" title="{{ situ.event.title }}">
                                 {{ situ.event.title|u.truncate(20, '...') }}
                             </td>
-                            
+
                             <td class="text-capitalize pt-3"
                                 data-toggle="tooltip" data-placement="right" title="{{ situ.categoryLevel1.title }}">
                                 {{ situ.categoryLevel1.title|u.truncate(20, '...') }}
                             </td>
-                            
+
                             <td class="text-capitalize pt-3"
                                 data-toggle="tooltip" data-placement="right" title="{{ situ.categoryLevel2.title }}">
                                 {{ situ.categoryLevel2.title|u.truncate(20, '...') }}
                             </td>
-                            
+
                             <td class="pt-3">
                                 <span class="text-capitalize">{{ situ.lang.name|raw }}</span>
                                 {% if situ.initialSitu == 0 %}
                                     <span class="small"><i class="fas fa-globe "></i></span>
                                 {% endif %}
                             </td>
-                            
+
                             <td class="pt-3 situStatus">
                                 {% if situ.status.id == 4 %}
                                     {% if situ.initialSitu ==  0 %}
@@ -106,7 +107,7 @@
                                     {{ situ.status.name|trans }}
                                 {% endif %}
                             </td>
-                            
+
                             {% if situ.status.id == 2 or (situ.status.id == 4 and situ.initialSitu ==  0) %}
                                 <td class="px-0 first-action"></td>
                             {% else %}
@@ -121,7 +122,7 @@
                                     </a>
                                 </td>
                             {% endif %}
-                            
+
                             {% if app.user.langs|length > 1 %}
                                 <td class="width-max-26 pl-0 pr-2">
                                     {% if situ.initialSitu == 1 %}
@@ -141,7 +142,7 @@
                                     {% endif %}
                                 </td>
                             {% endif %}
-                            
+
                             {% if situ.status.id == 1 %}
                                 <td class="width-max-26 px-0">
                                     <a href="{{ path('validation_situ', { 'situ': situ.id }) }}"
@@ -154,7 +155,7 @@
                                 </td>
                             {% elseif situ.status.id == 2 %}
                                 <td class="width-max-26 px-0">
-                                    <a href="{{ path('read_situ', { 'situ': situ.id, 'preview': 'preview' }) }}"
+                                    <a href="{{ path('read_situ', { 'slug': situ.slug, 'preview': 'preview' }) }}"
                                        class="btn btn-outline-secondary btn-sm px-1"
                                        data-toggle="tooltip" data-placement="left"
                                        title="{{ 'action.preview'|trans }}"
@@ -164,7 +165,7 @@
                                 </td>
                             {% elseif situ.status.id == 3 %}
                                 <td class="width-max-26 px-0">
-                                    <a href="{{ path('read_situ', { 'situ': situ.id }) }}"
+                                    <a href="{{ path('read_situ', { 'slug': situ.slug }) }}"
                                        class="btn btn-outline-success btn-sm px-1"
                                        data-toggle="tooltip" data-placement="left"
                                        title="{{ 'action.read'|trans }}"
@@ -175,7 +176,7 @@
                             {% else %}
                                 <td class="width-max-26 px-0"></td>
                             {% endif %}
-                            
+
                             <td class="width-max-45 px-2">
                                 <a href="{{ path('delete_situ', { 'situ': situ.id }) }}"
                                    class="situDelete btn btn-outline-danger btn-sm"
@@ -185,7 +186,7 @@
                                     <i class="far fa-trash-alt"></i>
                                 </a>
                             </td>
-                            
+
                         </tr>
                     {% endif %}
                 {% endfor %}

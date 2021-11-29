@@ -71,14 +71,14 @@
                             {% endif %}
                         </span>
                         <div class="col-lg-7 line-11 px-3">
-                            <span class="d-sm-flex justify-content-start">
+                            <span class="d-sm-flex justify-content-start text-capitalize">
                                 {% if (locale == 'ar') or (locale == 'he') or (locale == 'ur') %}
                                     {% set langs = user.langs|reverse %}
                                 {% else %}
                                     {% set langs = user.langs|sort %}
                                 {% endif %}
                                 {% for lang in user.langs %}
-                                    {{ lang.englishName|capitalize }}{% if not loop.last %} - {% endif %}
+                                    {{ lang.name|raw }}{% if not loop.last %} - {% endif %}
                                 {% endfor %}
                             </span>
                         </div>
