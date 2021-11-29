@@ -78,7 +78,7 @@ class SituController extends AbstractController
         ]);
     }
     
-    public function verifySitu( Request $request, $id): Response
+    public function verifySitu(Request $request, $id): Response
     {
         $situ = $this->em->getRepository(Situ::class)->find($id);
         
@@ -149,31 +149,30 @@ class SituController extends AbstractController
 
         $result = $this->situValidator->situValidation($data['dataForm']);
         
-        if (true == $result['success']) {
+        if (true === $result['success']) {
             
             // Filter super visitor
-            $user = $this->security->getUser();            
-            if ($user->hasRole('ROLE_SUPER_VISITOR')) {
-                return $this->json([
-                    'success' => true,
-                    'redirection' => $this->urlGenerator->generate('back_access_denied',[
+            if (true !== $result['validator']) {
+                $redirection = $this->urlGenerator->generate('back_access_denied',[
                                         '_locale' => locale_get_default(),
-                                    ]),
-                ]);
-            }
+                                    ]);
+            } else {
+                $redirection = $this->urlGenerator->generate('back_situs_validation',[
+                                        '_locale' => locale_get_default(),
+                                    ]);
             
-            $msg = $this->translator->trans(
-                        'contrib.situ.verify.form.modal.'. $data['dataForm']['action'] .'.flash.success', [],
-                        'back_messages', $locale = locale_get_default()
-                        );
+                $msg = $this->translator->trans(
+                            'contrib.situ.verify.form.modal.'.
+                                $data['dataForm']['action'] .'.flash.success', [],
+                            'back_messages', $locale = locale_get_default()
+                            );
 
-            $request->getSession()->getFlashBag()->add('success', $msg);
+                $request->getSession()->getFlashBag()->add('success', $msg);
+            }
             
             return $this->json([
                 'success' => true,
-                'redirection' => $this->urlGenerator->generate('back_situs_validation',[
-                                    '_locale' => locale_get_default(),
-                                ]),
+                'redirection' => $redirection,
             ]);
         } else {
             $request->getSession()->getFlashBag()->add('warning', $result['msg']);
