@@ -61,27 +61,7 @@ class SituFormType extends AbstractType
             'label' => '<i class="fas fa-plus-circle bg-none text-light text-small"></i>',
             'translation_domain' => false,
         ];
-            
         $builder
-            // Build choices with current and optional user land
-            ->add('lang', EntityType::class, [
-                'class' => Lang::class,
-                'required' => false,
-                'label' => 'situ.lang',
-                'choice_label' => function($lang, $key, $value) {
-                    return html_entity_decode($lang->getName());
-                },
-                'placeholder' => 'label.lang_placeholder',
-                'query_builder' => function (EntityRepository $er) use ($userLangs) {
-                        return $er->createQueryBuilder('lang')
-                                ->where('lang.id IN (:array)')
-                                ->setParameters(['array' => $userLangs]);
-                },
-                'choice_attr' => function($choice, $key, $value) {
-                    return ['class' => 'first-letter text-dark'];
-                },
-                'translation_domain' => 'messages'
-            ])
             // Buttons to add user own data
             ->add('addEvent', ButtonType::class, $addButtonOptions)
             ->add('addCategoryLevel1', ButtonType::class,$addButtonOptions)
@@ -129,6 +109,30 @@ class SituFormType extends AbstractType
          * 
          * So form needs to check conformity fields depending on user actions
          */
+        
+        // If optional langs, give choices
+        if (count($userLangs) > 1) {
+            $builder
+                // Build choices with current and optional user land
+                ->add('lang', EntityType::class, [
+                    'class' => Lang::class,
+                    'required' => false,
+                    'label' => 'situ.lang',
+                    'choice_label' => function($lang, $key, $value) {
+                        return html_entity_decode($lang->getName());
+                    },
+                    'placeholder' => 'label.lang_placeholder',
+                    'query_builder' => function (EntityRepository $er) use ($userLangs) {
+                            return $er->createQueryBuilder('lang')
+                                    ->where('lang.id IN (:array)')
+                                    ->setParameters(['array' => $userLangs]);
+                    },
+                    'choice_attr' => function($choice, $key, $value) {
+                        return ['class' => 'first-letter text-dark'];
+                    },
+                    'translation_domain' => 'messages'
+                ]);
+        }
         
         /**
          * If no optional language neither event, create event and its categories
