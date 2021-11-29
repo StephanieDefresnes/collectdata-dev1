@@ -2,24 +2,29 @@
 
 namespace App\Manager\Front;
 
+use App\Entity\Situ;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Security\Core\Security;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class SituManager {
     
     private $em;
     private $parameters;
+    private $security;
     private $translator;
     
     public function __construct(EntityManagerInterface $em,
                                 ParameterBagInterface $parameters,
+                                Security $security,
                                 TranslatorInterface $translator)
     {
         $this->em = $em;
         $this->parameters = $parameters;
+        $this->security = $security;
         $this->translator = $translator;
     }
     
@@ -84,4 +89,22 @@ class SituManager {
         }
         return $result;
     }
+    
+    /**
+     * Check if situ lang is in user langs
+     * if false redirect to error page to prevent processing errors
+     * (user has to know what he wants) 
+     * 
+     * @param type $situLang
+     * @return boolean
+     */
+    public function allowLang($situLang)
+    {
+        $user = $this->security->getUser();
+        if (false === $user->getLangs()->contains($situLang)) {
+            return false;
+        }
+        return true;
+    }
+    
 }

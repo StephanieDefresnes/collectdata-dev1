@@ -7,6 +7,8 @@ use App\Entity\Event;
 use App\Entity\Lang;
 use App\Entity\Situ;
 use App\Entity\Status;
+use App\Mailer\Mailer;
+use App\Messager\Messager;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Form\FormInterface;
@@ -20,18 +22,24 @@ class SituEditor {
     
     private $em;
     private $flash;
+    private $mailer;
+    private $messager;
     private $security;
     private $translator;
     private $urlGenerator;
     
     public function __construct(EntityManagerInterface $em,
                                 FlashBagInterface $flash,
+                                Mailer $mailer,
+                                Messager $messager,
                                 Security $security,
                                 TranslatorInterface $translator,
                                 UrlGeneratorInterface $urlGenerator)
     {
         $this->em = $em;
         $this->flash = $flash;
+        $this->mailer = $mailer;
+        $this->messager = $messager;
         $this->security = $security;
         $this->translator = $translator;
         $this->urlGenerator = $urlGenerator;
@@ -84,7 +92,7 @@ class SituEditor {
                         ->find($situRequest['lang']);
         } else {
             $lang = $this->em->getRepository(Lang::class)
-                        ->findBy(['lang' => locale_get_default()]);
+                        ->findOneBy(['lang' => locale_get_default()]);
         }
 
         // Select or create an event
@@ -170,9 +178,14 @@ class SituEditor {
                         );
             $this->flash->add('success', $msg);
 
-            $url = $this->urlGenerator->generate('user_situs',[
-                    '_locale' => locale_get_default(),
-                ]);  
+            $route = 'user_situs'; 
+            $params = [ '_locale' => locale_get_default() ];
+            
+            if (array_key_exists('submit', $situRequest)) {
+                $this->messager->sendModeratorAlert('submission', 'situ', $situ);
+                $this->mailer->sendModeratorSituValidate($situ);
+            }
+                
 
         } catch (\Doctrine\DBAL\DBALException $e) {
             $msg = $this->translator->trans(
@@ -181,24 +194,18 @@ class SituEditor {
                         );
             $this->flash->add('warning', $msg.PHP_EOL.$e->getMessage());
 
+            $route = 'create_situ'; 
             if ($id) {
-                $url = $this->urlGenerator->generate('create_situ', [
+                $params = [
                     '_locale' => locale_get_default(),
                     'id' => $id
-                ]);
+                ];
             } else {
-                if ($form->getTranslatedSituId()) {
-                    $url = $this->urlGenerator->generate('translate_situ', [
-                        '_locale' => locale_get_default(),
-                    ]);
-                } else {
-                    $url = $this->urlGenerator->generate('create_situ', [
-                        '_locale' => locale_get_default(),
-                    ]);
-                }
-            }  
+                if ($form->getTranslatedSituId()) { $route = 'translate_situ'; }
+                $params = [ '_locale' => locale_get_default() ];
+            }
         }
-        return $url;
+        return $this->urlGenerator->generate($route, $params);
     }
     
 }

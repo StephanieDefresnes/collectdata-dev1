@@ -88,6 +88,14 @@ class SituController extends AbstractController
             // Check permission
             $this->denyAccessUnlessGranted('create_situ', $situ);
             
+            // Check if situ lang is in user langs
+            if (true !== $this->situManager->allowLang($situ->getLang())) {
+                return $this->redirectToRoute('lang_error', [
+                    '_locale' => locale_get_default(),
+                    'lang' => $situ->getLang()->getEnglishName(),
+                ]);
+            }
+            
             // If validation requested return to preview
             if ($situ->getStatus()->getId() === 2) {
                 return $this->redirectToRoute('read_situ', [
@@ -117,11 +125,6 @@ class SituController extends AbstractController
             if (true !== $result) {
                 $form->addError(new FormError($result));
             } else {
-                if ('submit' === $form->getClickedButton()->getName()) {
-        //            $this->mailer->sendModeratorSituValidate($situ);
-                    $this->messager->sendModeratorAlert('submission', 'situ', $situ);
-                }
-                
                 $url = $this->situEditor->setSitu($form, $request, $id);
                 return $this->redirect($url);
             }
@@ -258,7 +261,7 @@ class SituController extends AbstractController
         try {
             $this->em->flush();
 
-//            $this->mailer->sendModeratorSituValidate($situ);
+            $this->mailer->sendModeratorSituValidate($situ);
             $this->messager->sendModeratorAlert('submission', 'situ', $situ);
             
             $msg = $this->translator->trans(
