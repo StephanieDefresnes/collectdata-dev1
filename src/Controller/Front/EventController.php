@@ -30,11 +30,10 @@ class EventController extends AbstractController
             
             $data = $request->request->get('data');
             $id = null;
+            $event = $this->em->getRepository(Event::class)->find($data['event']);
             
             // Set $id if not yet validated
-            if ($this->getEvent($data['event'])->getValidated() === false) {
-                $id = $this->getEvent($data['event'])->getId();
-            }
+            if ($event->getValidated() === false) { $id = $event->getId(); }
             
             return $this->json([
                 'success' => true,
@@ -51,8 +50,7 @@ class EventController extends AbstractController
         if ($request->isXMLHttpRequest()) {
             
             $data = $request->request->get('data');
-            
-            $event = $this->getEvent($data['id']);
+            $event = $this->em->getRepository(Event::class)->find($data['event']);
             
             $event->setTitle($data['title']);
             $this->em->persist($event);

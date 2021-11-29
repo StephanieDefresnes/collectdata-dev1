@@ -35,14 +35,15 @@ class CategoryController extends AbstractController
             if (array_key_exists('categoryLevel2', $data)) {
                 $categoryId = $data['categoryLevel2'];
             }
-            
             $id = null;
             
-            $description = $this->getCategory($categoryId)->getDescription();
+            $category = $this->em->getRepository(Category::class)
+                            ->find($categoryId);
+            $description = $category->getDescription();
             
             // Set $id if not yet validated
-            if ($this->getCategory($categoryId)->getValidated() === false) {
-                $id = $this->getCategory($categoryId)->getId();
+            if ($category->getValidated() === false) {
+                $id = $category->getId();
             }
             
             return $this->json([
@@ -62,7 +63,8 @@ class CategoryController extends AbstractController
             
             $data = $request->request->get('data');
             
-            $category = $this->getCategory($data['id']);
+            $category = $this->em->getRepository(Category::class)
+                            ->find($data['id']);
             
             $category->setTitle($data['title']);
             $category->setDescription($data['description']);
