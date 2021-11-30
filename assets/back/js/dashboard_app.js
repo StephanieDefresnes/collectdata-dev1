@@ -105,14 +105,15 @@ function chartArea(chartData, maxDataSitus) {
             }],
         },
         options: {
-        maintainAspectRatio: false,
-            layout: {
-            padding: {
-                left: 10,
-                right: 25,
-                top: 25,
-                bottom: 0
-            }
+            responsive: true,
+            maintainAspectRatio: false,
+                layout: {
+                padding: {
+                    left: 10,
+                    right: 25,
+                    top: 25,
+                    bottom: 0
+                }
             },
             scales: {
                 xAxes: [{
@@ -187,6 +188,7 @@ function chartBar(chartData, maxDataUsers) {
             }],
         },
         options: {
+            responsive: true,
             maintainAspectRatio: false,
             layout: {
                 padding: {
