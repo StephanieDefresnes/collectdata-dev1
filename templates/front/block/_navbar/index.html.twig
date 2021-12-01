@@ -24,9 +24,15 @@
                     {% if app.user %}
                         {% include 'front/block/_navbar/_contribution.html.twig' %}
                         {% include 'front/block/_navbar/_translation.html.twig' %}
-                    {% endif %}
-                    {% if app.user.langs|length > 1 %}
-                        {% include 'block/_locale_switcher.html.twig' %}
+                        {% if app.user.langs|length > 1 %}
+                            {% include 'block/_locale_switcher.html.twig' %}
+                        {% endif %}
+                    {% else %}
+                        <li class="nav-item mx-md-0 mx-sm-4 mx-0 px-md-0 px-md-0 px-sm-2 px-0{{ route == 'user_situs' ? ' active' }}">
+                            <a class="nav-link" href="{{ path('search_situ') }}">
+                                {{ 'label.contribution.search'|trans({}, 'messages') }}
+                            </a>
+                        </li>
                     {% endif %}
                 </ul>
                 <div class="d-flex">

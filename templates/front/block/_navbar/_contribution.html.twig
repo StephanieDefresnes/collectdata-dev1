@@ -6,12 +6,12 @@
                                                                                     'create_situ'] ? ' active' }}">
     <a class="nav-link dropdown-toggle" id="dropdown_contribs" 
        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            {{ 'label.contribution.title'|trans({}, 'messages') }}
+            {{ 'nav.contribs.title'|trans }}
     </a>
     <ul class="dropdown-menu pt-md-4 pt-0" aria-labelledby="dropdown_contribs">
         <li class="dropdown-item bg-dark-95{{ route == 'search_situ' ? ' active' }}">
             <a href="{{ path('search_situ') }}">
-                <i class="far fa-list-alt"></i> {{ 'nav.contribs.all'|trans }}
+                <i class="fas fa-search"></i> {{ 'label.contribution.search'|trans({}, 'messages') }}
             </a>
         </li>
         {% if app.user %}

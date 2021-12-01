@@ -1,14 +1,14 @@
 {% extends 'front/layout.html.twig' %}
-{% trans_default_domain 'user_messages' %}
+{% trans_default_domain 'front_messages' %}
 
-{% block title %}{{ 'nav.contribs.all'|trans }}{% endblock %}
+{% block title %}{{ 'label.contribution.search'|trans({}, 'messages') }}{% endblock %}
 
 {% block content %}
         
     {% block banner%}
         <div class="mt-3 mb-5 pt-5">
             <h1 class="h3 text-white">
-                {{ 'nav.contribs.all'|trans }}
+                {{ 'label.contribution.search'|trans({}, 'messages') }}
             </h1>
         </div>
     {% endblock %}
