@@ -51,9 +51,9 @@ class SituController extends AbstractController
         $this->translator = $translator;
     }
     
-    public function index(): Response
+    public function search(): Response
     {
-        return $this->render('front/situ/index.html.twig', [
+        return $this->render('front/situ/search.html.twig', [
             'controller_name' => 'SituController',
         ]);
     }
@@ -62,7 +62,7 @@ class SituController extends AbstractController
      * @IsGranted("IS_AUTHENTICATED_FULLY")
      * @IsGranted("ROLE_CONTRIBUTOR")
      */
-    public function getUserSitus()
+    public function userSitus()
     {
         return $this->render('front/situ/user.html.twig');
     }

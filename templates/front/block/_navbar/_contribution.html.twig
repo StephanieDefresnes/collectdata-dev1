@@ -1,13 +1,16 @@
 {% trans_default_domain 'user_messages' %}
 
-<li class="nav-item mx-md-0 mx-sm-4 mx-0 px-md-0 px-md-0 px-sm-2 px-0 dropdown{{ route in ['user_situs', 'create_situ'] ? ' active' }}">
+<li class="nav-item mx-md-0 mx-sm-4 mx-0 px-md-0 px-md-0 px-sm-2 px-0 dropdown{{ route in [
+                                                                                    'search_situ',
+                                                                                    'user_situs',
+                                                                                    'create_situ'] ? ' active' }}">
     <a class="nav-link dropdown-toggle" id="dropdown_contribs" 
        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             {{ 'label.contribution.title'|trans({}, 'messages') }}
     </a>
     <ul class="dropdown-menu pt-md-4 pt-0" aria-labelledby="dropdown_contribs">
-        <li class="dropdown-item bg-dark-95{{ route == '' ? ' active' }}">
-            <a href="{{ path('all_situs') }}">
+        <li class="dropdown-item bg-dark-95{{ route == 'search_situ' ? ' active' }}">
+            <a href="{{ path('search_situ') }}">
                 <i class="far fa-list-alt"></i> {{ 'nav.contribs.all'|trans }}
             </a>
         </li>
@@ -20,11 +23,6 @@
         <li class="dropdown-item bg-dark-95{{ route == 'create_situ' ? ' active' }}">
             <a href="{{ path('create_situ') }}">
                 <i class="far fa-edit"></i> {{ 'nav.contribs.add'|trans }}
-            </a>
-        </li>
-        <li class="dropdown-item bg-dark-95{{ route == '' ? ' active' }}">
-            <a href="">
-                <i class="fas fa-globe"></i> {{ 'nav.contribs.translate'|trans }}
             </a>
         </li>
         {% endif %}

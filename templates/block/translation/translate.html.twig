@@ -14,16 +14,36 @@
     
     <div id="fields" class="row">
         {% for key,field in form.fields %}
+            {% set borderEmpty = field.vars.value.value == '' ? ' border-danger' %}
 
             {% if field.vars.value.type == 'text' %}
             <div class="col-md-6 col-12 px-1">
                 <div class="form-group mb-2 px-2 pt-1 pb-2 rounded bg-white-50">
-                    <div class="d-flex justify-content-start mx-1 px-2">
-                        <label for="translation_form_fields_value_{{ key }}" class="line-12">
+                    
+                    {% if route == 'back_translation_create' %}
+                    <div class="row mt-2">
+                        <div class="col-12">
+                            <div class="d-flex justify-content-start col-12 mx-1 pt-2 px-2 font-italic">
+                                <label for="translation_form_fields_value_{{ key }}" class="line-11">
+                                    {{ field.vars.value.name }}
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                    {% endif %}
+                    
+                    <div class="d-flex justify-content-start mx-1 px-2 pb-1 line-12">
+                        <label for="translation_form_fields_value_{{ key }}">
                             {{ field.vars.value.name|trans({}, referent.name) }}
                         </label>
                     </div>
-                    {{ form_widget(field.value, {'attr': {'rows': '2', 'class': 'custom-textarea'}} ) }}
+                                
+                    {% if route == 'back_translation_create' %}
+                        </div>
+                    </div>
+                    {% endif %}
+                    
+                    {{ form_widget(field.value, {'attr': {'rows': '2', 'class': 'custom-textarea'~ borderEmpty}} ) }}
                     {{ form_widget(field.type) }}
                     {{ form_widget(field.name) }}
                 </div>
@@ -31,13 +51,35 @@
             {% else %}
             <div class="col-12 px-0">
                 <div class="form-group row mx-1 mb-2 pt-2 pb-2 rounded bg-white-50">
-                    <div class="d-flex justify-content-start col-md-6 col-12 p-2">
+                    
+                    {% if route == 'back_translation_create' %}
+                    <div class="col-12 mt-2">                            
+                        <div class="d-flex justify-content-startpt-2 px-2 font-italic">
+                            <label for="translation_form_fields_value_{{ key }}" class="line-11">
+                                {{ field.vars.value.name }}
+                            </label>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-12">
+                        <div class="row">
+                            <div class="col-12">
+                    {% endif %}
+                    
+                    <div class="d-flex justify-content-start {{ route == 'front_translation_create' ?
+                        ' col-md-6 col-12' }} p-2">
                         <label for="translation_form_fields_value_{{ key }}" class="line-11">
                             {{ field.vars.value.name|trans({}, referent.name)|nl2br }}
                         </label>
                     </div>
+                                
+                    {% if route == 'back_translation_create' %}
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+                    
                     <div class="col-md-6 col-12 px-2">
-                        {{ form_widget(field.value, {'attr': {'rows': '12'}} ) }}
+                        {{ form_widget(field.value, {'attr': {'rows': '12', 'class': borderEmpty}} ) }}
                         {{ form_widget(field.type) }}
                         {{ form_widget(field.name) }}
                     </div>
@@ -56,7 +98,7 @@
     {% set label = route == 'front_translation_create'
                     ? 'action.submit'|trans({}, 'messages')
                     : 'action.validate'|trans({}, 'messages') %}
-    <div class="form-group mb-0">
+    <div id="submit" class="form-group mb-0">
         {{ form_label(form.submit, label) }}
         {{ form_widget(form.submit) }}
     </div>

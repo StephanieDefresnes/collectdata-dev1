@@ -170,78 +170,87 @@ function loadSelectData($form, data, selectId, nextSelectId) {
             type: $form.attr('method'),
             data: data,
             success: function (html) {
-                
-                // Load next fields
-                let nextAll = $(selectId).parents('.formData').nextAll()
-                nextAll.each(function(i, obj){
-                    let objId = $(obj).find('.colForm').attr('id')
-                    
-                    // Destroy select2
-                    if ($('#'+ objId).data('select2'))
-                        $('#'+ objId).select2('destroy')
-                    
-                    // Replace from ajax
-                    $('#'+ objId).replaceWith($(html).find('#'+ objId))
-                    
-                    // Init select if necessary
-                    if ($('#'+ objId).is('select')) initSelect2('#'+ objId) 
-                })
-                
-                // If data have to be created (no data exists)
-                if (!$(nextSelectId).is('select')) {
-                    
-                    // Hide adding buttons
-                    if ($(selectId).attr('id') == 'situ_form_lang')
-                        toggleAddingButton('.colDataLang', 'hide')
-                    else if ($(selectId).attr('id') == 'situ_form_event')
-                        toggleAddingButton('.colData', 'hide')
-                    
-                    // Show all header fields container (event shown by default)
-                    removeClass($('#categoryLevel1, #categoryLevel2'), 'd-none') 
-                    removeClass($('#categoryLevel1, #categoryLevel2'), 'on-load')
-                }
-                // If options select exist (data exists)
-                else {
-                    // Add info in case of user has data not yet validated
-                    unvalidatedOption(nextSelectId)
-                    
-                    initSelect2(nextSelectId)
-                    
-                    // Show column of adding/remove buttons
-                    if ( $(selectId).attr('id') == 'situ_form_lang')
-                        toggleAddingButton('.colDataLang', 'show')
-                    else if ($(selectId).attr('id') == 'situ_form_event')
-                        toggleAddingButton('.colData', 'show')
-                    
-                    // Reset adding/remove buttons in case of necessity
-                    $('.formData').each(function(){
-                        $(this).find('.btnRemove').remove()
-                        $(this).find('.btnAdd').show()
+                $(nextSelectId).find('.editEntity').remove()
+            
+                if ($(selectId).val() == '')
+                    $(selectId).parents('.formData').nextAll().each(function(i, obj){
+                        $(obj).addClass('d-none')
                     })
-                }
                 
-                // Show next select container
-                if ($(selectId).val() != '') {
-                    if(nextSelectParent.hasClass('on-load')) {
-                        nextSelectParent
-                                .removeClass('d-none on-load')
+                else {
+
+                    // Load next fields
+                    let nextAll = $(selectId).parents('.formData').nextAll()
+                    nextAll.each(function(i, obj){
+                        let objId = $(obj).find('.colForm').attr('id')
+
+                        // Destroy select2
+                        if ($('#'+ objId).data('select2'))
+                            $('#'+ objId).select2('destroy')
+
+                        // Replace from ajax
+                        $('#'+ objId).replaceWith($(html).find('#'+ objId))
+
+                        // Init select if necessary
+                        if ($('#'+ objId).is('select')) initSelect2('#'+ objId) 
+                    })
+
+                    // If data have to be created (no data exists)
+                    if (!$(nextSelectId).is('select')) {
+
+                        // Hide adding buttons
+                        if ($(selectId).attr('id') == 'situ_form_lang')
+                            toggleAddingButton('.colDataLang', 'hide')
+                        else if ($(selectId).attr('id') == 'situ_form_event')
+                            toggleAddingButton('.colData', 'hide')
+
+                        // Show all header fields container (event shown by default)
+                        removeClass($('#categoryLevel1, #categoryLevel2'), 'd-none') 
+                        removeClass($('#categoryLevel1, #categoryLevel2'), 'on-load')
+                    }
+                    // If options select exist (data exists)
+                    else {
+                        // Add info in case of user has data not yet validated
+                        unvalidatedOption(nextSelectId)
+
+                        initSelect2(nextSelectId)
+
+                        // Show column of adding/remove buttons
+                        if ( $(selectId).attr('id') == 'situ_form_lang')
+                            toggleAddingButton('.colDataLang', 'show')
+                        else if ($(selectId).attr('id') == 'situ_form_event')
+                            toggleAddingButton('.colData', 'show')
+
+                        // Reset adding/remove buttons in case of necessity
+                        $('.formData').each(function(){
+                            $(this).find('.btnRemove').remove()
+                            $(this).find('.btnAdd').show()
+                        })
+                    }
+
+                    // Show next select container
+                    if ($(selectId).val() != '') {
+                        if(nextSelectParent.hasClass('on-load')) {
+                            nextSelectParent
+                                    .removeClass('d-none on-load')
+                                    .children('div').each(function() {
+                                        $(this).animate({ opacity: 1}, 250);
+                                    })
+                        }
+                        if (selectId == 'situ_form_categoryLevel2') {
+                            if ($('.card-body').hasClass('d-none')
+                                    && $('.card-footer').hasClass('d-none')) {
+                                $('.card-body, .card-footer')
+                                        .removeClass('d-none')
+                                        .animate({ opacity: 1}, 250)
+                            }
+                        }
+                    } else {
+                        nextSelectParent.addClass('d-none on-load')
                                 .children('div').each(function() {
-                                    $(this).animate({ opacity: 1}, 250);
+                                    $(this).css('opacity', 0); 
                                 })
                     }
-                    if (selectId == 'situ_form_categoryLevel2') {
-                        if ($('.card-body').hasClass('d-none')
-                                && $('.card-footer').hasClass('d-none')) {
-                            $('.card-body, .card-footer')
-                                    .removeClass('d-none')
-                                    .animate({ opacity: 1}, 250)
-                        }
-                    }
-                } else {
-                    nextSelectParent.addClass('d-none on-load')
-                            .children('div').each(function() {
-                                $(this).css('opacity', 0); 
-                            })
                 }
                 footerHeight()
             }
@@ -890,7 +899,7 @@ $(function() {
             }
                 
             // Load data or create them on action change
-            changeSelect($(this))
+            changeSelect($(this))                                         
         })
         
     } else {

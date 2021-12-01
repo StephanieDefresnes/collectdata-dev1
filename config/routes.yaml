@@ -170,9 +170,6 @@ back_situ_verify:
 ajaxFindTranslation:
     path:       /situ/ajaxFindTranslation
     controller: App\Controller\Front\SituController::ajaxFindTranslation
-all_situs:
-    path:       /{_locale}/contribs
-    controller: App\Controller\Front\SituController::index
 create_situ:
     path:       /{_locale}/contrib/{id}
     controller: App\Controller\Front\SituController::create
@@ -191,6 +188,9 @@ read_situ:
     methods:    ['GET']
     defaults:
         preview: null
+search_situ:
+    path:       /{_locale}/search
+    controller: App\Controller\Front\SituController::search
 translate_situ:
     path:       /{_locale}/translate/{situId}/{langId}
     controller: App\Controller\Front\SituController::translate
@@ -206,7 +206,7 @@ validation_situ:
         situ:     '\d+'
 user_situs:
     path:       /{_locale}/my-contribs
-    controller: App\Controller\Front\SituController::getUserSitus
+    controller: App\Controller\Front\SituController::userSitus
     
 # Translation
 ## back

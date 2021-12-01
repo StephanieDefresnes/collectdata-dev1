@@ -38,20 +38,20 @@
                 {{ form_errors(form) }}
             </div>
 
-            {% if form.lang is defined %}
-                <div id="lang" class="formData form-row mt-1 mb-4">
-                    <div class="{{ route == 'create_situ' ? 'col-md-5' : 'col-md-6' }} mb-md-0 mb-1 pt-md-1">
-                        {{ form_label(form.lang) }}
-                    </div>
-                    <div class="{{ route == 'create_situ' ? 'col-md-4' : 'col-md-6' }} col-sm-7 col-8">
-                        <div class="form-row">
-                            <div id="form-lang" class="col-md-12">
-                                {{ form_widget(form.lang) }}
-                            </div>
+            <div id="lang" class="formData form-row mt-1 mb-4{%
+                        if (langs|length == 1 and route == 'create_situ')
+                        or route == 'translate_situ' %} d-none{% endif %}">
+                <div class="{{ route == 'create_situ' ? 'col-md-5' : 'col-md-6' }} mb-md-0 mb-1 pt-md-1">
+                    {{ form_label(form.lang) }}
+                </div>
+                <div class="{{ route == 'create_situ' ? 'col-md-4' : 'col-md-6' }} col-sm-7 col-8">
+                    <div class="form-row">
+                        <div id="form-lang" class="col-md-12">
+                            {{ form_widget(form.lang) }}
                         </div>
                     </div>
                 </div>
-            {% endif %}
+            </div>
             
             <div id="event" class="formData form-row mb-4{{ langs|length != 1 and route == 'create_situ' ? ' d-none on-load'}}">
                 <div class="d-flex justify-content-start {{ route == 'create_situ' ? 'col-md-5' : 'col-md-6' }} mb-md-0 mb-1 pt-md-1">

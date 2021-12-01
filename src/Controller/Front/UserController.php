@@ -11,6 +11,7 @@ use App\Service\FileUploader;
 use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -56,7 +57,8 @@ class UserController extends AbstractController
     /**
      * @IsGranted("IS_AUTHENTICATED_FULLY")
      */
-    public function update( FileUploader $fileUploader,
+    public function update( ParameterBagInterface $parameters,
+                            FileUploader $fileUploader,
                             Request $request): Response
     {        
         // Get current user
@@ -69,6 +71,11 @@ class UserController extends AbstractController
         $currentImage = $this->getUser()->getImageFilename();
         
         if ($form->isSubmitted() && $form->isValid()) {
+            
+            // SUPER_VISITOR can't change his email
+            if (2 === $user->getId()) {
+                $user->setEmail($parameters->get('supervisitor_email'));
+            }
             
             if ($request->request->get('removeImg')) {
                 $user->setImageFilename(null);
