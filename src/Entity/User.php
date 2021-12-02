@@ -146,8 +146,6 @@ class User implements UserInterface
      * @ORM\OneToMany(targetEntity=Message::class, mappedBy="recipientUser", fetch="EXTRA_LAZY")
      */
     private $recipients;
-    
-    protected $captcha;
 
     /**
      * @ORM\OneToMany(targetEntity=Message::class, mappedBy="senderUser", orphanRemoval=true)
@@ -163,23 +161,18 @@ class User implements UserInterface
      * @ORM\OneToMany(targetEntity=Page::class, mappedBy="user")
      */
     private $pages;
-//
-//    /**
-//     * @ORM\OneToMany(targetEntity=Page::class, mappedBy="User")
-//     */
-//    private $pages;
 
     public function __construct()
     {
-//        $this->langs = new ArrayCollection();
-        $this->contributorLangs = new ArrayCollection();
-        $this->situs = new ArrayCollection();
-        $this->events = new ArrayCollection();
         $this->categories = new ArrayCollection();
+        $this->contributorLangs = new ArrayCollection();
+        $this->events = new ArrayCollection();
+        $this->langs = new ArrayCollection();
+        $this->pages = new ArrayCollection();
+        $this->situs = new ArrayCollection();
         $this->senders = new ArrayCollection();
         $this->recipients = new ArrayCollection();
         $this->translations = new ArrayCollection();
-//        $this->pages = new ArrayCollection();
     }
 
     public function __toString()
@@ -415,30 +408,6 @@ class User implements UserInterface
 
         return $this;
     }
-//    
-//    /**
-//     * @return Collection|Lang[]
-//     */
-//    public function getLangs(): Collection
-//    {
-//        return $this->langs;
-//    }
-//     
-//    public function addLang(Lang $lang): self
-//    {
-//        $this->langs[] = $lang;
-//        
-//        return $this;
-//    }
-//
-//    public function removeLang(Lang $lang): self
-//    {
-//        if ($this->langs->contains($lang)) {
-//            $this->langs->removeElement($lang);
-//        }
-//        
-//        return $this;
-//    }
 
     public function getLangContributor(): ?bool
     {
@@ -502,16 +471,6 @@ class User implements UserInterface
         $this->isVerified = $isVerified;
 
         return $this;
-    }
-    
-    public function getCaptcha()
-    {
-      return $this->captcha;
-    }
-
-    public function setCaptcha($captcha)
-    {
-      $this->captcha = $captcha;
     }
     
     /**
@@ -668,18 +627,6 @@ class User implements UserInterface
         if (!$this->senders->contains($sender)) {
             $this->senders[] = $sender;
             $sender->setSenderUser($this);
-        }
-
-        return $this;
-    }
-
-    public function removeSender(Message $sender): self
-    {
-        if ($this->senders->removeElement($sender)) {
-            // set the owning side to null (unless already changed)
-            if ($sender->getSenderUser() === $this) {
-                $sender->setSenderUser(null);
-            }
         }
 
         return $this;
