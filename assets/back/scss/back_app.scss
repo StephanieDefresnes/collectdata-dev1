@@ -198,6 +198,9 @@ label {
     padding-left: 0.5rem;
     padding-right: 10px;
 }
+.pcr-3 {
+    padding-right: 1rem !important;
+}
 .id {
     &::before {
         content: '#';
@@ -308,5 +311,9 @@ table td font { vertical-align: unset !important; }
     }
     .text-left {
         text-align: right !important;
+    }
+    .pcr-3 {
+        padding-right: unset !important;
+        padding-left: 1rem !important;
     }
 }
