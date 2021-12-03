@@ -10,13 +10,6 @@ require('startbootstrap-sb-admin-2/js/sb-admin-2.min.js');
     
 $(document).ready(function(){
     
-    // Responsive Navbar collapse menu
-    if ($(window).width() < 768) $('.sidebar .collapse').removeClass('show');
-
-    $(window).resize(function () {
-        if ($(window).width() >= 768) $('.sidebar .nav-item.active .collapse').collapse('show');
-    });
-    
     // Bootstrap tooltip
     $('body').find('[data-toggle="tooltip"]').tooltip({trigger: 'hover'})
     
@@ -24,5 +17,13 @@ $(document).ready(function(){
     $('body').find('#hideFlash').click(function() {
         $('#flash_message').fadeOut();
     })
+    
+    // Hide responsive Sidebar collapse menu on width < 768
+    let sidebar = $('#accordionSidebar');
+    if ($(window).width() < 768) sidebar.addClass('toggled')
+
+    $(window).resize(function () {
+        if ($(window).width() < 768) sidebar.addClass('toggled')
+    });
     
 })

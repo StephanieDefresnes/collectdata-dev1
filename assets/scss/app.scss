@@ -223,6 +223,14 @@ table.dataTable {
         }
         & .dataTables_filter {
             text-align: left !important;
+            & .search {
+                width: calc(100% - 95px) !important;
+            }
+        }
+        & .dataTables_paginate {
+            .page-item:not(.previous):not(.next) {
+                display: none;
+            }
         }
     }
 }
@@ -231,7 +239,7 @@ table.dataTable {
         & > label {
             width: 100% !important;
         }
-         & > input {
+        & > input {
             width: 100% !important;
             max-width: 100% !important;
             display: block;
