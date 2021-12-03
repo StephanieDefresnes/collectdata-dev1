@@ -2,7 +2,6 @@
 
 namespace App\Mailer;
 
-use App\Entity\Lang;
 use App\Entity\Message;
 use App\Entity\Situ;
 use App\Entity\User;
@@ -97,15 +96,22 @@ class Mailer
             ],
             UrlGeneratorInterface::ABSOLUTE_URL
         );
+        
+        $contactUrl = $this->router->generate(
+            'front_contact', ['_locale' => $recipientLang],
+            UrlGeneratorInterface::ABSOLUTE_URL
+        );
+        
         $context = [
             'url' => $url,
             'user' => $userName,
             'url' => $url,
             'alert' => $alert ? $alert : '',
             'website_name' => $this->parameters->get('configuration')['name'],
+            'contact_url' => $contactUrl,
         ];
         
-        $this->sendEMail($recipient, $subject, $template, $context);
+        $this->sendEmail($recipient, $subject, $template, $context);
     }
     
     public function sendUserMessage(Message $message, User $user)
@@ -117,7 +123,7 @@ class Mailer
                 ],
             'email_messages', $locale = $this->parameters->get('locale')
         );
-        $template = 'email/envelope.html.twig';
+        $template = 'email/situ/envelope.html.twig';
         
         $url = $this->router->generate(
             'front_envelope_read', [
@@ -126,23 +132,31 @@ class Mailer
             ],
             UrlGeneratorInterface::ABSOLUTE_URL
         );
+        
+        $contactUrl = $this->router->generate(
+            'front_contact', ['_locale' => $recipientLang],
+            UrlGeneratorInterface::ABSOLUTE_URL
+        );
+        
         $context = [
             'url' => $url,
             'user' => $user->getName(),
             'website_name' => $this->parameters->get('configuration')['name'],
+            'contact_url' => $contactUrl,
         ];
         
-        $this->sendEMail($recipient, $subject, $template, $context);
+        $this->sendEmail($recipient, $subject, $template, $context);
     }
     
     public function sendUserSituValidation(Situ $situ, User $user)
     {
         $recipient = $user->getEmail();
+        $recipientLang = $user->getLang()->getLang();
         $subject = $this->translator->trans(
             'situ.validation.subject', [
                 '%website_name%' => $this->parameters->get('configuration')['name'],
                 ],
-            'email_messages', $locale = $user->getLang()->getLang()
+            'email_messages', $locale = $recipientLang
         );
         $template = 'email/situ/contributor_validation.html.twig';
         
@@ -154,23 +168,114 @@ class Mailer
             ],
             UrlGeneratorInterface::ABSOLUTE_URL
         );
+        
+        $contactUrl = $this->router->generate(
+            'front_contact', ['_locale' => $recipientLang],
+            UrlGeneratorInterface::ABSOLUTE_URL
+        );
+        
         $context = [
             'url' => $url,
             'user' => $user->getName(),
             'website_name' => $this->parameters->get('configuration')['name'],
+            'contact_url' => $contactUrl,
         ];
         
-        $this->sendEMail($recipient, $subject, $template, $context);
+        $this->sendEmail($recipient, $subject, $template, $context);
     }
     
-    private function sendEMail($recipient, $subject, $template, $context)
+    public function sendUserToUser(User $sender, User $recipient, $formData)
+    {
+        $recipientLang = $recipient->getLang()->getLang();
+        
+        $subject = $this->translator->trans(
+            'user.subject', [
+                '%website_name%' => $this->parameters->get('configuration')['name'],
+            ],
+            'email_messages', $locale = $recipientLang
+        );
+        
+        $senderUrl = $this->router->generate(
+            'user_visit',
+            [
+                '_locale' => $recipientLang,
+                'slug' => $sender->getSlug(),
+            ],
+            UrlGeneratorInterface::ABSOLUTE_URL
+        );
+        
+        $template = 'email/user/email.html.twig';
+        
+        // Context
+        $contextMessage = $this->translator->trans(
+            'user.content', [
+                '%subject%' => $formData['subject'],
+                '%message%' =>$formData['message'],
+            ],
+            'email_messages', $locale = $recipientLang
+        ); 
+        
+        // Reply depending on sender agreement
+        
+        if (true === $formData['agreeEmail']) {
+            
+            $translationChain = 'user.reply_email_agree';
+            $senderEmailAgree = $sender->getEmail();
+            $contextFooter = '';
+            
+        } else {
+            
+            $translationChain = 'user.reply_email_disagree';
+            $senderEmailAgree = null;
+        
+            $contactUrl = $this->router->generate(
+                'front_contact', ['_locale' => $recipientLang],
+                UrlGeneratorInterface::ABSOLUTE_URL
+            );
+            
+            $contextFooter = $this->translator->trans(
+                    'user.reply_footer', [
+                            '%contact_url%' => $contactUrl,
+                        ],
+                        'email_messages', $locale = $recipientLang
+                    );
+        }
+        
+        $contextReply = $this->translator->trans(
+                    $translationChain, [
+                        '%sender_url%' => $senderUrl,
+                        '%sender_email%' => $sender->getEmail(),
+                    ],
+                    'email_messages', $locale = $recipientLang
+                );
+        
+        $context = [
+            'recipient' => $recipient->getName(),
+            'sender' => $sender->getName(),
+            'content' => $contextMessage,
+            'reply' => $contextReply,
+            'website_name' => $this->parameters->get('configuration')['name'],
+            'footer' => $contextFooter,
+        ];
+        
+        $this->sendEmail($recipient->getEmail(), $subject, $template, $context, $senderEmailAgree);
+    }
+    
+    private function sendEmail($recipient, $subject, $template, $context, $senderEmail = null)
     {
         $nameSite = $this->parameters->get('configuration')['name'];
         $sender = $this->parameters->get('configuration')['from_email'];
             
-        $email = (new TemplatedEmail())
+        $email = (new TemplatedEmail());
+        
+        $email
             ->from(new Address($sender, $nameSite))
             ->to(new Address($recipient))
+        ;
+        
+        if ($senderEmail) $email->replyTo(new Address($senderEmail));
+        
+        $email
             ->subject($subject)
             ->htmlTemplate($template)
             ->context($context)
@@ -221,6 +326,7 @@ class Mailer
         $email = (new Email())
             ->from(new Address($sender, $nameSite))
             ->to(new Address($toContact))
+            ->replyTo(new Address($contactFormData['email']))
             ->subject($subject)
             ->text($messageContent.\PHP_EOL.\PHP_EOL.
                 $senderLabel.' '.$contactFormData['name'].', '.$contactFormData['email'].\PHP_EOL.

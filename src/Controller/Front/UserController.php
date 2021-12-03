@@ -7,6 +7,7 @@ use App\Entity\Situ;
 use App\Entity\User;
 use App\Form\Front\User\UserContactType;
 use App\Form\Front\User\UserUpdateFormType;
+use App\Mailer\Mailer;
 use App\Service\FileUploader;
 use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
@@ -145,7 +146,9 @@ class UserController extends AbstractController
         ]);
     }
 
-    public function visit(Request $request, $slug): Response
+    public function visit(  Mailer $mailer,
+                            Request $request,
+                            $slug)
     {
         $user = $this->em->getRepository(User::class)
                 ->findOneBy(['slug' => $slug]);
@@ -159,7 +162,22 @@ class UserController extends AbstractController
         
         if($form->isSubmitted() && $form->isValid()) {
             
-            // TODO messenger
+            $formData = $form->getData();
+            $sender = $this->security->getUser();
+            
+            try {
+                $mailer->sendUserToUser($sender, $user, $formData);
+                
+                $msg = $this->translator
+                        ->trans('account.visit.contact.flash.success', [], 'user_messages');
+                $this->addFlash('success', $msg);
+            } catch (TransportExceptionInterface $e) {
+                $msg = $this->translator
+                        ->trans('contact.form.flash.error', [],
+                                'front_messages', $locale = locale_get_default());
+                $this->addFlash('error', $msg);
+            }
+            return $this->redirectToRoute('user_visit', ['slug' => $user->getSlug()]);            
         }
         
         return $this->render('front/user/account/profile/index.html.twig', [

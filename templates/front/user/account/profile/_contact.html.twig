@@ -1,4 +1,4 @@
-{% trans_default_domain 'messenger_messages' %}
+{% trans_default_domain 'front_messages' %}
 
 
 <div class="accordion" id="accordionExample">
@@ -17,6 +17,8 @@
                     {% if app.user %}
                         
                         {{ form_start(form) }}
+                            {{ form_errors(form) }}
+                        
                             <div class="d-flex justify-content-start row mb-4">
                                 <div class="col-md-2 col-12 mt-1">
                                     {{ form_label(form.subject) }}
@@ -32,12 +34,20 @@
                                     {{ form_row(form.message) }}
                                 </div>
                             </div>
+                    
+                            <div class="d-flex justify-content-start">
+                                {{ form_row(form.agreeEmail) }}
+                            </div>
 
-                            <div class="d-flex justify-content-end mt-4">
+                            <div class="text-center mt-4">
                                 <button class="btn btn-primary" type="submit">
                                     <i class="far fa-paper-plane"></i>
-                                    <span class="px-1">{{ 'contact.submit'|trans }}</span>
+                                    <span class="px-1">{{ 'action.send'|trans({}, 'messages') }}</span>
                                 </button>
+                            </div>
+                    
+                            <div class="mt-4 pt-5">
+                                {{ form_row(form.captcha) }}
                             </div>
                         {{ form_end(form) }}
                         

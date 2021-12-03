@@ -307,7 +307,6 @@ user_update:
 user_visit:
     path:       /{_locale}/visit/{slug}
     controller: App\Controller\Front\UserController::visit
-    methods:    ['GET']
 
 ## == Security == ##
 # Error

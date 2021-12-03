@@ -2,7 +2,8 @@
     <style>
         #email-content {max-width:500px;margin:0 auto;background:#fff;border:1px solid #4177d6;padding:6px;font-size: .875rem;}
         #email-content img {width:100%;height:auto;}
-        #email-content .content {padding:6px;font-size: .875rem;}
+        #email-content .content {padding:6px;font-size:1rem;}
+        #email-content .noreply {text-align:center;font-size:80%;padding:10px;background:#aaa;color:#fff;margin-top:1.5em;}
     </style>
     <div id="email-content">
     
@@ -14,7 +15,8 @@
                     '%user%': user,
                     '%url%': url,
                     '%website_name%': name_site,
-                    '%website_url%': app.request.schemeAndHttpHost
+                    '%website_url%': app.request.schemeAndHttpHost,
+                    '%contact_url%': contact_url
                 }, 'email_messages')|raw|nl2br
             }}
             

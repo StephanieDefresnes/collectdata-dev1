@@ -1,9 +1,10 @@
 {% apply inline_css %}
     <style>
-        #email-content {max-width:500px;margin:0 auto;background:#fff;border:1px solid #4177d6;padding:6px;font-size: .875rem;}
+        #email-content {max-width:500px;margin:0 auto;background:#fff;padding:6px;}
         #email-content img {width:100%;height:auto;}
         #email-content .content {padding:6px;font-size:1rem;}
-        #email-content .noreply {text-align:center;font-size:80%;padding:10px;background:#aaa;color:#fff;margin-top:1.5em;}
+        #email-content .content .message {padding:6px;border:1px solid #ddd}
+        #email-content .noreply {display:block;text-align:center;font-size:80%;padding:10px;background:#aaa;color:#fff;margin-top:1.5em;}
     </style>
     <div id="email-content">
     
@@ -11,14 +12,14 @@
             
         <div class="content">
             
-            {{ alert|raw|nl2br }}
-            
-            {{ 'situ.validate.message'|trans({
-                    '%user%': user,
-                    '%url%': url,
+            {{ 'user.message'|trans({
+                    '%recipient%': recipient,
+                    '%sender%': sender,
+                    '%content%': content,
+                    '%reply%': reply,
                     '%website_name%': name_site,
                     '%website_url%': app.request.schemeAndHttpHost,
-                    '%contact_url%': contact_url
+                    '%footer%': footer
                 }, 'email_messages')|raw|nl2br
             }}
             

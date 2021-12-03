@@ -42,3 +42,8 @@
     white-space: pre-line;
     text-align:left;
 }
+
+// User visit
+#user_contact_captcha > .grecaptcha-badge {
+    position: absolute !important;
+}
