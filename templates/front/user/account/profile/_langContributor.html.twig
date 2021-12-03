@@ -1,10 +1,9 @@
 {% trans_default_domain 'user_messages' %}
 
 <div id="form-translation" data-translation="{{ user.contributorLangs|length }}">
-{% if user.langContributor and user.contributorLangs %}
     <div class="row mb-lg-2 mb-3">
-        <div class="d-sm-flex justify-content-start col-lg-5 mb-3 text-secondary">
-            <p>{{ 'label_dp.translator'|trans({}, 'messages') }}</p>
+        <div class="d-sm-flex justify-content-start col-lg-5 text-secondary">
+            <p class="mb-0">{{ 'label_dp.translator'|trans({}, 'messages') }}</p>
         </div>
         <div class="col-lg-7">
             {% if route == 'user_account' %}
@@ -16,7 +15,7 @@
                     {% endif %}
                 </p>
             {% endif %}
-            <ul id="contributorLangs" class="d-sm-flex justify-content-start pl-0 line-11">
+            <ul id="contributorLangs" class="d-sm-flex justify-content-start mb-0 pl-0 line-11">
                 {% if (locale == 'ar') or (locale == 'he') or (locale == 'ur') %}
                     {% set langs = user.contributorLangs|reverse %}
                 {% else %}
@@ -28,6 +27,4 @@
             </ul>
         </div>
     </div>
-
-{% endif %}
 </div>

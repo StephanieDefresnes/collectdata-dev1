@@ -70,7 +70,7 @@
                                 {{ 'label_dp.lang'|trans }}
                             {% endif %}
                         </span>
-                        <div class="col-lg-7 line-11 px-3">
+                        <div class="col-lg-7 px-3">
                             <span class="d-sm-flex justify-content-start text-capitalize">
                                 {% if (locale == 'ar') or (locale == 'he') or (locale == 'ur') %}
                                     {% set langs = user.langs|reverse %}
@@ -93,7 +93,7 @@
                                 {{ 'status.title_dp'|trans }}
                             {% endif %}
                         </span>
-                        <div class="d-sm-flex justify-content-start col-lg-7 line-11 px-3">
+                        <div class="d-sm-flex justify-content-start col-lg-7 px-3">
                             {% if (locale == 'ar') or (locale == 'he') or (locale == 'ur') %}
                                 {% set userRoles = user.roles|reverse %}
                             {% else %}
@@ -107,10 +107,15 @@
                     </div>
 
                     {{ include('front/user/account/profile/_contribs.html.twig') }}
-                    {{ include('front/user/account/profile/_langContributor.html.twig') }}
-                    {% if route == 'user_visit' %}
+                    
+                    {% if user.langContributor and user.contributorLangs|length >= 1 %}
+                        {{ include('front/user/account/profile/_langContributor.html.twig') }}
+                    {% endif %}
+                    
+                    {% if route == 'user_visit' and app.user != user %}
                         {{ include('front/user/account/profile/_contact.html.twig') }}
                     {% endif %}
+                    
                 </div>
 
             </div>
@@ -132,4 +137,11 @@
 {% block javascripts %}
     {{ parent() }}
     {{ encore_entry_script_tags('user_account_app', null, 'frontApp') }}
+    {% if app.user and route == 'user_visit' and app.user != user %}
+        <script>
+            var recaptcha = {'sitekey' : '{{ google_recaptcha_site_key }}'}
+        </script> 
+        <script src="{{ asset('recaptcha/recaptcha.js') }}"></script>
+        <script src="https://www.google.com/recaptcha/api.js?onload=onGoogleReCaptchaApiLoad&render=explicit&hl={{ app.request.locale }}" async defer></script>
+    {% endif %}
 {% endblock %}
