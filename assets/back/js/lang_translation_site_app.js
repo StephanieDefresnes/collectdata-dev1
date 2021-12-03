@@ -78,7 +78,7 @@ $(function() {
     $('#createTranslation').click(function() {
         let referentId = $('#siteEnvironnement').val()
         let langId = $('#siteLang').val()
-        location.href = '/'+ path["locale"] +'/back/translation/'+ referentId + '/' + langId
+        location.href = '/'+ path["locale"] +'/back/translation/create/'+ referentId + '/' + langId
     })
     
 });
