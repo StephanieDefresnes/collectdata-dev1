@@ -45,7 +45,7 @@ class PageController extends AbstractController
                 return $this->redirectToRoute('front_contact_confirm');
             } catch (TransportExceptionInterface $e) {
                 $msg = $this->translator
-                        ->trans('contact.flash.error', [],
+                        ->trans('contact.form.flash.error', [],
                                 'front_messages', $locale = locale_get_default());
                 $this->addFlash('error', $msg);
                 return $this->redirectToRoute('front_contact');
