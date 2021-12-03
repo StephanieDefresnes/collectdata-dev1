@@ -75,144 +75,146 @@
                     <h6 class="m-0 font-weight-bold text-primary">{{ 'action.read_title'|trans }}</h6>
                 </div>
                 <div class="card-body">
-                        <div class="user-field pb-3 row">
-                            <div class="d-sm-flex justify-content-start col-sm-4 line-11">
-                                <strong>{{ 'label_dp.name'|trans }}</strong>
-                            </div>
-                            <div class="d-sm-flex justify-content-start col-sm-8 line-12">
-                                {{ user.name }}
-                            </div>
+                    <div class="user-field pb-3 row">
+                        <div class="d-sm-flex justify-content-start col-sm-4 line-11">
+                            <strong>{{ 'label_dp.name'|trans }}</strong>
                         </div>
-                        <div class="user-field pb-3 row">
-                            <div class="d-sm-flex justify-content-start col-sm-4 line-11">
-                                <strong>{{ 'label_dp.email'|trans }}</strong>
-                            </div>
-                            <div class="d-sm-flex justify-content-start col-sm-8 line-12">
-                                <a href="mailto:{{ user.email }}">{{ user.email }}</a>
-                            </div>
+                        <div class="d-sm-flex justify-content-start col-sm-8 line-12">
+                            {{ user.name }}
                         </div>
-                        <div class="user-field pb-3 row">
-                            <div class="d-sm-flex justify-content-start col-sm-4 line-11">
-                                <strong>{{ 'label_dp.enabled'|trans }}</strong>
-                            </div>
-                            <div class="d-sm-flex justify-content-start col-sm-8 line-12">
-                                {{ user.enabled ? 'yes'|trans : 'no'|trans }}
-                            </div>
+                    </div>
+                    {% if user.id != supremeAdminId %}
+                    <div class="user-field pb-3 row">
+                        <div class="d-sm-flex justify-content-start col-sm-4 line-11">
+                            <strong>{{ 'label_dp.email'|trans }}</strong>
                         </div>
-                        <div class="user-field pb-3 row">
-                            <div class="d-sm-flex justify-content-start col-sm-4 line-11">
-                                <strong>{{ 'label_dp.roles'|trans }}</strong>
-                            </div>
-                            <div class="d-sm-flex justify-content-start col-sm-8 line-12">
-                                {% if (locale == 'ar') or (locale == 'he') or (locale == 'ur') %}
-                                    {% set userRoles = user.roles|reverse %}
+                        <div class="d-sm-flex justify-content-start col-sm-8 line-12">
+                            <a href="mailto:{{ user.email }}">{{ user.email }}</a>
+                        </div>
+                    </div>
+                    {% endif %}
+                    <div class="user-field pb-3 row">
+                        <div class="d-sm-flex justify-content-start col-sm-4 line-11">
+                            <strong>{{ 'label_dp.enabled'|trans }}</strong>
+                        </div>
+                        <div class="d-sm-flex justify-content-start col-sm-8 line-12">
+                            {{ user.enabled ? 'yes'|trans : 'no'|trans }}
+                        </div>
+                    </div>
+                    <div class="user-field pb-3 row">
+                        <div class="d-sm-flex justify-content-start col-sm-4 line-11">
+                            <strong>{{ 'label_dp.roles'|trans }}</strong>
+                        </div>
+                        <div class="d-sm-flex justify-content-start col-sm-8 line-12">
+                            {% if (locale == 'ar') or (locale == 'he') or (locale == 'ur') %}
+                                {% set userRoles = user.roles|reverse %}
+                            {% else %}
+                                {% set userRoles = user.roles|sort %}
+                            {% endif %}
+                            {% for role in userRoles|filter(v => v != 'ROLE_USER') %}
+                                {% set roleName = 'user.'~role %}
+                                {{ roleName|trans }}{% if not loop.last %} - {% endif %}
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div class="user-field pb-3 row">
+                        <div class="d-sm-flex justify-content-start col-sm-4 line-11">
+                            <strong>
+                                {% if user.langs|length > 1 %}
+                                    {{ 'label_dp.langs'|trans }}
                                 {% else %}
-                                    {% set userRoles = user.roles|sort %}
+                                    {{ 'label_dp.lang'|trans }}
                                 {% endif %}
-                                {% for role in userRoles|filter(v => v != 'ROLE_USER') %}
-                                    {% set roleName = 'user.'~role %}
-                                    {{ roleName|trans }}{% if not loop.last %} - {% endif %}
-                                {% endfor %}
-                            </div>
+                            </strong>
                         </div>
-                        <div class="user-field pb-3 row">
-                            <div class="d-sm-flex justify-content-start col-sm-4 line-11">
-                                <strong>
-                                    {% if user.langs|length > 1 %}
-                                        {{ 'label_dp.langs'|trans }}
-                                    {% else %}
-                                        {{ 'label_dp.lang'|trans }}
-                                    {% endif %}
-                                </strong>
-                            </div>
-                            <div class="d-sm-flex justify-content-start col-sm-8 line-12">
+                        <div class="d-sm-flex justify-content-start col-sm-8 line-12">
+                            {% if (locale == 'ar') or (locale == 'he') or (locale == 'ur') %}
+                                {% set userLangs = user.langs|reverse %}
+                            {% else %}
+                                {% set userLangs = user.langs|sort %}
+                            {% endif %}
+                            {% for lang in userLangs %}
+                                {{ lang.englishName }}{% if not loop.last %} - {% endif %}
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div class="user-field pb-3 row">
+                        <div class="d-sm-flex justify-content-start col-sm-4 line-11">
+                            <strong>{{ 'label_dp.translator'|trans }}</strong>
+                        </div>
+                        <div class="d-sm-flex justify-content-start col-sm-8 line-12">
+                            {% if user.langContributor and user.contributorLangs %}
                                 {% if (locale == 'ar') or (locale == 'he') or (locale == 'ur') %}
-                                    {% set userLangs = user.langs|reverse %}
+                                    {% set langsContributor = user.contributorLangs|reverse %}
                                 {% else %}
-                                    {% set userLangs = user.langs|sort %}
+                                    {% set langsContributor = user.contributorLangs|sort %}
                                 {% endif %}
-                                {% for lang in userLangs %}
+                                {% for lang in langsContributor %}
                                     {{ lang.englishName }}{% if not loop.last %} - {% endif %}
                                 {% endfor %}
-                            </div>
-                        </div>
-                        <div class="user-field pb-3 row">
-                            <div class="d-sm-flex justify-content-start col-sm-4 line-11">
-                                <strong>{{ 'label_dp.translator'|trans }}</strong>
-                            </div>
-                            <div class="d-sm-flex justify-content-start col-sm-8 line-12">
-                                {% if user.langContributor and user.contributorLangs %}
-                                    {% if (locale == 'ar') or (locale == 'he') or (locale == 'ur') %}
-                                        {% set langsContributor = user.contributorLangs|reverse %}
-                                    {% else %}
-                                        {% set langsContributor = user.contributorLangs|sort %}
-                                    {% endif %}
-                                    {% for lang in langsContributor %}
-                                        {{ lang.englishName }}{% if not loop.last %} - {% endif %}
-                                    {% endfor %}
-                                {% endif %}
-                            </div>
-                        </div>
-                        <div class="user-field pb-3 row">
-                            <div class="d-sm-flex justify-content-start col-sm-4 line-11">
-                                <strong>{{ 'label_dp.date_create'|trans }}</strong>
-                            </div>
-                            <div class="d-sm-flex justify-content-start col-sm-8 line-12">
-                                {{ user.dateCreate ? user.dateCreate|format_datetime : '' }}
-                            </div>
-                        </div>
-                        {% if user.dateLastLogin %}
-                        <div class="user-field pb-3 row">
-                            <div class="d-sm-flex justify-content-start col-sm-4 line-11">
-                                <strong>{{ 'label_dp.date_login'|trans }}</strong>
-                            </div>
-                            <div class="d-sm-flex justify-content-start col-sm-8 line-12">
-                                {{ user.dateLastLogin ? user.dateLastLogin|format_datetime : '' }}
-                            </div>
-                        </div>
-                        {% endif %}
-                        {% if user.dateUpdate %}
-                        <div class="user-field pb-3 row">
-                            <div class="d-sm-flex justify-content-start col-sm-4 line-11">
-                                <strong>{{ 'label_dp.date_update'|trans }}</strong>
-                            </div>
-                            <div class="d-sm-flex justify-content-start col-sm-8 line-12">
-                                {{ user.dateUpdate ? user.dateUpdate|format_datetime : '' }}
-                            </div>
-                        </div>
-                        {% endif %}
-                        <div class="user-field pb-3 row">
-                            <div class="d-sm-flex justify-content-start col-sm-4 line-11">
-                                <strong>{{ 'label_dp.contribution.count_title_back'|trans }}</strong>
-                            </div>
-                            <div class="d-sm-flex justify-content-start col-sm-8 line-12">
-                                {% if situs ==  0 %}{{ 'label.contribution.empty'|trans }}
-                                {% elseif situs == 1 %}{{ 'label.contribution.single'|trans }}
-                                {% else %}{{ 'label.contribution.count'|trans({'%situs%' : situs }) }}{% endif %}
-                            </div>
-                        </div>
-                        {% if can_access %}
-                            {% if user.forbiddenAccess %}
-                            <div class="user-field pb-3 row">
-                                <div class="d-sm-flex justify-content-start col-sm-4 line-11">
-                                    <strong>{{ 'user.read.forbidden_acces.label'|trans({}, 'back_messages') }}</strong>
-                                </div>
-                                <div class="d-sm-flex justify-content-start col-sm-8 line-12">
-                                        {{ user.forbiddenAccess }}
-                                </div>
-                            </div>
                             {% endif %}
-                            {% if user.adminNote %}
-                            <div class="user-field pb-3 row">
-                                <div class="d-sm-flex justify-content-start col-sm-4 line-11">
-                                    <strong>{{ 'label_dp.note'|trans }}</strong>
-                                </div>
-                                <div class="col-sm-8 text-left line-12">
-                                    {{ user.adminNote|nl2br }}
-                                </div>
+                        </div>
+                    </div>
+                    <div class="user-field pb-3 row">
+                        <div class="d-sm-flex justify-content-start col-sm-4 line-11">
+                            <strong>{{ 'label_dp.date_create'|trans }}</strong>
+                        </div>
+                        <div class="d-sm-flex justify-content-start col-sm-8 line-12">
+                            {{ user.dateCreate ? user.dateCreate|format_datetime : '' }}
+                        </div>
+                    </div>
+                    {% if user.dateLastLogin %}
+                    <div class="user-field pb-3 row">
+                        <div class="d-sm-flex justify-content-start col-sm-4 line-11">
+                            <strong>{{ 'label_dp.date_login'|trans }}</strong>
+                        </div>
+                        <div class="d-sm-flex justify-content-start col-sm-8 line-12">
+                            {{ user.dateLastLogin ? user.dateLastLogin|format_datetime : '' }}
+                        </div>
+                    </div>
+                    {% endif %}
+                    {% if user.dateUpdate %}
+                    <div class="user-field pb-3 row">
+                        <div class="d-sm-flex justify-content-start col-sm-4 line-11">
+                            <strong>{{ 'label_dp.date_update'|trans }}</strong>
+                        </div>
+                        <div class="d-sm-flex justify-content-start col-sm-8 line-12">
+                            {{ user.dateUpdate ? user.dateUpdate|format_datetime : '' }}
+                        </div>
+                    </div>
+                    {% endif %}
+                    <div class="user-field pb-3 row">
+                        <div class="d-sm-flex justify-content-start col-sm-4 line-11">
+                            <strong>{{ 'label_dp.contribution.count_title_back'|trans }}</strong>
+                        </div>
+                        <div class="d-sm-flex justify-content-start col-sm-8 line-12">
+                            {% if situs ==  0 %}{{ 'label.contribution.empty'|trans }}
+                            {% elseif situs == 1 %}{{ 'label.contribution.single'|trans }}
+                            {% else %}{{ 'label.contribution.count'|trans({'%situs%' : situs }) }}{% endif %}
+                        </div>
+                    </div>
+                    {% if can_access %}
+                        {% if user.forbiddenAccess %}
+                        <div class="user-field pb-3 row">
+                            <div class="d-sm-flex justify-content-start col-sm-4 line-11">
+                                <strong>{{ 'user.read.forbidden_acces.label'|trans({}, 'back_messages') }}</strong>
                             </div>
-                            {% endif %}
+                            <div class="d-sm-flex justify-content-start col-sm-8 line-12">
+                                    {{ user.forbiddenAccess }}
+                            </div>
+                        </div>
                         {% endif %}
+                        {% if user.adminNote %}
+                        <div class="user-field pb-3 row">
+                            <div class="d-sm-flex justify-content-start col-sm-4 line-11">
+                                <strong>{{ 'label_dp.note'|trans }}</strong>
+                            </div>
+                            <div class="col-sm-8 text-left line-12">
+                                {{ user.adminNote|nl2br }}
+                            </div>
+                        </div>
+                        {% endif %}
+                    {% endif %}
                 </div>
             </div>        
         </div>
