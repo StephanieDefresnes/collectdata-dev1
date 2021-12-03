@@ -3,8 +3,8 @@
  * once all the Google dependencies have loaded
  */
 function onGoogleReCaptchaApiLoad() {
-    var widgets = document.querySelectorAll('[data-toggle="recaptcha"]');
-    for (var i = 0; i < widgets.length; i++) {
+    let widgets = document.querySelectorAll('[data-toggle="recaptcha"]');
+    for (let i = 0; i < widgets.length; i++) {
         renderReCaptcha(widgets[i]);
     }
 }
@@ -14,9 +14,9 @@ function onGoogleReCaptchaApiLoad() {
  * from the data-type attribute
  */
 function renderReCaptcha(widget) {
-    var form = widget.closest('form');
-    var widgetType = widget.getAttribute('data-type');
-    var widgetParameters = {
+    let form = widget.closest('form');
+    let widgetType = widget.getAttribute('data-type');
+    let widgetParameters = {
         'sitekey': recaptcha['sitekey']
     };
 
@@ -27,7 +27,7 @@ function renderReCaptcha(widget) {
         widgetParameters['size'] = "invisible";
     }
 
-    var widgetId = grecaptcha.render(widget, widgetParameters);
+    let widgetId = grecaptcha.render(widget, widgetParameters);
 
     if (widgetType == 'invisible') {
         bindChallengeToSubmitButtons(form, widgetId);
@@ -51,11 +51,11 @@ function bindChallengeToSubmitButtons(form, reCaptchaId) {
  * Get the submit buttons from the given form
  */
 function getSubmitButtons(form) {
-    var buttons = form.querySelectorAll('button, input');
-    var submitButtons = [];
+    let buttons = form.querySelectorAll('button, input');
+    let submitButtons = [];
 
-    for (var i= 0; i < buttons.length; i++) {
-        var button = buttons[i];
+    for (let i= 0; i < buttons.length; i++) {
+        let button = buttons[i];
         if (button.getAttribute('type') == 'submit') {
             submitButtons.push(button);
         }
