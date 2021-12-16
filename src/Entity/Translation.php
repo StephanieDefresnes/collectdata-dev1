@@ -81,7 +81,7 @@ class Translation
     private $enabled;
 
     /**
-     * @ORM\Column(type="boolean")
+     * @ORM\Column(type="boolean", nullable=true)
      */
     private $yamlGenerated;
 
@@ -129,7 +129,7 @@ class Translation
         return $this->referentId;
     }
 
-    public function setReferentId($referentId): self
+    public function setReferentId(?int $referentId): self
     {
         $this->referentId = $referentId;
 
@@ -254,7 +254,7 @@ class Translation
         return $this->yamlGenerated;
     }
 
-    public function setYamlGenerated(bool $yamlGenerated): self
+    public function setYamlGenerated(?bool $yamlGenerated): self
     {
         $this->yamlGenerated = $yamlGenerated;
 

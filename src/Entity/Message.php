@@ -75,7 +75,7 @@ class Message
     private $reported;
 
     /**
-     * @ORM\Column(type="boolean")
+     * @ORM\Column(type="boolean", nullable=true)
      */
     private $scanned;
 
@@ -231,7 +231,7 @@ class Message
         return $this->scanned;
     }
 
-    public function setScanned(bool $scanned): self
+    public function setScanned(?bool $scanned): self
     {
         $this->scanned = $scanned;
 

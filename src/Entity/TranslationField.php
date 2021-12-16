@@ -105,7 +105,7 @@ class TranslationField
         return $this->invalid;
     }
 
-    public function setInvalid(bool $invalid): self
+    public function setInvalid(?bool $invalid): self
     {
         $this->invalid = $invalid;
 

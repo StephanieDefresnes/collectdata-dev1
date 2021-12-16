@@ -72,7 +72,7 @@ class Lang
     public function __construct()
     {
         $this->langUsers = new ArrayCollection();
-//        $this->users = new ArrayCollection();
+        $this->users = new ArrayCollection();
         $this->events = new ArrayCollection();
         $this->categories = new ArrayCollection();
         $this->situs = new ArrayCollection();
@@ -81,9 +81,7 @@ class Lang
     public function __toString()
     {
         return $this->getLang();
-//        return $this->getUsers();
     }
-
     
     public function getId(): ?int
     {
