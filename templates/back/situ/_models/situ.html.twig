@@ -1,14 +1,20 @@
 {% trans_default_domain 'back_messages' %}
 
-{% if template == 'translation' %}
-<div class="row mb-3">
-    <div class="col-md-4 font-weight-bold">
-        {{ 'label_dp.user'|trans({}, 'messages') }}
+{% if template == 'read' %}
+    <div class="row mb-3">
+        <div class="col-md-5 d-flex justify-content-start font-weight-bold">
+            {{ 'label_dp.user'|trans({}, 'messages') }}
+        </div>
+        <div class="col-md-7 d-flex justify-content-start line-11 first-letter">
+            <span class="id">{{ situ.user.id }}</span>
+            <a href="{{ path('back_user_read', { 'id': situ.user.id }) }}"
+               target="_blank" class="px-1"
+               data-toggle="tooltip" data-placement="right"
+               title="{{ 'action.read'|trans({}, 'messages') }}">
+                <i class="fas fa-eye"></i>
+            </a>
+        </div>
     </div>
-    <div class="col-md-8 first-letter">
-        <span class="id">{{ situ.user.id }}</span>
-    </div>
-</div>
 {% endif %}
 
 {% if template == 'read' %}
@@ -39,7 +45,7 @@
     {% else %}
         {% set translations = render_service.getTranslations(situ.id) %}
         {% if translations %}
-            <div class="row d-flex mb-3" translate="no">
+            <div class="row mb-3" translate="no">
                 <div class="col-md-5 d-flex justify-content-start font-weight-bold">
                     {{ 'label_dp.translation_s'|trans({}, 'messages') }}
                 </div>
@@ -131,7 +137,7 @@
             <input id="validated-event" class="validationForm" type="hidden"
                    value="{{ situ.event.validated == 0 ? 0 : 1 }}">
             <div id="headingOne" class="row" translate="no">
-                <div class="col-12 py-0 text-left check collapsed"
+                <div class="col-12 py-0 text-left line-11 check collapsed"
                      data-toggle="collapse" data-target="#collapseOne"
                      aria-expanded="false" aria-controls="collapseOne">
                     {{ 'contrib.situ.verify.form.event'|trans }}
@@ -176,7 +182,7 @@
             <input id="validated-categoryLevel1" class="validationForm" type="hidden"
                    value="{{ situ.categoryLevel1.validated == 0 ? 0 : 1 }}">
             <div id="headingTwo" class="row" translate="no">
-                <div class="col-12 py-0 text-left check collapsed"
+                <div class="col-12 py-0 text-left line-11 check collapsed"
                      data-toggle="collapse" data-target="#collapseTwo"
                      aria-expanded="false" aria-controls="collapseTwo">
                     {{ 'contrib.situ.verify.form.category_level1'|trans }}
@@ -227,7 +233,7 @@
             <input id="validated-categoryLevel2" class="validationForm" type="hidden"
                    value="{{ situ.categoryLevel2.validated == 0 ? 0 : 1 }}">
             <div id="headingThree" class="row" translate="no"> 
-                <div class="col-12 py-0 text-left check collapsed"
+                <div class="col-12 py-0 text-left line-11 check collapsed"
                      data-toggle="collapse" data-target="#collapseThree"
                      aria-expanded="false" aria-controls="collapseThree">
                     {{ 'contrib.situ.verify.form.category_level2'|trans }}
@@ -278,7 +284,7 @@
     
     {% if template == 'data' and situ.initialSitu == 0 %}
         <div class="row mb-3">
-            <div class="col-md-4 font-weight-bold">
+            <div class="col-md-4 font-weight-bold line-11">
                 {{ 'contrib.situ.verify.data.translated'|trans({}, 'back_messages') }}
             </div>
             <div class="col-md-8 first-letter">
@@ -295,7 +301,7 @@
     
     <div class="row mb-3">
         <div class="{% if template == 'read'%}col-md-5{%
-                        else %}col-md-4{% endif %} d-flex justify-content-start font-weight-bold" translate="no">
+                        else %}col-md-4{% endif %} d-flex justify-content-start font-weight-bold line-11" translate="no">
             {{ 'label_dp.event'|trans({}, 'messages') }}
         </div>
         <div class="{% if template == 'read'%}col-md-7{%
@@ -338,7 +344,7 @@
 
         <div class="row pb-1">
             <div class="{% if template == 'read'%}col-md-5{%
-                        else %}col-md-4{% endif %} d-flex justify-content-start font-weight-bold" translate="no">
+                        else %}col-md-4{% endif %} d-flex justify-content-start font-weight-bold line-11" translate="no">
                 {{ 'label_dp.categoryLevel2'|trans({}, 'messages') }}
             </div>
             <div class="{% if template == 'read'%}col-md-7{%
@@ -368,10 +374,10 @@
 <div id="situGGT" class="d-none">
 {% endif %}
 
-    <h2 class="h5 font-weight-normal mt-2 pt-4">{{ 'label.situ'|trans({}, 'messages') }}</h2>
+    <h2 class="h5 font-weight-normal mt-2 pt-4 line-11" translate="no">{{ 'label.situ'|trans({}, 'messages') }}</h2>
 
     <div class="row">
-        <div class="col-12 mb-1 font-weight-bold">
+        <div class="col-12 mb-1 font-weight-bold line-11" translate="no">
             {{ 'label_dp.title'|trans({}, 'messages') }}
         </div>
         <div class="col-12 mb-3 px-4">
@@ -380,7 +386,7 @@
     </div>
 
     <div class="row">
-        <div class="col-12 mb-1 font-weight-bold">
+        <div class="col-12 mb-1 font-weight-bold line-11" translate="no">
             {{ 'label_dp.description'|trans({}, 'messages') }}
         </div>
         <div class="col-12 mb-3 px-4">
@@ -392,12 +398,12 @@
         {% for item in situ.situItems %}
             <div class="col-12">
                 {% if item.score == 0 %}
-                    <h2 class="h5 font-weight-normal">
+                    <h2 class="h5 font-weight-normal line-11" translate="no">
                         {{ 'contrib.form.item.label'|trans({}, 'user_messages') }}
                     </h2>
                 {% else %}
                     {% if loop.index == 2 %}
-                        <h2 class="h5 mb-3 font-weight-normal">
+                        <h2 class="h5 mb-3 font-weight-normal line-11" translate="no">
                             {% if situ.situItems|length > 2 %}
                             {{ 'contrib.situ.verify.data.label_items'|trans }}
                             {% else %}
@@ -405,7 +411,7 @@
                             {% endif %}
                         </h2>
                     {% endif %}
-                    <div class="mb-3 font-weight-bold">
+                    <div class="mb-3 font-weight-bold line-11" translate="no">
                         {{ 'label_dp.score'|trans({}, 'messages') }}
                         {% if item.score == 1 %}
                             <span class="text-info">
@@ -423,16 +429,16 @@
                     </div>
                 {% endif %}
             </div>
-            <div class="col-12 mb-1 font-weight-bold">
+            <div class="col-12 mb-1 font-weight-bold line-11" translate="no">
                 {{ 'label_dp.title'|trans({}, 'messages') }}
             </div>
             <div class="col-12 mb-3 px-4 line-11 first-letter h-title">
                 {{ item.title }}
             </div>
-            <div class="col-12 mb-1 font-weight-bold">
+            <div class="col-12 mb-1 font-weight-bold line-11" translate="no">
                 {{ 'label_dp.description'|trans({}, 'messages') }}
             </div>
-            <div class="col-12 px-5 line-11 first-letter h-description{% if loop.index != 1
+            <div class="col-12 px-4 line-11 first-letter h-description{% if loop.index != 1
                  and loop.last == false %} border-bottom{% endif %}
                  {% if loop.first == true %} mb-3{% elseif loop.last == false %} mb-4{% endif %}">
                 {{ item.description }}

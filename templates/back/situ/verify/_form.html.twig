@@ -4,25 +4,25 @@
     <div class="card shadow">
 
         <div id="translator" class="card-header py-1">
-            <div class="row d-flex justify-content-between">
+            <div class="row d-flex justify-content-between" translate="no">
                 <div class="col-auto">
-                    <h6 class="px-0 mt-2" translate="no">
-                        <span class="font-weight-bold text-primary">
-                            {{ 'contrib.situ.verify.form.title'|trans }}
-                        </span>
+                    <h6 class="px-0 mt-2 font-weight-bold text-primary" translate="no">
+                        {{ 'contrib.situ.verify.form.title'|trans }}
                     </h6>
                 </div>
-                <div class="col-auto mct-1px">
-                    <div class="row ggt-row float-right">
-                        <div class="col-auto px-1 mt-1"><i class="fas fa-globe-americas"></i></div>
-                        <div class="col-auto px-0">
-                            <div id="GGT"></div>
-                        </div>
-                        <div id="resetGGT" class="col-auto p-1 btn d-none">
-                            <i class="far fa-times-circle"></i>
+                {% if locale != situ.lang.lang %}
+                    <div class="col-md-auto mct-1px">
+                        <div class="row ggt-row">
+                            <div class="col-auto px-1 mt-1"><i class="fas fa-globe-americas"></i></div>
+                            <div class="col-auto px-0">
+                                <div id="GGT"></div>
+                            </div>
+                            <div id="resetGGT" class="col-auto p-1 btn d-none">
+                                <i class="far fa-times-circle"></i>
+                            </div>
                         </div>
                     </div>
-                </div>
+                {% endif %}
             </div>
         </div>
 

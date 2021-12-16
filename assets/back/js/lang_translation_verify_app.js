@@ -1,38 +1,52 @@
 // css
 import '../scss/lang_translation_verify_app.scss';
 
-function resetGGT() {
-    let dataExist = setInterval(function() {
-        if ($('iframe').length) {
-           $('#\\:1\\.container').contents().find('#\\:1\\.restore').click()
-           clearInterval(dataExist)
-        }
-    }, 50);
-}
+// json
+const isoLang = require('../../isoLangs.json')
 
-$(document).ready(function(){
+$(function() {
     
     /** GGTranslate **/
-    // Reset GGT
     // -- on load
-    setTimeout(resetGGT, 2000)
+    let ggtExist = setInterval(function() {
+        // Wait for GGT container
+        if ($('#\\:1\\.container').length) {
+            
+            // Reset menu
+            $('#\\:1\\.container').contents().find('#\\:1\\.restore').click()
+            
+            if ($('#GGT').find('.goog-te-combo option').length) {
+                $('#GGT').find('.goog-te-combo option').each(function() {
+                    // Translate placeholder
+                    if ($(this).val() == '') $(this).text(translations['translate'])
+                    else {
+                        let lang = $(this).val()
+                        // Get first lang name & capitalize
+                        let nativeLangName = isoLang[lang].nativeName.split(',')[0]
+                        $(this).text(nativeLangName.charAt(0).toUpperCase() + nativeLangName.slice(1))
+                    }
+                })
+                clearInterval(ggtExist)
+            }
+        }
+    }, 50);
     
-    // -- on click button
+    // -- on change lang
+    $('#translator').on('change', 'select', function() {
+        $('#resetGGT').removeClass('d-none')
+    })
+    
+    // -- on click reset button
     $('#resetGGT').click(function() {
         $('#\\:1\\.container').contents().find('#\\:1\\.restore').click()
-        $('#resetGGT, #situGGT').addClass('d-none')
-        $('.details').each(function() { $(this).addClass('d-none') })
-        $('#situ-data').removeClass('h-adjust')
+        $(this).addClass('d-none')
+        $('#GGT').find('.goog-te-combo option').each(function() {
+            // Translate placeholder
+            if ($(this).val() == '') $(this).text(translations['translate'])
+        })
     })
     
-    // Lang selected
-    $('#translator').on('change', 'select', function() {
-        $('#resetGGT, #situGGT').removeClass('d-none')
-        $('.details').each(function() { $(this).removeClass('d-none') })
-        $('#situ-data').addClass('h-adjust')
-    })
-    
-    
+    /** **/
     $('.translationField').click(function() {
         if ($(this).find('.form-check-input').prop('checked') == true) {
             $(this).find('.form-check-input').prop('checked', false)
@@ -42,7 +56,5 @@ $(document).ready(function(){
                 $(this).find('.pointer').addClass('border-danger alert alert-danger')
         }
     })
-    
-    
     
 })

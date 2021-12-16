@@ -5,6 +5,9 @@ import 'select2-theme-bootstrap4/dist/select2-bootstrap.min.css'
 
 require('select2')
 
+// json
+const isoLang = require('../../isoLangs.json')
+
 function initSelect2(select) {
     $.fn.select2.defaults.set('language', {
 	noResults: function () {
@@ -76,13 +79,75 @@ function situValidation(dataForm) {
     })
 }
 
-function resetGGT() {
-    let dataExist = setInterval(function() {
-        if ($('iframe').length) {
-           $('#\\:1\\.container').contents().find('#\\:1\\.restore').click()
-           clearInterval(dataExist)
+function submit() {
+    let dataForm, action, id, statusId,
+        eventId, eventValidated,
+        categoryLevel1Id, categoryLevel1Validated,
+        categoryLevel2Id, categoryLevel2Validated,
+        reason, comment,
+        entities = []
+
+    if (    $(this).attr('data-action') == 'validation'
+        ||  (   $(this).attr('data-action') == 'refuse'
+            &&  $('#refuseReason').val() != ''
+            &&  $('#refuseComment').val() != ''
+            && (    $('#translationRefuse').is(':checked')
+                ||  $('#EventRefuse').is(':checked')
+                ||  $('#CategoryLevel1Refuse').is(':checked')
+                ||  $('#CategoryLevel2Refuse').is(':checked')
+                ||  $('#SituRefuse').is(':checked')
+                ||  $('#ItemsRefuse').is(':checked')
+            )
+        )
+    ) {            
+        $(this).attr('data-action') == 'validation'
+            ? $('#validModal').modal('hide')
+            : $('#refuseModal').modal('hide')
+
+        $('#loader').show()
+
+        action = $(this).attr('data-action')
+        id = $('#situ').attr('data-id')
+        statusId = $('#accordion').attr('value-status')
+        eventId = $('#event').attr('data-id')
+        eventValidated = $('#validated-event').val()
+        categoryLevel1Id = $('#categoryLevel1').attr('data-id')
+        categoryLevel1Validated = $('#validated-categoryLevel1').val()
+        categoryLevel2Id = $('#categoryLevel2').attr('data-id')
+        categoryLevel2Validated = $('#validated-categoryLevel2').val()
+        reason = $('#refuseReason').val()
+        comment = $('#refuseComment').val()
+
+        entities.push({
+            'translation': $('#translationRefuse').val(),
+            'event': $('#EventRefuse').val(),
+            'categoryLevel1': $('#CategoryLevel1Refuse').val(),
+            'categoryLevel2': $('#CategoryLevel2Refuse').val(),
+            'situ': $('#SituRefuse').val(),
+            'items': $('#ItemsRefuse').val(),
+        })
+
+        dataForm = {
+            'action': action,
+            'id': id,
+            'statusId': statusId,
+            'eventId': eventId,
+            'eventValidated': eventValidated,
+            'categoryLevel1Id': categoryLevel1Id,
+            'categoryLevel1Validated': categoryLevel1Validated,
+            'categoryLevel2Id': categoryLevel2Id,
+            'categoryLevel2Validated': categoryLevel2Validated,
+            'reason': reason,
+            'comment': comment,
+            'entities': entities,
         }
-    }, 50);
+        situValidation(dataForm)
+    } else {
+        $('#refuseError').html('<div class="alert alert-danger" role="alert">'
+                +'<i class="fas fa-exclamation-circle"></i> '
+                +'<span>'+translations['unvalidRefuse'] +'</span>'
+           +'</div>')
+    }
 }
 
 $(function() {
@@ -94,23 +159,47 @@ $(function() {
         $('#valid-btn').removeClass('d-none')
     
     /** GGTranslate **/
-    // Reset GGT
     // -- on load
-    setTimeout(resetGGT, 2000)
+    let ggtExist = setInterval(function() {
+        // Wait for GGT container
+        if ($('#\\:1\\.container').length) {
+            
+            // Reset menu
+            $('#\\:1\\.container').contents().find('#\\:1\\.restore').click()
+            
+            if ($('#GGT').find('.goog-te-combo option').length) {
+                $('#GGT').find('.goog-te-combo option').each(function() {
+                    // Translate placeholder
+                    if ($(this).val() == '') $(this).text(translations['translate'])
+                    else {
+                        let lang = $(this).val()
+                        // Get first lang name & capitalize
+                        let nativeLangName = isoLang[lang].nativeName.split(',')[0]
+                        $(this).text(nativeLangName.charAt(0).toUpperCase() + nativeLangName.slice(1))
+                    }
+                })
+                clearInterval(ggtExist)
+            }
+        }
+    }, 50);
     
-    // -- on click button
-    $('#resetGGT').click(function() {
-        $('#\\:1\\.container').contents().find('#\\:1\\.restore').click()
-        $('#resetGGT, #situGGT').addClass('d-none')
-        $('.details').each(function() { $(this).addClass('d-none') })
-        $('#situ-data').removeClass('h-adjust')
-    })
-    
-    // Lang selected
+    // -- on change lang
     $('#translator').on('change', 'select', function() {
         $('#resetGGT, #situGGT').removeClass('d-none')
         $('.details').each(function() { $(this).removeClass('d-none') })
         $('#situ-data').addClass('h-adjust')
+    })
+    
+    // -- on click reset button
+    $('#resetGGT').click(function() {
+        $('#\\:1\\.container').contents().find('#\\:1\\.restore').click()
+        $('#resetGGT, #situGGT').addClass('d-none')
+        $('#GGT').find('.goog-te-combo option').each(function() {
+            // Translate placeholder
+            if ($(this).val() == '') $(this).text(translations['translate'])
+        })
+        $('.details').each(function() { $(this).addClass('d-none') })
+        $('#situ-data').removeClass('h-adjust')
     })
     
     /** Add toValidate info on Event & Category options **/
@@ -281,76 +370,6 @@ $(function() {
     /**
      * Submit
      */
-    $('.submit').click(function() {
-        
-        let dataForm, action, id, statusId,
-            eventId, eventValidated,
-            categoryLevel1Id, categoryLevel1Validated,
-            categoryLevel2Id, categoryLevel2Validated,
-            reason, comment,
-            entities = []
-                        
-        if (    $(this).attr('data-action') == 'validation'
-            ||  (   $(this).attr('data-action') == 'refuse'
-                &&  $('#refuseReason').val() != ''
-                &&  $('#refuseComment').val() != ''
-                && (    $('#translationRefuse').is(':checked')
-                    ||  $('#EventRefuse').is(':checked')
-                    ||  $('#CategoryLevel1Refuse').is(':checked')
-                    ||  $('#CategoryLevel2Refuse').is(':checked')
-                    ||  $('#SituRefuse').is(':checked')
-                    ||  $('#ItemsRefuse').is(':checked')
-                )
-            )
-        ) {            
-            $(this).attr('data-action') == 'validation'
-                ? $('#validModal').modal('hide')
-                : $('#refuseModal').modal('hide')
-            
-            $('#loader').show()
-            
-            action = $(this).attr('data-action')
-            id = $('#situ').attr('data-id')
-            statusId = $('#accordion').attr('value-status')
-            eventId = $('#event').attr('data-id')
-            eventValidated = $('#validated-event').val()
-            categoryLevel1Id = $('#categoryLevel1').attr('data-id')
-            categoryLevel1Validated = $('#validated-categoryLevel1').val()
-            categoryLevel2Id = $('#categoryLevel2').attr('data-id')
-            categoryLevel2Validated = $('#validated-categoryLevel2').val()
-            reason = $('#refuseReason').val()
-            comment = $('#refuseComment').val()
-
-            entities.push({
-                'translation': $('#translationRefuse').val(),
-                'event': $('#EventRefuse').val(),
-                'categoryLevel1': $('#CategoryLevel1Refuse').val(),
-                'categoryLevel2': $('#CategoryLevel2Refuse').val(),
-                'situ': $('#SituRefuse').val(),
-                'items': $('#ItemsRefuse').val(),
-            })
-
-            dataForm = {
-                'action': action,
-                'id': id,
-                'statusId': statusId,
-                'eventId': eventId,
-                'eventValidated': eventValidated,
-                'categoryLevel1Id': categoryLevel1Id,
-                'categoryLevel1Validated': categoryLevel1Validated,
-                'categoryLevel2Id': categoryLevel2Id,
-                'categoryLevel2Validated': categoryLevel2Validated,
-                'reason': reason,
-                'comment': comment,
-                'entities': entities,
-            }
-            situValidation(dataForm)
-        } else {
-            $('#refuseError').html('<div class="alert alert-danger" role="alert">'
-                    +'<i class="fas fa-exclamation-circle"></i> '
-                    +'<span>'+translations['unvalidRefuse'] +'</span>'
-               +'</div>')
-        }        
-    })
+    $('.submit').click(function() { submit() })
     
 })

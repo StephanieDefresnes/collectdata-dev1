@@ -2,25 +2,25 @@
 {% set template = 'translation' %}         
 
 <div class="modal fade" id="translateModal" data-backdrop="static" data-keyboard="false"
-     tabindex="-1" aria-labelledby="translateModalLabel" aria-hidden="true" translate="no">
+     tabindex="-1" aria-labelledby="translateModalLabel" aria-hidden="true"">
     <div class="modal-dialog modal-dialog-scrollable">
         <div class="modal-content">
-            <div class="modal-header bg-dark text-white row">
-                <div class="col-auto mx-auto mb-3 border-bottom">
-                    <h5 class="modal-title">
+            <div class="modal-header p-0 bg-dark text-white row" translate="no">
+                <div class="col-12 mb-2 px-4 pt-2 border-bottom">
+                    <h5 class="modal-title text-center mb-2">
                         {{ 'contrib.situ.verify.form.modal.translated.title'|trans }}
                     </h5>
                     <p class="small">
-                        {{ 'contrib.situ.verify.form.modal.translated.comment'|trans }}
+                        {{ 'contrib.situ.verify.form.modal.translated.comment'|trans|raw }}
                     </p>
                 </div>
-                <div class="col-5">
+                <div class="col-5 px-4 pb-2">
                     <h5 class="modal-title">
                         {{ 'contrib.situ.verify.form.modal.translated.initial'|trans }}
                         <span class="id">{{ situInitial.id }}</span>
                     </h5>
                 </div>
-                <div class="col-7">
+                <div class="col-7 px-4 pb-2">
                     <h5 class="modal-title">
                         {{ 'label.translation_s'|trans({}, 'messages') }}
                     </h5>
@@ -43,7 +43,7 @@
                         <div class="row border-left">
                         
                             <!-- NavTabs -->
-                            <div class="col-xl-3 col-lg-4 col-md-5 col-sm-3 col-4 position-relative">
+                            <div class="col-xl-3 col-lg-4 col-md-5 col-sm-3 col-4 position-relative" translate="no">
                                 <div class="nav flex-column nav-pills position-fixed" id="v-pills-tab"
                                      role="tablist" aria-orientation="vertical">
                                     {# Current first #}
@@ -79,13 +79,14 @@
                             <!-- ContentTabs -->
                             <div class="col-xl-9 col-lg-8 col-md-7 col-sm-9 col-8">
                                 <div class="tab-content" id="v-pills-tabContent">
+                                    {% set currentSitu = situ %}
                                     {% for translation in situsTranslated %}
-                                        <div class="tab-pane fade{{ translation.id == situ.id ? ' show active' }}"
+                                        <div class="tab-pane fade{{ translation.id == currentSitu.id ? ' active show' }}"
                                              id="v-pills-{{ translation.id }}"
                                              role="tabpanel" aria-labelledby="v-pills-{{ translation.id }}-tab">
                                             {% set situ = translation %}
                                             {{ include('back/situ/_models/situ.html.twig') }}
-                                            
+                                            {% set situ = currentSitu %}
                                         </div>
                                     {% endfor %}
                                 </div>
@@ -97,7 +98,7 @@
                 </div>
             </div>
                 
-            <div class="modal-footer bg-dark d-flex justify-content-center">
+            <div class="modal-footer bg-dark d-flex justify-content-center" translate="no">
                 <button class="btn bg-white px-4" data-dismiss="modal">
                     {{ 'action.close'|trans({}, 'messages') }}
                 </button>

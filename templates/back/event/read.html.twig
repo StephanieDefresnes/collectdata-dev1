@@ -26,7 +26,7 @@
 
                 <div id="translator" class="card-header py-1">
                     <div class="row d-flex justify-content-between" translate="no">
-                        <div class="col-md-5">
+                        <div class="col-auto">
                             <h6 class="mt-2 font-weight-bold text-primary">
                                 {{ 'contrib.event.read.title'|trans }}
                             </h6>
@@ -50,10 +50,10 @@
                 <div class="card-body pb-3">
                     
                     <div class="row mb-1" translate="no">
-                        <div class="col-auto{% if event.validated == false %} mt-1{% endif %}">
+                        <div class="col-md-3 col-6 d-flex justify-content-start{% if event.validated == false %} mt-1{% endif %} font-weight-bold">
                             {{ 'label_dp.enabled'|trans({}, 'messages') }}
                         </div>
-                        <div id="enable-row" class="col-auto">
+                        <div id="enable-row" class="col-md-auto col-6">
                             {% if event.validated %}
                                 {{ 'yes'|trans({}, 'messages') }}
                             {% else %}
@@ -68,10 +68,10 @@
                     </div>
                     
                     <div class="row mb-3" translate="no">
-                        <div class="col-auto">
+                        <div class="col-md-3 col-6 d-flex justify-content-start font-weight-bold" translate="no">
                             {{ 'label_dp.lang'|trans({}, 'messages') }}
                         </div>
-                        <div class="col-auto">
+                        <div class="col-md-auto col-6 d-flex justify-content-start text-capitalize">
                             {{ event.lang.englishName }}
                         </div>
                     </div>
@@ -193,12 +193,24 @@
     <script>
         var translation = {
             "yes" : "{{ 'yes'|trans({}, 'messages') }}",
+            "translate" : "{{ 'action.translate'|trans({}, 'messages') }}",
         }
         {% if locale != event.lang.lang %}
+            {% set userLangs = [] %}
+            {% if app.user.langs|length > 1 %}
+                {% for userLang in app.user.langs %}
+                    {% set userLangs = userLangs|merge([userLang.lang]) %}
+                {% endfor %}
+            {% endif %}
             function googleTranslateElementInit() { 
-                new google.translate.TranslateElement({pageLanguage: '{{ event.lang.lang }}'},'GGT')
+                new google.translate.TranslateElement({
+                    pageLanguage: '{{ event.lang.lang }}',
+                    includedLanguages: '{{ userLangs|join(',') }}'
+                },'GGT')
             }
         {% endif %}
     </script> 
-    <script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+    {% if locale != event.lang.lang %}
+        <script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+    {% endif %}
 {% endblock %}

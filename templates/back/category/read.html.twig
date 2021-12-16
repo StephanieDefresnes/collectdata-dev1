@@ -21,13 +21,13 @@
                      alt="{{ category.lang.lang }}" class="translation-flag mx-1 border">
             </h1>
         </div>
-
+            
         <div class="col-lg-10 mx-auto mb-4">
             <div class="card shadow">
 
                 <div id="translator" class="card-header py-1">
                     <div class="row d-flex justify-content-between" translate="no">
-                        <div class="col-md-5">
+                        <div class="col-auto">
                             <h6 class="mt-2 font-weight-bold text-primary">
                                 {{ category.event ? 'contrib.categoryLevel1.read.title'|trans 
                                             : 'contrib.categoryLevel2.read.title'|trans }}
@@ -51,23 +51,35 @@
 
                 <div class="card-body pb-3">
                     
+                    <div class="row mb-4">
+                        <div class="col-12 d-flex justify-content-start font-weight-bold" translate="no">
+                            {{ 'label_dp.description'|trans({}, 'messages') }}
+                        </div>
+                        <div class="col-12 text-left line-11">
+                            {{ category.description }}
+                        </div>
+                    </div>
+                    
                     <div class="row mb-3" translate="no">
-                        <div class="col-auto{% if category.validated == false %} mt-1{% endif %}">
+                        <div class="col-md-3 col-6 d-flex justify-content-start{% if category.validated == false %} mt-1{% endif %} font-weight-bold">
                             {{ 'label_dp.enabled'|trans({}, 'messages') }}
                         </div>
-                        <div id="enable-row" class="col-auto">
+                        <div id="enable-row" class="col-md-auto col-6">
                             {% if category.validated %}
                                 {{ 'yes'|trans({}, 'messages') }}
                             {% else %}
                                 <span id="enableData" class="enableCategory btn btn-primary py-1"
                                       data-id="{{ category.id }}">
                                     {{ 'action.enable'|trans({}, 'messages')}}
+                                <div class="spinner-border text-primary spinner-border-sm mx-4 d-none" role="status">
+                                    <span class="sr-only">Loading...</span>
+                                </div>
                             {% endif %}
                         </div>
                     </div>
                     
                     <div class="row mb-1">
-                        <div class="col-md-3 col-6 d-flex justify-content-start" translate="no">
+                        <div class="col-md-3 col-6 d-flex justify-content-start font-weight-bold" translate="no">
                             {{ 'label_dp.lang'|trans({}, 'messages') }}
                         </div>
                         <div class="col-md-auto col-6 d-flex justify-content-start text-capitalize">
@@ -75,11 +87,11 @@
                         </div>
                     </div>
                     
-                    <div class="row {{ category.event ? 'mb-3' : 'mb-1'}}">
-                        <div class="col-md-3 col-6 d-flex justify-content-start" translate="no">
+                    <div class="row {{ category.event ? 'mb-4' : 'mb-1'}}">
+                        <div class="col-md-3 col-6 d-flex justify-content-start font-weight-bold" translate="no">
                             {{ 'label_dp.event'|trans({}, 'messages') }}
                         </div>
-                        <div class="col-md-auto col-6 d-flex justify-content-start text-capitalize">
+                        <div class="col-md-auto col-6 d-flex justify-content-start text-capitalize line-11">
                             {% if category.event %}
                                 <a href="{{ path('back_event_read', { 'event': category.event }) }}">
                                     {{ category.event.title }}
@@ -93,11 +105,11 @@
                     </div>
                     
                     {% if category.parent %}
-                    <div class="row mb-3">
-                        <div class="col-md-3 col-6 d-flex justify-content-start" translate="no">
+                    <div class="row mb-4">
+                        <div class="col-md-3 col-6 d-flex justify-content-start font-weight-bold" translate="no">
                             {{ 'label_dp.categoriesLevel1'|trans({}, 'messages') }}
                         </div>
-                        <div class="col-md-auto col-6 d-flex justify-content-start text-capitalize">
+                        <div class="col-md-auto col-6 d-flex justify-content-start text-capitalize line-11">
                             <a href="{{ path('back_category_read', { 'category': category.parent }) }}">
                                 {{ category.parent.title }}
                             </a>
@@ -262,14 +274,26 @@
     {{ parent() }}
     {{ encore_entry_script_tags('category_event_read_app', null, 'backApp') }}
     <script>
-        var translation = {
+        var translations = {
             "yes" : "{{ 'yes'|trans({}, 'messages') }}",
+            "translate" : "{{ 'action.translate'|trans({}, 'messages') }}",
         }
         {% if locale != category.lang.lang %}
+            {% set userLangs = [] %}
+            {% if app.user.langs|length > 1 %}
+                {% for userLang in app.user.langs %}
+                    {% set userLangs = userLangs|merge([userLang.lang]) %}
+                {% endfor %}
+            {% endif %}
             function googleTranslateElementInit() { 
-                new google.translate.TranslateElement({pageLanguage: '{{ category.lang.lang }}'},'GGT')
+                new google.translate.TranslateElement({
+                    pageLanguage: '{{ category.lang.lang }}',
+                    includedLanguages: '{{ userLangs|join(',') }}'
+                },'GGT')
             }
         {% endif %}
     </script> 
-    <script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+    {% if locale != category.lang.lang %}
+        <script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+    {% endif %}
 {% endblock %}

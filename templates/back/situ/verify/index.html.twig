@@ -69,6 +69,7 @@
             "inappropriateItemsRefuse" : "{{ 'contrib.situ.verify.form.modal.refuse.comment.inappropriate.itemsRefuse'|trans }}",
             "unvalidRefuse" : "{{ 'contrib.situ.verify.form.modal.refuse.unvalid'|trans }}",
             "translationRefuse" : "{{ 'contrib.situ.verify.form.modal.refuse.comment.conflict.validated'|trans }}",
+            "translate" : "{{ 'action.translate'|trans({}, 'messages') }}",
             
             {% for translation in situsTranslated %}
                 {% if translation.status.id == 3 %}
@@ -77,9 +78,22 @@
                 {% endif %}
             {% endfor %}
         }
-        function googleTranslateElementInit() { 
-            new google.translate.TranslateElement({pageLanguage: '{{ situ.lang.lang }}'},'GGT')
-        }
+        {% if locale != situ.lang.lang %}
+            {% set userLangs = [] %}
+            {% if app.user.langs|length > 1 %}
+                {% for userLang in app.user.langs %}
+                    {% set userLangs = userLangs|merge([userLang.lang]) %}
+                {% endfor %}
+            {% endif %}
+            function googleTranslateElementInit() { 
+                new google.translate.TranslateElement({
+                    pageLanguage: '{{ situ.lang.lang }}',
+                    includedLanguages: '{{ userLangs|join(',') }}'
+                },'GGT')
+            }
+        {% endif %}
     </script> 
-    <script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+    {% if locale != situ.lang.lang %}
+        <script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+    {% endif %}
 {% endblock %}
