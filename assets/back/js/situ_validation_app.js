@@ -79,16 +79,11 @@ function situValidation(dataForm) {
     })
 }
 
-function submit() {
-    let dataForm, action, id, statusId,
-        eventId, eventValidated,
-        categoryLevel1Id, categoryLevel1Validated,
-        categoryLevel2Id, categoryLevel2Validated,
-        reason, comment,
-        entities = []
+function submit(button) {
+    let dataForm, entities = []
 
-    if (    $(this).attr('data-action') == 'validation'
-        ||  (   $(this).attr('data-action') == 'refuse'
+    if (    button.attr('data-action') == 'validation'
+        ||  (   button.attr('data-action') == 'refuse'
             &&  $('#refuseReason').val() != ''
             &&  $('#refuseComment').val() != ''
             && (    $('#translationRefuse').is(':checked')
@@ -106,39 +101,27 @@ function submit() {
 
         $('#loader').show()
 
-        action = $(this).attr('data-action')
-        id = $('#situ').attr('data-id')
-        statusId = $('#accordion').attr('value-status')
-        eventId = $('#event').attr('data-id')
-        eventValidated = $('#validated-event').val()
-        categoryLevel1Id = $('#categoryLevel1').attr('data-id')
-        categoryLevel1Validated = $('#validated-categoryLevel1').val()
-        categoryLevel2Id = $('#categoryLevel2').attr('data-id')
-        categoryLevel2Validated = $('#validated-categoryLevel2').val()
-        reason = $('#refuseReason').val()
-        comment = $('#refuseComment').val()
-
         entities.push({
-            'translation': $('#translationRefuse').val(),
-            'event': $('#EventRefuse').val(),
-            'categoryLevel1': $('#CategoryLevel1Refuse').val(),
-            'categoryLevel2': $('#CategoryLevel2Refuse').val(),
-            'situ': $('#SituRefuse').val(),
-            'items': $('#ItemsRefuse').val(),
+            'translation': $('#translationRefuse').prop('checked'),
+            'event': $('#EventRefuse').prop('checked'),
+            'categoryLevel1': $('#CategoryLevel1Refuse').prop('checked'),
+            'categoryLevel2': $('#CategoryLevel2Refuse').prop('checked'),
+            'situ': $('#SituRefuse').prop('checked'),
+            'items': $('#ItemsRefuse').prop('checked'),
         })
 
         dataForm = {
-            'action': action,
-            'id': id,
-            'statusId': statusId,
-            'eventId': eventId,
-            'eventValidated': eventValidated,
-            'categoryLevel1Id': categoryLevel1Id,
-            'categoryLevel1Validated': categoryLevel1Validated,
-            'categoryLevel2Id': categoryLevel2Id,
-            'categoryLevel2Validated': categoryLevel2Validated,
-            'reason': reason,
-            'comment': comment,
+            'action': button.attr('data-action'),
+            'id': $('#situ').attr('data-id'),
+            'statusId': $('#accordion').attr('value-status'),
+            'eventId': $('#event').attr('data-id'),
+            'eventValidated': $('#validated-event').val(),
+            'categoryLevel1Id': $('#categoryLevel1').attr('data-id'),
+            'categoryLevel1Validated': $('#validated-categoryLevel1').val(),
+            'categoryLevel2Id': $('#categoryLevel2').attr('data-id'),
+            'categoryLevel2Validated': $('#validated-categoryLevel2').val(),
+            'reason': $('#refuseReason').val(),
+            'comment': $('#refuseComment').val(),
             'entities': entities,
         }
         situValidation(dataForm)
@@ -370,6 +353,6 @@ $(function() {
     /**
      * Submit
      */
-    $('.submit').click(function() { submit() })
+    $('.submit').click(function() { submit($(this)) })
     
 })
