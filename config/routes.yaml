@@ -318,20 +318,19 @@ back_not_found:
     path:       /{_locale}/back/404
     controller: App\Controller\Security\ErrorController::backNotFound
 ## front
-access_denied:
+error_403:
     path:       /{_locale}/403
     controller: App\Controller\Security\ErrorController::accessDenied
     methods:    ['GET', 'POST']
-error:
-    path:       /{_locale}/error
-    controller: App\Controller\Security\ErrorController::error
-    methods:    ['GET']
-lang_error:
-    path:       /{_locale}/bad-lang/{lang}
-    controller: App\Controller\Security\ErrorController::langError
-not_found:
+error_404:
     path:       /{_locale}/404
-    controller: App\Controller\Security\ErrorController::notFound
+    controller: App\Controller\Security\ErrorController::showError
+error_500:
+    path:       /{_locale}/500
+    controller: App\Controller\Security\ErrorController::showError
+lang_error:
+    path:       /{_locale}/error/{lang}
+    controller: App\Controller\Security\ErrorController::langError
 
 # Registration
 app_register:
