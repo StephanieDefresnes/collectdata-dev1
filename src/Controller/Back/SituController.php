@@ -157,17 +157,21 @@ class SituController extends AbstractController
                                         '_locale' => locale_get_default(),
                                     ]);
             } else {
-                $redirection = $this->urlGenerator->generate('back_situs_validation',[
-                                        '_locale' => locale_get_default(),
-                                    ]);
-            
-                $msg = $this->translator->trans(
+                if ($result['msg']) {
+                    $msgError = $result['msg'];
+                    $request->getSession()->getFlashBag()->add('error', $msgError);
+                }
+                $msgSuccess = $this->translator->trans(
                             'contrib.situ.verify.form.modal.'.
                                 $data['dataForm']['action'] .'.flash.success', [],
                             'back_messages', $locale = locale_get_default()
                             );
-
-                $request->getSession()->getFlashBag()->add('success', $msg);
+                $request->getSession()->getFlashBag()->add('success', $msgSuccess);
+                
+                $redirection = $this->urlGenerator->generate('back_situs_validation',[
+                                        '_locale' => locale_get_default(),
+                                    ]);
+                
             }
             
             return $this->json([

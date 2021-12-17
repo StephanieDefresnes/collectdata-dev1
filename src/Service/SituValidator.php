@@ -101,31 +101,62 @@ class SituValidator {
             } else {
             
                 $this->em->flush();
+                
+                $error = null;
 
                 if (array_key_exists('event', $entities)) {
-                    $this->messager->sendUserAlert('validation', 'event', $event);
+                    try {
+                        $this->messager->sendUserAlert('validation', 'event', $event);
+                    } catch (\Exception $e) {
+                        $error .= $e->getMessage().PHP_EOL;
+                    }
                 }
-
+                
                 if (array_key_exists('categoryLevel1', $entities)) {
-                    $this->messager->sendUserAlert('validation', 'categoryLevel1', $categoryLevel1);
+                    try {
+                        $this->messager->sendUserAlert('validation', 'categoryLevel1', $categoryLevel1);
+                    } catch (\Exception $e) {
+                        $error .= $e->getMessage().PHP_EOL;
+                    }
                 }
 
                 if (array_key_exists('categoryLevel2', $entities)) {
-                    $this->messager->sendUserAlert('validation', 'categoryLevel2', $categoryLevel2);
+                    try {
+                        $this->messager->sendUserAlert('validation', 'categoryLevel2', $categoryLevel2);
+                    } catch (\Exception $e) {
+                        $error .= $e->getMessage().PHP_EOL;
+                    }
                 }
 
                 if (true === $entities['situ']['validation']) {
-                    $this->messager->sendUserAlert('validation', 'situ', $situ);
-                    $this->mailer->sendUserSituValidation($situ, $situ->getUser());
+                    try {
+                        $this->messager->sendUserAlert('validation', 'situ', $situ);
+                    } catch (\Exception $e) {
+                        $error .= $e->getMessage().PHP_EOL;
+                    }
+                    try {
+                        $this->mailer->sendUserSituValidation($situ, $situ->getUser());
+                    } catch (\Exception $e) {
+                        $error .= $e->getMessage().PHP_EOL;
+                    }
                 } else {
-                    $message = $this->messager
+                    try {
+                        $message = $this->messager
                                 ->sendUserEnvelope('situ_refuse', $entities['situ']['text'], $situ);
-                    $this->mailer->sendUserMessage($message['message'], $situ->getUser());
+                    } catch (\Exception $e) {
+                        $error .= $e->getMessage().PHP_EOL;
+                    }
+                    try {
+                        $this->mailer->sendUserSituValidation($situ, $situ->getUser());
+                    } catch (\Exception $e) {
+                        $error = $e->getMessage();
+                    }
                 }
 
                 $result = [
                     'success' => true,
                     'validator' => true,
+                    'msg' => $error,
                 ];
             }
             
