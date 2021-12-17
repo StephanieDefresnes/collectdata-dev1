@@ -22,4 +22,4 @@ framework:
     assets:
         base_urls:
             - '%env(BASE_URL)%'
-#    error_controller: App\Controller\Security\ErrorController::notFound
+    error_controller: App\Controller\Security\ErrorController::showError
