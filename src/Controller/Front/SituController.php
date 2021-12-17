@@ -64,6 +64,7 @@ class SituController extends AbstractController
      */
     public function userSitus()
     {
+        $situ = $this->em->getRepository(Situ::class)->findOneBy(['toto' => $slug]);
         return $this->render('front/situ/user.html.twig');
     }
     
@@ -84,6 +85,10 @@ class SituController extends AbstractController
         if ($id) {
             
             $situ = $this->em->getRepository(Situ::class)->find($id);
+        
+            if (!$situ) {
+                throw $this->createNotFoundException();
+            }
         
             // Check permission
             $this->denyAccessUnlessGranted('create_situ', $situ);
@@ -181,6 +186,10 @@ class SituController extends AbstractController
     {   
         $situ = $this->em->getRepository(Situ::class)->findOneBy(['slug' => $slug]);
         
+        if (!$situ) {
+            throw $this->createNotFoundException();
+        }
+        
         // Check permission
         $subject = ['situ' => $situ, 'preview' => $preview];
         $this->denyAccessUnlessGranted('read_situ', $subject);
@@ -196,6 +205,12 @@ class SituController extends AbstractController
      */
     public function translate(Request $request, $situId, $langId): Response
     {        
+        $situToTranslate = $this->em->getRepository(Situ::class)->find($situId);
+        
+        if (!$situToTranslate) {
+            throw $this->createNotFoundException();
+        }
+        
         $defaultLang = $this->em->getRepository(Lang::class)
                 ->findOneBy(['lang' => $this->parameters->get('locale')])
                 ->getId();
@@ -208,6 +223,10 @@ class SituController extends AbstractController
         
         // Translation lang
         $lang = $this->em->getRepository(Lang::class)->find($langId);
+        
+        if (true != $lang->getEnabled()) {
+            throw $this->createNotFoundException();
+        }
         
         // Check permission
         $subject = ['situ' => $situData, 'lang' => $lang];
@@ -251,6 +270,10 @@ class SituController extends AbstractController
      */
     function validation(Situ $situ): Response
     {
+        if (!$situ) {
+            throw $this->createNotFoundException();
+        }
+        
         // Check permission
         $this->denyAccessUnlessGranted('validation_situ', $situ);
         
