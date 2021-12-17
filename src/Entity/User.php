@@ -8,6 +8,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
@@ -15,7 +16,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
  * @UniqueEntity(fields="email", message="unique_email")
  * @UniqueEntity(fields="name", message="unique_name")
  */
-class User implements UserInterface
+class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     /**
      * @ORM\Id
@@ -25,7 +26,7 @@ class User implements UserInterface
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=190, unique=true)
+     * @ORM\Column(type="string", length=180, unique=true)
      */
     private $email;
 
@@ -218,14 +219,17 @@ class User implements UserInterface
      *
      * @see UserInterface
      */
-    public function getUsername(): string
+    public function getUserIdentifier(): string
     {
         return (string) $this->email;
     }
 
-    public function hasRole($role): bool
+    /**
+     * @deprecated since Symfony 5.3, use getUserIdentifier instead
+     */
+    public function getUsername(): string
     {
-        return in_array(strtoupper($role), $this->getRoles(), true);
+        return (string) $this->email;
     }
 
     /**
@@ -247,12 +251,17 @@ class User implements UserInterface
         return $this;
     }
 
+    public function hasRole($role): bool
+    {
+        return in_array(strtoupper($role), $this->getRoles(), true);
+    }
+
     /**
-     * @see UserInterface
+     * @see PasswordAuthenticatedUserInterface
      */
     public function getPassword(): string
     {
-        return (string) $this->password;
+        return $this->password;
     }
 
     public function setPassword(string $password): self
@@ -263,11 +272,14 @@ class User implements UserInterface
     }
 
     /**
+     * Returning a salt is only needed, if you are not using a modern
+     * hashing algorithm (e.g. bcrypt or sodium) in your security.yaml.
+     *
      * @see UserInterface
      */
-    public function getSalt()
+    public function getSalt(): ?string
     {
-        // not needed when using the "bcrypt" algorithm in security.yaml
+        return null;
     }
 
     /**
@@ -313,7 +325,7 @@ class User implements UserInterface
         return $this->name;
     }
 
-    public function setName(?string $name): self
+    public function setName(string $name): self
     {
         $this->name = $name;
 
@@ -330,7 +342,7 @@ class User implements UserInterface
         return $this->imageFilename;
     }
 
-    public function setImageFilename($imageFilename)
+    public function setImageFilename(?string $imageFilename)
     {
         $this->imageFilename = $imageFilename;
 
@@ -402,7 +414,7 @@ class User implements UserInterface
         return $this->lang;
     }
 
-    public function setLang(?Lang $lang): self
+    public function setLang(Lang $lang): self
     {
         $this->lang = $lang;
 
@@ -414,7 +426,7 @@ class User implements UserInterface
         return $this->langContributor;
     }
 
-    public function setLangContributor(bool $langContributor): self
+    public function setLangContributor(?bool $langContributor): self
     {
         $this->langContributor = $langContributor;
 
@@ -703,5 +715,4 @@ class User implements UserInterface
 
         return $this;
     }
-   
 }

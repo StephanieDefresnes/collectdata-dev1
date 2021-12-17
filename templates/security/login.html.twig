@@ -5,17 +5,16 @@
 
 {% block content %}
     
-    {% if error %}
-        <div class="fadeInDown animated">
-            <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
-        </div>
-    {% endif %}
-    
     <div class="col-lg-6 mx-auto pt-5">
         
         <div class="card mt-4 mb-4 p-2 bg-light-80">
             
             <div class="card-body">
+    
+                {% if error %}
+                    <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+                {% endif %}
+                
                 <form method="post">
                     {% if app.user %}
                         <div class="mb-3">
@@ -25,7 +24,7 @@
                         <h1 class="h3 mb-3 font-weight-normal d-flex justify-content-start">{{ 'action.login'|trans }}</h1>
                         <div class="form-group">
                             <label for="inputEmail" class="d-flex justify-content-start required">{{ 'label.email'|trans({}, 'messages') }}</label>
-                            <input type="email" value="{{ last_username }}" name="email" id="inputEmail" class="form-control mb-2" placeholder="email@example.com" required autofocus>
+                            <input type="email" {# value="{{ last_username }}" #} name="email" id="inputEmail" class="form-control mb-2" placeholder="email@example.com" required autofocus>
                         </div>
                         <div class="form-group">
                             <label for="inputPassword" class="d-flex justify-content-start required">{{ 'login.label.password'|trans }}</label>
@@ -39,8 +38,6 @@
                                 </div>
                             </div>
                         </div>
-                        <input type="hidden" name="_csrf_token"
-                            value="{{ csrf_token('authenticate') }}">
                         <div class="form-group d-flex justify-content-start">
                             <div class="checkbox mb-3">
                                 <label>
@@ -48,13 +45,15 @@
                                 </label>
                             </div>
                         </div>
+                        <input type="hidden" name="_csrf_token"
+                            value="{{ csrf_token('authenticate') }}">
                         <div class="form-group text-center mb-4">
                             <button class="btn btn-secondary px-5" type="submit">
                                 {{ 'login.btn.submit'|trans }}
                             </button>
                         </div>
-                        <div id="login_captcha"
-                             data-toggle="recaptcha" data-type="invisible"></div>
+                        {#<div id="login_captcha"
+                             data-toggle="recaptcha" data-type="invisible"></div>#}
                         <hr>
                         <div class="row">
                             <div class="col-sm-6">
@@ -78,7 +77,8 @@
     {{ encore_entry_script_tags('pw_app', null, 'frontApp') }}
     <script>
         var recaptcha = {'sitekey' : '{{ google_recaptcha_site_key }}'}
-    </script> 
-    <script src="{{ asset('recaptcha/recaptcha.js') }}"></script>
+    </script>
+    {# uncomment in prod #}
+{#    <script src="{{ asset('recaptcha/recaptcha.js') }}"></script>#}
     <script src="https://www.google.com/recaptcha/api.js?onload=onGoogleReCaptchaApiLoad&render=explicit&hl={{ app.request.locale }}" async defer></script>
 {% endblock %}
