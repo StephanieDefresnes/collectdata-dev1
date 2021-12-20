@@ -1,3 +1,5 @@
 {% trans_default_domain 'back_messages' %}
 
-{{ form_row(form.user)}}
+{% if form.user is defined %}
+    {{ form_row(form.user)}}
+{% endif %}
