@@ -7,6 +7,7 @@ use App\Entity\Page;
 use App\Entity\Status;
 use App\Entity\User;
 use App\Form\Page\PageFormType;
+use App\Manager\Back\UserManager;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
@@ -46,14 +47,17 @@ class PageController extends AbstractController
                                 Request $request,
                                 Security $security,
                                 TranslatorInterface $translator,
+                                UserManager $userManager,
                                 $_locale, $id, $back = null): Response
     {
-        $user = $security->getUser();
-            
         $action = 'submit';
         $label = 'action.submit';
         $referentPage = '';
+        $user = $security->getUser();
         $users = [];
+        
+        // Prevent SUPER_VISITOR flush
+        $result = $userManager->preventSuperVisitor();
         
         if ($back) {
             $this->denyAccessUnlessGranted('ROLE_SUPER_VISITOR');
@@ -82,6 +86,11 @@ class PageController extends AbstractController
             if ($back) {
                 $label = 'action.attribute';
                 foreach ($user->getLangs()->getValues() as $lang) {
+                    if ($lang->getLang() === $page->getLang()) {
+                        $label = 'action.validate';
+                    }
+                }
+                foreach ($user->getContributorLangs()->getValues() as $lang) {
                     if ($lang->getLang() === $page->getLang()) {
                         $label = 'action.validate';
                     }
@@ -115,7 +124,7 @@ class PageController extends AbstractController
         // Form
         $form = $this->createForm(PageFormType::class, $page, [
                 'label' => $label,
-                'users' => $users
+                'users' => $users,
             ]);
         $form->handleRequest($request);
         
@@ -179,11 +188,15 @@ class PageController extends AbstractController
             $em->persist($page);
             
             try {
-                // Super visitor filter
-                if ($back && $user->hasRole('ROLE_SUPER_VISITOR')) {
-                    return $this->redirectToRoute('back_access_denied', [
-                        '_locale' => locale_get_default()
-                    ]);
+                if (false !== $result) {
+                    if ($back) {
+                        $url = $this->redirect($result);
+                    } else {
+                        $url = $this->redirectToRoute('error_403', [
+                            '_locale' => locale_get_default(),
+                        ]);
+                    }
+                    return $url;
                 }
                 
                 $em->flush();

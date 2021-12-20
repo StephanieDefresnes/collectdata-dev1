@@ -64,7 +64,6 @@ class SituController extends AbstractController
      */
     public function userSitus()
     {
-        $situ = $this->em->getRepository(Situ::class)->findOneBy(['toto' => $slug]);
         return $this->render('front/situ/user.html.twig');
     }
     

@@ -3,13 +3,13 @@
 namespace App\Controller\Back;
 
 use App\Entity\Lang;
+use App\Manager\Back\UserManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Contracts\Translation\TranslatorInterface;
-use Symfony\Component\Security\Core\Security;
 
 /**
  * @IsGranted("IS_AUTHENTICATED_FULLY")
@@ -28,9 +28,10 @@ class LangController extends AbstractController
     public function permuteEnabled( EntityManagerInterface $em,
                                     TranslatorInterface $translatorInterface,
                                     Request $request,
-                                    Security $security, $id): Response
+                                    UserManager $userManager, $id): Response
     {    
-        $user = $security->getUser(); 
+        // Prevent SUPER_VISITOR flush
+        $result = $userManager->preventSuperVisitor();
         
         $lang = $em->getRepository(Lang::class)->find($id);
 
@@ -43,12 +44,7 @@ class LangController extends AbstractController
         }
         
         try {
-            // Filter super visitor           
-            if ($user->hasRole('ROLE_SUPER_VISITOR')) {
-                return $this->redirectToRoute('back_access_denied', [
-                    '_locale' => locale_get_default()
-                ]);
-            }
+            if (false !== $result) return $this->redirect($result);
             
             $em->flush();
 

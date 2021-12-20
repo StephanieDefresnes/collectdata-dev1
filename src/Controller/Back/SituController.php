@@ -8,6 +8,7 @@ use App\Entity\Lang;
 use App\Entity\Situ;
 use App\Entity\User;
 use App\Form\Back\Situ\VerifySituFormType;
+use App\Manager\Back\UserManager;
 use App\Service\SituValidator;
 use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
@@ -16,7 +17,6 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
-use Symfony\Component\Security\Core\Security;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
@@ -25,22 +25,22 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 class SituController extends AbstractController
 {
     private $em;
-    private $security;
     private $situValidator;
     private $translator;
     private $urlGenerator;
+    private $userManager;
     
     public function __construct(EntityManagerInterface $em,
-                                Security $security,
                                 SituValidator $situValidator,
                                 TranslatorInterface $translator,
-                                UrlGeneratorInterface $urlGenerator)
+                                UrlGeneratorInterface $urlGenerator,
+                                UserManager $userManager)
     {
         $this->em = $em;
-        $this->security = $security;
         $this->situValidator = $situValidator;
         $this->translator = $translator;
         $this->urlGenerator = $urlGenerator;
+        $this->userManager = $userManager;
     }
     
     public function allSitus(): Response
@@ -157,21 +157,17 @@ class SituController extends AbstractController
                                         '_locale' => locale_get_default(),
                                     ]);
             } else {
-                if ($result['msg']) {
-                    $msgError = $result['msg'];
-                    $request->getSession()->getFlashBag()->add('error', $msgError);
-                }
-                $msgSuccess = $this->translator->trans(
+                $redirection = $this->urlGenerator->generate('back_situs_validation',[
+                                        '_locale' => locale_get_default(),
+                                    ]);
+            
+                $msg = $this->translator->trans(
                             'contrib.situ.verify.form.modal.'.
                                 $data['dataForm']['action'] .'.flash.success', [],
                             'back_messages', $locale = locale_get_default()
                             );
-                $request->getSession()->getFlashBag()->add('success', $msgSuccess);
-                
-                $redirection = $this->urlGenerator->generate('back_situs_validation',[
-                                        '_locale' => locale_get_default(),
-                                    ]);
-                
+
+                $request->getSession()->getFlashBag()->add('success', $msg);
             }
             
             return $this->json([
@@ -195,13 +191,8 @@ class SituController extends AbstractController
         }
             
         try {
-            // Filter super visitor
-            $user = $this->security->getUser();            
-            if ($user->hasRole('ROLE_SUPER_VISITOR')) {
-                return $this->redirectToRoute('back_access_denied', [
-                    '_locale' => locale_get_default()
-                ]);
-            }
+            // Prevent SUPER_VISITOR flush
+            $this->userManager->preventSuperVisitor();
             
             $this->em->remove($situ);
             $this->em->flush();

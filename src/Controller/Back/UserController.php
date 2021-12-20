@@ -83,6 +83,9 @@ class UserController extends AbstractController
         // Check permission
         $this->denyAccessUnlessGranted('back_user_update', $user);
         
+        // Prevent SUPER_VISITOR flush
+        $result = $this->userManager->preventSuperVisitor();
+        
         // Form depending on user role
         $role = '';
         if ($this->security->isGranted('ROLE_SUPER_ADMIN')) {
@@ -96,8 +99,7 @@ class UserController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             
             try {
-                // Prevent SUPER_VISITOR flush
-                $this->userManager->preventSuperVisitor($user);
+                if (false !== $result) return $this->redirect($result);
             
                 $this->em->flush();
                 
@@ -126,6 +128,9 @@ class UserController extends AbstractController
         
         // Check permission
         $this->denyAccessUnlessGranted('back_user_delete', $users);
+        
+        // Prevent SUPER_VISITOR flush
+        $result = $this->userManager->preventSuperVisitor();;
 
         // Replace contributions author
         $this->userManager->anonymizeContributions($users);
@@ -134,8 +139,7 @@ class UserController extends AbstractController
         else $type = 'user';
 
         try {
-            // Prevent SUPER_VISITOR flush
-            $this->userManager->preventSuperVisitor($user);
+            if (false !== $result) return $this->redirect($result);
             
             $this->em->flush();
             
@@ -169,8 +173,7 @@ class UserController extends AbstractController
         }
 
         try {
-            // Prevent SUPER_VISITOR flush
-            $this->userManager->preventSuperVisitor($user);
+            if (false !== $result) return $this->redirect($result);
 
             $this->em->flush();
             

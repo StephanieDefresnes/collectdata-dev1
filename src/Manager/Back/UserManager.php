@@ -8,9 +8,11 @@ use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\Form\Exception\LogicException;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Exception\InvalidParameterException;
+use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
@@ -25,16 +27,18 @@ class UserManager
     public function __construct(EntityManagerInterface $em,
                                 ParameterBagInterface $parameters,
                                 RequestStack $requestStack,
-                                TranslatorInterface $translator,
+                                RouterInterface $router,
                                 Security $security,
+                                TranslatorInterface $translator,
                                 UrlGeneratorInterface $urlGenerator)
     {
         $this->em = $em;
         $this->requestStack = $requestStack;
-        $this->security = $security;
+        $this->router = $router;
         $this->supremeAdminId = $parameters->get('supreme_admin_id');
         $this->translator = $translator;
         $this->urlGenerator = $urlGenerator;
+        $this->user = $security->getUser();
     }
     
     /**
@@ -107,10 +111,13 @@ class UserManager
     public function getUsers()
     {    
         $request = $this->requestStack->getCurrentRequest();
+        
         $ids = $request->query->get('ids', null);
-        if (!is_array($ids)) { throw new InvalidParameterException(); }
+        if (!is_array($ids)) throw new InvalidParameterException();
+        
         $users = $this->em->getRepository(User::class)->findById($ids);
-        if (count($ids) !== count($users)) { throw new NotFoundHttpException(); }
+        if (count($ids) !== count($users)) throw new NotFoundHttpException();
+        
         return $users;
     }
     
@@ -119,21 +126,28 @@ class UserManager
      * 
      * @param type $user
      */
-    public function preventSuperVisitor($user)
+    public function preventSuperVisitor($response = null)
     {
-        if ($this->security->getUser()->hasRole('ROLE_SUPER_VISITOR')) {
-            return $this->redirectToRoute('back_access_denied', [
-                '_locale' => locale_get_default()
-            ]);
+        if ($this->user->hasRole('ROLE_SUPER_VISITOR')) {
+            if (true === $response) {
+                return new RedirectResponse(
+                    $this->router->generate('back_access_denied', [
+                        '_locale' => locale_get_default()
+                    ])
+                );
+            }
+            return $this->urlGenerator->generate('back_access_denied', [
+                    '_locale' => locale_get_default()
+                ]);
         }
+        return false;
     }
-
+    
     /**
      * Anonymize all users contributions and remove before flush
      */
     public function anonymizeContributions($users)
     {   
-        
         // Assign user contribs to anonymous
         $anonymous = $this->em->getRepository(User::class)->find(0);
 
