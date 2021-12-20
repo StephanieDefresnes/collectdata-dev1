@@ -98,7 +98,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private $lang;
 
     /**
-     * @ORM\ManyToMany(targetEntity=Lang::class, inversedBy="users")
+     * @ORM\ManyToMany(targetEntity=Lang::class, cascade={"persist"}, inversedBy="users")
      */
     private $langs;
 
@@ -108,7 +108,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private $langContributor;
 
     /**
-    * @ORM\ManyToMany(targetEntity=Lang::class)
+    * @ORM\ManyToMany(targetEntity=Lang::class, cascade={"persist"})
     * @ORM\JoinTable(name="contributor_langs")
     */
     protected $contributorLangs;
@@ -162,6 +162,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @ORM\OneToMany(targetEntity=Page::class, mappedBy="user")
      */
     private $pages;
+    
+    protected $captcha;
 
     public function __construct()
     {
@@ -714,5 +716,15 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         }
 
         return $this;
+    }
+    
+    public function getCaptcha()
+    {
+      return $this->captcha;
+    }
+
+    public function setCaptcha($captcha)
+    {
+      $this->captcha = $captcha;
     }
 }
