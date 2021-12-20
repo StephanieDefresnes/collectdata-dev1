@@ -897,6 +897,12 @@ $(function() {
                         .animate({ opacity: 1}, 250)
                 }
             }
+            
+            // Remove edit next entity buttons if exist
+            $(this).parents('.formData').find('.editEntity').remove()
+            $(this).parents('.formData').nextAll().each(function(i, obj){
+                        $(obj).find('.editEntity').remove()
+                    })
                 
             // Load data or create them on action change
             changeSelect($(this))                                         
