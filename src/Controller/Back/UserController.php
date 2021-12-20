@@ -159,6 +159,9 @@ class UserController extends AbstractController
         
         // Check permission
         $this->denyAccessUnlessGranted('back_user_permute_enabled', $users);
+        
+        // Prevent SUPER_VISITOR flush
+        $result = $this->userManager->preventSuperVisitor();
             
         $permute;
         foreach ($users as $user) {
