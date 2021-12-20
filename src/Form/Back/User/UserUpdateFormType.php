@@ -28,25 +28,25 @@ class UserUpdateFormType extends AbstractType
             case 'super-admin':
                 if ($this->security->getUser()->getId() == 1) {
                     $choices = [
-                        'role.ROLE_SUPER_ADMIN' => 'ROLE_SUPER_ADMIN',
-                        'role.ROLE_SUPER_VISITOR' => 'ROLE_SUPER_VISITOR',
-                        'role.ROLE_ADMIN' => 'ROLE_ADMIN',
-                        'role.ROLE_MODERATOR' => 'ROLE_MODERATOR',
-                        'role.ROLE_CONTRIBUTOR' => 'ROLE_CONTRIBUTOR',
+                        'user.ROLE_SUPER_ADMIN' => 'ROLE_SUPER_ADMIN',
+                        'user.ROLE_SUPER_VISITOR' => 'ROLE_SUPER_VISITOR',
+                        'user.ROLE_ADMIN' => 'ROLE_ADMIN',
+                        'user.ROLE_MODERATOR' => 'ROLE_MODERATOR',
+                        'user.ROLE_CONTRIBUTOR' => 'ROLE_CONTRIBUTOR',
                     ];
                 } else {
                     $choices = [
-                        'role.ROLE_ADMIN' => 'ROLE_ADMIN',
-                        'role.ROLE_MODERATOR' => 'ROLE_MODERATOR',
-                        'role.ROLE_CONTRIBUTOR' => 'ROLE_CONTRIBUTOR',
+                        'user.ROLE_ADMIN' => 'ROLE_ADMIN',
+                        'user.ROLE_MODERATOR' => 'ROLE_MODERATOR',
+                        'user.ROLE_CONTRIBUTOR' => 'ROLE_CONTRIBUTOR',
                     ];
                 }
                 $bsClass = '';
                 break;
             case 'admin':
                 $choices = [
-                    'role.ROLE_MODERATOR' => 'ROLE_MODERATOR',
-                    'role.ROLE_CONTRIBUTOR' => 'ROLE_CONTRIBUTOR',
+                    'user.ROLE_MODERATOR' => 'ROLE_MODERATOR',
+                    'user.ROLE_CONTRIBUTOR' => 'ROLE_CONTRIBUTOR',
                 ];
                 $bsClass = '';
                 break;
@@ -59,14 +59,15 @@ class UserUpdateFormType extends AbstractType
                 'attr' => [
                     'rows' => '3',
                 ],
+                'translation_domain' => 'messages'
             ])
             ->add('roles', ChoiceType::class, [
-                'label' => 'role.label',
+                'label' => 'user.role',
                 'row_attr' => ['class' => $bsClass],
                 'choices' => $choices,
                 'expanded' => true,
                 'multiple' => true,
-                'translation_domain' => 'front_messages'
+                'translation_domain' => 'messages'
             ]);
     }
 
