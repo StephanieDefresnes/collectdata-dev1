@@ -103,7 +103,7 @@ class SituController extends AbstractController
             $situInitial = '';
             $situsTranslated = '';
             
-            if ($situ->getInitialSitu() === false) {
+            if (false === $situ->getInitialSitu()) {
                 $situInitial = $this->em->getRepository(Situ::class)
                         ->find($situ->getTranslatedSituId());
                 $situsTranslated = $this->em->getRepository(Situ::class)
@@ -112,32 +112,17 @@ class SituController extends AbstractController
                             'lang' => $situ->getLang()
                         ]);
             }
-            $events = $this->em->getRepository(Event::class)
-                        ->findBy(['lang' => $situ->getLang()->getId()]);
-            
-            $categoriesLevel1 = $this->em->getRepository(Category::class)
-                        ->findBy(['event' => $situ->getEvent()->getId()]);
-            
-            $categoriesLevel2 = $this->em->getRepository(Category::class)
-                        ->findBy(['parent' => $situ->getCategoryLevel1()->getId()]);
-        
-            $author = $this->em->getRepository(User::class)->find($situ->getUser());
-            $authorLang = $this->em->getRepository(Lang::class)->find($author->getLang());
         }
         
         // Form
-        $form = $this->createForm(VerifySituFormType::class, $situ, [
-            'events' => $events,
-            'categoriesLevel1' => $categoriesLevel1,
-            'categoriesLevel2' => $categoriesLevel2,
-        ]);
+        $form = $this->createForm(VerifySituFormType::class, $situ);
         
         return $this->render('back/situ/verify/index.html.twig', [
             'form' => $form->createView(),
             'situ' => $situ,
             'situInitial' => $situInitial,
             'situsTranslated' => $situsTranslated,
-            'authorLang' => $authorLang->getLang(),
+            'authorLang' => $situ->getUser()->getLang(),
         ]);
     }
     
