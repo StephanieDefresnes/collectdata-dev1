@@ -70,15 +70,15 @@ class CategoryController extends AbstractController
             $category->setDescription($data['description']);
             $this->em->persist($category);
             
-            $type = $category->getEvent() ? 'level1' : 'level2';
+            $type = $category->getEvent() ? 'categoryLevel1' : 'categoryLevel2';
             
             try {
                 $this->em->flush();
 
                 $msg = $this->translator->trans(
-                            'contrib.form.category.'. $type .'.update.success', [],
-                            'user_messages', $locale = locale_get_default()
-                            );
+                        'contrib.form.'. $type .'.update.success', [],
+                        'user_messages', $locale = locale_get_default()
+                    );
             
                 return $this->json([
                     'success' => true,
@@ -87,9 +87,9 @@ class CategoryController extends AbstractController
 
             } catch (\Doctrine\DBAL\DBALException $e) {
                 $msg = $this->translator->trans(
-                            'contrib.form.category.'. $type .'.update.error', [],
+                            'contrib.form.'. $type .'.update.error', [],
                             'user_messages', $locale = locale_get_default()
-                            );
+                        );
             
                 return $this->json([
                     'success' => false,
