@@ -7,7 +7,7 @@ use App\Entity\Category;
 use App\Entity\Lang;
 use App\Entity\Situ;
 use App\Entity\User;
-use App\Form\Back\Situ\VerifySituFormType;
+use App\Form\Back\Situ\VerifySituForm;
 use App\Manager\Back\UserManager;
 use App\Service\SituValidator;
 use Doctrine\ORM\EntityManagerInterface;
@@ -115,7 +115,7 @@ class SituController extends AbstractController
         }
         
         // Form
-        $form = $this->createForm(VerifySituFormType::class, $situ);
+        $form = $this->createForm(VerifySituForm::class, $situ);
         
         return $this->render('back/situ/verify/index.html.twig', [
             'form' => $form->createView(),

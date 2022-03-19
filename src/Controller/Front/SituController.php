@@ -5,7 +5,7 @@ namespace App\Controller\Front;
 use App\Entity\Lang;
 use App\Entity\Situ;
 use App\Entity\Status;
-use App\Form\Front\Situ\SituFormType;
+use App\Form\Front\Situ\SituForm;
 use App\Mailer\Mailer;
 use App\Manager\Front\SituManager;
 use App\Messager\Messager;
@@ -114,7 +114,7 @@ class SituController extends AbstractController
         }
         
         // Form
-        $form = $this->createForm(SituFormType::class, $situ);
+        $form = $this->createForm(SituForm::class, $situ);
         $form->handleRequest($request);
         
         /**
@@ -233,7 +233,7 @@ class SituController extends AbstractController
         
         // Form
         $situ = new Situ();
-        $form = $this->createForm(SituFormType::class, $situ);
+        $form = $this->createForm(SituForm::class, $situ);
         $form->handleRequest($request);
         
         /**

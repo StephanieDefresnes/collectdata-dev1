@@ -25,7 +25,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-class SituFormType extends AbstractType
+class SituForm extends AbstractType
 {
     private $em;
     private $translator;
