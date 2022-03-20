@@ -190,8 +190,6 @@ function loadSelectData($form, data, selectId, nextSelectId) {
                         // Destroy select2
                         if ($('#'+ objId).data('select2'))
                             $('#'+ objId).select2('destroy')
-
-                        console.log($(html).find('#'+ objId))
                         
                         // Replace from ajax
                         $('#'+ objId).replaceWith($(html).find('#'+ objId))
@@ -876,8 +874,6 @@ $(function() {
                                 +'#situ_data_form_event, '
                                 +'#situ_data_form_categoryLevel1, '
                                 +'#situ_data_form_categoryLevel2', function() {
-
-            /* console.log($(this)) */
 
             // Toggle styles
             let rendered = $(this).parent().find('.select2-selection__rendered')
