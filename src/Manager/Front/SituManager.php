@@ -2,6 +2,7 @@
 
 namespace App\Manager\Front;
 
+use App\Entity\Situ;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\Form\FormInterface;
@@ -32,41 +33,50 @@ class SituManager {
      *
      * If the result returned is a string the form is not validated and the message is added in the flash bag
      *  
-     * @param FormInterface $form
+     * @param Situ $situ = $form->getViewData()
      * @return boolean|string
      */
-    public function validationForm(Request $request)
+    public function validationForm(Situ $situ)
     {
-        $data = $request->request->get('situ_form');
-        
-        if ((is_numeric($data['event'])
-                || (is_array($data['event']) && !empty($data['event']['title'])))
-            && (is_numeric($data['categoryLevel1'])
-                || (is_array($data['categoryLevel1'])
-                    && !empty($data['categoryLevel1']['title'])
-                    && !empty($data['categoryLevel1']['description'])))
-            && (is_numeric($data['categoryLevel2'])
-                || (is_array($data['categoryLevel2'])
-                    && !empty($data['categoryLevel2']['title'])
-                    && !empty($data['categoryLevel2']['description'])))
-            && !empty($data['title'])
-            && !empty($data['description'])
-            && $this->unvalidateItems($data['situItems']) === 0
-                )
+        if ( !empty($situ->getEvent()->getTitle())
+            && !empty($situ->getCategoryLevel1()->getTitle())
+            && !empty($situ->getCategoryLevel1()->getDescription())
+            && !empty($situ->getCategoryLevel2()->getTitle())
+            && !empty($situ->getCategoryLevel2()->getDescription())
+            && !empty($situ->getTitle())
+            && !empty($situ->getDescription())
+            && count($situ->getSituItems()) > 0
+            && count($situ->getSituItems()) < 5
+            && $this->isValidItems($situ->getSituItems()) )
         {
             return true;
         }
+
+        $msgForm = '';
+
+        if ( empty($situ->getEvent()->getTitle())
+            || empty($situ->getCategoryLevel1()->getTitle())
+            || empty($situ->getCategoryLevel1()->getDescription())
+            || empty($situ->getCategoryLevel2()->getTitle())
+            || empty($situ->getCategoryLevel2()->getDescription())
+            || empty($situ->getTitle())
+            || empty($situ->getDescription()) )
+        {
+            $msgForm = $this->translator->trans('contrib.form.error', [], 'user_messages');
+        }
         
-        $msgForm = $this->translator->trans('contrib.form.error', [], 'user_messages');
 
         $msgItems = '';
-        if (count($data['situItems']) < 1) {
+        if (count($situ->getSituItems()) < 1)
+        {
             $errorItems = $this->translator->trans(
                             'contrib.form.item.flash.error_min', [],
                             'user_messages', $locale = locale_get_default()
                         );
             $msgItems = PHP_EOL.$errorItems;
-        } elseif (count($data['situItems']) > 4) {
+
+        } elseif (count($situ->getSituItems()) > 4) {
+
             $errorItems = $this->translator->trans(
                             'contrib.form.item.flash.error_max', [],
                             'user_messages', $locale = locale_get_default()
@@ -77,16 +87,22 @@ class SituManager {
         return $msgForm.$msgItems;
     }
     
-    private function unvalidateItems($items) {
+    /**
+     * Check if situ collection is available
+     * 
+     * @param $items = $data->getSituItems()
+     * @return int
+     */
+    private function isValidItems($items) {
         $result = 0;
         foreach ($items as $item) {
-            if (!is_numeric($item['score'])
-                    || empty($item['title'])
-                    || empty($item['description'])) {
+            if (!is_numeric($item->getScore())
+                    || empty($item->getTitle())
+                    || empty($item->getDescription())) {
                 $result = $result +1;
             }
         }
-        return $result;
+        return $result === 0 ? true : false;
     }
     
     /**

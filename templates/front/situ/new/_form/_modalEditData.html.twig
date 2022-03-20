@@ -1,0 +1,22 @@
+{% trans_default_domain 'messages' %}
+
+<div class="modal fade" id="editEntity" data-backdrop="static" data-keyboard="false"
+        tabindex="-1" aria-labelledby="editEntityLabel" aria-hidden="true"
+        data-entity="" data-id="" style="z-index: 10001">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header d-flex justify-content-start bg-dark text-white">
+                <h5 class="modal-title"></h5>
+            </div>
+            <div class="modal-body"></div>
+            <div class="modal-footer d-flex justify-content-center py-2 bg-light">
+                <span class="btn btn-secondary btnModal modalCancel">
+                    {{ 'action.cancel'|trans({}, 'messages') }}
+                </span>
+                <span class="btn btn-primary btnModal modalValidate">
+                    {{ 'action.validate'|trans({}, 'messages') }}
+                </span>
+            </div>
+        </div>
+    </div>
+</div>

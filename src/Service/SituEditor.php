@@ -48,74 +48,71 @@ class SituEditor {
     /**
      * Distribute data to persist & flush
      * 
-     * @param FormInterface $form
+     * @param Situ $situForm
      * @param Request $request
-     * @param type $id
      * @return type
      */
-    public function setSitu(FormInterface $form, Request $request, $id = null)
+    /* public function setSitu(FormInterface $form, Request $request, $id = null) */
+    public function setSitu(Situ $situForm, Request $request)
     {
-        $situRequest = $request->request->get('situ_form');
-        $form = $form->getData();
-        
-        $dateNow = new \DateTime('now');
-        
-        // Current user
-        $user = $this->security->getUser();
+        $situRequest    = $request->request->get('situ_form');
+        $_locale        = locale_get_default();
+        $dateNow        = new \DateTime('now');
+        $currentUser    = $this->security->getUser();
         
         // If updating Situ
-        if ($id) {
-            $situ = $this->em->getRepository(Situ::class)->find($id);
+        if ($situForm->getId()) {
+            $situ = $this->em->getRepository(Situ::class)->find($situForm->getId());
             $situ->setDateLastUpdate($dateNow);
             $success = 'success_update';
         } else {
             $situ = new Situ();
-            $situ->setUser($user);
+            $situ->setUser($currentUser);
             $situ->setDateCreation($dateNow);
             $success = 'success';
         }
 
         // Status depending on submitted button
         if (array_key_exists('save', $situRequest)) {
-            $statusRequest = $this->em->getRepository(Status::class)->find(1);
+            $statusFrom = $this->em->getRepository(Status::class)->find(1);
             $situ->setDateSubmission(null);
             $action = 'save';
         } elseif (array_key_exists('submit', $situRequest)) {
-            $statusRequest = $this->em->getRepository(Status::class)->find(2);
+            $statusFrom = $this->em->getRepository(Status::class)->find(2);
             $situ->setDateSubmission($dateNow);
             $action = 'submit';
-            if ($id) { $success = 'success'; }
+            if ($situForm->getId()) $success = 'success';
         }
 
-        if (array_key_exists('lang', $situRequest)) {
+        if ($situForm->getLang()->getId()) {
             $lang = $this->em->getRepository(Lang::class)
-                        ->find($situRequest['lang']);
+                        ->find($situForm->getLang()->getId());
         } else {
             $lang = $this->em->getRepository(Lang::class)
-                        ->findOneBy(['lang' => locale_get_default()]);
+                        ->findOneBy(['lang' => $_locale]);
         }
 
         // Select or create an event
-        if ($form->getEvent()->getId()) {
-            $event = $form->getEvent();
+        if ($situForm->getEvent()->getId()) {
+            $event = $situForm->getEvent();
         } else {
             $event = new Event();
-            $event->setTitle($form->getEvent()->getTitle());
-            $event->setUser($user);
+            $event->setTitle($situForm->getEvent()->getTitle());
+            $event->setUser($currentUser);
             $event->setValidated(false);
             $event->setLang($lang);
             $this->em->persist($event);
         }
 
         // Select or create an categoryLevel1
-        if ($form->getCategoryLevel1()->getId()) {
-            $categoryLevel1 = $form->getCategoryLevel1();
+        if ($situForm->getCategoryLevel1()->getId()) {
+            $categoryLevel1 = $situForm->getCategoryLevel1();
         } else {
             $categoryLevel1 = new Category();
-            $categoryLevel1->setTitle($form->getCategoryLevel1()->getTitle());
-            $categoryLevel1->setDescription($form->getCategoryLevel1()->getDescription());
+            $categoryLevel1->setTitle($situForm->getCategoryLevel1()->getTitle());
+            $categoryLevel1->setDescription($situForm->getCategoryLevel1()->getDescription());
             $categoryLevel1->setDateCreation(new \DateTime('now'));
-            $categoryLevel1->setUser($user);
+            $categoryLevel1->setUser($currentUser);
             $categoryLevel1->setValidated(false);
             $categoryLevel1->setLang($lang);
             $categoryLevel1->setEvent($event);
@@ -123,14 +120,14 @@ class SituEditor {
         }
 
         // Select or create an categoryLevel2
-        if ($form->getCategoryLevel2()->getId()) {
-            $categoryLevel2 = $form->getCategoryLevel2();
+        if ($situForm->getCategoryLevel2()->getId()) {
+            $categoryLevel2 = $situForm->getCategoryLevel2();
         } else {
             $categoryLevel2 = new Category();
-            $categoryLevel2->setTitle($form->getCategoryLevel2()->getTitle());
-            $categoryLevel2->setDescription($form->getCategoryLevel2()->getDescription());
+            $categoryLevel2->setTitle($situForm->getCategoryLevel2()->getTitle());
+            $categoryLevel2->setDescription($situForm->getCategoryLevel2()->getDescription());
             $categoryLevel2->setDateCreation(new \DateTime('now'));
-            $categoryLevel2->setUser($user);
+            $categoryLevel2->setUser($currentUser);
             $categoryLevel2->setValidated(false);
             $categoryLevel2->setLang($lang);
             $categoryLevel2->setParent($categoryLevel1);
@@ -141,70 +138,79 @@ class SituEditor {
         $situ->setEvent($event);
         $situ->setCategoryLevel1($categoryLevel1);
         $situ->setCategoryLevel2($categoryLevel2);
-        $situ->setTitle($form->getTitle());
-        $situ->setDescription($form->getDescription());
-        $situ->setStatus($statusRequest);
+        $situ->setTitle($situForm->getTitle());
+        $situ->setDescription($situForm->getDescription());
+        $situ->setStatus($statusFrom);
 
-        if ($form->getTranslatedSituId()) {
+        if ($situForm->getTranslatedSituId()) {
             $situ->setInitialSitu(false);
-            $situ->setTranslatedSituId($form->getTranslatedSituId());
+            $situ->setTranslatedSituId($situForm->getTranslatedSituId());
         } else {
             $situ->setInitialSitu(true);
         }
 
-        // Original SituItem collection
+        // Original SituItem collection from Situ object
         $originalItems = new ArrayCollection();
         foreach ($situ->getSituItems() as $item) {
             $originalItems->add($item);
         }
+        
+        // Remove obsolete SituItem
         foreach ($originalItems as $item) {
-            if (false === $form->getSituItems()->contains($item)) {
+            if (false === $situForm->getSituItems()->contains($item)) {
                 $situ->getSituItems()->removeElement($item);
                 $this->em->remove($item);
             }
         }
-        foreach ($form->getSituItems() as $item) {
-            $situ->addSituItem($item);
+
+        // Add new SituItem
+        foreach ($situForm->getSituItems() as $item) {
+            if (false === $originalItems->contains($item)) {
+                $situ->addSituItem($item);
+            }
         }
-            
+        
         $this->em->persist($situ);
+
+        $route  = 'user_situs'; 
+        $params = [ '_locale' => $_locale ];
+        $eFlash = '';
 
         try {
             $this->em->flush();
-
-            $msg = $this->translator->trans(
-                        'contrib.form.'. $action .'.flash.'. $success, [],
-                        'user_messages', $locale = locale_get_default()
-                        );
-            $this->flash->add('success', $msg);
-
-            $route = 'user_situs'; 
-            $params = [ '_locale' => locale_get_default() ];
+            
+            $flashResult    = 'success';
+            $flashType      = '.flash.'. $success;
             
             if (array_key_exists('submit', $situRequest)) {
                 $this->messager->sendModeratorAlert('submission', 'situ', $situ);
                 $this->mailer->sendModeratorSituValidate($situ);
             }
-                
 
         } catch (\Doctrine\DBAL\DBALException $e) {
-            $msg = $this->translator->trans(
-                        'contrib.form.'. $action .'.flash.error', [],
-                        'user_messages', $locale = locale_get_default()
-                        );
-            $this->flash->add('warning', $msg.PHP_EOL.$e->getMessage());
 
-            $route = 'create_situ'; 
-            if ($id) {
-                $params = [
-                    '_locale' => locale_get_default(),
-                    'id' => $id
-                ];
+            $route          = 'create_situ';
+            $flashResult    = 'warning';
+            $flashType      = '.flash.error';
+            $eFlash         = PHP_EOL.$e->getMessage();
+
+            if ($situForm->getId()) {
+                $params['id'] = $situForm->getId();
             } else {
-                if ($form->getTranslatedSituId()) { $route = 'translate_situ'; }
-                $params = [ '_locale' => locale_get_default() ];
+                if ($situForm->getTranslatedSituId()) {
+                    $route = 'translate_situ';
+                    $params['situId'] = $situForm->getTranslatedSituId();
+                    $params['langId'] = $situForm->getLang()->getId();
+                }
             }
         }
+
+        $flashMsg = $this->translator->trans(
+                    'contrib.form.'. $action . $flashType, [],
+                    'user_messages', $locale = $_locale
+                );
+        $this->flash->add($flashResult, $flashMsg . $eFlash);
+
         return $this->urlGenerator->generate($route, $params);
     }
     

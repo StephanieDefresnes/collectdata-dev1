@@ -5,6 +5,7 @@ namespace App\Controller\Front;
 use App\Entity\Lang;
 use App\Entity\Situ;
 use App\Entity\Status;
+use App\Form\Front\Situ\SituDataForm;
 use App\Form\Front\Situ\SituForm;
 use App\Mailer\Mailer;
 use App\Manager\Front\SituManager;
@@ -113,9 +114,13 @@ class SituController extends AbstractController
             $situ = new Situ();
         }
         
-        // Form
+        // Situ entity form
         $form = $this->createForm(SituForm::class, $situ);
         $form->handleRequest($request);
+
+        // Relation entities form
+        $formData = $this->createForm(SituDataForm::class, $situ);
+        $formData->handleRequest($request);
         
         /**
          * isSubmitted() method is used by dynamics fields
@@ -124,21 +129,23 @@ class SituController extends AbstractController
          */
         if ($form->get('save')->isClicked() || $form->get('submit')->isClicked()) {
             
-            $result = $this->situManager->validationForm($request);
+            $formSituData = $form->getViewData();
+            $result = $this->situManager->validationForm($formSituData);
             
             if (true !== $result) {
                 $form->addError(new FormError($result));
             } else {
-                $url = $this->situEditor->setSitu($form, $request, $id);
+                $url = $this->situEditor->setSitu($formSituData, $request);
                 return $this->redirect($url);
             }
         }
         
         return $this->render('front/situ/new/create.html.twig', [
-            'defaultLang' => $defaultLang,
-            'form' => $form->createView(),
-            'langs' => $langs,
-            'situ' => $situ,
+            'defaultLang'   => $defaultLang,
+            'form'          => $form->createView(),
+            'formData'      => $formData->createView(),
+            'langs'         => $langs,
+            'situ'          => $situ,
         ]);
     }
     
@@ -203,7 +210,9 @@ class SituController extends AbstractController
      * @IsGranted("ROLE_CONTRIBUTOR")
      */
     public function translate(Request $request, $situId, $langId): Response
-    {        
+    {
+        $situ = new Situ();
+
         $situToTranslate = $this->em->getRepository(Situ::class)->find($situId);
         
         if (!$situToTranslate) {
@@ -231,10 +240,14 @@ class SituController extends AbstractController
         $subject = ['situ' => $situData, 'lang' => $lang];
         $this->denyAccessUnlessGranted('translate_situ', $subject);
         
-        // Form
-        $situ = new Situ();
+        
+        // Situ entity form
         $form = $this->createForm(SituForm::class, $situ);
         $form->handleRequest($request);
+        
+        // Relation entities form
+        $formData = $this->createForm(SituDataForm::class, $situ);
+        $formData->handleRequest($request);
         
         /**
          * isSubmitted() method is used by dynamics fields
@@ -243,23 +256,25 @@ class SituController extends AbstractController
          */
         if ($form->get('save')->isClicked() || $form->get('submit')->isClicked()) {
             
-            $result = $this->situManager->validationForm($request);
-            
+            $formSituData = $form->getViewData();
+            $result = $this->situManager->validationForm($formSituData);
+
             if (true !== $result) {
                 $form->addError(new FormError($result));
             } else {
-                $url = $this->situEditor->setSitu($form, $request, $id);
+                $url = $this->situEditor->setSitu($formSituData, $request, $situId);
                 return $this->redirect($url);
             }
         }
         
         return $this->render('front/situ/new/translate.html.twig', [
-            'defaultLang' => $defaultLang,
-            'form' => $form->createView(),
-            'lang' => $lang,
-            'langs' => $langs,
-            'situ' => $situ,
-            'situData' => $situData,
+            'defaultLang'   => $defaultLang,
+            'form'          => $form->createView(),
+            'formData'      => $formData->createView(),
+            'lang'          => $lang,
+            'langs'         => $langs,
+            'situ'          => $situ,
+            'situData'      => $situData,
         ]);
     }
     
@@ -332,7 +347,7 @@ class SituController extends AbstractController
             $situTranslated = $this->em->getRepository(Situ::class)
                                 ->findTranslations($situId, $langId);
             return new JsonResponse([
-                'success'  => true,
+                'success' => true,
                 'situTranslated' => $situTranslated,
             ]);
         }
