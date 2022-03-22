@@ -381,7 +381,7 @@ function editEntity(name, button, id) {
                 $('#loader').show()
                 $('#editEntity').attr('data-entity', name).attr('data-id', id)
                 $('#editEntity .modal-body').html(
-                    $(html).find('#situ_dynamic_form_'+name)
+                    $(html).find('[id$="_form_'+name+'"]')
                 )
                 $('#editEntity h5').text(translations[name+ 'Update'])
                 $('#editEntity').modal('show')
@@ -430,7 +430,7 @@ function updateEntity() {
             $('#'+ entity).find('.editEntity').remove()
             
             // Replace new title
-            $('#situ_dynamic_form_'+ entity +' option').each(function() {
+            $('[id$="_form_'+ entity +'"] option').each(function() {
                 if ($(this).val() == id) {
                     
                     // Replace option text
@@ -769,19 +769,19 @@ function checkForm() {
 // Set values to submit
 function modalSubmit() {
     $('#modalLang').text(
-            $('#situ_dynamic_form_lang option[value="'+$('#situ_dynamic_form_lang').val()+'"]')
+            $('[id$="_form_lang"] option[value="'+$('[id$="_form_lang"]').val()+'"]')
                 .text()
             )
     
     let eventInput = $('#form-event').find('input').val(),
         eventTitle = eventInput === undefined 
-                                ?  $('#situ_dynamic_form_event option[value="'+$('#situ_dynamic_form_event').val()+'"]').text()
+                                ?  $('[id$="_form_event"] option[value="'+$('[id$="_form_event"]').val()+'"]').text()
                                 : eventInput
     $('#modalEvent').text(eventTitle)
     
     let categoryLevel1Input = $('#form-categoryLevel1').find('textarea').val(),
         categoryLevel1Title = categoryLevel1Input === undefined 
-                                ? $('#situ_dynamic_form_categoryLevel1 option[value="'+$('#situ_dynamic_form_categoryLevel1').val()+'"]').text()
+                                ? $('[id$="_form_categoryLevel1"] option[value="'+$('[id$="_form_categoryLevel1"]').val()+'"]').text()
                                 : categoryLevel1Input
     $('#modalCategoryLevel1-title').text(categoryLevel1Title)
     let categoryLevel1Text = $('#form-categoryLevel1').find('textarea').val(),
@@ -792,7 +792,7 @@ function modalSubmit() {
     
     let categoryLevel2Input = $('#form-categoryLevel2').find('textarea').val(),
         categoryLevel2Title = categoryLevel2Input === undefined 
-                                ? $('#situ_dynamic_form_categoryLevel2 option[value="'+$('#situ_dynamic_form_categoryLevel2').val()+'"]').text()
+                                ? $('[id$="_form_categoryLevel2"] option[value="'+$('[id$="_form_categoryLevel2"]').val()+'"]').text()
                                 : categoryLevel2Input
     $('#modalCategoryLevel2-title').text(categoryLevel2Title)
     let categoryLevel2Text = $('#form-categoryLevel2').find('textarea').val(),
@@ -806,14 +806,14 @@ function modalSubmit() {
     
     $('#situItems').find('.situItem').each(function(index) {
         if (index == 0) {
-            $('#modalSuccess .title').text($('#situ_form_situItems_0_title').val())
-            $('#modalSuccess .description').text($('#situ_form_situItems_0_description').val())
+            $('#modalSuccess .title').text($('[id$="_situItems_0_title"]').val())
+            $('#modalSuccess .description').text($('[id$="_situItems_0_description"]').val())
         } else {
             let prototype = $('#modalSituItems').attr('data-prototype')
             
             let scoreValue =
-                    $('#situ_form_situItems_'+ index +'_score option[value="'
-                            +$('#situ_form_situItems_'+ index +'_score').val()
+                    $('[id$="_situItems_'+ index +'_score"] option[value="'
+                            +$('[id$="_situItems_'+ index +'_score"]').val()
                         +'"]').attr('class')
             scoreValue = scoreValue.replace('selectable ', '').replace(' selected', '')
                 
@@ -822,9 +822,9 @@ function modalSubmit() {
                     .replace(/__score__/g, scoreValue)
                     .replace(/__scoreText__/g, translations[scoreValue+"Item"])
                     .replace(/__titleItem__/g, translations["titleItem"])
-                    .replace(/__title__/g, $('#situ_form_situItems_'+ index +'_title').val())
+                    .replace(/__title__/g, $('[id$="_situItems_'+ index +'_title"]').val())
                     .replace(/__descriptionItem__/g, translations["descriptionItem"])
-                    .replace(/__description__/g,$('#situ_form_situItems_'+ index +'_description').val())
+                    .replace(/__description__/g,$('[id$="_situItems_'+ index +'_description"]').val())
             $('#optionScore').append(item)
         }
     })
@@ -867,13 +867,13 @@ $(function() {
     /**
      * Load events/categories or create them if choice is empty
      */
-    if ($('#situ_dynamic_form_lang').is('select')
-     || $('#situ_dynamic_form_event').is('select')) {
+    if ($('[id$="_form_lang"]').is('select')
+     || $('[id$="_form_event"]').is('select')) {
         
-        $('form').on('change',  '#situ_dynamic_form_lang, '
-                                +'#situ_dynamic_form_event, '
-                                +'#situ_dynamic_form_categoryLevel1, '
-                                +'#situ_dynamic_form_categoryLevel2', function() {
+        $('form').on('change',  '[id$="_form_lang"], '
+                                +'[id$="_form_event"], '
+                                +'[id$="_form_categoryLevel1"], '
+                                +'[id$="_form_categoryLevel2"]', function() {
 
             // Toggle styles
             let rendered = $(this).parent().find('.select2-selection__rendered')
@@ -965,7 +965,7 @@ $(function() {
     if ($('#loader').hasClass('translateSitu')) {
         
         // Load lang to set events
-        $('#situ_dynamic_form_lang').val($('#situ').attr('data-lang')).trigger('change')
+        $('[id$="_form_lang"]').val($('#situ').attr('data-lang')).trigger('change')
                 .parent().find('.select2-selection__rendered').addClass('selection-on')
         
         // Then hide loader
@@ -1006,7 +1006,7 @@ $(function() {
      * Then..
      */
     // Show card-body when fill categoryLevel2 description
-    $('form').on('keyup paste', '#situ_dynamic_form_categoryLevel2_description', function() {
+    $('form').on('keyup paste', '[id$="_form_categoryLevel2_description"]', function() {
         if ($('.card-body').hasClass('d-none') && $('.card-footer').hasClass('d-none')) {
             $('.card-body, .card-footer').removeClass('d-none').animate({ opacity: 1}, 250)
         }
