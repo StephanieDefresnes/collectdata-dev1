@@ -65,7 +65,7 @@ class SituForm extends AbstractType
             'data_class' => Situ::class,
             'translation_domain' => 'user_messages',
 //            'attr' => [
-//                'novalidate' => 'novalidate', // comment me to reactivate the html5 validation!
+//                'novalidate' => 'novalidate', // uncomment to disable the html5 validation!
 //            ]
         ]);
     }

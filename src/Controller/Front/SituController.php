@@ -5,7 +5,7 @@ namespace App\Controller\Front;
 use App\Entity\Lang;
 use App\Entity\Situ;
 use App\Entity\Status;
-use App\Form\Front\Situ\SituDataForm;
+use App\Form\Front\Situ\SituDynamicForm;
 use App\Form\Front\Situ\SituForm;
 use App\Mailer\Mailer;
 use App\Manager\Front\SituManager;
@@ -75,13 +75,9 @@ class SituController extends AbstractController
     public function create(Request $request, $id): Response
     {
         $defaultLang = $this->em->getRepository(Lang::class)
-                ->findOneBy(['lang' => $this->parameters->get('locale')])
+                ->findOneBy(['lang' => locale_get_default()])
                 ->getId();
         
-        // Current user
-        $user = $this->security->getUser();
-        $langs = $user->getLangs()->getValues();
-                
         if ($id) {
             
             $situ = $this->em->getRepository(Situ::class)->find($id);
@@ -119,7 +115,8 @@ class SituController extends AbstractController
         $form->handleRequest($request);
 
         // Relation entities form
-        $formData = $this->createForm(SituDataForm::class, $situ);
+        $currentUser = $this->security->getUser();
+        $formData = $this->createForm(SituDynamicForm::class, $situ, ['user' => $currentUser]);
         $formData->handleRequest($request);
         
         /**
@@ -144,7 +141,7 @@ class SituController extends AbstractController
             'defaultLang'   => $defaultLang,
             'form'          => $form->createView(),
             'formData'      => $formData->createView(),
-            'langs'         => $langs,
+            'langs'         => count($currentUser->getLangs()),
             'situ'          => $situ,
         ]);
     }
@@ -246,7 +243,9 @@ class SituController extends AbstractController
         $form->handleRequest($request);
         
         // Relation entities form
-        $formData = $this->createForm(SituDataForm::class, $situ);
+        $formData = $this->createForm(SituDynamicForm::class, $situ, [
+            'user' => $this->security->getUser()
+        ]);
         $formData->handleRequest($request);
         
         /**
