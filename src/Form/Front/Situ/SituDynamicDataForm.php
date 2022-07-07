@@ -16,9 +16,8 @@ use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Security\Core\Security;
 
-class SituDynamicForm extends AbstractType
+class SituDynamicDataForm extends AbstractType
 {
     protected $em;
     
@@ -27,7 +26,7 @@ class SituDynamicForm extends AbstractType
         $this->em = $em;
     }
 
-    private function configSelectOptions($entity, $data)
+    private function selectOptions($entity, $data)
     {
         $className = Category::class;
         if ('event' === $entity)  $className = Event::class;
@@ -148,7 +147,7 @@ class SituDynamicForm extends AbstractType
             }
             if ($events) {
                 $form->add('event', EntityType::class, 
-                            $this->configSelectOptions('event', $events));
+                            $this->selectOptions('event', $events));
                 return;
             }
             
@@ -172,7 +171,7 @@ class SituDynamicForm extends AbstractType
 
             if ($categoriesLevel1) {
                 $form->add('categoryLevel1', EntityType::class, 
-                            $this->configSelectOptions('categoryLevel1', $categoriesLevel1));
+                            $this->selectOptions('categoryLevel1', $categoriesLevel1));
                 return;
             }
 
@@ -195,7 +194,7 @@ class SituDynamicForm extends AbstractType
             
             if ($categoriesLevel2) {
                 $form->add('categoryLevel2', EntityType::class, 
-                            $this->configSelectOptions('categoryLevel2', $categoriesLevel2));
+                            $this->selectOptions('categoryLevel2', $categoriesLevel2));
                 return;
             }
             

@@ -5,7 +5,7 @@ namespace App\Controller\Front;
 use App\Entity\Lang;
 use App\Entity\Situ;
 use App\Entity\Status;
-use App\Form\Front\Situ\SituDynamicForm;
+use App\Form\Front\Situ\SituDynamicDataForm;
 use App\Form\Front\Situ\SituForm;
 use App\Mailer\Mailer;
 use App\Manager\Front\SituManager;
@@ -114,9 +114,9 @@ class SituController extends AbstractController
         $form = $this->createForm(SituForm::class, $situ);
         $form->handleRequest($request);
 
-        // Relation entities form
+        // Select, create, edit mapped data
         $currentUser = $this->security->getUser();
-        $formData = $this->createForm(SituDynamicForm::class, $situ, ['user' => $currentUser]);
+        $formData = $this->createForm(SituDynamicDataForm::class, $situ, ['user' => $currentUser]);
         $formData->handleRequest($request);
         
         /**
@@ -243,7 +243,7 @@ class SituController extends AbstractController
         $form->handleRequest($request);
         
         // Relation entities form
-        $formData = $this->createForm(SituDynamicForm::class, $situ, [
+        $formData = $this->createForm(SituDynamicDataForm::class, $situ, [
             'user' => $this->security->getUser()
         ]);
         $formData->handleRequest($request);
