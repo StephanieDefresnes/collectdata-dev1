@@ -52,102 +52,49 @@ class SituEditor {
      * @param Request $request
      * @return type
      */
-    /* public function setSitu(FormInterface $form, Request $request, $id = null) */
     public function setSitu(Situ $situForm, Request $request)
     {
         $situRequest    = $request->request->get('situ_form');
-        $_locale        = locale_get_default();
-        $dateNow        = new \DateTime('now');
-        $currentUser    = $this->security->getUser();
         
-        // If updating Situ
-        if ($situForm->getId()) {
-            $situ = $this->em->getRepository(Situ::class)->find($situForm->getId());
-            $situ->setDateLastUpdate($dateNow);
-            $success = 'success_update';
-        } else {
-            $situ = new Situ();
-            $situ->setUser($currentUser);
-            $situ->setDateCreation($dateNow);
-            $success = 'success';
-        }
-
+        // Is updating Situ
+        $resultSitu = self::loadDataRequested( 'situ', $situForm );
+        $situ       = $resultSitu['data'];
+        $success    = $resultSitu['success'];
+        
         // Status depending on submitted button
-        if (array_key_exists('save', $situRequest)) {
-            $statusFrom = $this->em->getRepository(Status::class)->find(1);
-            $situ->setDateSubmission(null);
-            $action = 'save';
-        } elseif (array_key_exists('submit', $situRequest)) {
-            $statusFrom = $this->em->getRepository(Status::class)->find(2);
-            $situ->setDateSubmission($dateNow);
-            $action = 'submit';
-            if ($situForm->getId()) $success = 'success';
-        }
+        $resultStatus   = self::loadDataRequested( 'status', $situRequest, $situ );
+        $action = $resultStatus['action'];
+        if ( $situForm->getId() ) $success = 'success';
 
-        if ($situForm->getLang()->getId()) {
-            $lang = $this->em->getRepository(Lang::class)
-                        ->find($situForm->getLang()->getId());
-        } else {
-            $lang = $this->em->getRepository(Lang::class)
-                        ->findOneBy(['lang' => $_locale]);
-        }
+        // Lang depending on user choice or lovale
+        $resultLang = self::loadDataRequested( 'lang', $situForm, $situ );
+        $lang       = $resultLang['lang'];
+        $situ->setLang( $lang );
 
         // Select or create an event
-        if ($situForm->getEvent()->getId()) {
-            $event = $situForm->getEvent();
-        } else {
-            $event = new Event();
-            $event->setTitle($situForm->getEvent()->getTitle());
-            $event->setUser($currentUser);
-            $event->setValidated(false);
-            $event->setLang($lang);
-            $this->em->persist($event);
-        }
+        $resultEvent    = self::loadDataRequested( 'event', $situForm,
+                                                        null, $lang );
+        $event          = $resultEvent['event'];
+        $situ->setEvent( $event );
 
         // Select or create an categoryLevel1
-        if ($situForm->getCategoryLevel1()->getId()) {
-            $categoryLevel1 = $situForm->getCategoryLevel1();
-        } else {
-            $categoryLevel1 = new Category();
-            $categoryLevel1->setTitle($situForm->getCategoryLevel1()->getTitle());
-            $categoryLevel1->setDescription($situForm->getCategoryLevel1()->getDescription());
-            $categoryLevel1->setDateCreation(new \DateTime('now'));
-            $categoryLevel1->setUser($currentUser);
-            $categoryLevel1->setValidated(false);
-            $categoryLevel1->setLang($lang);
-            $categoryLevel1->setEvent($event);
-            $this->em->persist($categoryLevel1);
-        }
+        $resultCatLv1   = self::loadDataRequested( 'categoryLevel1', $situForm,
+                                                        null, $lang, $event );
+        $categoryLv1    = $resultCatLv1['category'];
+        $situ->setCategoryLevel1( $categoryLv1 );
 
         // Select or create an categoryLevel2
-        if ($situForm->getCategoryLevel2()->getId()) {
-            $categoryLevel2 = $situForm->getCategoryLevel2();
-        } else {
-            $categoryLevel2 = new Category();
-            $categoryLevel2->setTitle($situForm->getCategoryLevel2()->getTitle());
-            $categoryLevel2->setDescription($situForm->getCategoryLevel2()->getDescription());
-            $categoryLevel2->setDateCreation(new \DateTime('now'));
-            $categoryLevel2->setUser($currentUser);
-            $categoryLevel2->setValidated(false);
-            $categoryLevel2->setLang($lang);
-            $categoryLevel2->setParent($categoryLevel1);
-            $this->em->persist($categoryLevel2);
-        }
-
-        $situ->setLang($lang);
-        $situ->setEvent($event);
-        $situ->setCategoryLevel1($categoryLevel1);
-        $situ->setCategoryLevel2($categoryLevel2);
+        $resultCatLv2   = self::loadDataRequested( 'categoryLevel2', $situForm,
+                                                        null, $lang, null, $categoryLv1 );
+        $categoryLv2    = $resultCatLv2['category'];
+        $situ->setCategoryLevel2( $categoryLv2 );
+        
+        // If translation on initale
+        self::loadDataRequested( 'translate', $situForm, $situ );
+        
+        
         $situ->setTitle($situForm->getTitle());
         $situ->setDescription($situForm->getDescription());
-        $situ->setStatus($statusFrom);
-
-        if ($situForm->getTranslatedSituId()) {
-            $situ->setInitialSitu(false);
-            $situ->setTranslatedSituId($situForm->getTranslatedSituId());
-        } else {
-            $situ->setInitialSitu(true);
-        }
 
         // Original SituItem collection from Situ object
         $originalItems = new ArrayCollection();
@@ -172,46 +119,173 @@ class SituEditor {
         
         $this->em->persist($situ);
 
-        $route  = 'user_situs'; 
-        $params = [ '_locale' => $_locale ];
-        $eFlash = '';
+        $route          = 'user_situs';
+        $flashResult    = 'success';
+        $flashType      = '.flash.'. $success;
+        $eFlash         = '';
+        $params         = [ '_locale' => locale_get_default() ];
 
         try {
             $this->em->flush();
             
-            $flashResult    = 'success';
-            $flashType      = '.flash.'. $success;
-            
-            if (array_key_exists('submit', $situRequest)) {
-                $this->messager->sendModeratorAlert('submission', 'situ', $situ);
-                $this->mailer->sendModeratorSituValidate($situ);
+            if ( array_key_exists( 'submit', $situRequest ) ) {
+                $this->messager->sendModeratorAlert( 'submission', 'situ', $situ );
+                $this->mailer->sendModeratorSituValidate( $situ );
             }
 
-        } catch (\Doctrine\DBAL\DBALException $e) {
+        } catch ( \Doctrine\DBAL\DBALException $e ) {
 
             $route          = 'create_situ';
             $flashResult    = 'warning';
             $flashType      = '.flash.error';
-            $eFlash         = PHP_EOL.$e->getMessage();
+            $eFlash         = "\n". $e->getMessage();
 
-            if ($situForm->getId()) {
+            if ( $situForm->getId() ) {
                 $params['id'] = $situForm->getId();
-            } else {
-                if ($situForm->getTranslatedSituId()) {
-                    $route = 'translate_situ';
-                    $params['situId'] = $situForm->getTranslatedSituId();
-                    $params['langId'] = $situForm->getLang()->getId();
-                }
+            }
+            if ( $situForm->getTranslatedSituId() ) {
+                $route = 'translate_situ';
+                $params['situId'] = $situForm->getTranslatedSituId();
+                $params['langId'] = $situForm->getLang()->getId();
             }
         }
 
         $flashMsg = $this->translator->trans(
                     'contrib.form.'. $action . $flashType, [],
-                    'user_messages', $locale = $_locale
+                    'user_messages', locale_get_default()
                 );
-        $this->flash->add($flashResult, $flashMsg . $eFlash);
+        $this->flash->add( $flashResult, $flashMsg . $eFlash );
 
-        return $this->urlGenerator->generate($route, $params);
+        return $this->urlGenerator->generate( $route, $params );
+    }
+    
+    private function loadDataRequested( $subject, $data, Situ $situ = null,
+                                                        Lang $lang = null,
+                                                        Event $event = null,
+                                                        Category $category = null )
+    {
+        $dateNow        = new \DateTime('now');
+        $currentUser    = $this->security->getUser();
+        $result         = [];
+        
+        switch( $subject ) {
+            
+            case 'situ':
+                
+                if ( $data->getId() ) {
+                    $situ = $this->em->getRepository(Situ::class)->find($data->getId());
+                    $situ->setDateLastUpdate( $dateNow );
+                    $result = [ 'data' => $situ, 'success' => 'success_update' ];
+                    break;
+                }
+                
+                $situ = new Situ();
+                $situ->setUser( $currentUser );
+                $situ->setDateCreation( $dateNow );
+                $result = [ 'data' => $situ, 'success' => 'success' ];
+                break;
+                
+            case 'status':
+                
+                $statusId       = 1;
+                $dateSubmission = null;
+                $action         = 'save';
+                
+                if ( array_key_exists( 'submit', $data ) ) {
+                    $statusId       = 2;
+                    $dateSubmission = $dateNow;
+                    $action         = 'submit';
+                }
+                
+                $situStatus     = $this->em->getRepository(Status::class)->find( $statusId );
+                $situ->setStatus( $situStatus );
+                $situ->setDateSubmission( $dateSubmission );
+                $result = [ 'action' => $action ];
+                break;
+                
+            case 'lang':
+                
+                if ( $data->getLang()->getId() ) {
+                    $lang = $this->em->getRepository(Lang::class)
+                                ->find( $data->getLang()->getId( ));
+                    $result = [ 'lang' => $lang ];
+                    break;
+                }
+                $lang = $this->em->getRepository(Lang::class)
+                            ->findOneBy([ 'lang' => locale_get_default() ]);
+                $result = [ 'lang' => $lang ];
+                break;
+                
+            case 'event':
+                
+                if ( $data->getEvent()->getId() ) {
+                    $result = [ 'event' => $data->getEvent() ];
+                    break;
+                }
+                
+                $event = new Event();
+                $event->setTitle( $data->getEvent()->getTitle() );
+                $event->setUser( $currentUser );
+                $event->setValidated( false );
+                $event->setLang( $lang );
+                $this->em->persist( $event );
+                
+                $result = [ 'event' => $event ];
+                break;
+                
+            case 'categoryLevel1':
+        
+                if ( $data->getCategoryLevel1()->getId() ) {
+                    $result = [ 'category' => $data->getCategoryLevel1() ];
+                    break;
+                }
+                
+                $categoryLevel1 = new Category();
+                $categoryLevel1->setTitle( $data->getCategoryLevel1()->getTitle() );
+                $categoryLevel1->setDescription( $data->getCategoryLevel1()->getDescription() );
+                $categoryLevel1->setDateCreation( $dateNow );
+                $categoryLevel1->setUser( $currentUser );
+                $categoryLevel1->setValidated( false );
+                $categoryLevel1->setLang( $lang );
+                $categoryLevel1->setEvent( $event );
+                $this->em->persist( $categoryLevel1 );
+                
+                $result = [ 'category' => $categoryLevel1 ];
+                break;
+                
+            case 'categoryLevel2':
+        
+                if ( $data->getCategoryLevel2()->getId() ) {
+                    $result = [ 'category' => $data->getCategoryLevel2() ];
+                    break;
+                }
+                
+                $categoryLevel2 = new Category();
+                $categoryLevel2->setTitle( $data->getCategoryLevel2()->getTitle() );
+                $categoryLevel2->setDescription( $data->getCategoryLevel2()->getDescription() );
+                $categoryLevel2->setDateCreation( $dateNow );
+                $categoryLevel2->setUser( $currentUser );
+                $categoryLevel2->setValidated( false );
+                $categoryLevel2->setLang( $lang );
+                $categoryLevel2->setParent( $category );
+                $this->em->persist($categoryLevel2);
+                
+                $result = [ 'category' => $categoryLevel2 ];
+                break;
+                
+            case 'translate':
+                
+                if ( $data->getTranslatedSituId() ) {
+                    $situ->setInitialSitu( false );
+                    $situ->setTranslatedSituId( $data->getTranslatedSituId() );
+                    break;
+                }
+                
+                $situ->setInitialSitu( true );
+                break;
+        }
+        
+        return $result;
     }
     
 }

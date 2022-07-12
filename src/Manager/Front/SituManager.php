@@ -3,29 +3,23 @@
 namespace App\Manager\Front;
 
 use App\Entity\Situ;
-use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
-use Symfony\Component\Form\FormInterface;
-use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class SituManager {
     
-    private $em;
-    private $parameters;
     private $security;
     private $translator;
+    private $urlGenerator;
     
-    public function __construct(EntityManagerInterface $em,
-                                ParameterBagInterface $parameters,
-                                Security $security,
-                                TranslatorInterface $translator)
+    public function __construct(Security $security,
+                                TranslatorInterface $translator,
+                                UrlGeneratorInterface $urlGenerator)
     {
-        $this->em = $em;
-        $this->parameters = $parameters;
         $this->security = $security;
         $this->translator = $translator;
+        $this->urlGenerator = $urlGenerator;
     }
     
     /**
@@ -36,55 +30,31 @@ class SituManager {
      * @param Situ $situ = $form->getViewData()
      * @return boolean|string
      */
-    public function validationForm(Situ $situ)
+    public function validationForm( Situ $situ )
     {
-        if ( !empty($situ->getEvent()->getTitle())
-            && !empty($situ->getCategoryLevel1()->getTitle())
-            && !empty($situ->getCategoryLevel1()->getDescription())
-            && !empty($situ->getCategoryLevel2()->getTitle())
-            && !empty($situ->getCategoryLevel2()->getDescription())
-            && !empty($situ->getTitle())
-            && !empty($situ->getDescription())
-            && count($situ->getSituItems()) > 0
-            && count($situ->getSituItems()) < 5
-            && $this->isValidItems($situ->getSituItems()) )
+        if ( empty( $situ->getEvent()->getTitle() )
+            || empty( $situ->getCategoryLevel1()->getTitle() )
+            || empty( $situ->getCategoryLevel1()->getDescription() )
+            || empty( $situ->getCategoryLevel2()->getTitle() )
+            || empty( $situ->getCategoryLevel2()->getDescription() )
+            || empty( $situ->getTitle() )
+            || true !== $this->isValidItems( $situ->getSituItems() ) )
         {
-            return true;
-        }
-
-        $msgForm = '';
-
-        if ( empty($situ->getEvent()->getTitle())
-            || empty($situ->getCategoryLevel1()->getTitle())
-            || empty($situ->getCategoryLevel1()->getDescription())
-            || empty($situ->getCategoryLevel2()->getTitle())
-            || empty($situ->getCategoryLevel2()->getDescription())
-            || empty($situ->getTitle())
-            || empty($situ->getDescription()) )
-        {
-            $msgForm = $this->translator->trans('contrib.form.error', [], 'user_messages');
+            return $this->translator->trans( 'contrib.form.error', [], 'user_messages' );
         }
         
-
-        $msgItems = '';
-        if (count($situ->getSituItems()) < 1)
+        if ( count($situ->getSituItems()) < 1 || count($situ->getSituItems()) > 4 )
         {
-            $errorItems = $this->translator->trans(
-                            'contrib.form.item.flash.error_min', [],
+            $error = 'error_min';
+            if ( count($situ->getSituItems()) > 4 ) $error = 'error_max';
+            
+            return $this->translator->trans(
+                            'contrib.form.item.flash.'. $error, [],
                             'user_messages', $locale = locale_get_default()
                         );
-            $msgItems = PHP_EOL.$errorItems;
-
-        } elseif (count($situ->getSituItems()) > 4) {
-
-            $errorItems = $this->translator->trans(
-                            'contrib.form.item.flash.error_max', [],
-                            'user_messages', $locale = locale_get_default()
-                        );
-            $msgItems = PHP_EOL.$errorItems;
         }
 
-        return $msgForm.$msgItems;
+        return true;
     }
     
     /**
@@ -93,13 +63,14 @@ class SituManager {
      * @param $items = $data->getSituItems()
      * @return int
      */
-    private function isValidItems($items) {
+    private function isValidItems( $items ) {
         $result = 0;
-        foreach ($items as $item) {
-            if (!is_numeric($item->getScore())
-                    || empty($item->getTitle())
-                    || empty($item->getDescription())) {
-                $result = $result +1;
+        foreach ( $items as $item ) {
+            if ( ! is_numeric( $item->getScore() )
+                    || empty( $item->getTitle() )
+                    || empty( $item->getDescription() ) )
+            {
+                $result++;
             }
         }
         return $result === 0 ? true : false;
@@ -107,18 +78,32 @@ class SituManager {
     
     /**
      * Check if situ lang is in user langs
-     * if false redirect to error page to prevent processing errors
-     * (user has to know what he wants) 
+     * or if situ validation is requested
      * 
-     * @param type $situLang
+     * @param Situ $situ
      * @return boolean
      */
-    public function allowLang($situLang)
+    public function allowEdit( Situ $situ )
     {
         $user = $this->security->getUser();
-        if (false === $user->getLangs()->contains($situLang)) {
-            return false;
+        
+        // If lang is not a user lang, redirect to error page
+        if ( ! $user->getLangs()->contains( $situ->getLang() ) ) {
+            return $this->urlGenerator->generate( 'lang_error', [
+                '_locale' => locale_get_default(),
+                'lang' => $situ->getLang()->getLang(),
+            ] );
         }
+        
+        // If validation is requested, redirect to preview
+        if ( $situ->getStatus()->getId() === 2 ) {
+            return $this->urlGenerator->generate( 'read_situ', [
+                '_locale' => locale_get_default(),
+                'slug' => $situ->getSlug(),
+                'p' => 'preview'
+            ] );
+        }
+        
         return true;
     }
     

@@ -5,7 +5,7 @@ import 'select2-theme-bootstrap4/dist/select2-bootstrap.min.css'
 
 require('select2')
 
-function initSelect2(select) {
+function initSelect2( select ) {
     $(select).select2({
         minimumResultsForSearch: Infinity,
         width: 'resolve'
@@ -26,8 +26,8 @@ function footerHeight() {
         let newHeight = $('body').height()
         let contentHeight = newHeight - $('#footerEnd').height()
 
-        if (lastHeight != newHeight) lastHeight = newHeight;
-        if (windowHeight > contentHeight)
+        if ( lastHeight !== newHeight ) lastHeight = newHeight;
+        if ( windowHeight > contentHeight )
             $('#footerEnd').height(windowHeight - contentHeight)
         else {
             $('#footerEnd').height(0)
@@ -40,36 +40,36 @@ function footerHeight() {
  * Select data functions
  */
 // Action change on select
-function changeSelect(selectId) {
+function changeSelect( selectId ) {
     let nextSelectId = selectId.parents('.formData').next().find('.colForm').attr('id'),
         $form = selectId.closest('form'),
         data = {}
     data[selectId.attr('name')] = selectId.val()
-    loadSelectData($form, data, selectId, '#'+ nextSelectId)
+    loadSelectData( $form, data, selectId, '#'+ nextSelectId )
 }
 
 // Show field with effect on action change
-function removeClass(id, classes) {
-    if (id.hasClass(classes))
+function removeClass( id, classes ) {
+    if ( id.hasClass(classes) )
         id.removeClass(classes).children().animate({ opacity: 1}, 250)
 }
 
 // Toogle adding data button
-function toggleAddingButton(colClass, event) {
-    if (event == 'hide')
+function toggleAddingButton( colClass, event ) {
+    if ( 'hide' === event )
         $(colClass).each(function(){ $(this).next('.colBtn').hide() })
     else {
         $(colClass).each(function(){
-            if ($(this).children().is('select')) $(this).next('.colBtn').show()
+            if ( $(this).children().is('select') ) $(this).next('.colBtn').show()
             else $(this).next('.colBtn').hide()
         })
     }
 }
 
 // Add comment to unvalidated user options (not yet validated)
-function unvalidatedOption(element) {
+function unvalidatedOption( element ) {
     $(element).find('option').each(function() {
-        if ($(this).hasClass('to-validate'))
+        if ( $(this).hasClass('to-validate') )
             $(this).append(' '+ translations['toValidate'])
     })
 }
@@ -77,17 +77,16 @@ function unvalidatedOption(element) {
 // Get Event or Category data depending on value
 //  - show edit button if not yet validated
 //  - show category description
-function getData(name, value) {
-    let data, url, categoryLevel1, categoryLevel2
-            
-    if (name == 'event') {
+function getData( name, value ) {
+    let categoryLevel1, categoryLevel2,
         url = '/front/ajaxGetEvent'
-        data = {'event': value}
-    } else {
-        url = '/front/ajaxGetCategory'
-        
-        if (name == 'categoryLevel1') categoryLevel1 = value
+        data = { 'event': value }
+            
+    if ( 'event' !== name ) {
+        if ('categoryLevel1' === name ) categoryLevel1 = value
         else categoryLevel2 = value
+        
+        url = '/front/ajaxGetCategory'
         data = {
             'categoryLevel1': categoryLevel1,
             'categoryLevel2': categoryLevel2,
@@ -100,30 +99,29 @@ function getData(name, value) {
         data: {data},
         success: function (data) {
             // Category description
-            if (name != 'event') {
-                $('#'+ name).find('.description').text(data['description'])
-                toggleInfoCollapse('show', $('#form-'+ name))
+            if ( 'event' !== name ) {
+                $('#'+ name).find('.description').text(data.description)
+                toggleInfoCollapse( 'show', $('#form-'+ name) )
             }
             // Edit button
-            if (data['id']) addEditButton(name, data['id'])
+            if ( data.id ) addEditButton( name, data.id )
             
             // Hide loader at the end of loop (if necessary)
-            if (name == 'categoryLevel2')
+            if ( 'categoryLevel2' === name )
                 $(document).ajaxSuccess(function() { $('#loader').hide() })
         }
     })
 }
 
 // Toggle category description from collapse
-function toggleInfoCollapse(action, selector) {
+function toggleInfoCollapse( action, selector ) {
     selector.parents('.formData').find('.editEntity').each(function() {
         $(this).remove()
     })
     
-    if (action == 'hide') {
+    if ( 'hide' === action ) {
         // Hide current
-        selector
-                .parents('.formData').find('.pointer').each(function(){
+        selector.parents('.formData').find('.pointer').each(function(){
                      $(this).removeClass('pointer')
                 })
                 .parents('.formData').find('.infoCollapse').each(function(){
@@ -137,33 +135,32 @@ function toggleInfoCollapse(action, selector) {
                 $(this).addClass('d-none')
             })
         })
-    } else {
-        // Show current
-        selector.parents('.formData').find('.linkCollapse').addClass('pointer')
-                                    .find('label').addClass('pointer')
-            .parents('.formData').find('.infoCollapse').each(function(){
-                if ($(this).hasClass('d-none')) $(this).removeClass('d-none')
-            })
+        return
     }
+    
+    // Show current
+    selector.parents('.formData').find('.linkCollapse').addClass('pointer')
+                                .find('label').addClass('pointer')
+        .parents('.formData').find('.infoCollapse').each(function(){
+            if ( $(this).hasClass('d-none') ) $(this).removeClass('d-none')
+        })
 }
 
 /**
  * Load options select if exist or create new
  */
-function loadSelectData($form, data, selectId, nextSelectId) {
+function loadSelectData( $form, data, selectId, nextSelectId ) {
 
-    /* console.log(data) */
-
-    if ($(selectId).is('select')) {
+    if ( $(selectId).is('select') ) {
         let nextSelectParent = $(nextSelectId).parents('.formData')
 
-        if ($(selectId).val() != '') {
+        if ( '' !== $(selectId).val() ) {
             // Show card-header loader
             nextSelectParent.addClass('on-load')
                     .children('div').each(function() {
                         $(this).css('opacity', 0); 
                     })
-            if (nextSelectParent.hasClass('d-none'))
+            if ( nextSelectParent.hasClass('d-none') )
                 nextSelectParent.removeClass('d-none')
         } else  nextSelectParent.addClass('d-none on-load')
         
@@ -174,87 +171,81 @@ function loadSelectData($form, data, selectId, nextSelectId) {
             data: data,
             success: function (html) {
                 $(nextSelectId).find('.editEntity').remove()
-            
-                if ($(selectId).val() == '')
+                
+                if ( '' === $(selectId).val() ) {
                     $(selectId).parents('.formData').nextAll().each(function(i, obj){
                         $(obj).addClass('d-none')
                     })
-                
-                else {
-
-                    // Load next fields
-                    let nextAll = $(selectId).parents('.formData').nextAll()
-                    nextAll.each(function(i, obj){
-                        let objId = $(obj).find('.colForm').attr('id')
-
-                        // Destroy select2
-                        if ($('#'+ objId).data('select2'))
-                            $('#'+ objId).select2('destroy')
-                        
-                        // Replace from ajax
-                        $('#'+ objId).replaceWith($(html).find('#'+ objId))
-
-                        // Init select if necessary
-                        if ($('#'+ objId).is('select')) initSelect2('#'+ objId) 
-                    })
-
-                    // If data have to be created (no data exists)
-                    if (!$(nextSelectId).is('select')) {
-
-                        // Hide adding buttons
-                        if ($(selectId).attr('id') == 'situ_dynamic_form_lang')
-                            toggleAddingButton('.colDataLang', 'hide')
-                        else if ($(selectId).attr('id') == 'situ_dynamic_form_event')
-                            toggleAddingButton('.colData', 'hide')
-
-                        // Show all header fields container (event shown by default)
-                        removeClass($('#categoryLevel1, #categoryLevel2'), 'd-none') 
-                        removeClass($('#categoryLevel1, #categoryLevel2'), 'on-load')
-                    }
-                    // If options select exist (data exists)
-                    else {
-                        // Add info in case of user has data not yet validated
-                        unvalidatedOption(nextSelectId)
-
-                        initSelect2(nextSelectId)
-
-                        // Show column of adding/remove buttons
-                        if ( $(selectId).attr('id') == 'situ_dynamic_form_lang')
-                            toggleAddingButton('.colDataLang', 'show')
-                        else if ($(selectId).attr('id') == 'situ_dynamic_form_event')
-                            toggleAddingButton('.colData', 'show')
-
-                        // Reset adding/remove buttons in case of necessity
-                        $('.formData').each(function(){
-                            $(this).find('.btnRemove').remove()
-                            $(this).find('.btnAdd').show()
-                        })
-                    }
-
-                    // Show next select container
-                    if ($(selectId).val() != '') {
-                        if(nextSelectParent.hasClass('on-load')) {
-                            nextSelectParent
-                                    .removeClass('d-none on-load')
-                                    .children('div').each(function() {
-                                        $(this).animate({ opacity: 1}, 250);
-                                    })
-                        }
-                        if (selectId == 'situ_dynamic_form_categoryLevel2') {
-                            if ($('.card-body').hasClass('d-none')
-                                    && $('.card-footer').hasClass('d-none')) {
-                                $('.card-body, .card-footer')
-                                        .removeClass('d-none')
-                                        .animate({ opacity: 1}, 250)
-                            }
-                        }
-                    } else {
-                        nextSelectParent.addClass('d-none on-load')
-                                .children('div').each(function() {
-                                    $(this).css('opacity', 0); 
-                                })
-                    }
+                    footerHeight()
+                    return
                 }
+                
+                // Load next fields
+                let nextAll = $(selectId).parents('.formData').nextAll()
+                nextAll.each(function(i, obj){
+                    let objId = $(obj).find('.colForm').attr('id')
+
+                    // Destroy select2
+                    if ( $('#'+ objId).data('select2') )
+                        $('#'+ objId).select2('destroy')
+
+                    // Replace from ajax
+                    $('#'+ objId).replaceWith( $(html).find('#'+ objId) )
+
+                    // Init select if necessary
+                    if ( $('#'+ objId).is('select') ) initSelect2( '#'+ objId ) 
+                })
+
+                // If data have to be created (no data exists)
+                if ( ! $(nextSelectId).is('select') ) {
+
+                    // Hide adding buttons
+                    if ( 'situ_dynamic_data_form_lang' === $(selectId).attr('id') )
+                        toggleAddingButton( '.colDataLang', 'hide' )
+                    if ( 'situ_dynamic_data_form_event' === $(selectId).attr('id') )
+                        toggleAddingButton( '.colData', 'hide' )
+
+                    // Show all header fields container (event shown by default)
+                    removeClass( $('#categoryLevel1, #categoryLevel2'), 'd-none') 
+                    removeClass( $('#categoryLevel1, #categoryLevel2'), 'on-load')
+                    return
+                }
+                
+                // Add info in case of user has data not yet validated
+                unvalidatedOption( nextSelectId )
+
+                initSelect2( nextSelectId )
+
+                // Show column of adding/remove buttons
+                if ( 'situ_dynamic_data_form_lang' === $(selectId).attr('id') )
+                    toggleAddingButton( '.colDataLang', 'show' )
+                if ( 'situ_dynamic_data_form_event' === $(selectId).attr('id') )
+                    toggleAddingButton( '.colData', 'show' )
+
+                // Reset adding/remove buttons in case of necessity
+                $('.formData').each(function(){
+                    $(this).find('.btnRemove').remove()
+                    $(this).find('.btnAdd').show()
+                })
+
+                // Show next select container
+                if ( nextSelectParent.hasClass('on-load') ) {
+                    nextSelectParent
+                            .removeClass('d-none on-load')
+                            .children('div').each(function() {
+                                $(this).animate({ opacity: 1}, 250);
+                            })
+                }
+
+                if ( 'situ_dynamic_data_form_categoryLevel2' === selectId
+                        && $('.card-body').hasClass('d-none')
+                        && $('.card-footer').hasClass('d-none') )
+                {
+                    $('.card-body, .card-footer')
+                            .removeClass('d-none')
+                            .animate({ opacity: 1}, 250)
+                }
+                
                 footerHeight()
             }
         })
@@ -265,7 +256,7 @@ function loadSelectData($form, data, selectId, nextSelectId) {
  * Create data instead of choosing an option if user wants to
  */
 // Set fields
-function loadCreateData(button) {
+function loadCreateData( button ) {
     
     let $form = button.closest('form'),
         currentId = button.parents('.formData').find('.colForm').attr('id'),
@@ -281,21 +272,21 @@ function loadCreateData(button) {
             
             // Set & show current entity new fields
             // - Destroy current select2
-            if ($('#'+ currentId).data('select2'))
+            if ( $('#'+ currentId).data('select2') )
                 $('#'+ currentId).select2('destroy')
             // - Replace current news fields
             $('#'+ currentId).replaceWith(
                 $(html).find('#'+currentId)
             )
             // - Show new fields container
-            removeClass($('#'+ currentId).parents('.formData'), 'd-none') 
-            removeClass($('#'+ currentId).parents('.formData'), 'on-load')
+            removeClass( $('#'+ currentId).parents('.formData'), 'd-none' ) 
+            removeClass( $('#'+ currentId).parents('.formData'), 'on-load' )
             
             // Set & show next new fields
             nextAll.each(function(i, obj){
                 let objId = $(obj).find('.colForm').attr('id')
                 // - Destroy next select2
-                if ($('#'+ objId).data('select2'))
+                if ( $('#'+ objId).data('select2') )
                     $('#'+ objId).select2('destroy')
                 // - Replace next news fields
                 $('#'+ objId).replaceWith(
@@ -304,8 +295,8 @@ function loadCreateData(button) {
                 // - Hide next adding button
                 $(obj).find('.colBtn').hide()
                 // - Show next new fields container
-                removeClass($(obj), 'd-none') 
-                removeClass($(obj), 'on-load')
+                removeClass( $(obj), 'd-none' ) 
+                removeClass( $(obj), 'on-load' )
             })
             
             // If user wants to cancel adding
@@ -315,7 +306,7 @@ function loadCreateData(button) {
 }
 
 // Cancel adding data
-function removeCreateData(button) {
+function removeCreateData( button ) {
     
     // Hide Adding button & add Reset button
     button.addClass('d-none')
@@ -352,20 +343,20 @@ function removeCreateData(button) {
  * Update entity not yet validated
  */
 // Add edit button depending on getData() result
-function addEditButton(name, id) {
+function addEditButton( name, id ) {
     
     // Add edit button
-    let updateButton = $('<button type="button" id="situ_dynamic_form_edit-'+ name +'" '
-            +'name="situ_dynamic_form[edit-'+ name +']" '
+    let updateButton = $('<button type="button" id="situ_dynamic_data_form_edit-'+ name +'" '
+            +'name="situ_dynamic_data_form[edit-'+ name +']" '
             +'class="editEntity d-flex bg-none border-0 mx-2 py-2 small" '
             +'data-toggle="tooltip" data-placement="top" '
             +'title="'+ translations["update"] +'">'
             +'<i class="fas fa-edit bg-none text-light"></i></button>')
     $('#'+ name + ' > .d-flex').append(updateButton)
-    editEntity(name, updateButton, id)
+    editEntity( name, updateButton, id )
 }
 // Get form into modal
-function editEntity(name, button, id) {
+function editEntity( name, button, id ) {
     button.on('click', function() {
         $('#loader').show()
         let $form = button.closest('form'),
@@ -391,7 +382,7 @@ function editEntity(name, button, id) {
 }
 
 // editEntity() flash result
-function setFlash(type, msg) {
+function setFlash( type, msg ) {
     let icon = type === 'success' ? 'fa-check-circle' : 'fa-exclamation-circle',
         flash = '<span class="icon text-'+ type +'"><i class="fas '+ icon +'"></i></span>'
                 +'<span class="msg">'+ msg +'</span>'
@@ -401,7 +392,7 @@ function setFlash(type, msg) {
 // Update with url depending on entity requested form modal
 function updateEntity() {
     let type, data = {},
-        url = $('#editEntity').attr('data-entity') === 'event'
+        url = 'event' === $('#editEntity').attr('data-entity')
                     ? '/front/ajaxUpdateEvent'
                     : '/front/ajaxUpdateCategory',
         entity = $('#editEntity').attr('data-entity'),
@@ -410,7 +401,7 @@ function updateEntity() {
     // Set data values
     data['id'] =            id,
     data['title'] =         $('#editEntity').find('input[type=text]').val(),
-    data['description'] =   entity != 'event'
+    data['description'] =   'event' !== entity
                                 ? $('#editEntity').find('textarea').val() : ''
                                 
     $.ajax({
@@ -431,14 +422,14 @@ function updateEntity() {
             
             // Replace new title
             $('[id$="_form_'+ entity +'"] option').each(function() {
-                if ($(this).val() == id) {
+                if ( id === $(this).val() ) {
                     
                     // Replace option text
                     $(this).text($('#editEntity input').val())
-                    unvalidatedOption($(this).parent()) 
+                    unvalidatedOption( $(this).parent() ) 
                     
                     // Reinit select2 to set new text option
-                    initSelect2($(this).parent())
+                    initSelect2( $(this).parent() )
                     $(this).parent().val(id).trigger('change')
                     
                     // Remove next update entity buttons
@@ -449,8 +440,8 @@ function updateEntity() {
             })
             
             // Reload current category description
-            if (entity == 'categoryLevel1' || entity == 'categoryLevel2') {
-                toggleInfoCollapse('hide', $('#form-'+ entity))
+            if ('categoryLevel1' === entity || 'categoryLevel2' === entity ) {
+                toggleInfoCollapse( 'hide', $('#form-'+ entity) )
             }
             
             // Empty modal
@@ -470,7 +461,7 @@ function updateEntity() {
 const collectionHolder = $('#situItems')
 
 // Disable score already selected
-function updateScore(collectionHolder, newElem) {
+function updateScore( collectionHolder, newElem ) {
     let select = newElem.find('select'),
         values = [],
         // timeout because of situItems dynamic adding
@@ -479,11 +470,11 @@ function updateScore(collectionHolder, newElem) {
                 if ($(this).val() != '') values.push($(this).val())
             })
             // Ckeck all except first situItem (success score)
-            if (select.attr('id') !== 'situ_form_situItems_0_score') {
-                if (values.length > 0) {
+            if ( 'situ_form_situItems_0_score' !== select.attr('id') ) {
+                if ( values.length > 0 ) {
                     select.find('option').each(function() {
                         // If value selected disabled it from newElem
-                        if (values.includes($(this).val())) {
+                        if ( values.includes( $(this).val() ) ) {
                             $(this).addClass('bg-readonly').prop('disabled', true)
                             clearTimeout(timeout)
                         }
@@ -494,7 +485,7 @@ function updateScore(collectionHolder, newElem) {
 }
 
 // Delete situItem with confirm alert
-function removeSituItem(button) {
+function removeSituItem( button ) {
     let divItem = button.parents('.situItem')
     
     button.on('click', function() {
@@ -520,20 +511,20 @@ function removeSituItem(button) {
                     btnClass: 'btn-red',
                     action: function () {
                         // If Current value is defined
-                        if (divItem.find('select').val() != '') {
+                        if ( divItem.find('select').val() != '' ) {
                             // Get current value
                             let scoreSelected = divItem.find('select').val()
                             // For each SituItemLi select score
                             collectionHolder.find('select').each(function() {
                                 $(this).find('option').each(function() {
-                                    if ($(this).val() == scoreSelected)
+                                    if ( scoreSelected === $(this).val() )
                                         $(this).removeClass('bg-readonly').removeAttr('disabled')
                                 })
                             })
                         }
                         divItem.remove()
                         // Hide Adding button when all options are selected
-                        if (collectionHolder.find('.situItem').length < 4 ) {
+                        if ( collectionHolder.find('.situItem').length < 4 ) {
                             $('#add-situItem').show()
                         }
                     }
@@ -544,26 +535,26 @@ function removeSituItem(button) {
 }
 
 // Add css class to empty option score selection to set placeholder later
-function addPlaceholderClass(newElem) {
-    if (newElem == '') {
+function addPlaceholderClass( newElem ) {
+    if ( '' === newElem ) {
         collectionHolder.find('select').each(function() {
             $(this).find('option').each(function() {
-                if ($(this).val() == '') $(this).addClass('placeholder')
+                if ( '' === $(this).val() ) $(this).addClass('placeholder')
             })
         })
     } else {
         newElem.find('select').each(function() {
             $(this).find('option').each(function() {
-                if ($(this).val() == '') $(this).addClass('placeholder')
+                if ( '' === $(this).val() ) $(this).addClass('placeholder')
             })
         })
     }
 }
 
 // Toggle style depending on selection value
-function toggleClassSelection(newElem) {
+function toggleClassSelection( newElem ) {
     newElem.find('select').on('change', function() {
-        if ($(this).val() == '' && $(this).hasClass('selection-on'))
+        if ( '' === $(this).val() && $(this).hasClass('selection-on') )
             $(this).removeClass('selection-on')
         else $(this).addClass('selection-on')
     })
@@ -573,7 +564,7 @@ function toggleClassSelection(newElem) {
 function newScore() {
     collectionHolder.find('select').each(function() {
         
-        if ($(this).attr('id') != 'situ_form_situItems_0_score' )
+        if ( 'situ_form_situItems_0_score' !== $(this).attr('id') )
             $(this).find('option[value="0"]').remove()
         
         
@@ -586,7 +577,7 @@ function newScore() {
                     checkScores(newValue, oldValue)
                     setScorePlaceholder($(this), newValue)
                     $(this).find('option').each(function() {
-                        if ($(this).val() == newValue && newValue != '')
+                        if ( newValue === $(this).val() && '' !== newValue )
                             $(this).addClass('selected')
                     })
                 })
@@ -594,15 +585,15 @@ function newScore() {
 }
 
 // Update all options for each situItem score depending on new elem value
-function checkScores(newValue, oldValue) {
+function checkScores( newValue, oldValue ) {
     collectionHolder.find('select').each(function() {
         // If current Score selection
-        if ($(this).hasClass('onSelect')) {
+        if ( $(this).hasClass('onSelect') ) {
             $(this).find('option').each(function() {
                 // If reset selection
-                if (oldValue != ''
-                        && $(this).val() == oldValue
-                        && $(this).hasClass('selected')) {
+                if ( '' !== oldValue && $(this).val() == oldValue
+                                        && $(this).hasClass('selected') )
+                {
                     $(this).removeClass('selected')
                 }
             })
@@ -610,29 +601,27 @@ function checkScores(newValue, oldValue) {
         // Any else Score selection
         else {
             $(this).find('option').each(function() {
-                if ($(this).val() != 0) {
+                if ( 0 !== $(this).val() ) {
                     // Disable selected option from current Score selection
-                    if ($(this).val() == newValue && newValue != '') {
+                    if ( newValue === $(this).val() && '' !== newValue ) {
                         $(this).addClass('bg-readonly').prop('disabled', true)
                     }
                     // Enable unselected option from current Score selection
-                    if ($(this).val() == oldValue && oldValue != '') {
+                    if ( oldValue === $(this).val() && '' !== oldValue ) {
                         $(this).removeClass('bg-readonly').prop('disabled', false)
                     }
                 }
             })
         }
         // And the end of change, reset current Score selection
-        if ($(this).hasClass('onSelect')) $(this).removeClass('onSelect')
+        if ( $(this).hasClass('onSelect') ) $(this).removeClass('onSelect')
     })
 }
 
 // Set Score selection placeholder text
-function setScorePlaceholder(select, newValue) {
-    if (newValue == '')
-        select.find('.placeholder').text(translations['scoreLabel'])
-    else
-        select.find('.placeholder').text(translations['scoreLabelAlt'])
+function setScorePlaceholder( select, newValue ) {
+    if ( '' === newValue ) select.find('.placeholder').text(translations['scoreLabel'])
+    else select.find('.placeholder').text(translations['scoreLabelAlt'])
 }
 
 // Add situItem from prototype
@@ -655,7 +644,7 @@ function addSituItem() {
     newScore()
 
     // Hide Adding button when all options are selected
-    if (collectionHolder.find('.situItem').length == 4 ) {
+    if ( collectionHolder.find('.situItem').length === 4 ) {
         $('#add-situItem').hide()
     }
 }
@@ -673,23 +662,23 @@ function updateSitu() {
     // Header fields
     $('.formData').each(function() {
         // Hide header loader
-        if ($(this).hasClass('on-load') && $(this).find('select').val() != '')
+        if ( $(this).hasClass('on-load') && '' !== $(this).find('select').val() )
             $(this).removeClass('on-load')
         
         // Show collapsed
         $(this).find('.infoCollapse').each(function() {
-            if ($(this).hasClass('d-none')) $(this).removeClass('d-none')
+            if ( $(this).hasClass('d-none') ) $(this).removeClass('d-none')
         })
         
         // Show data
-        if ($(this).attr('id') != 'lang') {
+        if ( 'lang' !== $(this).attr('id') ) {
             let value = $(this).find('select').val()
-            if (value) getData($(this).attr('id'), value)
+            if ( value ) getData( $(this).attr('id'), value )
         }
     })
     
     // Check SituItems
-    if (collectionHolder.find('.situItem').length > 1) {
+    if ( collectionHolder.find('.situItem').length > 1 ) {
         let values = []
         
         collectionHolder.find('select').each(function() {
@@ -703,16 +692,16 @@ function updateSitu() {
             let value = $(this).val()
             
             $(this).find('option').each(function() {
-                if ($(this).val() == value)
+                if ( value === $(this).val() )
                     $(this).addClass('selected')
-                else if (values.includes($(this).val()))
+                else if ( values.includes( $(this).val() ) )
                     $(this).addClass('bg-readonly').prop('disabled', true)
-                else if ($(this).val() == '')
+                else if ( '' === $(this).val() )
                     $(this).text(translations['scoreLabelAlt'])
             })
             
             // Allow updating placeholder on change
-            setScorePlaceholder($(this), $(this).val())
+            setScorePlaceholder( $(this), $(this).val() )
         })
         
         // Add class to SituItems scores
@@ -729,36 +718,34 @@ function updateSitu() {
         $('#loader').hide()
     }
     // Add button display
-    if (collectionHolder.find('.situItem').length == 4) $('#add-situItem').hide()
+    if ( collectionHolder.find('.situItem').length == 4 ) $('#add-situItem').hide()
 }
 
 // Add BS error class to empty field if ErrorForm exist
 function checkForm() {
     $('form').find('.form-control').each(function() {
-        if ($(this).attr('id') != 'situ_form_situItems_0_score') {
-            if ($(this).val() == '') {
-                if (!$(this).is('select')) $(this).addClass('is-invalid')
+        if ( 'situ_form_situItems_0_score' !== $(this).attr('id') ) {
+            if ( '' === $(this).val() ) {
+                if ( ! $(this).is('select') ) $(this).addClass('is-invalid')
                 else {
-                    if ($(this).attr('data-select2-id') !== undefined) {
+                    if ( undefined !== $(this).attr('data-select2-id') ) {
                         $(this).parent().find('.select2-selection__rendered')
                             .addClass('is-invalid')
-                    } else {
-                        $(this).addClass('is-invalid')
-                    }
-
+                    } else  $(this).addClass('is-invalid')
                 }
             } else {
-                if (!$(this).is('select')) {
-                    if ($(this).hasClass('is-invalid')) $(this).removeClass('is-invalid')
+                if ( ! $(this).is('select') ) {
+                    if ( $(this).hasClass('is-invalid') ) $(this).removeClass('is-invalid')
                 } else {
-                    if ($(this).attr('data-select2-id') !== undefined) {
-                        if ($(this).parent().find('.select2-selection__rendered')
-                            .hasClass('is-invalid')) {
+                    if ( undefined !== $(this).attr('data-select2-id') ) {
+                        if ( $(this).parent().find('.select2-selection__rendered')
+                                                .hasClass('is-invalid') )
+                        {
                             $(this).parent().find('.select2-selection__rendered')
                                 .removeClass('is-invalid')
                         }
                     } else {
-                        if ($(this).hasClass('is-invalid')) $(this).removeClass('is-invalid')
+                        if ( $(this).hasClass('is-invalid') ) $(this).removeClass('is-invalid')
                     }
                 }
             }
@@ -850,8 +837,8 @@ $(function() {
     
     // Init header selects
     $('.card-header').find('select').each(function() {
-        unvalidatedOption(this)
-        initSelect2($(this))
+        unvalidatedOption( $(this) )
+        initSelect2( $(this) )
         // When update Situ
         if ($(this).val() != '') {
             $(this).parent().find('.select2-selection__rendered')
@@ -861,15 +848,14 @@ $(function() {
     
     // Hide adding events/categories button if must have to be created (choice empty)
     $('.colDataLang').each(function(){
-        if (!$(this).children().is('select')) $(this).next().find('.btnAdd').hide()
+        if ( ! $(this).children().is('select') ) $(this).next().find('.btnAdd').hide()
     })
     
     /**
      * Load events/categories or create them if choice is empty
      */
-    if ($('[id$="_form_lang"]').is('select')
-     || $('[id$="_form_event"]').is('select')) {
-        
+    if ( $('[id$="_form_lang"]').is('select') || $('[id$="_form_event"]').is('select') )
+    {
         $('form').on('change',  '[id$="_form_lang"], '
                                 +'[id$="_form_event"], '
                                 +'[id$="_form_categoryLevel1"], '
@@ -877,26 +863,26 @@ $(function() {
 
             // Toggle styles
             let rendered = $(this).parent().find('.select2-selection__rendered')
-            if ($(this).val() == '' && rendered.hasClass('selection-on'))
+            if ( '' === $(this).val() && rendered.hasClass('selection-on') )
                 rendered.removeClass('selection-on')
             else rendered.addClass('selection-on')
             footerHeight()
 
             // Hide collapse
-            toggleInfoCollapse('hide', $(this))
+            toggleInfoCollapse( 'hide', $(this) )
             
             // Event or Category data
             let divId = $(this).parents('.formData').attr('id')
                 // Get & show data
-            if (divId != 'lang' && $(this).val() != '')
-                getData(divId, $(this).val())
+            if ('lang' !== divId && '' !== $(this).val() )
+                getData( divId, $(this).val() )
             // Hide next header field
-            if ($(this).is('select'))
+            if ( $(this).is('select') )
                 $(this).parents('.formData').nextAll().addClass('d-none')
 
             // Show card body on select categoryLevel2
-            if ($(this).attr('id') == 'situ_dynamic_form_categoryLevel2') {
-                if ($('.card-body').hasClass('d-none') && $('.card-footer').hasClass('d-none')) {
+            if ( 'situ_dynamic_data_form_categoryLevel2' === $(this).attr('id') ) {
+                if ( $('.card-body').hasClass('d-none') && $('.card-footer').hasClass('d-none') ) {
                     $('.card-body, .card-footer').removeClass('d-none')
                         .animate({ opacity: 1}, 250)
                 }
@@ -909,15 +895,15 @@ $(function() {
                     })
                 
             // Load data or create them on action change
-            changeSelect($(this))                                         
+            changeSelect( $(this) )                                         
         })
         
     } else {
         // If create data, hide create button & show header fields
         $('.colBtn').each(function(){ $(this).hide() })
-        removeClass($('#event'), 'd-none on-load') 
-        removeClass($('#categoryLevel1'), 'd-none on-load') 
-        removeClass($('#categoryLevel2'), 'd-none on-load') 
+        removeClass( $('#event'), 'd-none on-load' ) 
+        removeClass( $('#categoryLevel1'), 'd-none on-load' ) 
+        removeClass( $('#categoryLevel2'), 'd-none on-load' ) 
     }
     
     /**
@@ -940,9 +926,9 @@ $(function() {
                     $(obj).find('.editEntity').remove()
                 })
         // Hide useless info collapse
-        toggleInfoCollapse('hide', $(this))
+        toggleInfoCollapse( 'hide', $(this) )
         
-        loadCreateData($(this))
+        loadCreateData( $(this) )
     })
     
     /**

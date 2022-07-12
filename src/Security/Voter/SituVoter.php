@@ -11,96 +11,97 @@ use Symfony\Component\Security\Core\Security;
 
 class SituVoter extends Voter
 {
-    const DELETE = 'delete_situ';
-    const READ = 'read_situ';
-    const TRANSLATE = 'translate_situ';
-    const UPDATE = 'create_situ';
-    const VALIDATION = 'validation_situ';
+    const DELETE        = 'delete_situ';
+    const READ          = 'read_situ';
+    const TRANSLATE     = 'translate_situ';
+    const UPDATE        = 'create_situ';
+    const VALIDATION    = 'validation_situ';
     
     private $security;
     
-    public function __construct(Security $security)
+    public function __construct( Security $security )
     {
         $this->security = $security;
     }
     
-    protected function supports($attribute, $subject)
+    protected function supports( $attribute, $subject )
     {        
-        return in_array($attribute, [
+        return in_array( $attribute, [
             self::DELETE,
             self::READ,
             self::TRANSLATE,
             self::UPDATE,
             self::VALIDATION,
-        ]);
+        ] );
     }
 
-    protected function voteOnAttribute($attribute, $subject, TokenInterface $token)
+    protected function voteOnAttribute( $attribute, $subject, TokenInterface $token )
     {
         $user = $token->getUser();
         // the user must be logged in; if not, deny access
-        if (!$user instanceof UserInterface) {
-            return false;
-        }
+        if ( ! $user instanceof UserInterface ) return false;
 
         // ... (check conditions and return true to grant permission) ...
-        switch ($attribute) {
+        switch ( $attribute ) {
             case self::DELETE:
-                return $this->canDelete($subject, $user);
+                return $this->canDelete( $subject, $user );
             case self::READ:
-                return $this->canRead($subject, $user);
+                return $this->canRead( $subject, $user );
             case self::TRANSLATE:
-                return $this->canTranslate($subject);
+                return $this->canTranslate( $subject );
             case self::UPDATE:
-                return $this->canUpdate($subject, $user);
+                return $this->canUpdate( $subject, $user );
             case self::VALIDATION:
-                return $this->canValidation($subject, $user);
+                return $this->canValidation( $subject, $user );
         }
+        
         throw new \LogicException('This code should not be reached!');
     }
 
-    private function canDelete(Situ $subject, User $user)
+    private function canDelete( Situ $subject, User $user )
     {
         // Only situ author can delete situ
-        if ($user !== $subject->getUser()) { return false; }
+        if ( $user !== $subject->getUser() ) return false;
+        
         return true;
     }
 
-    private function canRead(array $subject, User $user)
+    private function canRead( array $subject, User $user )
     {
-        // - A user must be connected and paramter preview not null
+        // A user needs to be connected and paramter preview not null
         // to be allow to read a validation requested situ
-        // - Else none can read a not validated situ 
-        if ($subject['situ']->getStatus()->getId() === 2) {
-            if ((null !== $subject['preview'] && !$user)
-                    || (null === $subject['preview'] && $user)) {
-                return false;
-            }
-        } elseif ($subject['situ']->getStatus()->getId() !== 3) {
-            return false;
-        }
+        if ( 2 === $subject['situ']->getStatus()->getId()
+                && ( ( null !== $subject['preview'] && ! $user ) )
+                    || ( null === $subject['preview'] && $user ) ) return false;
+        
+        // None can read a not validated situ 
+        if ( 3 !== $subject['situ']->getStatus()->getId() ) return false;
+        
         return true;
     }
 
-    private function canUpdate(Situ $subject, User $user)
+    private function canUpdate( Situ $subject, User $user )
     {
         // Only situ author can update situ
-        if ($user !== $subject->getUser()) { return false; }
+        if ( $user !== $subject->getUser() ) return false;
+        
         return true;
     }
 
-    private function canTranslate(array $subject)
+    private function canTranslate( array $subject )
     {        
         // If lang is Lang situ to translate or lang is not enabled
-        if ($subject['lang'] === $subject['situ']->getLang()
-                || true !== $subject['lang']->getEnabled()) { return false; }
+        if ( $subject['lang'] === $subject['situ']->getLang()
+                || true !== $subject['lang']->getEnabled() ) return false;
+        
         return true;
     }
 
-    private function canValidation(Situ $subject, User $user)
+    private function canValidation( Situ $subject, User $user )
     {
         // Only situ author can request validation
-        if ($user !== $subject->getUser()) { return false; }
+        if ( $user !== $subject->getUser() ) return false;
+        
         return true;
     }
 }
