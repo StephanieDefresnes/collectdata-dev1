@@ -24,15 +24,15 @@ class CategoryController extends AbstractController
     /**
      * Load Category description on select dynamic situ form
      */
-    public function ajaxGetCategory(Request $request): JsonResponse
+    public function ajaxGetCategory( Request $request ): JsonResponse
     {
-        if ($request->isXMLHttpRequest()) {
+        if ( $request->isXMLHttpRequest() ) {
             
             $data = $request->request->get('data');
-            if (array_key_exists('categoryLevel1', $data)) {
+            if ( array_key_exists('categoryLevel1', $data) ) {
                 $categoryId = $data['categoryLevel1'];
             }
-            if (array_key_exists('categoryLevel2', $data)) {
+            if ( array_key_exists('categoryLevel2', $data) ) {
                 $categoryId = $data['categoryLevel2'];
             }
             $id = null;
@@ -42,14 +42,14 @@ class CategoryController extends AbstractController
             $description = $category->getDescription();
             
             // Set $id if not yet validated
-            if ($category->getValidated() === false) {
+            if ( false === $category->getValidated() ) {
                 $id = $category->getId();
             }
             
             return $this->json([
-                'success' => true,
-                'description' => $description,
-                'id' => $id,
+                'success'       => true,
+                'description'   => $description,
+                'id'            => $id,
             ]);
         }
     }
@@ -57,45 +57,40 @@ class CategoryController extends AbstractController
     /**
      * Update Category after submitting modal on new situ templates
      */
-    public function ajaxUpdateCategory(Request $request): JsonResponse
+    public function ajaxUpdateCategory( Request $request ): JsonResponse
     {
-        if ($request->isXMLHttpRequest()) {
+        if ( $request->isXMLHttpRequest() ) {
             
             $data = $request->request->get('data');
             
             $category = $this->em->getRepository(Category::class)
                             ->find($data['id']);
             
-            $category->setTitle($data['title']);
-            $category->setDescription($data['description']);
+            $category->setTitle( $data['title'] );
+            $category->setDescription( $data['description'] );
             $this->em->persist($category);
             
-            $type = $category->getEvent() ? 'categoryLevel1' : 'categoryLevel2';
+            $type   = $category->getEvent() ? 'categoryLevel1' : 'categoryLevel2';
             
             try {
                 $this->em->flush();
-
-                $msg = $this->translator->trans(
-                        'contrib.form.'. $type .'.update.success', [],
-                        'user_messages', $locale = locale_get_default()
-                    );
-            
-                return $this->json([
-                    'success' => true,
-                    'msg' => $msg,
-                ]);
-
-            } catch (\Doctrine\DBAL\DBALException $e) {
+                $msg    = $this->translator->trans(
+                            'contrib.form.'. $type .'.update.success', [],
+                            'user_messages', $locale = locale_get_default()
+                        );
+                $success = true;
+            } catch ( \Doctrine\DBAL\DBALException $e ) {
                 $msg = $this->translator->trans(
                             'contrib.form.'. $type .'.update.error', [],
                             'user_messages', $locale = locale_get_default()
                         );
-            
-                return $this->json([
-                    'success' => false,
-                    'msg' => $msg,
-                ]);
+                $success = false;
             }
+            
+            return $this->json([
+                'success'   => $success,
+                'msg'       => $msg,
+            ]);
         }
     }
 }

@@ -24,16 +24,16 @@ class EventController extends AbstractController
     /**
      * Load Event validated value on updating situ
      */
-    public function ajaxGetEvent(Request $request): JsonResponse
+    public function ajaxGetEvent( Request $request ): JsonResponse
     {
-        if ($request->isXMLHttpRequest()) {
+        if ( $request->isXMLHttpRequest() ) {
             
             $data = $request->request->get('data');
             $id = null;
             $event = $this->em->getRepository(Event::class)->find($data['event']);
             
             // Set $id if not yet validated
-            if ($event->getValidated() === false) { $id = $event->getId(); }
+            if ( $event->getValidated() === false) $id = $event->getId();
             
             return $this->json([
                 'success' => true,
@@ -45,9 +45,9 @@ class EventController extends AbstractController
     /**
      * Update Event after submitting modal on new situ templates
      */
-    public function ajaxUpdateEvent(Request $request): JsonResponse
+    public function ajaxUpdateEvent( Request $request ): JsonResponse
     {
-        if ($request->isXMLHttpRequest()) {
+        if ( $request->isXMLHttpRequest() ) {
             
             $data = $request->request->get('data');
             $event = $this->em->getRepository(Event::class)->find($data['event']);
@@ -68,7 +68,7 @@ class EventController extends AbstractController
                     'msg' => $msg,
                 ]);
 
-            } catch (\Doctrine\DBAL\DBALException $e) {
+            } catch ( \Doctrine\DBAL\DBALException $e ) {
                 $msg = $this->translator->trans(
                             'contrib.form.event.update.error', [],
                             'user_messages', $locale = locale_get_default()

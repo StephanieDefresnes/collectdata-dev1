@@ -12,7 +12,7 @@ use Symfony\Component\HttpFoundation\Request;
 
 class PageController extends AbstractController
 {
-    public function index(EntityManagerInterface $em)
+    public function index( EntityManagerInterface $em )
     {
         $langs = $em->getRepository(Lang::class)->findBy(['enabled' => true]);
         
@@ -31,19 +31,19 @@ class PageController extends AbstractController
         ]);
     }
     
-    public function contact(Request $request, Mailer $mailer)
+    public function contact( Request $request, Mailer $mailer )
     {
         $form = $this->createForm(ContactType::class);
         $form->handleRequest($request);
         
-        if($form->isSubmitted() && $form->isValid()) {
+        if ( $form->isSubmitted() && $form->isValid() ) {
             
             $contactFormData = $form->getData();
             
             try {
                 $mailer->sendEmailContact($contactFormData);
                 return $this->redirectToRoute('front_contact_confirm');
-            } catch (TransportExceptionInterface $e) {
+            } catch ( TransportExceptionInterface $e ) {
                 $msg = $this->translator
                         ->trans('contact.form.flash.error', [],
                                 'front_messages', $locale = locale_get_default());
