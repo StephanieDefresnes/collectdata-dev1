@@ -18,28 +18,14 @@ class UserCreateCommand extends Command
 {
     protected static $defaultName = 'app:user:create';
     
-    /**
-     *
-     * @var EntityManagerInterface
-     */
     private $em;
-    
-    /**
-     *
-     * @var UserRepository
-     */
-    private $userRepository;
-
-    /**
-     *
-     * @var UserPasswordEncoderInterface
-     */
     private $passwordEncoder;
+    private $userRepository;
 
     public function __construct(UserPasswordEncoderInterface $passwordEncoder, EntityManagerInterface $em, UserRepository $userRepository)
     {
-        $this->passwordEncoder = $passwordEncoder;
         $this->em = $em;
+        $this->passwordEncoder = $passwordEncoder;
         $this->userRepository = $userRepository;
         parent::__construct();
     }

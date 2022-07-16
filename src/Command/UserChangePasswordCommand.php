@@ -2,13 +2,11 @@
 
 namespace App\Command;
 
-use App\Entity\User;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Console\Question\Question;
@@ -18,28 +16,14 @@ class UserChangePasswordCommand extends Command
 {
     protected static $defaultName = 'app:user:change-password';
     
-    /**
-     *
-     * @var EntityManagerInterface
-     */
     private $em;
-    
-    /**
-     *
-     * @var UserRepository
-     */
-    private $userRepository;
-
-    /**
-     *
-     * @var UserPasswordEncoderInterface
-     */
     private $passwordEncoder;
+    private $userRepository;
 
     public function __construct(UserPasswordEncoderInterface $passwordEncoder, EntityManagerInterface $em, UserRepository $userRepository)
     {
-        $this->passwordEncoder = $passwordEncoder;
         $this->em = $em;
+        $this->passwordEncoder = $passwordEncoder;
         $this->userRepository = $userRepository;
         parent::__construct();
     }
