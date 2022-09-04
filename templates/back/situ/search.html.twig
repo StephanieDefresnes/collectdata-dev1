@@ -88,11 +88,11 @@
                             <td class="px-2 align-middle">{{ situ.dateCreation|format_datetime('short', 'none', locale=locale) }}</td>
                             <td class="px-2 align-middle">{{ situ.dateSubmission ? situ.dateSubmission|format_datetime('short', 'none', locale=locale) : '' }}</td>
                             <td class="px-2 align-middle">{{ situ.dateValidation ? situ.dateValidation|format_datetime('short', 'none', locale=locale) : '' }}</td>
-                            <td class="px-2 align-middle text-center">
+                            <td class="px-2 align-middle">
                                 {% set langName = situ.lang.englishName|split(';') %}
                                 <img src="{{ asset('img/flag/'~ situ.lang.lang  ~'.jpg') }}"
                                      alt="{{ langName[0] }}" class="lang-flag mr-1"
-                                     data-toggle="tooltip" data-placement="left"
+                                     data-toggle="tooltip" data-placement="right"
                                      title="{{ langName[0] }}">
                             </td>
                             <td class="px-2 align-middle text-nowrap">

@@ -44,7 +44,11 @@
                                 <td class="px-2 align-middle">{{ category.id }}</td>
                                 <td class="px-2 align-middle text-capitalize">{{ category.title }}</td>
                                 <td class="px-2 align-middle">
-                                    {{ category.lang.englishName }}
+                                {% set langName = category.lang.englishName|split(';') %}
+                                <img src="{{ asset('img/flag/'~ category.lang.lang  ~'.jpg') }}"
+                                     alt="{{ langName[0] }}" class="lang-flag mr-1"
+                                     data-toggle="tooltip" data-placement="right"
+                                     title="{{ langName[0] }}">
                                 </td>
                                 <td class="px-2 align-middle">
                                     {{ category.validated ? 'yes'|trans({}, 'messages') : 'no'|trans({}, 'messages') }}

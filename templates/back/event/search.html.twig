@@ -44,7 +44,11 @@
                                 <td class="px-2 align-middle">{{ event.id }}</td>
                                 <td class="px-2 align-middle text-capitalize">{{ event.title }}</td>
                                 <td class="px-2 align-middle">
-                                    {{ event.lang.englishName }}
+                                {% set langName = event.lang.englishName|split(';') %}
+                                <img src="{{ asset('img/flag/'~ event.lang.lang  ~'.jpg') }}"
+                                     alt="{{ langName[0] }}" class="lang-flag mr-1"
+                                     data-toggle="tooltip" data-placement="right"
+                                     title="{{ langName[0] }}">
                                 </td>
                                 <td class="px-2 align-middle">
                                     {{ event.validated ? 'yes'|trans({}, 'messages') : 'no'|trans({}, 'messages') }}
