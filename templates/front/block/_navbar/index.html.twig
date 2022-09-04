@@ -23,7 +23,10 @@
                 <ul class="navbar-nav p-0">
                     {% if app.user %}
                         {% include 'front/block/_navbar/_contribution.html.twig' %}
-                        {% include 'front/block/_navbar/_translation.html.twig' %}
+                        {% if (app.user and app.user.langContributor and app.user.contributorLangs is not empty)
+                                or (app.user and app.user.langs|length > 1) %}
+                            {% include 'front/block/_navbar/_translation.html.twig' %}
+                        {% endif %}
                         {% if app.user.langs|length > 1 %}
                             {% include 'block/_locale_switcher.html.twig' %}
                         {% endif %}

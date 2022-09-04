@@ -1,6 +1,6 @@
 {% trans_default_domain 'messages' %}
                     
-<div class="modal fade" id="validModal"
+<div class="modal fade" id="validModal" translate="no"
      data-backdrop="static" data-keyboard="false" tabindex="-1"
      aria-labelledby="validModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
@@ -12,6 +12,9 @@
             </div>
             <div class="modal-body">
                 
+                <div id="validError"></div>
+                
+                {% if situsTranslated|length > 1 %}
                 <div class="row mb-2">
                     <div class="col-5 font-weight-bold">
                         {{ 'label_dp.translation'|trans }}
@@ -21,42 +24,43 @@
                         <span class="result validated">{{ 'status.validated'|trans }}</span>
                     </div>                        
                 </div>
+                {% endif%}
                 
-                <div class="row mb-2">
-                    <div class="col-5 font-weight-bold">
+                <div class="row row-item mb-2">
+                    <div class="col-5 font-weight-bold label-col">
                         {{ 'label_dp.event'|trans }}
                     </div>
                     <div id="valid-event" class="col-7 line-11 validation" data-result="valid">
-                        <span class="result valid">{{ 'label.ok'|trans }}</span>
-                        <span class="result validated">{{ 'status.validated'|trans }}</span>
+                        <span class="result valid d-none">{{ 'label.ok'|trans }}</span>
+                        <span class="result validated d-none">{{ 'status.validated'|trans }}</span>
                     </div>                        
                 </div>
                     
-                <div class="row mb-2">
-                    <div class="col-5 font-weight-bold">
+                <div class="row row-item mb-2">
+                    <div class="col-5 font-weight-bold label-col">
                         {{ 'label_dp.categoryLevel1'|trans }}
                     </div>
                     <div id="valid-categoryLevel1" class="col-7 line-11 validation" data-result="valid">
-                        <span class="result valid">{{ 'label.ok'|trans }}</span>
-                        <span class="result validated">{{ 'status.validated'|trans }}</span>
+                        <span class="result valid d-none">{{ 'label.ok'|trans }}</span>
+                        <span class="result validated d-none">{{ 'status.validated'|trans }}</span>
+                    </div>                        
+                </div>
+                    
+                <div class="row row-item mb-2">
+                    <div class="col-5 font-weight-bold line-11 label-col">
+                        {{ 'label_dp.categoryLevel2'|trans }}
+                    </div>
+                    <div id="valid-categoryLevel2" class="col-7 line-11 validation" data-result="valid">
+                        <span class="result valid d-none">{{ 'label.ok'|trans }}</span>
+                        <span class="result validated d-none">{{ 'status.validated'|trans }}</span>
                     </div>                        
                 </div>
                     
                 <div class="row mb-2">
                     <div class="col-5 font-weight-bold line-11">
-                        {{ 'label_dp.categoryLevel2'|trans }}
-                    </div>
-                    <div id="valid-categoryLevel2" class="col-7 line-11 validation" data-result="valid">
-                        <span class="result valid">{{ 'label.ok'|trans }}</span>
-                        <span class="result validated">{{ 'status.validated'|trans }}</span>
-                    </div>                        
-                </div>
-                    
-                <div class="row mb-2">
-                    <div class="col-5 font-weight-bold">
                         {{ 'label_dp.situ'|trans }}
                     </div>
-                    <div class="col-7 line-11">
+                    <div id="valid-situ" class="col-7 line-11">
                         <span class="result valid">{{ 'label.ok'|trans }}</span>
                     </div>                        
                 </div>
@@ -64,7 +68,7 @@
             </div>
             <div class="modal-footer" translate="no">
                 {% if app.user.hasRole('ROLE_SUPER_VISITOR') %}
-                    <a href="{{ path('visitor_denied') }}" class="btn btn-primary mx-1 px-3">
+                    <a href="{{ path('back_access_denied') }}" class="btn btn-primary mx-1 px-3">
                         {{ 'action.confirm'|trans }}
                     </a>
                 {% else %}

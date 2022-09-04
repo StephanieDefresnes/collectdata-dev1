@@ -5,7 +5,6 @@ namespace App\Messager;
 use App\Entity\Message;
 use App\Entity\Situ;
 use App\Entity\User;
-use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
@@ -15,9 +14,8 @@ class Messager {
     
     private $em;
     private $generateUrl;
-    private $supremeAdminId;
+    private $supremeAdmin;
     private $translator;
-    private $userRepository;
     
     /**
      * Messenger constructor
@@ -25,139 +23,125 @@ class Messager {
     public function __construct(EntityManagerInterface $em,
                                 UrlGeneratorInterface $generateUrl,
                                 ParameterBagInterface $parameters,
-                                TranslatorInterface $translator,
-                                UserRepository $userRepository)
+                                TranslatorInterface $translator)
     {
         $this->em = $em;
         $this->generateUrl = $generateUrl;
-        $this->supremeAdminId = $parameters->get('supreme_admin_id');
+        $this->supremeAdmin = $em->getRepository(User::class)
+                                    ->find($parameters->get('supreme_admin_id'));
         $this->translator = $translator;
-        $this->userRepository = $userRepository;
     }
     
     /**
      * Send Message alert to Moderator
      * 
      * @param type $type        - string
-     * @param type $entity      - string
      * @param type $data        - object
      * @throws \Exception
      */
-    public function sendModeratorAlert($action, $entity, $data)
+    public function sendModeratorAlert( $action, $object)
     {
-        // Default
-        $admin = true;
-        $senderUser = $data->getUser();
-        $entityId = $data->getId();
+        $channel        = $action === 'submission' ? 'primary' : null;
         
-        // FLP recipient(s)
-        $moderators = $this->em->getRepository(User::class)
-                            ->findRoleByLang('MODERATOR', $data->getLang());
-        $supremeAdmin = $this->em->getRepository(User::class)
-                            ->find($this->supremeAdminId);
+        $classObject    = $this->em->getClassMetadata( get_class($object) )->getName();
+        $classArray     = explode('\\', $classObject);
+        $objectString   = strtolower( end($classArray) );
         
-        $userName = $data->getUser()->getName();
-        
-        // Situ validation requested
-        if($action === 'submission') {
-            $channel = 'primary';
-        }
+        $moderators     = $this->em->getRepository(User::class)
+                                ->findRoleByLang('MODERATOR', $object->getLang());
 
-        if ($moderators) {
-            foreach ($moderators as $moderator) {
-                // Moderator current default lang
-                $moderatorLang = $moderator->getLang()->getLang();
+        if ( $moderators ) {
+            foreach ( $moderators as $moderator ) {
 
                 $subject = $this->translator->trans(
-                    'back.alert.'.$action.'.'.$entity, [
-                        '%id%' => $entityId,
-                        '%user%' => $userName,
+                    'back.alert.'. $action .'.'. $objectString,
+                    [
+                        '%id%' => $object->getId(),
+                        '%user%' => $object->getUser()->getName(),
                     ],
                     'messenger_messages',
-                    $locale = $moderatorLang
+                    $moderator->getLang()->getLang()
                 );
 
-                // Persist Message
-                $this->message( $admin, 'alert',
-                                $senderUser, $moderator,
-                                $subject, null, null,
-                                $entity, $entityId,
-                                null, $channel);
+                $this->addMessage(   true, 'alert',
+                                    $object->getUser(), $moderator,
+                                    $subject, null, null,
+                                    $objectString, $object->getId(),
+                                    null, $channel);
             }
-        } else {
-            // SupremeAdmin current default lang
-            $supremeAdminLang = $supremeAdmin->getLang()->getLang();
-            
-            $subject = $this->translator->trans(
-                'back.alert.'.$type.'.'.$entity, [
-                    '%id%' => $entityId,
-                    '%user%' => $userName,
-                ],
-                'messenger_messages',
-                $locale = $supremeAdminLang
-            );
-            
-            // Persist Message
-            $this->message( $admin, 'alert',
-                            $senderUser, $supremeAdmin,
-                            $subject, null, $url,
-                            $entity, $entityId,
+            return;
+        }
+        
+        $subject = $this->translator->trans(
+            'back.alert.'. $type .'.'. $entity ,
+            [
+                '%id%' => $object->getId(),
+                '%user%' => $object->getUser()->getName(),
+            ],
+            'messenger_messages',
+            $this->supremeAdmin->getLang()->getLang()
+        );
+
+        $this->addMessage(   true, 'alert',
+                            $object->getUser(), $this->supremeAdmin,
+                            $subject, null, null,
+                            $objectString, $object->getId(),
                             null, $channel);
-        }       
     }
     
     /**
      * Send Message alert to user
      * 
-     * @param type $type        set by moderator validation - string
-     * @param type $entity      set by moderator validation - string
-     * @param type $data        set by moderator validation - object
+     * @param type $action      set by moderator validation - string
+     * @param type $object      set by moderator validation
      * @return Message
      * @throws \Exception
      */
-    public function sendUserAlert($action, $entity, $data)
+    public function sendUserAlert( $action, $object )
     {
-        // Default
-        $admin = false;
-        $recipientUser = $data->getUser();
-        $entityId = $data->getId();
-        $url = null;
-        // FLP default sender
-        $senderUser = $this->em->getRepository(User::class)->find(0);
+        $channel    = 'validation' == $action ? 'success' : null;
+        $sender     = $this->em->getRepository(User::class)->find(intval('-1'));
+        $url        = null;
         
-        // Default recipient Lang
-        $lang = $recipientUser->getLang()->getLang();
+        
+        $classObject    = $this->em->getClassMetadata( get_class($object) )->getName();
+        $classArray     = explode('\\', $classObject);
+        $entityName     = strtolower( end($classArray) );
+        
+        $objectString   = 'category' === $entityName
+                            ? $entityName . ( $object->getEvent() ? 'Level1' : 'Level2' )
+                            : $entityName;
 
         // Validation situ
-        if($action === 'validation') {
-            $channel = 'success';
-
+        if ( 'validation' == $action ) {
+            
             $subject = $this->translator->trans(
-                'front.alert.'.$action.'.'.$entity, [
-                    '%title%' => $data->getTitle(),
+                'front.alert.'. $action .'.'. $objectString, [
+                    '%title%' => $object->getTitle(),
                 ],
                 'messenger_messages',
-                $locale = $lang
+                $object->getUser()->getLang()->getLang()
             );
             
-            if ($entity === 'situ') {
-                $situ = $this->em->getRepository(Situ::class)->find($entityId);
+            if ( $object instanceof Situ ) {
                 $url = $this->generateUrl->generate(
                     'read_situ',
                     [
-                        'slug' => $situ->getSlug(),
-                        '_locale' => $lang,
+                        'slug' => $object->getSlug(),
+                        '_locale' => $object->getUser()->getLang()->getLang(),
                     ]
                 );
             }
+            
+            if ( $object instanceof Category )
+                $objectString = $category->getEvent() ? 'categoryLevel1' : 'categoryLevel2';
         }
         
-        // Persist Message
-        $this->message( $admin, 'alert',
-                        $senderUser, $recipientUser,
-                        $subject, null, $url,
-                        $entity, $entityId,
-                        null, $channel);
+        $this->addMessage(   false, 'alert',
+                            $sender, $object->getUser(),
+                            $subject, null, $url,
+                            $objectString, $object->getId(),
+                            null, $channel);
     }
     
     /**
@@ -169,141 +153,132 @@ class Messager {
      * @return Message
      * @throws \Exception
      */
-    public function sendUserEnvelope($action, $text, $data)
+    public function sendUserEnvelope( $action, $object, $text )
     {
-        // Default
-        $admin = false;
-        $entityId = $data->getId();
-        $channel = 'warning';
-        $recipient = $data->getUser();
+        $channel = 'situ_refuse' === $action ? 'warning' : 'primary';
+        
+        $classObject    = $this->em->getClassMetadata( get_class($object) )->getName();
+        $classArray     = explode('\\', $classObject);
+        $objectString   = strtolower( end($classArray) );
         
         // FLP moderator signing
-        $sender = $this->em->getRepository(User::class)->find('-1');
-        
-        // Default recipient Lang
-        $lang = $data->getUser()->getLang()->getLang();
+        $sender = $this->em->getRepository(User::class)->find('-1');        
 
-        if ($action = 'situ_refuse') {
+        if ( 'situ_refuse' === $action ) {
             
-            $entity = 'situ';
+            $lang = $object->getUser()->getLang()->getLang();
             
             // Subject
             $subject = $this->translator->trans(
                 'front.alert.refuse.subject', [],
-                'messenger_messages',
-                $locale = $lang
+                'messenger_messages', $lang
             );
 
-            // Text
+            // Content
             $reason = $this->translator->trans(
                 'front.alert.refuse.text', [
-                    '%id%' => $entityId,
+                    '%id%' => $object->getId(),
                 ],
-                'messenger_messages',
-                $locale = $lang
+                'messenger_messages', $lang
             );
 
-            $situLink = $this->generateUrl->generate(
+            $urlSitu = $this->generateUrl->generate(
                 'create_situ',
                 [
                     '_locale' => $lang,
-                    'id' => $entityId,
+                    'id' => $object->getId(),
                 ]
             );
+            
             $link = $this->translator->trans(
                 'front.alert.refuse.link', [
-                    '%link%' => $situLink,
+                    '%link%' => $urlSitu,
                 ],
-                'messenger_messages',
-                $locale = $lang
+                'messenger_messages', $lang
             );
 
-            $text = $reason.PHP_EOL.$text.PHP_EOL.$link;
+            $content = $reason ."\n". $text ."\n". $link;
         }
 
-        // Persist Message
-        return $this->message( $admin, 'envelope',
-                        $sender, $recipient,
-                        $subject, $text, null,
-                        $entity, $entityId,
-                        null, $channel);
+        return $this->addMessage(false, 'envelope',
+                                $sender, $object->getUser(),
+                                $subject, $content, null,
+                                $objectString, $object->getId(),
+                                null, $channel);
     }
     
     /**
-     * Send Message envelope to report Moderator
+     * Send report Message to moderator
      * 
-     * @param type $_locale
-     * @param type $text            set by user or anonymous
+     * @param type $text
      * @param type $senderUser      can be user or anonymous
-     * @param type $type            set by user or anonymous - string
-     * @param type $entity          set by user or anonymous
-     * @param type $data            set by user or anonymous, can be situ or user
+     * @param type $object          can be situ or user
      */
-    public function reportEnvelope($text, $senderUser = null, $entity, $data)
+    public function reportMessage( $text, $senderUser = null, $object )
     {
-        // Default
-        if (null === $senderUser) {
-            // Anonymous (user not connected)
-            $sender =   $this->em->getRepository(User::class)->find('-1');
-        } else {
-            $sender =   $senderUser;
-        }
-        $admin =        true;
-        $reported =     true;
-        $entityId =     $data->getId();
-        $channel =      'warning';
+        // Sender can be anonymous
+        $sender =   $this->em->getRepository(User::class)->find(0);
+        if ( $senderUser ) $sender = $senderUser;
         
-        $langData = $data->getLang()->getLang();
-        $params =       [
-                            'id' => $entityId,
-                            'back' => 'back',
-                            '_locale' => $langData,
-                        ];
+        $params     = [ 'id' => $object->getId(),
+                        'back' => 'back',
+                        '_locale' => $object->getLang()->getLang() ];
+        $url        = null;
         
-        // FLP recipient(s)
-        $moderators = $this->em->getRepository(User::class)
-                            ->findRoleByLang('MODERATOR', $data->getLang());
-        $supremeAdmin = $this->em->getRepository(User::class)
-                            ->find($this->supremeAdminId);
-        
-        // Situ report
-        if($entity = 'situ') $url = $this->generateUrl->generate('back_situ_read', $params);
-        // User report
-        elseif($entity = 'user') $url = $this->generateUrl->generate('back_user_read', $params);
-        
-        // Persist Message
-        if ($moderators) {
-            foreach ($moderators as $moderator) {
+        $classObject    = $this->em->getClassMetadata( get_class($object) )->getName();
+        $classArray     = explode('\\', $classObject);
+        $objectString   = strtolower( end($classArray) );
                 
-                $moderatorlang = $moderator->getLang()->getLang();
+        // Situ report
+        if ( $object instanceof Situ )
+                $url = $this->generateUrl->generate('back_situ_read', $params);
+        // User report
+        if ( $object instanceof User )
+                $url = $this->generateUrl->generate('back_user_read', $params);
+        
+        $moderators = $this->em->getRepository(User::class)
+                            ->findRoleByLang('MODERATOR', $object->getLang());
+        
+        if ( $moderators ) {
+            foreach ( $moderators as $moderator ) {
                 
                 $subject = $this->translator->trans(
-                    'message.report.'. $entity .'.subject', [],
+                    'message.report.'. $objectString .'.subject', [],
                     'messenger_messages',
-                    $locale = $moderatorlang
+                    $moderator->getLang()->getLang()
                 );
 
-                $text = $this->translator->trans(
-                    'message.report.'. $entity .'.text', [],
-                    'messenger_messages',
-                    $locale = $moderatorlang
-                ).PHP_EOL.$text;
+                $content = $this->translator->trans(
+                                'message.report.'. $objectString .'.text', [],
+                                'messenger_messages',
+                                $moderator->getLang()->getLang()
+                            ) ."\n". $text;
             
-                $this->message( $admin, 'envelope',
-                                $sender, $moderator,
-                                $subject, $text, $url,
-                                $entity, $entityId,
-                                $reported, $channel);
+                addMessage(   true, 'envelope',
+                                    $sender, $moderator,
+                                    $subject, $content, $url,
+                                    $objectString, $object->getId(),
+                                    true, 'warning');
             }
-        } else {
-            $supremeAdmin = $this->em->getRepository(User::class)->find($this->supremeAdminId);
-            
-            $this->message( $admin, 'envelope',
-                            $sender, $supremeAdmin,
-                            $subject, $content, $url,
-                            $entity, $entityId,
-                            $reported, $channel);
+            return;
         }
+                
+        $subject = $this->translator->trans(
+            'message.report.'. $objectString .'.subject', [],
+            'messenger_messages',
+            $this->supremeAdmin->getLang()->getLang()
+        );
+        
+        $content = $this->translator->trans(
+                        'message.report.'. $objectString .'.text', [],
+                        'messenger_messages', $this->supremeAdmin->getLang()->getLang()
+                    ) ."\n". $text;
+
+        $this->addMessage(   true, 'envelope',
+                            $sender, $this->supremeAdmin,
+                            $subject, $content, $url,
+                            $objectString, $objectId,
+                            true, $channel);
     }
     
     /**
@@ -316,34 +291,34 @@ class Messager {
      * @param type $subject         string
      * @param type $text            text - null with alert type
      * @param type $url             string - null with entity event or category, and alert type
-     * @param type $entity          string entity name - can be user, situ, event...
+     * @param type $entity          string object name - can be user, situ, event...
      * @param type $entityId        objectId - object can be User, Situ, Event...
      * @param type $reported        boolean
      * @param type $channel         string
      * @return Message
      * @throws \Exception 
      */
-    public function message($admin, $type,
-                            $sender, $recipient,
-                            $subject, $text = null, $url = null,
-                            $entity, $entityId,
-                            $reported = null, $channel = null)
+    public function addMessage( $admin, $type,
+                                $sender, $recipient,
+                                $subject, $text = null, $url = null,
+                                $entity, $entityId,
+                                $reported = null, $channel = null)
     {
         $message = new Message();
         
-        $message->setAdmin($admin);
-        $message->setType($type);
-        $message->setSenderUser($sender);
-        $message->setRecipientUser($recipient);
-        $message->setSubject($subject);
-        $message->setText($text);
-        $message->setUrl($url);
-        $message->setEntity($entity);
-        $message->setEntityId($entityId);
-        $message->setReported($reported);
-        $message->setScanned(false);
-        $message->setChannel($channel);
-        $this->em->persist($message);
+        $message->setAdmin( $admin );
+        $message->setType( $type );
+        $message->setSenderUser( $sender );
+        $message->setRecipientUser( $recipient );
+        $message->setSubject( $subject );
+        $message->setText( $text );
+        $message->setUrl( $url );
+        $message->setEntity( $entity );
+        $message->setEntityId( $entityId );
+        $message->setReported( $reported );
+        $message->setScanned( false );
+        $message->setChannel( $channel );
+        $this->em->persist( $message );
 
         try {
             $this->em->flush();

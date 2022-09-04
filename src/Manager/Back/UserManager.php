@@ -7,11 +7,11 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\Form\Exception\LogicException;
 use Symfony\Component\Form\FormInterface;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Exception\InvalidParameterException;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -126,19 +126,25 @@ class UserManager
      * 
      * @param type $user
      */
-    public function preventSuperVisitor($response = null)
+    public function preventSuperVisitor($back = null)
     {
         if ($this->user->hasRole('ROLE_SUPER_VISITOR')) {
-            if (true === $response) {
+            if ( $back ) {
                 return new RedirectResponse(
                     $this->router->generate('back_access_denied', [
                         '_locale' => locale_get_default()
                     ])
                 );
             }
-            return $this->urlGenerator->generate('back_access_denied', [
+//            return $this->urlGenerator->generate('error_403', [
+//                    '_locale' => locale_get_default()
+//                ]);
+            
+            return new RedirectResponse(
+                $this->router->generate('error_403', [
                     '_locale' => locale_get_default()
-                ]);
+                ])
+            );
         }
         return false;
     }

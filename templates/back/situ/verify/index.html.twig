@@ -47,34 +47,37 @@
     {{ parent() }}
     <script src="{{ asset('toggle-switch/js/script.js') }}"></script>
     {{ encore_entry_script_tags('situ_validation_app', null, 'backApp') }}
+    {% if locale != situ.lang.lang %}
+        {{ encore_entry_script_tags('_ggt_app', null, 'backApp') }}
+    {% endif %}
     <script>
         var path = {
             "locale" : "{{ locale }}",
         }
         var translations = {
-            "toValidate" : "{{ 'contrib.situ.verify.data.to_validate'|trans }}",
-            "ok" : "{{ 'label.ok'|trans }}",
-            "todoValidate" : "{{ 'status.validation'|trans({}, 'messages') }}",
-            "doneValidated" : "{{ 'status.validated'|trans({}, 'messages') }}",
-            "noResult" : "{{ 'select2.no_result'|trans }}",
             "createEventRefuse" : "{{ 'contrib.situ.verify.form.modal.refuse.comment.create.eventRefuse'|trans }}",
             "createCategoryLevel1Refuse" : "{{ 'contrib.situ.verify.form.modal.refuse.comment.create.categoryLevel1Refuse'|trans }}",
             "createCategoryLevel2Refuse" : "{{ 'contrib.situ.verify.form.modal.refuse.comment.create.categoryLevel2Refuse'|trans }}",
             "createSituRefuse" : "",
             "createItemsRefuse" : "",
+            "doneValidated" : "{{ 'status.validated'|trans({}, 'messages') }}",
             "inappropriateEventRefuse" : "{{ 'contrib.situ.verify.form.modal.refuse.comment.inappropriate.eventRefuse'|trans }}",
             "inappropriateCategoryLevel1Refuse" : "{{ 'contrib.situ.verify.form.modal.refuse.comment.inappropriate.categoryLevel1Refuse'|trans }}",
             "inappropriateCategoryLevel2Refuse" : "{{ 'contrib.situ.verify.form.modal.refuse.comment.inappropriate.categoryLevel2Refuse'|trans }}",
             "inappropriateSituRefuse" : "{{ 'contrib.situ.verify.form.modal.refuse.comment.inappropriate.situRefuse'|trans }}",
             "inappropriateItemsRefuse" : "{{ 'contrib.situ.verify.form.modal.refuse.comment.inappropriate.itemsRefuse'|trans }}",
-            "unvalidRefuse" : "{{ 'contrib.situ.verify.form.modal.refuse.unvalid'|trans }}",
+            "noResult" : "{{ 'select2.no_result'|trans }}",
+            "todoValidate" : "{{ 'status.validation'|trans({}, 'messages') }}",
+            "toValidate" : "{{ 'contrib.situ.verify.data.to_validate'|trans }}",
             "translationRefuse" : "{{ 'contrib.situ.verify.form.modal.refuse.comment.conflict.validated'|trans }}",
             "translate" : "{{ 'action.translate'|trans({}, 'messages') }}",
+            "unvalidRefuse" : "{{ 'contrib.situ.verify.form.modal.refuse.unvalid'|trans }}",
+            "unvalidValidation" : "{{ 'contrib.situ.verify.form.modal.validation.unvalid'|trans }}",
             
             {% for translation in situsTranslated %}
                 {% if translation.status.id == 3 %}
-                    "translationRead" : "{{ 'contrib.situ.verify.form.modal.refuse.comment.conflict.read'|trans }}",
                     "translationPath" : "/{{ authorLang }}/read/{{ translation.id }}",
+                    "translationRead" : "{{ 'contrib.situ.verify.form.modal.refuse.comment.conflict.read'|trans }}",
                 {% endif %}
             {% endfor %}
         }
@@ -82,7 +85,9 @@
             {% set userLangs = [] %}
             {% if app.user.langs|length > 1 %}
                 {% for userLang in app.user.langs %}
-                    {% set userLangs = userLangs|merge([userLang.lang]) %}
+                    {% if userLang.lang != situ.lang.lang %}
+                        {% set userLangs = userLangs|merge([userLang.lang]) %}
+                    {% endif %}
                 {% endfor %}
             {% endif %}
             function googleTranslateElementInit() { 

@@ -45,6 +45,7 @@
                             <th class="no-sort"></th>
                             <th class="px-2">{{ 'label.enabled'|trans({}, 'messages') }}</th>
                             <th class="px-2">{{ 'label.lang'|trans({}, 'messages') }}</th>
+                            <th class="px-2">{{ 'status.title'|trans({}, 'messages') }}</th>
                             <th class="px-2">{{ 'label.attribution'|trans({}, 'messages') }}</th>
                             <th class="px-2">{{ 'label.type'|trans({}, 'messages') }}</th>
                             <th class="px-2">{{ 'label.title'|trans({}, 'messages') }}</th>
@@ -55,6 +56,16 @@
                         {% for page in pages %}
                         <tr>
                             <td class="px-2">
+                                {% if page.enabled == 1 %}
+                                <a href="#clone"
+                                       class="btn btn-outline-warning btn-sm px-2"
+                                       data-toggle="tooltip" data-placement="left"
+                                       title="{{ 'action.clone'|trans({}, 'messages') }}"
+                                       aria-label="{{ 'action.clone'|trans({}, 'messages') }}">
+                                        <i class="far fa-clone"></i>
+                                    </a>
+                                </a>
+                                {% else %}
                                 <a href="{{ path('back_content_edit', {
                                                     '_locale': locale,
                                                     'back': 'back',
@@ -64,13 +75,16 @@
                                    data-toggle="tooltip" data-placement="left"
                                    title="{{ 'action.edit'|trans({}, 'messages') }}">
                                     <i class="fas fa-edit"></i>
-                                </a>
+                                {% endif %}
                             </td>
                             <td class="px-2">
                                 {{ page.enabled == 0 ? 'no'|trans({}, 'messages')  : 'yes'|trans({}, 'messages')  }}
                             </td>
                             <td class="px-2 text-uppercase">
                                 {{ page.lang }}
+                            </td>
+                            <td class="px-2">
+                                {{ page.status.name|trans({}, 'messages') }}
                             </td>
                             <td class="px-2">
                                 {{ page.user ? page.user.name }}

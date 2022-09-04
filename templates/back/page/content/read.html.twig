@@ -1,0 +1,138 @@
+{% trans_default_domain 'back_messages' %}
+{% extends "back/layout.html.twig" %}
+{% set locale = app.request.locale %}
+
+{% block title %}
+    {{ 'content.form.title' |trans }}
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {{ encore_entry_link_tags('page_edit_app', null, 'backApp') }}
+    {{ encore_entry_link_tags('app') }}
+{% endblock %}
+
+{% block content %}
+    
+    <div class="container-fluid pt-4">
+        
+        <div class="d-sm-flex align-items-center justify-content-between mb-4" translate="no">
+            <h1 class="h3 mb-0 text-gray-800">{{ 'content.form.title'|trans }}</h1>
+            <a href="{{ path('back_content_search') }}" class="btn btn-secondary mx-2 pt-1">
+                <i class="fas fa-reply"></i>
+                {{ 'action.back_list'|trans({}, 'messages') }}
+            </a>
+        </div>
+            
+        <div class="row">
+            <div class="col-11 mx-auto px-0 card shadow mb-4">
+
+                <div id="translator" class="card-header py-3 do-ggt" translate="no">
+                    <div class="row d-flex justify-content-between">
+                        <div class="col-auto">
+                            <h6 class="px-0 mt-2" translate="no">
+                                <span class="text-secondary">
+                                    {{ 'label_dp.type'|trans }}
+                                </span>
+                                <span class="text-primary font-weight-bold px-2">
+                                    {% set type = 'content.form.page.type.choice.'~page.type %}
+                                    {{ type|trans  }}
+                                </span>
+                                <span class="text-secondary mx-1">-</span>
+                                <span class="text-secondary">
+                                    {{ 'label_dp.lang'|trans({}, 'messages') }}
+                                </span>
+                                <span class="text-primary px-2 font-weight-bold">
+                                    {% set langName = render_service.getLang(page.lang).englishName|split(';') %}
+                                    {{ langName[0] }}
+                                </span>
+                            </h6>
+                        </div>
+                        {% if locale != page.lang %}
+                            <div class="col-md-auto mct-1px" translate="no">
+                                <div class="row ggt-row px-3 d-none">
+                                    <div class="col-auto px-1 mt-1"><i class="fas fa-globe-americas"></i></div>
+                                    <div class="col-auto px-0">
+                                        <div id="GGT"></div>
+                                    </div>
+                                    <div id="resetGGT" class="col-auto p-1 btn d-none">
+                                        <i class="far fa-times-circle"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div id="page" class="card-body pt-0">
+
+                    {% for keyPage, contentPage in page.pageContents %}
+                    <div class="row {{ keyPage != 0 ? 'border-top' }}">
+                        <div class="{{ locale != page.lang ? 'col-md-6' : 'col-md-12'}} pt-3">
+                            <div class="d-flex justify-content-start mb-3">
+                                <span class="font-weight-bold" translate="no">{{ 'label_dp.title'|trans({}, 'messages')  }}</span>
+                                <span class="mx-2">{{ contentPage.title }}</span>
+                            </div>
+                            <p class="d-flex justify-content-start font-weight-bold" translate="no">
+                                {{ 'content.read.section' |trans }}
+                            </p>
+                            {{ contentPage.content|raw }}
+                        </div>
+                        
+                        {% if locale != page.lang %}
+                        <div class="col-md-6 border-left pt-3" translate="no">
+                        {% for keyReferent, contentReferent in referentPage.pageContents %}
+                            {% if keyPage == keyReferent %}
+                                <div class="d-flex justify-content-start mb-3">
+                                    <span class="font-weight-bold">
+                                        {{ 'label_dp.title'|trans({}, 'messages')  }}
+                                    </span>
+                                    <span class="mx-2">{{ contentReferent.title }}</span>
+                                </div>
+                                <p class="d-flex justify-content-start font-weight-bold">
+                                    {{ 'content.read.section' |trans }}
+                                </p>
+                                {{ contentReferent.content|raw }}
+                            {% endif %}
+                        {% endfor %}
+                        </div>
+                        {% endif %}
+                    </div>
+                    {% endfor %}
+
+                </div>
+                    
+                
+            </div>
+
+        </div>
+                    
+    </div>
+                    
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+{#    {{ encore_entry_script_tags('page_edit_app', null, 'backApp') }}#}
+        {{ encore_entry_script_tags('_ggt_app', null, 'backApp') }}
+    <script> 
+        var translations = {
+            "translate" : "{{ 'action.translate'|trans({}, 'messages') }}",
+        }
+        {% set userLangs = [] %}
+        {% if app.user.langs|length > 1 %}
+            {% for userLang in app.user.langs %}
+                {% if userLang.lang != page.lang %}
+                    {% set userLangs = userLangs|merge([userLang.lang]) %}
+                {% endif %}
+            {% endfor %}
+        {% endif %}
+        function googleTranslateElementInit() { 
+            new google.translate.TranslateElement({
+                pageLanguage: '{{ page.lang }}',
+                includedLanguages: '{{ userLangs|join(',') }}'
+            },'GGT')
+        }
+    </script> 
+    <script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+{% endblock %}

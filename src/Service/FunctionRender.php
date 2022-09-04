@@ -119,6 +119,17 @@ class FunctionRender {
     }
     
     /**
+     *  front\situ\translation.html.twig
+     * 
+     * @param type $situId
+     * @return type Get translations read situ
+     */
+    public function getTranslationByInitialIdAndUserLang($situId, $langId) {
+        return $this->em->getRepository(Situ::class)
+                ->findby(['translatedSituId' => $situId, 'lang' => $langId ]);
+    }
+    
+    /**
      * Entity Translation
      * 
      * front\translation\search\_translations.html.twig

@@ -132,9 +132,9 @@
             <div id="conflict"></div>
         {% endif %}
 
-        <div id="event" class="formData card border-0 mb-3"
-             data-id="{{ situ.event.id }}">
+        <div id="event" class="formData card border-0 mb-3">
             <input id="validated-event" class="validationForm" type="hidden"
+                   data-initial="{{ situ.event.validated == 0 ? 0 : 1 }}"
                    value="{{ situ.event.validated == 0 ? 0 : 1 }}">
             <div id="headingOne" class="row" translate="no">
                 <div class="col-12 py-0 text-left line-11 check collapsed"
@@ -177,9 +177,9 @@
             </div>
         </div>
 
-        <div id="categoryLevel1" class="formData card border-0 mb-3"
-             data-id="{{ situ.categoryLevel1.id }}">
+        <div id="categoryLevel1" class="formData card border-0 mb-3">
             <input id="validated-categoryLevel1" class="validationForm" type="hidden"
+                   data-initial="{{ situ.categoryLevel1.validated == 0 ? 0 : 1 }}"
                    value="{{ situ.categoryLevel1.validated == 0 ? 0 : 1 }}">
             <div id="headingTwo" class="row" translate="no">
                 <div class="col-12 py-0 text-left line-11 check collapsed"
@@ -228,9 +228,9 @@
             </div>
         </div>
 
-        <div id="categoryLevel2" class="formData card border-0 mb-2 pb-2"
-             data-id="{{ situ.categoryLevel2.id }}">
+        <div id="categoryLevel2" class="formData card border-0 mb-2 pb-2">
             <input id="validated-categoryLevel2" class="validationForm" type="hidden"
+                   data-initial="{{ situ.categoryLevel2.validated == 0 ? 0 : 1 }}"
                    value="{{ situ.categoryLevel2.validated == 0 ? 0 : 1 }}">
             <div id="headingThree" class="row" translate="no"> 
                 <div class="col-12 py-0 text-left line-11 check collapsed"

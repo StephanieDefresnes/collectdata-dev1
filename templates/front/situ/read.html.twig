@@ -12,7 +12,7 @@
 {% block content %}
     
     {% block banner%}
-    <div class="d-flex justify-content-between mt-3 mb-5 pt-5">
+    <div class="d-md-flex justify-content-between d-block mt-3 mb-md-5 mb-4 pt-md-5 pt-0">
         <div class="d-flex justify-content-start">
             <h3 class=" text-white">{{ 'contrib.situ.title'|trans }}
                 {% if app.user and situ.status.id == 2 %}
@@ -41,15 +41,45 @@
 
     <div class="row">
 
-        <div class="col-md-8 mx-auto p-0">
+        <div class="col-md-8 mx-auto">
 
-            <div class="card mb-4 bg-light-50 border-0 rounded-lg shadow">
+            <div class="card mb-4  bg-light-50 border-0 rounded-lg shadow">
 
                 <div class="card-header bg-dark-50 p-4 text-white">
                     <div class="row">
                         <div class="col-12">
                             <div class="position-absolute">
-                                <img src="{{ asset('img/flag/'~ situ.lang.lang ~'.jpg') }}" alt="{{ situ.lang.lang }}" class="scale-12 text-uppercase">
+                                <ul id="menu-translations" class="navbar-nav p-0">
+                                    <li class="nav-item dropdown">
+                                        {% if situ.initialSitu %}
+                                            {% set translations = render_service.getTranslations(situ.id) %}
+                                        {% else %}
+                                            {% set initialSitu = render_service.getSitu(situ.translatedSituId) %}
+                                            {% set initialTranslations = render_service.getTranslations(initialSitu.id) %}
+                                            {% set translations = initialTranslations|merge([initialSitu]) %}
+                                        {% endif %}
+                                        <a class="nav-link dropdown-toggle {% if translations %}pointer {% endif %}"
+                                           data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            <img src="{{ asset('img/flag/'~ situ.lang.lang ~'.jpg') }}"
+                                                 alt="{{ situ.lang.lang }}" class="scale-12">
+                                        </a>
+                                        {% if translations %}
+                                        <ul class="dropdown-menu p-0 mt-0 mx-n1 dropdown-list dropdown-menu-left shadow animated--grow-in" aria-labelledby="menu_lang">
+                                            
+                                            {% for translation in translations %}
+                                                {% if translation != situ and translation.status.id == 3  %}
+                                                <li class="dropdown-item bg-dark-85 px-1">
+                                                    <a href="{{ path('read_situ', { 'slug': translation.slug }) }}">
+                                                        <img src="{{ asset('img/flag/'~ translation.lang.lang ~'.jpg') }}" alt="{{ translation.lang.lang }}" class="lang-flag mr-2">
+                                                    </a>
+                                                </li>
+                                                {% endif %}
+                                            {% endfor %}
+                                        </ul>
+                                       {% endif %}
+                                    </i>
+                                </ul>
+                                
                             </div>
                             <div class="h5 mb-0">
                                 <div class="text-center">{{ situ.event.title|capitalize }}</div>

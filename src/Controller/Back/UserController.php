@@ -135,8 +135,7 @@ class UserController extends AbstractController
         // Replace contributions author
         $this->userManager->anonymizeContributions($users);
 
-        if (count($users) > 1) $type = 'users';
-        else $type = 'user';
+        $type = count($users) > 1 ? 'users' : 'user';
 
         try {
             if (false !== $result) return $this->redirect($result);
@@ -168,12 +167,11 @@ class UserController extends AbstractController
             $permute = $user->getEnabled() ? false : true;
             $user->setEnabled($permute);
         }
-
-        if (count($users) > 1) $type = 'users';
-        else {
-            if ($permute) $type = 'user_enabled';
-            else $type = 'user_disabled';
-        }
+        
+        
+        $type = count($users) > 1
+                    ? 'users'
+                    : ( $permute ? 'user_enabled' : 'user_disabled' );
 
         try {
             if (false !== $result) return $this->redirect($result);

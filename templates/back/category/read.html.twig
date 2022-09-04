@@ -34,8 +34,8 @@
                             </h6>
                         </div>
                         {% if locale != category.lang.lang %}
-                            <div class="col-md-auto mct-1px">
-                                <div class="row ggt-row">
+                            <div class="col-md-auto mct-1px" translate="no">
+                                <div class="row ggt-row d-none">
                                     <div class="col-auto px-1 mt-1"><i class="fas fa-globe-americas"></i></div>
                                     <div class="col-auto px-0">
                                         <div id="GGT"></div>
@@ -273,6 +273,9 @@
 {% block javascripts %}
     {{ parent() }}
     {{ encore_entry_script_tags('category_event_read_app', null, 'backApp') }}
+    {% if locale != category.lang.lang %}
+        {{ encore_entry_script_tags('_ggt_app', null, 'backApp') }}
+    {% endif %}
     <script>
         var translations = {
             "yes" : "{{ 'yes'|trans({}, 'messages') }}",
@@ -282,7 +285,9 @@
             {% set userLangs = [] %}
             {% if app.user.langs|length > 1 %}
                 {% for userLang in app.user.langs %}
-                    {% set userLangs = userLangs|merge([userLang.lang]) %}
+                    {% if userLang.lang != category.lang.lang %}
+                        {% set userLangs = userLangs|merge([userLang.lang]) %}
+                    {% endif %}
                 {% endfor %}
             {% endif %}
             function googleTranslateElementInit() { 

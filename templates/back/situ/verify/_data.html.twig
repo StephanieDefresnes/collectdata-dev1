@@ -6,9 +6,11 @@
         <h6 class="d-flex justify-content-start m-0">
             <span class="font-weight-bold text-primary">{{ 'contrib.situ.verify.data.title'|trans({}, 'back_messages') }}</span>
             <span class="px-2">-</span>
-            <span>{{ situ.lang.englishName }}</span>
-            <img src="{{ asset('img/flag/'~ situ.lang.lang ~'.jpg') }}"
-                 alt="" class="mx-1 mt-1">
+            {% set langName = situ.lang.englishName|split(';') %}
+            <img src="{{ asset('img/flag/'~ situ.lang.lang  ~'.jpg') }}"
+                 alt="{{ langName[0] }}" class="mx-1 mt-1"
+                 data-toggle="tooltip" data-placement="right"
+                 title="{{ langName[0] }}">
         </h6>
     </div>
                  

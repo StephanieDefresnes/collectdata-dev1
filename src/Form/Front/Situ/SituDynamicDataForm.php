@@ -121,7 +121,8 @@ class SituDynamicDataForm extends AbstractType
         };
         
         $formEditObject = function (FormInterface $form, $entity, $data)
-                                    use ($formCreateObject){
+                                    use ($formCreateObject)
+        {
             $formCreateObject($form, $entity, $data);
         };
         
@@ -129,38 +130,40 @@ class SituDynamicDataForm extends AbstractType
          * If no optional language neither event, create event and its categories
          * else user can select or create if necessary
          */
-        if (count($userLangs) < 2 && empty($GLOBALS['events'])) {
-            $formCreateObject($form, 'event');
-            $formCreateObject($form, 'categoryLevel1');
-            $formCreateObject($form, 'categoryLevel2');
+        if ( count($userLangs) < 2 && empty($GLOBALS['events']) ) {
+            $formCreateObject( $form, 'event ');
+            $formCreateObject( $form, 'categoryLevel1' );
+            $formCreateObject( $form, 'categoryLevel2' );
             return;
         }
 
-        $formSelectEvent = function (FormInterface $form, $lang_id)
-                                use ( $formCreateObject ) {
+        $formSelectEvent = function ( FormInterface $form, $lang_id )
+                                use ( $formCreateObject )
+        {
             
             $events = $GLOBALS['events'];
 
-            if ($lang_id) {
+            if ( $lang_id ) {
                 $events = $this->em->getRepository(Event::class)
                             ->findByLangAndUser($lang_id);
             }
-            if ($events) {
+            if ( $events ) {
                 $form->add('event', EntityType::class, 
                             $this->selectOptions('event', $events));
                 return;
             }
             
-            $formCreateObject($form, 'event');
-            $formCreateObject($form, 'categoryLevel1');
-            $formCreateObject($form, 'categoryLevel2');
+            $formCreateObject( $form, 'event' );
+            $formCreateObject( $form, 'categoryLevel1' );
+            $formCreateObject( $form, 'categoryLevel2' );
         };
             
-        $formSelectCategoryLevel1 = function (FormInterface $form, $event_id)
-                                        use ( $formCreateObject ) {
+        $formSelectCategoryLevel1 = function ( FormInterface $form, $event_id )
+                                        use ( $formCreateObject )
+        {
             $categoriesLevel1 = [];
             
-            if ($event_id) {
+            if ( $event_id ) {
                 /**
                  * Categories validated depending on event lang,
                  * and on current user categories not validated yet
@@ -169,21 +172,22 @@ class SituDynamicDataForm extends AbstractType
                                         ->findByEventAndUser($event_id);
             }
 
-            if ($categoriesLevel1) {
+            if ( $categoriesLevel1 ) {
                 $form->add('categoryLevel1', EntityType::class, 
                             $this->selectOptions('categoryLevel1', $categoriesLevel1));
                 return;
             }
 
-            $formCreateObject($form, 'categoryLevel1');
-            $formCreateObject($form, 'categoryLevel2');
+            $formCreateObject( $form, 'categoryLevel1' );
+            $formCreateObject( $form, 'categoryLevel2' );
         };
             
-        $formSelectCategoryLevel2 = function (FormInterface $form, $categoryLevel1_id)
-                                        use ( $formCreateObject ) { 
+        $formSelectCategoryLevel2 = function ( FormInterface $form, $categoryLevel1_id )
+                                        use ( $formCreateObject )
+        { 
             $categoriesLevel2 = [];
             
-            if ($categoryLevel1_id) {
+            if ( $categoryLevel1_id ) {
                 /**
                  * Subcategories validated depending on categoryLevel1 lang,
                  * and on current user subcategories not validated yet
@@ -192,13 +196,13 @@ class SituDynamicDataForm extends AbstractType
                                         ->findByParentAndUser($categoryLevel1_id);
             }
             
-            if ($categoriesLevel2) {
+            if ( $categoriesLevel2 ) {
                 $form->add('categoryLevel2', EntityType::class, 
                             $this->selectOptions('categoryLevel2', $categoriesLevel2));
                 return;
             }
             
-            $formCreateObject($form, 'categoryLevel2');
+            $formCreateObject( $form, 'categoryLevel2' );
         };
         
         /**
@@ -206,22 +210,23 @@ class SituDynamicDataForm extends AbstractType
          */
         $builder->addEventListener(
             FormEvents::PRE_SET_DATA,
-            function (FormEvent $form) use ($formSelectEvent,
-                                            $formSelectCategoryLevel1,
-                                            $formSelectCategoryLevel2) {
+            function ( FormEvent $form ) use (  $formSelectEvent,
+                                                $formSelectCategoryLevel1,
+                                                $formSelectCategoryLevel2 )
+            {
                 $id = null;
 
-                if ($lang = $form->getData()->getLang())
+                if ( $lang = $form->getData()->getLang() )
                     $id = $lang->getId();
-                $formSelectEvent($form->getForm(), $id);
+                $formSelectEvent( $form->getForm(), $id );
 
-                if ($event = $form->getData()->getEvent())
+                if ( $event = $form->getData()->getEvent() )
                     $id = $event->getId();
-                $formSelectCategoryLevel1($form->getForm(), $id);
+                $formSelectCategoryLevel1( $form->getForm(), $id );
 
-                if ($categoryLevel1 = $form->getData()->getCategoryLevel1())
+                if ( $categoryLevel1 = $form->getData()->getCategoryLevel1() )
                     $id = $categoryLevel1->getId();
-                $formSelectCategoryLevel2($form->getForm(), $id);
+                $formSelectCategoryLevel2( $form->getForm(), $id );
             }
         );
         
@@ -238,55 +243,64 @@ class SituDynamicDataForm extends AbstractType
                                                 $formSelectCategoryLevel1,
                                                 $formSelectCategoryLevel2,
                                                 $formCreateObject,
-                                                $formEditObject) {
+                                                $formEditObject )
+            {
                 $data = $event->getData();
                 $form = $event->getForm();
                 
                 // Select object
-                if (array_key_exists('lang', $data)) {
-                    $formSelectEvent($form, $data['lang']);
+                if ( array_key_exists('lang', $data) )
+                {
+                    $formSelectEvent( $form, $data['lang'] );
                 }
-                if (array_key_exists('event', $data) && is_numeric($data['event'])) {
-                    $formSelectCategoryLevel1($form, $data['event']);
+                if ( array_key_exists('event', $data) && is_numeric($data['event']) )
+                {
+                    $formSelectCategoryLevel1( $form, $data['event'] );
                 }
-                if (array_key_exists('categoryLevel1', $data) && is_numeric($data['categoryLevel1'])) {
-                    $formSelectCategoryLevel2($form, $data['categoryLevel1']);
+                if ( array_key_exists('categoryLevel1', $data) && is_numeric($data['categoryLevel1']) )
+                {
+                    $formSelectCategoryLevel2( $form, $data['categoryLevel1'] );
                 }
                 
                 // Create object
-                if ( (array_key_exists('event', $data) && is_array($data['event']))
-                    || array_key_exists('addEvent', $data) ) {
-                    $formCreateObject($form, 'event');
+                if ( ( array_key_exists('event', $data) && is_array($data['event']) )
+                    || array_key_exists('addEvent', $data) )
+                {
+                    $formCreateObject( $form, 'event' );
                 }
-                if ( (array_key_exists('event', $data) && is_array($data['event']))
-                    || (array_key_exists('categoryLevel1', $data) && is_array($data['categoryLevel1']))
+                if ( ( array_key_exists('event', $data) && is_array($data['event']) )
+                    || ( array_key_exists('categoryLevel1', $data) && is_array($data['categoryLevel1']) )
                     || array_key_exists('addEvent', $data)
-                    || array_key_exists('addCategoryLevel1', $data) ) {
-                    $formCreateObject($form, 'categoryLevel1');
+                    || array_key_exists('addCategoryLevel1', $data) )
+                {
+                    $formCreateObject( $form, 'categoryLevel1' );
                 }
-
-                if ( (array_key_exists('event', $data) && is_array($data['event']))
-                    || (array_key_exists('categoryLevel1', $data) && is_array($data['categoryLevel1']))
-                    || (array_key_exists('categoryLevel2', $data) && is_array($data['categoryLevel2']))
+                if ( ( array_key_exists('event', $data) && is_array($data['event']) )
+                    || ( array_key_exists('categoryLevel1', $data) && is_array($data['categoryLevel1']) )
+                    || ( array_key_exists('categoryLevel2', $data) && is_array($data['categoryLevel2']) )
                     || array_key_exists('addEvent', $data)
                     || array_key_exists('addCategoryLevel1', $data)
-                    || array_key_exists('addCategoryLevel2', $data) ) {
-                    $formCreateObject($form, 'categoryLevel2');
+                    || array_key_exists('addCategoryLevel2', $data) )
+                {
+                    $formCreateObject( $form, 'categoryLevel2' );
                 }
                 
                 // Update object
-                if (array_key_exists('edit-event', $data)) {
-                    $formEditObject($form, 'event', 
-                            $this->em->getRepository(Event::class)->find($data['edit-event']));
+                if ( array_key_exists('edit-event', $data) )
+                {
+                    $formEditObject( $form, 'event', 
+                            $this->em->getRepository(Event::class)->find($data['edit-event']) );
                 }
                 
-                if (array_key_exists('edit-categoryLevel1', $data)) {
-                    $formEditObject($form, 'categoryLevel1',
-                            $this->em->getRepository(Category::class)->find($data['edit-categoryLevel1']));
+                if ( array_key_exists('edit-categoryLevel1', $data) )
+                {
+                    $formEditObject( $form, 'categoryLevel1',
+                            $this->em->getRepository(Category::class)->find($data['edit-categoryLevel1']) );
                 }
                 
-                if (array_key_exists('edit-categoryLevel2', $data)) {
-                    $formEditObject($form, 'categoryLevel2',
+                if ( array_key_exists('edit-categoryLevel2', $data) )
+                {
+                    $formEditObject( $form, 'categoryLevel2',
                             $this->em->getRepository(Category::class)->find($data['edit-categoryLevel2']));
                 }
             }

@@ -179,8 +179,8 @@ class ResetPasswordController extends AbstractController
             'security', $locale = $userLang->getLang()
         );
         
-        $sender = $this->parameters->get('configuration')['from_email'];
         $nameSite = $this->parameters->get('configuration')['name'];
+        $sender = $this->parameters->get('configuration')['mail_noreply'];
 
         $email = (new TemplatedEmail())
             ->from(new Address($sender, $nameSite))

@@ -111,7 +111,7 @@
 #translation-situ {
     
     .card-header:nth-child(2) {
-        min-height: 218px;
+        min-height: 222px;
     }
     .card-body,
     .card-footer {
@@ -124,15 +124,32 @@
         height: 40px;
         overflow-y: auto;
         line-height: 1.2;
+        &.border {
+            border-style: dotted !important;
+            -webkit-box-shadow: inset 0px -10px 12px -8px rgba(0, 0, 0, 0.4);
+            -moz-box-shadow: inset 0px -10px 12px -8px rgba(0, 0, 0, 0.4);
+            box-shadow: inset 0px -10px 12px -8px rgba(0, 0, 0, 0.4);
+        }
     }
     .h-description {
         height: 136px;
         overflow-y: auto;
         line-height: 1.2;
+        &.border {
+            border-style: dotted !important;
+            -webkit-box-shadow: inset 0px -10px 12px -8px rgba(0, 0, 0, 0.4);
+            -moz-box-shadow: inset 0px -10px 12px -8px rgba(0, 0, 0, 0.4);
+            box-shadow: inset 0px -10px 12px -8px rgba(0, 0, 0, 0.4);
+        }
     }
     #initialSituItems {
+        & h2 {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
         & .h-title {
-            height: 28px;
+            height: 37px;
         }
         & .h-description {
             height: 133px;
@@ -145,19 +162,100 @@
     .mb-score {
         margin-bottom: 14px;
     }
+    #toggle-btn {
+        & > .show-less,
+        & > .show-more {
+            position: relative;
+            cursor: pointer;
+        }
+        & > .show-less::before {
+            content: '▲';
+            position: absolute;
+            top: -10px;
+            left: 0;
+            right: 0;
+            font-size: 8px;
+            color: #fff;
+        }
+        & > .show-more::after {
+            content: '▼';
+            position: absolute;
+            bottom: -10px;
+            left: 0;
+            right: 0;
+            font-size: 8px;
+            color: #fff;
+        }
+    }
+}
 
-    @media screen and (max-width: 768px) {
-        .h-title,.h-description {
-            height: auto;
-            overflow-y: none;
+@media screen and (min-width: 767px) {
+    #translation-situ {
+        .do-excerpt {
+            max-height: 218px;
+            &.error-excerpt {
+                & #categoryLevel1 {
+                    display: none !important;
+                }
+                & .mt-n3 {
+                    margin-top: 3em !important;
+                }
+            }
+            &:not(.error-excerpt)  {
+                & #categoryLevel1 {
+                    & .colForm {
+                        & .form-group:nth-child(2) {
+                            display: none !important;
+                        }
+                    }
+                }
+            }
+            & #categoryLevel2 {
+                display: none !important;
+            }
         }
-        .title-success {
-            margin-bottom: 12px !important;
-            padding-bottom: 0 !important;
+        .error-excerpt {
+            & .alert-danger {
+                &.show-less::before,
+                &.show-more::after {
+                    color: #721c24 !important;
+                }
+                &.show-less::before {
+                    top: -11px !important;
+                }
+            }
         }
-        .pt-score {
-            margin-bottom: 12px;
-            padding-top: 12px;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    #translation-situ {
+        .card-header:nth-child(2) {
+            min-height: auto;
+        }
+        .h-title {
+            height: auto !important;
+        }
+        .h-description {
+            height: auto !important;
+            margin-bottom: 36px !important;
+        }
+    }
+    .title-success {
+        margin-bottom: 12px !important;
+        padding-bottom: 0 !important;
+    }
+    .pt-score {
+        margin-bottom: 12px;
+        padding-top: 12px;
+    }
+}
+@media screen and (max-width: 992px) {
+    #page {
+        &  > .container{
+            &.w-100 {
+                max-width: 100% !important;
+            }
         }
     }
 }

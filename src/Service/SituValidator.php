@@ -9,7 +9,6 @@ use App\Entity\Status;
 use App\Mailer\Mailer;
 use App\Messager\Messager;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\Security\Core\Security;
 
 class SituValidator {
     
@@ -19,148 +18,82 @@ class SituValidator {
     
     public function __construct(EntityManagerInterface $em,
                                 Mailer $mailer,
-                                Messager $messager,
-                                Security $security)
+                                Messager $messager)
     {
         $this->em = $em;
         $this->mailer = $mailer;
         $this->messager = $messager;
-        $this->security = $security;
     }
     
-    public function situValidation($data)
+    public function situValidation( $data )
     {
         $situ = $this->em->getRepository(Situ::class)->find($data['id']);
         
-        $situ->setStatus($this->em->getRepository(Status::class)->find($data['statusId']));
+        $situ->setStatus( $this->em->getRepository(Status::class)->find($data['statusId']) );
         
-        $entities = [];
-        $user = $this->security->getUser();
+        $validation = [];
         
-        if ($data['action'] === 'validation') {
+        $situ->setDateValidation( 'validation' === $data['action'] ? new \DateTime('now') : null );
+        $this->em->persist($situ);
+        
+        // Default refuse
+        $validation['situ'] = [
+            'validation' => false,
+            'situ' => $situ,
+            'text' => $data['comment'],
+        ];
+        
+        if ( 'validation' === $data['action'] ) {
             
-            $situ->setDateValidation(new \DateTime('now'));
-            $this->em->persist($situ);
+            $event          = $this->dataValidation( $data, $situ->getEvent() );
+            if ( '0' === $data['eventInitial'] )
+                    $validation['event'] = $event;
+
+            $categoryLevel1 = $this->dataValidation( $data, $situ->getCategoryLevel1() );
+            if ( '0' === $data['categoryLevel1Initial'] )
+                    $validation['categoryLevel1'] = $categoryLevel1;
             
-            // SUPER_VISITOR can't validate his own event neither category
-            if (!$user->hasRole('ROLE_SUPER_VISITOR')) {
-                
-                if ($data['eventValidated'] === '1') {
-                    $event = $this->em->getRepository(Event::class)->find($data['eventId']);
-                    if ($event->getValidated() === false) {
-                        $event->setValidated(true);
-                        $entities['event'] = $event;
-                    }
-                    $this->em->persist($event);
-                }
-                if ($data['categoryLevel1Validated'] === '1') {
-                    $categoryLevel1 = $this->em->getRepository(Category::class)
-                                            ->find($data['categoryLevel1Id']);
-                    if ($categoryLevel1->getValidated() === false) {
-                        $categoryLevel1->setValidated(true);
-                        $entities['categoryLevel1'] = $categoryLevel1;
-                    }
-                    $this->em->persist($categoryLevel1);
-                }
-                if ($data['categoryLevel2Validated'] === '1') {
-                    $categoryLevel2 = $this->em->getRepository(Category::class)
-                                            ->find($data['categoryLevel2Id']);
-                    if ($categoryLevel2->getValidated() === false) {
-                        $categoryLevel2->setValidated(true);
-                        $entities['categoryLevel2'] = $categoryLevel2;
-                    }
-                    $this->em->persist($categoryLevel2);
-                }
-            }
+            $categoryLevel2 = $this->dataValidation( $data, $situ->getCategoryLevel2() );
+            if ( '0' === $data['categoryLevel2Initial'] )
+                    $validation['categoryLevel2'] = $categoryLevel2;
             
-            // notification validation (message)
-            $entities['situ'] = ['validation' => true];
-            
-        } elseif ($data['action'] === 'refuse') {
-            $situ->setDateValidation(null);
-            
-            $comment = $data['comment'];
-            
-            $entities['situ'] = [
-                'validation' => false,
-                'situ' => $situ,
-                'text' => $comment,
-            ];
+            // message validation
+            $validation['situ'] = [ 'validation' => true ];
         }
             
         try {
             
-            // Filter super visitor, can fush only his owns
-            if ($user->hasRole('ROLE_SUPER_VISITOR')
-                    && $situ->getUser() !== $user) {
-                $result = [
-                    'success' => true,
-                    'validator' => false,
-                ];
-                
-            } else {
+            $this->em->flush();
+
+            $error = null;
             
-                $this->em->flush();
-                
-                $error = null;
+            if ( array_key_exists('event', $validation) )
+                $error .= $this->tryToSend( 'alert', $event );
 
-                if (array_key_exists('event', $entities)) {
-                    try {
-                        $this->messager->sendUserAlert('validation', 'event', $event);
-                    } catch (\Exception $e) {
-                        $error .= $e->getMessage().PHP_EOL;
-                    }
-                }
-                
-                if (array_key_exists('categoryLevel1', $entities)) {
-                    try {
-                        $this->messager->sendUserAlert('validation', 'categoryLevel1', $categoryLevel1);
-                    } catch (\Exception $e) {
-                        $error .= $e->getMessage().PHP_EOL;
-                    }
-                }
+            if ( array_key_exists('categoryLevel1', $validation) )
+                $error .= $this->tryToSend( 'alert', $categoryLevel1 ); 
 
-                if (array_key_exists('categoryLevel2', $entities)) {
-                    try {
-                        $this->messager->sendUserAlert('validation', 'categoryLevel2', $categoryLevel2);
-                    } catch (\Exception $e) {
-                        $error .= $e->getMessage().PHP_EOL;
-                    }
-                }
-
-                if (true === $entities['situ']['validation']) {
-                    try {
-                        $this->messager->sendUserAlert('validation', 'situ', $situ);
-                    } catch (\Exception $e) {
-                        $error .= $e->getMessage().PHP_EOL;
-                    }
-                    try {
-                        $this->mailer->sendUserSituValidation($situ, $situ->getUser());
-                    } catch (\Exception $e) {
-                        $error .= $e->getMessage().PHP_EOL;
-                    }
-                } else {
-                    try {
-                        $message = $this->messager
-                                ->sendUserEnvelope('situ_refuse', $entities['situ']['text'], $situ);
-                    } catch (\Exception $e) {
-                        $error .= $e->getMessage().PHP_EOL;
-                    }
-                    try {
-                        $this->mailer->sendUserSituValidation($situ, $situ->getUser());
-                    } catch (\Exception $e) {
-                        $error = $e->getMessage();
-                    }
-                }
-
-                $result = [
-                    'success' => true,
-                    'validator' => true,
-                    'msg' => $error,
-                ];
+            if ( array_key_exists('categoryLevel2', $validation) )
+                $error .= $this->tryToSend( 'alert', $categoryLevel2 );
+            
+            switch ( $validation['situ']['validation'] ) {
+                case true:
+                    $error .= $this->tryToSend( 'alert', $situ );
+                    // commented in localhost
+                    $error .= $this->tryToSend( 'validation', $situ );
+                    break;
+                default:
+                    $error .= $this->tryToSend( 'refuse', $situ, $validation['situ']['text'] );
+                    // commented in localhost
+                    $error .= $this->tryToSend( 'validation', $situ );
             }
+
+            $result = [
+                'success' => true,
+                'msg' => $error,
+            ];
             
-        } catch (\Doctrine\DBAL\DBALException $e) {
+        } catch ( \Doctrine\DBAL\DBALException $e ) {
             $result = [
                 'success' => false,
                 'msg' => $e->getMessage(),
@@ -168,6 +101,43 @@ class SituValidator {
         }
         
         return $result;
+    }
+    
+    private function dataValidation( $data, $object )
+    {
+        $classObject    = $this->em->getClassMetadata( get_class($object) )->getName();
+        $classArray     = explode('\\', $classObject);
+        $entityName     = strtolower( end($classArray) );
+        $dataName       = 'event' === $entityName
+                            ? $entityName
+                            : ( $object->getEvent() 
+                                ? 'categoryLevel1' : 'categoryLevel2' );
+        
+        if ( '0' === $data[$dataName .'Initial'] && ! $object->getValidated() )
+        {
+            $object->setValidated( true );
+        }
+        return $object;
+    }
+    
+    private function tryToSend( $action, $object, $text = null ) {
+        try {
+            switch ( $action ) {
+                case 'alert':
+                    $this->messager->sendUserAlert( 'validation', $object );
+                    break;
+                case 'validation':
+                    // commented in localhost
+                    $this->mailer->sendSituValidationMail( $object );
+                    break;
+                case 'refuse':
+                    $this->messager->sendUserEnvelope( 'situ_refuse', $object, $text );
+                    break;
+            }
+            return null;
+        } catch ( \Exception $e ) {
+            return $e->getMessage().PHP_EOL;
+        }
     }
     
 }

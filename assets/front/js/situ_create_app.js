@@ -12,6 +12,13 @@ function initSelect2( select ) {
     });
 }
 
+// Show card-body when fill categoryLevel2 description
+function showCards() {
+    if ( $('.card-body').hasClass('d-none') && $('.card-footer').hasClass('d-none') ) {
+        $('.card-body, .card-footer').removeClass('d-none').animate({ opacity: 1}, 250)
+    }
+}
+
 // Recalculate the "footer" height, because of fullscreenslide
 // #footerEnd filling the empty space and hides fullscreenslide after footer
 function footerHeight() {
@@ -34,6 +41,182 @@ function footerHeight() {
             clearInterval(footerEnd)
         }
     }, 100)
+}
+
+// Show dynamic form section content depending on the need to create first data or not
+function setDetailsFormSection() {
+    if ( $('[id$="_form_lang"]').is('select') || $('[id$="_form_event"]').is('select') )
+    {
+        // If lang and event is select, set event JS 
+        $('form').on('change', '[id$="_form_lang"], '
+                                +'[id$="_form_event"], '
+                                +'[id$="_form_categoryLevel1"], '
+                                +'[id$="_form_categoryLevel2"]',
+            function() { formChange( $(this) ) }
+            
+        )
+        return
+    }
+    
+    // If create data, hide create button & show all header fields
+    $('.colBtn').each(function(){ $(this).hide() })
+
+    $('.formData:not(#lang)').each(function(i, obj){
+        removeClass( $(obj), 'd-none on-load' ) 
+    })
+}
+
+// Show next field depending on prevent choice
+function formChange( field ) {
+
+    // Toggle styles
+    let rendered = field.parent().find('.select2-selection__rendered')
+    if ( '' === field.val() && rendered.hasClass('selection-on') )
+        rendered.removeClass('selection-on')
+    else rendered.addClass('selection-on')
+    footerHeight()
+
+    // Hide collapse
+    toggleInfoCollapse( 'hide', field )
+
+    // Event or Category data
+    let divId = field.parents('.formData').attr('id')
+    
+    // Get & show data
+    if ('lang' !== divId && '' !== field.val() )
+        getData( divId, field.val() )
+    
+    // Hide next header field
+    if ( field.is('select') )
+        field.parents('.formData').nextAll().addClass('d-none')
+
+    // Show card body on select categoryLevel2
+    if ( 'situ_dynamic_data_form_categoryLevel2' === field.attr('id') ) {
+        if ( $('.card-body').hasClass('d-none') && $('.card-footer').hasClass('d-none') ) {
+            $('.card-body, .card-footer').removeClass('d-none')
+                .animate({ opacity: 1}, 250)
+        }
+    }
+
+    // Remove edit next entity buttons if exist
+    field.parents('.formData').find('.editEntity').remove()
+    field.parents('.formData').nextAll().each(function(i, obj){
+                $(obj).find('.editEntity').remove()
+            })
+
+    // Load data or create them on action change
+    changeSelect( field )
+}
+
+// Add BS is-invalid class to empty field
+function checkForm() {
+    $('#form-error').empty()
+        
+    let emptyValue = 0
+    $('form').find('.form-control').each(function() {
+        if ( 'situ_form_situItems_0_score' !== $(this).attr('id') ) {
+            
+            if ( '' === $(this).val() ) {
+                if ( ! $(this).is('select') ) {
+                    $(this).addClass('is-invalid')
+                    emptyValue++
+                    return
+                }
+                if ( undefined !== $(this).attr('data-select2-id') ) {
+                    $(this).parent().find('.select2-selection__rendered')
+                        .addClass('is-invalid')
+                    emptyValue++
+                    return
+                }
+                $(this).addClass('is-invalid')
+                emptyValue++
+                return
+            }
+            
+            if ( undefined !== $(this).attr('data-select2-id') ) {
+                if ( $(this).parent().find('.select2-selection__rendered')
+                                        .hasClass('is-invalid') )
+                {
+                    $(this).parent().find('.select2-selection__rendered')
+                        .removeClass('is-invalid')
+                }
+                return
+            }
+            if ( $(this).hasClass('is-invalid') ) $(this).removeClass('is-invalid')
+        }
+    })
+    
+    let formValid = emptyValue > 0 ? false : true
+    
+    if ( ! formValid ) {
+        let msg = '<div class="alert alert-danger" role="alert">'
+                +'<i class="fas fa-exclamation-circle"></i>'
+                + translations["formError"]+'</div>'
+        $('#form-error').append(msg)
+        
+        if ( $('#loader').hasClass('translateSitu') ) {
+            $('#details').addClass('error-excerpt')
+            $('#toggle-btn > span').addClass('alert alert-danger py-0 px-1')
+        }
+    }
+    return formValid
+}
+
+// Set fields events
+function keypressPasteCut( field ) {
+    field
+        .change(function() {  checkField( $(this) ) })
+        .keypress(function() {  checkField( $(this) ) })
+        .focusout(function() {  checkField( $(this) ) })
+        .on( 'paste cut', function(e){ 
+            checkField( $(this), e )
+    })
+}
+
+// Check invalid fields
+function checkField( elemt, e = null ) {
+    
+    if ( 0 === $('#form-error .alert').length ) return
+    
+    let select2Attr = elemt.attr('data-select2-id')
+    
+    if ( ! elemt.is('select') ) {
+        
+        if ( e && '' === e.originalEvent.clipboardData.getData('text') ) {
+            elemt.addClass('is-invalid')
+            return
+        }
+        if ( '' === elemt.val() )
+        {
+            elemt.addClass('is-invalid')
+            return
+        }
+        if ( elemt.hasClass('is-invalid') ) elemt.removeClass('is-invalid')
+        return
+    }
+    
+    if ( typeof select2Attr !== 'undefined' && select2Attr !== false ) {
+        if ( '' === elemt.val() ) {
+            elemt.parent().find('.select2-selection__rendered')
+                                .addClass('is-invalid')
+            return
+        }
+        if ( elemt.parent().find('.select2-selection__rendered')
+                                .hasClass('is-invalid') )
+        {
+            elemt.parent().find('.select2-selection__rendered')
+                    .removeClass('is-invalid')
+            return     
+        }
+        return
+    }
+    
+    if ( '' === elemt.val() ) {
+        elemt.addClass('is-invalid')
+        return     
+    }
+    if ( elemt.hasClass('is-invalid') ) elemt.removeClass('is-invalid')
+    return
 }
 
 /**
@@ -79,7 +262,7 @@ function unvalidatedOption( element ) {
 //  - show category description
 function getData( name, value ) {
     let categoryLevel1, categoryLevel2,
-        url = '/front/ajaxGetEvent'
+        url = '/front/ajaxGetEvent',
         data = { 'event': value }
             
     if ( 'event' !== name ) {
@@ -150,6 +333,10 @@ function toggleInfoCollapse( action, selector ) {
  * Load options select if exist or create new
  */
 function loadSelectData( $form, data, selectId, nextSelectId ) {
+    
+    if ( $('#toggle-btn').length ) $('#toggle-btn').remove()
+    
+    if ( $('#form-error alert').length ) checkForm()
 
     if ( $(selectId).is('select') ) {
         let nextSelectParent = $(nextSelectId).parents('.formData')
@@ -171,6 +358,7 @@ function loadSelectData( $form, data, selectId, nextSelectId ) {
             data: data,
             success: function (html) {
                 $(nextSelectId).find('.editEntity').remove()
+                checkField( selectId )
                 
                 if ( '' === $(selectId).val() ) {
                     $(selectId).parents('.formData').nextAll().each(function(i, obj){
@@ -178,6 +366,15 @@ function loadSelectData( $form, data, selectId, nextSelectId ) {
                     })
                     footerHeight()
                     return
+                }
+
+                // Show next select container
+                if ( nextSelectParent.hasClass('on-load') ) {
+                    nextSelectParent
+                            .removeClass('d-none on-load')
+                            .children('div').each(function() {
+                                $(this).animate({ opacity: 1}, 250);
+                            })
                 }
                 
                 // Load next fields
@@ -191,6 +388,8 @@ function loadSelectData( $form, data, selectId, nextSelectId ) {
 
                     // Replace from ajax
                     $('#'+ objId).replaceWith( $(html).find('#'+ objId) )
+                    keypressPasteCut( $('#'+ objId).find('input') )
+                    keypressPasteCut( $('#'+ objId).find('textarea') )
 
                     // Init select if necessary
                     if ( $('#'+ objId).is('select') ) initSelect2( '#'+ objId ) 
@@ -208,6 +407,10 @@ function loadSelectData( $form, data, selectId, nextSelectId ) {
                     // Show all header fields container (event shown by default)
                     removeClass( $('#categoryLevel1, #categoryLevel2'), 'd-none') 
                     removeClass( $('#categoryLevel1, #categoryLevel2'), 'on-load')
+                    
+                    if ( 'situ_dynamic_data_form_categoryLevel2' !== $(selectId).attr('id') )
+                        translationToggleBtn()
+                    
                     return
                 }
                 
@@ -225,17 +428,9 @@ function loadSelectData( $form, data, selectId, nextSelectId ) {
                 // Reset adding/remove buttons in case of necessity
                 $('.formData').each(function(){
                     $(this).find('.btnRemove').remove()
+                    $(this).find('.colBtn').show()
                     $(this).find('.btnAdd').show()
                 })
-
-                // Show next select container
-                if ( nextSelectParent.hasClass('on-load') ) {
-                    nextSelectParent
-                            .removeClass('d-none on-load')
-                            .children('div').each(function() {
-                                $(this).animate({ opacity: 1}, 250);
-                            })
-                }
 
                 if ( 'situ_dynamic_data_form_categoryLevel2' === selectId
                         && $('.card-body').hasClass('d-none')
@@ -255,8 +450,31 @@ function loadSelectData( $form, data, selectId, nextSelectId ) {
 /**
  * Create data instead of choosing an option if user wants to
  */
+// Add new Event or Categories
+function createData( button ) {
+    
+        // Show current & next header loaders
+        button.parents('.formData').addClass('on-load')
+                .children('div').each(function() {
+                    $(this).css('opacity', 0); 
+                })
+            .parents('.formData').addClass('on-load')
+                .nextAll().each(function(i, obj){
+                    $(obj).addClass('on-load')
+                            .children('div').each(function() {
+                                $(this).css('opacity',0); 
+                            })
+                    // Remove next edit entity buttons
+                    $(obj).find('.editEntity').remove()
+                })
+        // Hide useless info collapse
+        toggleInfoCollapse( 'hide', button )
+        
+        loadCreateData( button ) 
+}
+
 // Set fields
-function loadCreateData( button ) {
+function loadCreateData( button ) { 
     
     let $form = button.closest('form'),
         currentId = button.parents('.formData').find('.colForm').attr('id'),
@@ -270,34 +488,51 @@ function loadCreateData( button ) {
         data: data,
         success: function (html) {
             
-            // Set & show current entity new fields
-            // - Destroy current select2
-            if ( $('#'+ currentId).data('select2') )
-                $('#'+ currentId).select2('destroy')
-            // - Replace current news fields
-            $('#'+ currentId).replaceWith(
-                $(html).find('#'+currentId)
-            )
-            // - Show new fields container
+            /**
+             * Set & show current new field
+             */ 
+            // Destroy current select2
+            if ( $('#'+ currentId).data('select2') ) $('#'+ currentId).select2('destroy')
+            
+            // Replace current news fields
+            $('#'+ currentId).replaceWith(  $(html).find('#'+currentId) )
+            
+            // Set fields events js
+            keypressPasteCut( $('#'+ currentId).find('input') )
+            if ( $('#'+currentId).find('textarea').length )
+                keypressPasteCut( $('#'+currentId).find('textarea') )
+            
+            // Show new fields container
             removeClass( $('#'+ currentId).parents('.formData'), 'd-none' ) 
             removeClass( $('#'+ currentId).parents('.formData'), 'on-load' )
             
-            // Set & show next new fields
+            /**
+             * Set & show next new fields
+             */ 
             nextAll.each(function(i, obj){
                 let objId = $(obj).find('.colForm').attr('id')
-                // - Destroy next select2
-                if ( $('#'+ objId).data('select2') )
-                    $('#'+ objId).select2('destroy')
-                // - Replace next news fields
-                $('#'+ objId).replaceWith(
-                    $(html).find('#'+ objId)
-                )
-                // - Hide next adding button
+                
+                // Destroy next select2
+                if ( $('#'+ objId).data('select2') )  $('#'+ objId).select2('destroy')
+                
+                // Set events js && replace next news fields
+                $('#'+ objId).replaceWith( $(html).find('#'+ objId) )
+                $('#'+ objId).replaceWith( $(html).find('#'+ objId) )
+                
+                // Set fields events js
+                keypressPasteCut( $('#'+ objId).find('input') )
+                keypressPasteCut( $('#'+ objId).find('textarea') )
+                
+                // Hide next adding button
                 $(obj).find('.colBtn').hide()
-                // - Show next new fields container
+                
+                // Show next new fields container
                 removeClass( $(obj), 'd-none' ) 
                 removeClass( $(obj), 'on-load' )
+                
             })
+            
+            translationToggleBtn()
             
             // If user wants to cancel adding
             removeCreateData(button)
@@ -320,6 +555,8 @@ function removeCreateData( button ) {
 
     // Cancel adding
     resetButton.on('click', function() {
+    
+        if ( $('#toggle-btn').length ) $('#toggle-btn').remove()
         
         // Get back data from select
         let prevSelect = $('#'+ dataEntity).prev().find('select'),
@@ -339,9 +576,223 @@ function removeCreateData( button ) {
     })
 }
 
+// Set values to submit
+function modalSubmit() {
+    $('#modalLang').text(
+        $('[id$="_form_lang"] option[value="'+$('[id$="_form_lang"]').val()+'"]')
+            .text()
+    )
+    
+    let eventInput = $('#form-event').find('input').val(),
+        eventTitle = eventInput === undefined 
+                                ?  $('[id$="_form_event"] option[value="'+$('[id$="_form_event"]').val()+'"]').text()
+                                : eventInput
+    $('#modalEvent').text(eventTitle)
+    
+    let categoryLevel1Input = $('#form-categoryLevel1').find('textarea').val(),
+        categoryLevel1Title = categoryLevel1Input === undefined 
+                                ? $('[id$="_form_categoryLevel1"] option[value="'+$('[id$="_form_categoryLevel1"]').val()+'"]').text()
+                                : categoryLevel1Input
+    $('#modalCategoryLevel1-title').text(categoryLevel1Title)
+    
+    let categoryLevel1Text = $('#form-categoryLevel1').find('textarea').val(),
+        categoryLevel1Description = categoryLevel1Text === undefined 
+                                ? $('#categoryLevel1 .description').text()
+                                : categoryLevel1Text
+    $('#modalCategoryLevel1-description').text(categoryLevel1Description)
+    
+    let categoryLevel2Input = $('#form-categoryLevel2').find('textarea').val(),
+        categoryLevel2Title = categoryLevel2Input === undefined 
+                                ? $('[id$="_form_categoryLevel2"] option[value="'+$('[id$="_form_categoryLevel2"]').val()+'"]').text()
+                                : categoryLevel2Input
+    $('#modalCategoryLevel2-title').text(categoryLevel2Title)
+    
+    let categoryLevel2Text = $('#form-categoryLevel2').find('textarea').val(),
+        categoryLevel2Description = categoryLevel2Text === undefined 
+                                ? $('#categoryLevel2 .description').text()
+                                : categoryLevel2Text
+    $('#modalCategoryLevel2-description').text(categoryLevel2Description)
+    
+    $('#modalTitle').text($('#situ_form_title').val())
+    $('#modalDescription').text($('#situ_form_description').val())
+    
+    $('#situItems').find('.situItem').each(function(index) {
+        if ( index == 0 ) {
+            $('#modalSuccess .title').text($('[id$="_situItems_0_title"]').val())
+            $('#modalSuccess .description').text($('[id$="_situItems_0_description"]').val())
+            return
+        }
+        
+        let prototype   = $('#modalSituItems').attr('data-prototype'),
+            scoreValue  = $('[id$="_situItems_'+ index +'_score"] option[value="'
+                                + $('[id$="_situItems_'+ index +'_score"]').val()
+                            +'"]').attr('class')
+                    
+        scoreValue = scoreValue.replace('selectable ', '').replace(' selected', '')
+
+        let item = prototype.replace(/__item__/g, translations["item"])
+                .replace(/__scoreTitle__/g, translations["scoreTitle"])
+                .replace(/__score__/g, scoreValue)
+                .replace(/__scoreText__/g, translations[scoreValue+"Item"])
+                .replace(/__titleItem__/g, translations["titleItem"])
+                .replace(/__title__/g, $('[id$="_situItems_'+ index +'_title"]').val())
+                .replace(/__descriptionItem__/g, translations["descriptionItem"])
+                .replace(/__description__/g,$('[id$="_situItems_'+ index +'_description"]').val())
+        $('#optionScore').append(item)
+    })
+    
+    $('#confirmSubmit').modal('show')
+}
+
+function errorMangement() {
+    $('.formData').each(function() {
+        if ( $(this).hasClass('on-load') ) $(this).removeClass('on-load')
+    })
+    checkForm()
+    $('#loader').hide()
+}
+
+function bindFooter() {
+    $('#loader').show() // Comment if html5 browser is disabled (attr novalidate)
+    $('#form-error').empty()
+}
+
 /**
- * Update entity not yet validated
+ * Load translation
  */
+function loadTranslation() {
+        
+    // Load lang to set events
+    $('[id$="_form_lang"]').val($('#situ').attr('data-lang')).trigger('change')
+            .parent().find('.select2-selection__rendered').addClass('selection-on')
+
+    // Then hide loader
+    $(document).ajaxComplete(function () {
+        if ( ! $('[id$="_form_event"]').is('select') ) translationToggleBtn()
+        $('#loader').removeClass('d-block')
+    })
+
+    // Show situItems depending on Situ to translate
+    let itemsLength = $('#initialSituItems').attr('data-initial')
+    for( var i = 1; i < itemsLength; i++ ) {
+        addSituItem()
+    }
+}
+
+function translationToggleBtn() {
+    
+    if ( $('#loader').hasClass('translateSitu') && 0 === $('#toggle-btn').length )
+    {
+        
+        let toggleBtn = '<div id="toggle-btn" class="d-block text-center pt-3">'
+                            +'<span class="small show-less">'+ translations['showLess'] +'</span>'
+                        +'</div>'
+
+        $('#details').append(toggleBtn)
+    
+        $('#details').on('click', '#toggle-btn > span', function() {
+            $(this).toggleClass('show-less').toggleClass('show-more')
+            if ( ! $(this).hasClass('show-less') ) {
+                $(this).addClass('show-more').text( translations['showMore'] )
+                        .parent().removeClass('pt-3').addClass('mt-n3')
+                $('#details').addClass('do-excerpt')
+                return
+            }
+            $(this).text( translations['showLess'] )
+                    .parent().removeClass('mt-n3').addClass('pt-3')
+            $('#details').removeClass('do-excerpt')
+        })
+    }
+}
+
+/**
+ * When update Situ
+ */
+// Show content & check selected SituItems
+function updateSitu() {
+
+    // Show all card sections
+    $('#event, #categoryLevel1, #categoryLevel2, .card-body, .card-footer')
+            .removeClass('d-none').css('opacity', 1)
+    
+    // Header fields
+    $('.formData').each(function() {
+        // Hide header loader
+        if ( $(this).hasClass('on-load') && '' !== $(this).find('select').val() )
+            $(this).removeClass('on-load')
+        
+        // Show collapsed
+        $(this).find('.infoCollapse').each(function() {
+            if ( $(this).hasClass('d-none') ) $(this).removeClass('d-none')
+        })
+        
+        // Show data
+        if ( 'lang' !== $(this).attr('id') ) {
+            let value = $(this).find('select').val()
+            if ( value ) getData( $(this).attr('id'), value )
+        }
+    })
+    
+    // Check SituItems
+    if ( collectionHolder.find('.situItem').length > 1 ) {
+        let values = []
+        
+        collectionHolder.find('select').each(function() {
+            values.push($(this).val())
+        })
+        
+        // Check SituItems scores
+        collectionHolder.find('select').each(function() {
+            $(this).addClass('selection-on')
+            
+            let value = $(this).val()
+            
+            $(this).find('option').each(function() {
+                if ( value === $(this).val() )
+                    $(this).addClass('selected')
+                else if ( values.includes( $(this).val() ) )
+                    $(this).addClass('bg-readonly').prop('disabled', true)
+                else if ( '' === $(this).val() )
+                    $(this).text( translations['scoreLabelAlt'] )
+            })
+            
+            // Allow updating placeholder on change
+            setScorePlaceholder( $(this), $(this).val() )
+        })
+        
+        // Add class to SituItems scores
+        addPlaceholderClass('')
+        
+        // Allow management SituItems score changes
+        newScore()
+        
+        // Allow remove SituItems
+        $('.removeSituItem').each(function() {
+            removeSituItem($(this))
+        })
+        
+        $('#loader').hide()
+    }
+    
+    // SituItem add button
+    if ( collectionHolder.find('.situItem').length == 4 ) $('#add-situItem').hide()
+}
+
+/**
+ * Update data not yet validated
+ */
+// Update event or categries not yet validated
+function editData( button ) {
+        if ( button.hasClass('modalValidate') ) {
+            $('#editEntity').modal('hide')
+            updateEntity()
+            return
+        }
+        $('#editEntity').modal('hide').attr('data-entity', '').attr('data-id', '')
+        $('#editEntity h5, #editEntity .modal-body').empty()
+        $('#loader').hide()
+}
+
 // Add edit button depending on getData() result
 function addEditButton( name, id ) {
     
@@ -374,7 +825,7 @@ function editEntity( name, button, id ) {
                 $('#editEntity .modal-body').html(
                     $(html).find('[id$="_form_'+name+'"]')
                 )
-                $('#editEntity h5').text(translations[name+ 'Update'])
+                $('#editEntity h5').text( translations[name+ 'Update'] )
                 $('#editEntity').modal('show')
             }
         });
@@ -567,7 +1018,6 @@ function newScore() {
         if ( 'situ_form_situItems_0_score' !== $(this).attr('id') )
             $(this).find('option[value="0"]').remove()
         
-        
         let newValue = '', oldValue = ''
         $(this).on('focus', function () { oldValue = this.value })
                 .change(function(){
@@ -587,7 +1037,7 @@ function newScore() {
 // Update all options for each situItem score depending on new elem value
 function checkScores( newValue, oldValue ) {
     collectionHolder.find('select').each(function() {
-        // If current Score selection
+        // Current Score selection
         if ( $(this).hasClass('onSelect') ) {
             $(this).find('option').each(function() {
                 // If reset selection
@@ -597,31 +1047,29 @@ function checkScores( newValue, oldValue ) {
                     $(this).removeClass('selected')
                 }
             })
+            $(this).removeClass('onSelect')
+            return
         }
-        // Any else Score selection
-        else {
-            $(this).find('option').each(function() {
-                if ( 0 !== $(this).val() ) {
-                    // Disable selected option from current Score selection
-                    if ( newValue === $(this).val() && '' !== newValue ) {
-                        $(this).addClass('bg-readonly').prop('disabled', true)
-                    }
-                    // Enable unselected option from current Score selection
-                    if ( oldValue === $(this).val() && '' !== oldValue ) {
-                        $(this).removeClass('bg-readonly').prop('disabled', false)
-                    }
+        // Other Score selections        
+        $(this).find('option').each(function() {
+            if ( 0 !== $(this).val() ) {
+                // Disable selected option from current Score selection
+                if ( newValue === $(this).val() && '' !== newValue ) {
+                    $(this).addClass('bg-readonly').prop('disabled', true)
                 }
-            })
-        }
-        // And the end of change, reset current Score selection
-        if ( $(this).hasClass('onSelect') ) $(this).removeClass('onSelect')
+                // Enable unselected option from current Score selection
+                if ( oldValue === $(this).val() && '' !== oldValue ) {
+                    $(this).removeClass('bg-readonly').prop('disabled', false)
+                }
+            }
+        })
     })
 }
 
 // Set Score selection placeholder text
 function setScorePlaceholder( select, newValue ) {
-    if ( '' === newValue ) select.find('.placeholder').text(translations['scoreLabel'])
-    else select.find('.placeholder').text(translations['scoreLabelAlt'])
+    if ( '' === newValue ) select.find('.placeholder').text( translations['scoreLabel'] )
+    else select.find('.placeholder').text( translations['scoreLabelAlt'] )
 }
 
 // Add situItem from prototype
@@ -639,6 +1087,11 @@ function addSituItem() {
     removeSituItem(newElem.find('.removeSituItem'))
     addPlaceholderClass(newElem)
     toggleClassSelection(newElem)
+    
+    keypressPasteCut( newElem.find('input[type="text"]') ) 
+    keypressPasteCut( newElem.find('textarea') ) 
+    keypressPasteCut( newElem.find('select') ) 
+    
     newElem.find('.score-info').tooltip()
     newElem.appendTo(collectionHolder)
     newScore()
@@ -649,174 +1102,66 @@ function addSituItem() {
     }
 }
 
-/**
- * When update Situ
- */
-// Show content & check selected SituItems
-function updateSitu() {
+function resizeWindows() {
+        
+    if ( $(window).width() > 767 ) {
+        
+        $('#initialSitu .h-title').each(function() {
+            if ( $(this).height() < $(this).children().height() )
+                $(this).addClass('px-1 border border-top-0 border-secondary')
+        })
 
-    // Show all card sections
-    $('#event, #categoryLevel1, #categoryLevel2, .card-body, .card-footer')
-            .removeClass('d-none').css('opacity', 1)
-    
-    // Header fields
-    $('.formData').each(function() {
-        // Hide header loader
-        if ( $(this).hasClass('on-load') && '' !== $(this).find('select').val() )
-            $(this).removeClass('on-load')
-        
-        // Show collapsed
-        $(this).find('.infoCollapse').each(function() {
-            if ( $(this).hasClass('d-none') ) $(this).removeClass('d-none')
+        $('#initialSitu .h-description').each(function() {
+            if ( $(this).height() < $(this).children().height() )
+                $(this).addClass('px-1 border border-top-0 border-secondary')
         })
+
+        if ( $('#details').height() < $('#initialSitu .card-header:eq(1)').height() )
+            $('#details').css( 'height', $('#initialSitu .card-header:eq(1)').height() + 30 )
         
-        // Show data
-        if ( 'lang' !== $(this).attr('id') ) {
-            let value = $(this).find('select').val()
-            if ( value ) getData( $(this).attr('id'), value )
-        }
-    })
-    
-    // Check SituItems
-    if ( collectionHolder.find('.situItem').length > 1 ) {
-        let values = []
-        
-        collectionHolder.find('select').each(function() {
-            values.push($(this).val())
-        })
-        
-        // Check SituItems scores
-        collectionHolder.find('select').each(function() {
-            $(this).addClass('selection-on')
-            
-            let value = $(this).val()
-            
-            $(this).find('option').each(function() {
-                if ( value === $(this).val() )
-                    $(this).addClass('selected')
-                else if ( values.includes( $(this).val() ) )
-                    $(this).addClass('bg-readonly').prop('disabled', true)
-                else if ( '' === $(this).val() )
-                    $(this).text(translations['scoreLabelAlt'])
-            })
-            
-            // Allow updating placeholder on change
-            setScorePlaceholder( $(this), $(this).val() )
-        })
-        
-        // Add class to SituItems scores
-        addPlaceholderClass('')
-        
-        // Allow management SituItems score changes
-        newScore()
-        
-        // Allow remove SituItems
-        $('.removeSituItem').each(function() {
-            removeSituItem($(this))
-        })
-        
-        $('#loader').hide()
     }
-    // Add button display
-    if ( collectionHolder.find('.situItem').length == 4 ) $('#add-situItem').hide()
-}
 
-// Add BS error class to empty field if ErrorForm exist
-function checkForm() {
-    $('form').find('.form-control').each(function() {
-        if ( 'situ_form_situItems_0_score' !== $(this).attr('id') ) {
-            if ( '' === $(this).val() ) {
-                if ( ! $(this).is('select') ) $(this).addClass('is-invalid')
-                else {
-                    if ( undefined !== $(this).attr('data-select2-id') ) {
-                        $(this).parent().find('.select2-selection__rendered')
-                            .addClass('is-invalid')
-                    } else  $(this).addClass('is-invalid')
-                }
-            } else {
-                if ( ! $(this).is('select') ) {
-                    if ( $(this).hasClass('is-invalid') ) $(this).removeClass('is-invalid')
-                } else {
-                    if ( undefined !== $(this).attr('data-select2-id') ) {
-                        if ( $(this).parent().find('.select2-selection__rendered')
-                                                .hasClass('is-invalid') )
-                        {
-                            $(this).parent().find('.select2-selection__rendered')
-                                .removeClass('is-invalid')
-                        }
-                    } else {
-                        if ( $(this).hasClass('is-invalid') ) $(this).removeClass('is-invalid')
-                    }
-                }
-            }
-        }
-    })
-}
+    $(window).resize((event) => {
+    
+        const attr = $('#details').attr('style')
 
-// Set values to submit
-function modalSubmit() {
-    $('#modalLang').text(
-            $('[id$="_form_lang"] option[value="'+$('[id$="_form_lang"]').val()+'"]')
-                .text()
-            )
-    
-    let eventInput = $('#form-event').find('input').val(),
-        eventTitle = eventInput === undefined 
-                                ?  $('[id$="_form_event"] option[value="'+$('[id$="_form_event"]').val()+'"]').text()
-                                : eventInput
-    $('#modalEvent').text(eventTitle)
-    
-    let categoryLevel1Input = $('#form-categoryLevel1').find('textarea').val(),
-        categoryLevel1Title = categoryLevel1Input === undefined 
-                                ? $('[id$="_form_categoryLevel1"] option[value="'+$('[id$="_form_categoryLevel1"]').val()+'"]').text()
-                                : categoryLevel1Input
-    $('#modalCategoryLevel1-title').text(categoryLevel1Title)
-    let categoryLevel1Text = $('#form-categoryLevel1').find('textarea').val(),
-        categoryLevel1Description = categoryLevel1Text === undefined 
-                                ? $('#categoryLevel1 .description').text()
-                                : categoryLevel1Text
-    $('#modalCategoryLevel1-description').text(categoryLevel1Description)
-    
-    let categoryLevel2Input = $('#form-categoryLevel2').find('textarea').val(),
-        categoryLevel2Title = categoryLevel2Input === undefined 
-                                ? $('[id$="_form_categoryLevel2"] option[value="'+$('[id$="_form_categoryLevel2"]').val()+'"]').text()
-                                : categoryLevel2Input
-    $('#modalCategoryLevel2-title').text(categoryLevel2Title)
-    let categoryLevel2Text = $('#form-categoryLevel2').find('textarea').val(),
-        categoryLevel2Description = categoryLevel2Text === undefined 
-                                ? $('#categoryLevel2 .description').text()
-                                : categoryLevel2Text
-    $('#modalCategoryLevel2-description').text(categoryLevel2Description)
-    
-    $('#modalTitle').text($('#situ_form_title').val())
-    $('#modalDescription').text($('#situ_form_description').val())
-    
-    $('#situItems').find('.situItem').each(function(index) {
-        if (index == 0) {
-            $('#modalSuccess .title').text($('[id$="_situItems_0_title"]').val())
-            $('#modalSuccess .description').text($('[id$="_situItems_0_description"]').val())
-        } else {
-            let prototype = $('#modalSituItems').attr('data-prototype')
+        if ( innerWidth > 767 ) {
+
+            if ( $('#details').height() < $('#initialSitu .card-header:eq(1)').height() )
+                $('#details').css( 'height', $('#initialSitu .card-header:eq(1)').height() + 30 )
+            else if ( typeof attr !== 'undefined' && attr !== false )
+                $('#details').removeAttr('style')
             
-            let scoreValue =
-                    $('[id$="_situItems_'+ index +'_score"] option[value="'
-                            +$('[id$="_situItems_'+ index +'_score"]').val()
-                        +'"]').attr('class')
-            scoreValue = scoreValue.replace('selectable ', '').replace(' selected', '')
-                
-            let item = prototype.replace(/__item__/g, translations["item"])
-                    .replace(/__scoreTitle__/g, translations["scoreTitle"])
-                    .replace(/__score__/g, scoreValue)
-                    .replace(/__scoreText__/g, translations[scoreValue+"Item"])
-                    .replace(/__titleItem__/g, translations["titleItem"])
-                    .replace(/__title__/g, $('[id$="_situItems_'+ index +'_title"]').val())
-                    .replace(/__descriptionItem__/g, translations["descriptionItem"])
-                    .replace(/__description__/g,$('[id$="_situItems_'+ index +'_description"]').val())
-            $('#optionScore').append(item)
+            $('#initialSitu .h-title').each(function() {
+                if ( $(this).height() < $(this).children().height() )
+                    $(this).addClass('px-1 border border-top-0 border-secondary')
+                else if ( $(this).hasClass('px-1 border border-top-0 border-secondary') )
+                    $(this).removeClass('px-1 border border-top-0 border-secondary')
+            })
+
+            $('#initialSitu .h-description').each(function() {
+                if ( $(this).height() < $(this).children().height() )
+                    $(this).addClass('px-1 border border-top-0 border-secondary')
+                else if ( $(this).hasClass('px-1 border border-top-0 border-secondary') )
+                    $(this).removeClass('px-1 border border-top-0 border-secondary')
+            })
+            return
         }
+        
+        if ( typeof attr !== 'undefined' && attr !== false )
+            $('#details').removeAttr('style')
+            
+            $('#initialSitu .h-title').each(function() {
+                if ( $(this).hasClass('px-1 border border-top-0 border-secondary') )
+                    $(this).removeClass('px-1 border border-top-0 border-secondary')
+            })
+
+            $('#initialSitu .h-description').each(function() {
+                if ( $(this).hasClass('px-1 border border-top-0 border-secondary') )
+                    $(this).removeClass('px-1 border border-top-0 border-secondary')
+            })
+
     })
-    
-    $('#confirmSubmit').modal('show')
 }
 
 $(function() {
@@ -824,188 +1169,74 @@ $(function() {
     // Debug focus
     $('.form-control').unbind('blur')
     
-    // For dynamic tooltip
+    // Dynamic BS tooltip
     $('body').tooltip({ selector: '.editEntity'})
     
-    // When update Situ
-    if ($('#situ').attr('data-id')) updateSitu()
-    else {
-        // Create SituItem once required
-        addSituItem()
-        $('#loader').hide()
-    }
+    // Set multiple events
+    $('input[type="text"], textarea').each(function() { keypressPasteCut( $(this) ) })
     
-    // Init header selects
+    // Show first fields
+    setDetailsFormSection()
+    
+    // Init the selects of the details section
     $('.card-header').find('select').each(function() {
         unvalidatedOption( $(this) )
         initSelect2( $(this) )
         // When update Situ
-        if ($(this).val() != '') {
+        if ( '' !== $(this).val() ) {
             $(this).parent().find('.select2-selection__rendered')
                     .addClass('selection-on')
         }
     })
     
-    // Hide adding events/categories button if must have to be created (choice empty)
+    // Hide adding events/categories button if need to be created
     $('.colDataLang').each(function(){
         if ( ! $(this).children().is('select') ) $(this).next().find('.btnAdd').hide()
     })
     
-    /**
-     * Load events/categories or create them if choice is empty
-     */
-    if ( $('[id$="_form_lang"]').is('select') || $('[id$="_form_event"]').is('select') )
-    {
-        $('form').on('change',  '[id$="_form_lang"], '
-                                +'[id$="_form_event"], '
-                                +'[id$="_form_categoryLevel1"], '
-                                +'[id$="_form_categoryLevel2"]', function() {
-
-            // Toggle styles
-            let rendered = $(this).parent().find('.select2-selection__rendered')
-            if ( '' === $(this).val() && rendered.hasClass('selection-on') )
-                rendered.removeClass('selection-on')
-            else rendered.addClass('selection-on')
-            footerHeight()
-
-            // Hide collapse
-            toggleInfoCollapse( 'hide', $(this) )
-            
-            // Event or Category data
-            let divId = $(this).parents('.formData').attr('id')
-                // Get & show data
-            if ('lang' !== divId && '' !== $(this).val() )
-                getData( divId, $(this).val() )
-            // Hide next header field
-            if ( $(this).is('select') )
-                $(this).parents('.formData').nextAll().addClass('d-none')
-
-            // Show card body on select categoryLevel2
-            if ( 'situ_dynamic_data_form_categoryLevel2' === $(this).attr('id') ) {
-                if ( $('.card-body').hasClass('d-none') && $('.card-footer').hasClass('d-none') ) {
-                    $('.card-body, .card-footer').removeClass('d-none')
-                        .animate({ opacity: 1}, 250)
-                }
-            }
-            
-            // Remove edit next entity buttons if exist
-            $(this).parents('.formData').find('.editEntity').remove()
-            $(this).parents('.formData').nextAll().each(function(i, obj){
-                        $(obj).find('.editEntity').remove()
-                    })
-                
-            // Load data or create them on action change
-            changeSelect( $(this) )                                         
-        })
+    // When update Situ
+    if ( $('#situ').attr('data-id') ) updateSitu()
+    else {
+        // Reset lang
+        if ( $('#situ_dynamic_data_form_lang option').length > 1 )
+            $('#situ_dynamic_data_form_lang').val(null).trigger('change')
         
-    } else {
-        // If create data, hide create button & show header fields
-        $('.colBtn').each(function(){ $(this).hide() })
-        removeClass( $('#event'), 'd-none on-load' ) 
-        removeClass( $('#categoryLevel1'), 'd-none on-load' ) 
-        removeClass( $('#categoryLevel2'), 'd-none on-load' ) 
-    }
-    
-    /**
-     * Add new Event or Categories
-     */
-    $('form').on('click', '.btnAdd', function() {
-        
-        // Show current & next header loaders
-        $(this).parents('.formData').addClass('on-load')
-                .children('div').each(function() {
-                    $(this).css('opacity', 0); 
-                })
-        $(this).parents('.formData').addClass('on-load')
-                .nextAll().each(function(i, obj){
-                    $(obj).addClass('on-load')
-                            .children('div').each(function() {
-                                $(this).css('opacity',0); 
-                            })
-                    // Remove next edit entity buttons
-                    $(obj).find('.editEntity').remove()
-                })
-        // Hide useless info collapse
-        toggleInfoCollapse( 'hide', $(this) )
-        
-        loadCreateData( $(this) )
-    })
-    
-    /**
-     * Update event or categries not yet validated
-     */
-    $('#editEntity .btnModal').click(function() {
-        if ($(this).hasClass('modalValidate')) {
-            $('#editEntity').modal('hide')
-            updateEntity()
-        } else {
-            $('#editEntity').modal('hide').attr('data-entity', '').attr('data-id', '')
-            $('#editEntity h5, #editEntity .modal-body').empty()
-            $('#loader').hide()
-        }
-    })
-    
-    /**
-     * When translate situ
-     */
-    if ($('#loader').hasClass('translateSitu')) {
-        
-        // Load lang to set events
-        $('[id$="_form_lang"]').val($('#situ').attr('data-lang')).trigger('change')
-                .parent().find('.select2-selection__rendered').addClass('selection-on')
-        
-        // Then hide loader
-        $(document).ajaxComplete(function () {
-            $('#loader').removeClass('d-block')
-        });
-        
-        // Show situItems depending on Situ to translate
-        let itemsLength = $('#initialSituItems').attr('data-initial')
-        for(var i = 1; i < itemsLength; i++) {
-            addSituItem()
-        }
-    }
-    
-    /**
-     * Error management
-     */
-    if ($('#form-error > .alert').length !== 0) {
-        $('.formData').each(function() {
-            if ($(this).hasClass('on-load')) $(this).removeClass('on-load')
-        })
-        checkForm()
+        // Create SituItem once required
+        addSituItem()
         $('#loader').hide()
     }
+    
+    // If translate situ
+    if ( $('#loader').hasClass('translateSitu') ) {
+        $('#page > .container').addClass('w-100')
+        loadTranslation()
+        resizeWindows()
+    }
+    
+    // Create new event or categories
+    $('form').on('click', '.btnAdd', function() { createData( $(this) ) })
+    
+    // If new categoryLevel2
+    $('form').on('keyup paste', '[id$="_form_categoryLevel2_description"]',
+        function() { showCards() }
+    )
+    
+    // Update event or categries not yet validated
+    $('#editEntity .btnModal').click(function() { editData( $(this) ) })
+    
+    // Add SituItem until 4
+    $('#add-itemSitu-link').click(function() { addSituItem() })
+    
+    // Error management
+    if ( 0 !== $('#form-error > .alert').length ) { errorMangement() }
     
     /**
      * Confirm submit
      */
-    $('#modalSubmit').click(function() {
-        modalSubmit()
-    })
-    $('#cancelSubmit').bind('click', function() {
-        $('#optionScore').empty()
-    })
+    $('#actionSave').click(function() { if ( checkForm() ) $('#situ_form_save').click() })   
+    $('#modalSubmit').click(function() { if ( checkForm() ) modalSubmit() })     
+    $('#cancelSubmit').bind('click', function() { $('#optionScore').empty() })
     
-    
-    /**
-     * Then..
-     */
-    // Show card-body when fill categoryLevel2 description
-    $('form').on('keyup paste', '[id$="_form_categoryLevel2_description"]', function() {
-        if ($('.card-body').hasClass('d-none') && $('.card-footer').hasClass('d-none')) {
-            $('.card-body, .card-footer').removeClass('d-none').animate({ opacity: 1}, 250)
-        }
-    })
-    
-    // Add SituItem until 4
-    $('#add-itemSitu-link').click(function() {
-        addSituItem()
-    })
-    
-    $('.card-footer > button').bind('click', function() {
-        $('#loader').show() // Comment if html5 browser is disabled (attr novalidate)
-        $('#form-error').empty()
-    })
+    $('.card-footer > button').bind('click', function() { bindFooter() })
     
 })

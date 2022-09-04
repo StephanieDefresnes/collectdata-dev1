@@ -36,47 +36,46 @@ class CategoryController extends AbstractController
         ]);
     }
     
-    public function read(Category $category)
+    public function read( Category $category )
     {
-        if (!$category) {
+        if ( ! $category ) {
             return $this->redirectToRoute('back_not_found', [
                 '_locale' => locale_get_default()
             ]);
         }
         
-        return $this->render('back/category/read.html.twig', [
-            'category' => $category,
-        ]);
+        return $this->render('back/category/read.html.twig', ['category' => $category]);
     }
     
-    public function ajaxCategoryEnable( Request $request,
-                                        Messager $messager)
+    public function ajaxCategoryEnable( Request $request, Messager $messager )
     {
-        if ($request->isXMLHttpRequest()) {
+        if ( $request->isXMLHttpRequest() ) {
             
             $id = $request->request->get('id');
             $category = $this->em->getRepository(Category::class)->find($id);
             
-            if ($category->getValidated() === false) $category->setValidated(true);
+            if ( false === $category->getValidated() ) $category->setValidated( true );
 
             $this->em->persist($category);
             
             try {
                 $this->em->flush();
                 
-                $categoryLevel = $category->getEvent()
-                                    ? 'categoryLevel1'
-                                    : 'categoryLevel2';
-                $messager->sendUserAlert('validation', $categoryLevel, $category);
+                $success = true;
+                $messager->sendUserAlert( 'validation', $category );
                 
-                return $this->json(['success' => true]);
-            } catch (Exception $ex) {
-                $msg = $this->translator
-                        ->trans('contrib.category.validation.flash.error', [],
-                                'back_messages', $locale = locale_get_default());
+            } catch ( Exception $ex ) {
+                $success = false;
+                
+                $msg = $this->translator->trans(
+                                'contrib.category.validation.flash.error', [],
+                                'back_messages',
+                                locale_get_default()
+                        );
                 $this->addFlash('error', $msg);
-                return $this->json(['success' => false]);
             }
+                
+            return $this->json([ 'success' => $success ]);
         }
     }
     

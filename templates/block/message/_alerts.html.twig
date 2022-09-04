@@ -18,7 +18,8 @@
                         <i class="fas fa-hands"></i>
                     </div>
                 </td>
-                <td class="p-2">{{ alert.subject|raw }}<br>
+                <td class="p-2">
+                    {{ alert.subject|raw }}
                     <p class="mb-0 small">{{ alert.dateCreate is empty ? ''
                         : alert.dateCreate
                             |format_datetime('full', 'short', locale=locale)

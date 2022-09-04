@@ -26,7 +26,7 @@
         </div>
             
         <div class="row">
-            <div class="col-10 mx-auto px-0 card shadow mb-4">
+            <div class="col-11 mx-auto px-0 card shadow mb-4">
 
                 <div class="card-header py-3">
                     <h6 class="d-flex justify-content-start m-0">
@@ -73,8 +73,8 @@
         var translations = {
            "deletePage-title" : "{{ 'content.form.page.collection.remove.title'|trans }}",
            "deletePage-content" : "{{ 'content.form.page.collection.remove.confirm'|trans }}",
-           "yes" : "{{ 'yes'|trans }}",
-           "no" : "{{ 'no'|trans }}",
+           "yes" : "{{ 'yes'|trans({}, 'messages') }}",
+           "no" : "{{ 'no'|trans({}, 'messages') }}",
         }
     </script>
 {% endblock %}

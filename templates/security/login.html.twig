@@ -53,9 +53,9 @@
                             </button>
                         </div>
                             
-                        {# comment in locale #}
-                        <div id="login_captcha"
-                             data-toggle="recaptcha" data-type="invisible"></div>
+                        {# commented in localhost #}
+                         <div id="login_captcha"
+                             data-toggle="recaptcha" data-type="invisible"></div> 
                         
                         <hr>
                         <div class="row">
@@ -81,7 +81,7 @@
     <script>
         var recaptcha = {'sitekey' : '{{ google_recaptcha_site_key }}'}
     </script>
-    {# comment in locale #}
+    {# commented in localhost #}
     <script src="{{ asset('recaptcha/recaptcha.js') }}"></script>
     <script src="https://www.google.com/recaptcha/api.js?onload=onGoogleReCaptchaApiLoad&render=explicit&hl={{ app.request.locale }}" async defer></script>
 {% endblock %}

@@ -104,6 +104,55 @@ class SituRepository extends ServiceEntityRepository
             ->getQuery()
             ->getScalarResult();
     }
+    
+    public function findInitialSitusByUserLangs( $user, $userLangs )
+    {
+        $qb = $this->_em->createQueryBuilder();
+        
+        $initials = $qb->expr()->andX(
+            $qb->expr()->in('s.lang', ':langs'),
+            $qb->expr()->neq('s.user', '?1'),
+            $qb->expr()->eq('s.initialSitu', '?2'),
+            $qb->expr()->eq('s.status', '?3'),
+        );
+        
+        $initialSitus = $qb->from(Situ::class,'s')
+            ->select('s')
+            ->andWhere($initials)
+            ->setParameters([
+                ':langs' => $userLangs,
+                1 => $user,
+                2 => true,
+                3 => 3,
+            ])
+            ->getQuery()
+            ->getResult();
+        
+        $translations = $qb->expr()->andX(
+            $qb->expr()->in('s.lang', ':langs'),
+            $qb->expr()->neq('s.user', '?1'),
+            $qb->expr()->eq('s.initialSitu', '?2'),
+            $qb->expr()->eq('s.status', '?3'),
+        );
+        
+        return $initialSitus;
+    }
+    
+    public function findSituByLang()
+    {
+        return $this->_em->createQueryBuilder()
+            ->from(Situ::class,'situ')
+            ->select("  count(situ.id)      situs,
+                        date_format(situ.dateValidation, '%y') situYear,
+                        date_format(situ.dateValidation, '%M') situMonth")
+            ->groupBy('situMonth')
+            ->orderBy('situ.dateValidation', 'ASC')
+            ->andWhere('situ.status = ?1')
+            ->setMaxResults(12)
+            ->setParameter(1, 3)
+            ->getQuery()
+            ->getScalarResult();
+    }
 
     // /**
     //  * @return Situ[] Returns an array of Situ objects

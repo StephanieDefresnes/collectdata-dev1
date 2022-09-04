@@ -96,9 +96,9 @@
     {{ encore_entry_script_tags('situ_read_app', null, 'backApp') }}
     <script>
         var translations = {
-            "removeTitle" : "{{ 'contrib.situ.read.remove.title'|trans }}",
-            "removeText" : "{{ 'contrib.situ.read.remove.text'|trans }}",
-            "translate" : "{{ 'action.translate'|trans({}, 'messages') }}",
+            "removeTitle" : "{{ 'contrib.situ.read.remove.title'|trans({}, 'back_messages')  }}",
+            "removeText" : "{{ 'contrib.situ.read.remove.text'|trans({}, 'back_messages')  }}",
+            "translate" : "{{ 'action.translate'|trans }}",
             "no" : "{{ 'no'|trans }}",
             "yes" : "{{ 'yes'|trans }}",
         }

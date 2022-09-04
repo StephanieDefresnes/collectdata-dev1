@@ -44,10 +44,8 @@ class SituForm extends AbstractType
             )
             ->add('translatedSituId', HiddenType::class)
             ->add('save', SubmitType::class, [
-                'label' => 'action.save',
-                'attr' => ['class' => 'btn-outline-primary px-3 mx-2'],
-                'row_attr' => ['class' => 'mb-0'],
-                'translation_domain' => 'messages',
+                'label' => false,
+                'attr' => ['class' => 'd-none'],
             ])
             ->add('submit', SubmitType::class, [
                 'label' => 'action.confirm',

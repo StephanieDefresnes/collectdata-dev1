@@ -18,38 +18,50 @@
 
 // Custom scrollbar
 *::-webkit-scrollbar {
-  width: 16px;
-  height: 11px;
+  width: 26px;
+  height: 21px;
 }
 .table-responsive::-webkit-scrollbar {
-  width: 11px;
-  height: 11px;
+  width: 21px;
+  height: 21px;
 }
 * {
   scrollbar-width: thin;
-  scrollbar-color: $scrollbar-secondary $scrollbar-dark;
+  scrollbar-color: black $dark-default;
+}
+div {
+  scrollbar-width: thin;
+  scrollbar-color: black grey;
 }
 .table-responsive {
   scrollbar-width: thin;
-  scrollbar-color: $scrollbar-dark $scrollbar-light !important;
+  scrollbar-color: $dark-default $scrollbar-light !important;
 }
 *::-webkit-scrollbar-track {
-  background: $scrollbar-dark;
+  background: $dark-default;
+}
+div::-webkit-scrollbar-track {
+  background: grey;
 }
 .table-responsive::-webkit-scrollbar-track {
   background: $scrollbar-light !important;
 }
 *::-webkit-scrollbar-thumb {
-  background-color: $scrollbar-secondary;
+  background-color: black;
   border-radius: 6px;
-  border: 3px solid $scrollbar-dark;
+  border: 3px solid $dark-default;
 }
+div::-webkit-scrollbar-thumb {
+  background-color: black;
+  border-radius: 6px;
+  border: 3px solid grey;
+}
+
 .table-responsive::-webkit-scrollbar-thumb {
-  background-color: $scrollbar-dark !important;
+  background-color: $dark-default !important;
   border-radius: 6px;
   border: 3px solid $scrollbar-light !important;
 }
-
 body {
     position: absolute;
     width: 100%;
@@ -80,7 +92,7 @@ a:focus,
     bottom: 0;
     left: 0;
     right: 0;
-    background: $dark url('../img/page-loader.gif') center / 120px no-repeat;
+    background: $dark-default url('../img/page-loader.gif') center / 120px no-repeat;
     z-index: 10000;
 }
 #flash_message {

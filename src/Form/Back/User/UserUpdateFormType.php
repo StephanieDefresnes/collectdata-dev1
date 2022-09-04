@@ -34,13 +34,14 @@ class UserUpdateFormType extends AbstractType
                         'user.ROLE_MODERATOR' => 'ROLE_MODERATOR',
                         'user.ROLE_CONTRIBUTOR' => 'ROLE_CONTRIBUTOR',
                     ];
-                } else {
-                    $choices = [
-                        'user.ROLE_ADMIN' => 'ROLE_ADMIN',
-                        'user.ROLE_MODERATOR' => 'ROLE_MODERATOR',
-                        'user.ROLE_CONTRIBUTOR' => 'ROLE_CONTRIBUTOR',
-                    ];
+                    break;
                 }
+                
+                $choices = [
+                    'user.ROLE_ADMIN' => 'ROLE_ADMIN',
+                    'user.ROLE_MODERATOR' => 'ROLE_MODERATOR',
+                    'user.ROLE_CONTRIBUTOR' => 'ROLE_CONTRIBUTOR',
+                ];
                 $bsClass = '';
                 break;
             case 'admin':

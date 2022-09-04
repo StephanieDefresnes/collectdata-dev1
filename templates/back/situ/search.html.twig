@@ -63,8 +63,9 @@
                                         <i class="far fa-paper-plane"></i>
                                     </a>                            
                                 {% else %}
+                                    {% set color = ( situ.status.id == 4 or situ.status.id == 5 ) ? 'danger' : ( situ.status.id == 1 ? 'secondary' : 'primary' ) %}
                                     <a href="{{ path('back_situ_read', { 'id': situ.id }) }}"
-                                       class="btn {%if situ.status.id== 4 or  situ.status.id== 5 %}btn-outline-danger{% else %}btn-outline-primary{% endif %} px-2 py-1"
+                                       class="btn {{ 'btn-outline-' ~ color }} px-2 py-1"
                                        data-id="{{ situ.id }}" data-action=""
                                        data-toggle="tooltip" data-placement="left"
                                        title="{{ 'action.read'|trans({}, 'messages') }}">
@@ -87,7 +88,13 @@
                             <td class="px-2 align-middle">{{ situ.dateCreation|format_datetime('short', 'none', locale=locale) }}</td>
                             <td class="px-2 align-middle">{{ situ.dateSubmission ? situ.dateSubmission|format_datetime('short', 'none', locale=locale) : '' }}</td>
                             <td class="px-2 align-middle">{{ situ.dateValidation ? situ.dateValidation|format_datetime('short', 'none', locale=locale) : '' }}</td>
-                            <td class="px-2 align-middle">{{ situ.lang.englishName }}</td>
+                            <td class="px-2 align-middle text-center">
+                                {% set langName = situ.lang.englishName|split(';') %}
+                                <img src="{{ asset('img/flag/'~ situ.lang.lang  ~'.jpg') }}"
+                                     alt="{{ langName[0] }}" class="lang-flag mr-1"
+                                     data-toggle="tooltip" data-placement="left"
+                                     title="{{ langName[0] }}">
+                            </td>
                             <td class="px-2 align-middle text-nowrap">
                                 {% if situ.initialSitu %}
                                     {{ 'yes'|trans({}, 'messages') }}
@@ -100,7 +107,7 @@
                                     {{ situ.event.title|u.truncate(20, '...') }}
                                 {% else %}
                                     {{ situ.event.title|u.truncate(10, '...') }}
-                                    <span class="badge badge-pill badge-primary">{{ 'badge.new'|trans }}</span>
+                                    <span class="badge badge-pill badge-primary">{{ 'status.new'|trans({}, 'messages') }}</span>
                                 {% endif %}
                             </td>
                             <td class="px-2 align-middle text-nowrap">
@@ -108,7 +115,7 @@
                                     {{ situ.categoryLevel1.title|u.truncate(20, '...') }}
                                 {% else %}
                                     {{ situ.categoryLevel1.title|u.truncate(10, '...') }}
-                                    <span class="badge badge-pill badge-primary">{{ 'badge.new'|trans }}</span>
+                                    <span class="badge badge-pill badge-primary">{{ 'status.new'|trans({}, 'messages') }}</span>
                                 {% endif %}
                             </td>
                             <td class="px-2 align-middle text-nowrap">
@@ -116,7 +123,7 @@
                                     {{ situ.categoryLevel2.title|u.truncate(20, '...') }}
                                 {% else %}
                                     {{ situ.categoryLevel2.title|u.truncate(10, '...') }}
-                                    <span class="badge badge-pill badge-primary">{{ 'badge.new'|trans }}</span>
+                                    <span class="badge badge-pill badge-primary">{{ 'status.new'|trans({}, 'messages') }}</span>
                                 {% endif %}
                             </td>
                             <td class="px-2 align-middle">{{ situ.user.name }}</td>

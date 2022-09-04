@@ -3,7 +3,7 @@
 {{ form_start(form) }}
     <div class="card shadow">
 
-        <div id="translator" class="card-header py-1">
+        <div id="translator" class="card-header py-1 do-ggt">
             <div class="row d-flex justify-content-between" translate="no">
                 <div class="col-auto">
                     <h6 class="px-0 mt-2 font-weight-bold text-primary" translate="no">
@@ -11,8 +11,8 @@
                     </h6>
                 </div>
                 {% if locale != situ.lang.lang %}
-                    <div class="col-md-auto mct-1px">
-                        <div class="row ggt-row">
+                    <div class="col-md-auto mct-1px" translate="no">
+                        <div class="row ggt-row d-none">
                             <div class="col-auto px-1 mt-1"><i class="fas fa-globe-americas"></i></div>
                             <div class="col-auto px-0">
                                 <div id="GGT"></div>

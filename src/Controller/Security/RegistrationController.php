@@ -87,7 +87,7 @@ class RegistrationController extends AbstractController
                 $this->em->flush();
 
                 $nameSite = $this->parameters->get('configuration')['name'];
-                $sender = $this->parameters->get('configuration')['from_email'];
+                $sender = $this->parameters->get('configuration')['mail_noreply'];
 
                 $subject = $this->translator->trans(
                     'registration.email.subject', [],

@@ -83,7 +83,7 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
     }
     
     /*
-     * @return user array by role for specific lang 
+     * @return langContributor users by lang
      */    
     public function findLangContributors($lang)
     {

@@ -80,12 +80,16 @@ $(function() {
     })
     
     $('select').change(function() {
-        if ($(this).val() == '' && $(this).parent().find('.select2-selection__rendered').hasClass('selection-on'))
+        if ( $(this).parent().find('.select2-selection__rendered').hasClass('selection-on') 
+                && '' === $(this).val() )
+        {
             $(this).parent().find('.select2-selection__rendered').removeClass('selection-on')
-        else $(this).parent().find('.select2-selection__rendered').addClass('selection-on')
+            return
+        }
+        $(this).parent().find('.select2-selection__rendered').addClass('selection-on')
     })
     
-    if ($('#page_form_save').hasClass('d-none')) {
+    if ( $('#page_form_save').hasClass('d-none') ) {
         $('.card-footer .form-inline').removeClass('border-left ml-lg-4 ml-0 pl-lg-3 pl-2')
     }
     

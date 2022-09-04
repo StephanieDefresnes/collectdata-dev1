@@ -1,0 +1,173 @@
+{% extends 'front/layout.html.twig' %}
+{% trans_default_domain 'messages' %}
+
+{% block title %}{{ 'nav.translation.contrib'|trans({}, 'user_messages') }}{% endblock %}
+
+{% block content %}
+        
+    {% block banner%}
+        <div class="mt-3 mb-5 pt-5">
+            <h1 class="h3 text-white">
+                {{ 'nav.translation.contrib'|trans({}, 'user_messages') }}
+            </h1>
+        </div>
+    {% endblock %}
+
+    <div class="card card bg-secondary-50">
+        <div id="situs" class="card-body text-white front-dataTable" data-empty="{{ app.user.situs is empty ? 'yes' }}">
+
+            {% if situs is empty %}
+            <div class="text-left mb-5 p-3 bg-white-70 text-secondary">
+                {{ 'label.translation_empty'|trans }}
+            </div>
+            {% else %}
+            <table id="dataTable-situs" class="shadow table table-borderless table-hover text-nowrap">
+                <thead class="bg-black-40 text-white">
+                    <tr>
+                        <th class="d-none"></th>
+                        <th class="py-2"></th>
+                        <th class="py-2">{{ 'label.title'|trans }}</th>
+                        <th class="py-2">{{ 'label.description'|trans }}</th>
+                        <th class="py-2">{{ 'label.event'|trans }}</th>
+                        <th class="py-2">{{ 'label.categoryLevel1'|trans }}</th>
+                        <th class="py-2">{{ 'label.author'|trans }}</th>
+                        <th class="py-2">{{ 'label.lang'|trans }}</th>
+                        {% for lang in app.user.langs %}
+                        <th class="py-2 text-center">
+                            <img src="{{ asset('img/flag/'~ lang.lang  ~'.jpg') }}"
+                                 alt="{{ lang.name|raw }}" class="lang-flag mr-1"
+                                 data-toggle="tooltip" data-placement="left"
+                                 title="{{ lang.name|raw }}">
+                        </th>
+                        {% endfor %}
+                    </tr>
+                </thead>
+                <tbody class="small bg-white-80">
+                {% for situ in situs %}
+                        <tr data-id="{{ situ.id }}">
+
+                            <td class="d-none">{{ situ.id }}</td>
+                            
+                            <td class="px-2 text-center">
+                            {% if situ.status.id == 2 %}
+                                {% set action   = 'action.preview'|trans %}
+                                {% set class    = 'secondary' %}
+                                {% set params   = { 'slug': situ.slug, 'preview': 'preview' } %}
+                            {% elseif situ.status.id == 3 %}
+                                {% set action   = 'action.read'|trans %}
+                                {% set class    = 'primary' %}
+                                {% set params   = { 'slug': situ.slug } %}
+                            {% endif %}
+                                <a href="{{ path('read_situ', params) }}"
+                                   class="btn {{ 'btn-outline-'~ class }} btn-sm px-1"
+                                   data-toggle="tooltip" data-placement="right"
+                                   title="{{ action }}"
+                                   aria-label="{{ action }}">
+                                    <i class="fas fa-eye"></i>
+                                 </a>
+                            </td>
+
+                            <th class="text-capitalize pt-3 situ-title"
+                                scope="row" data-toggle="tooltip" data-placement="right" title="{{ situ.title }}">
+                                {{ situ.title|u.truncate(20, '...') }}
+                            </th>
+
+                            <td class="first-letter pt-3"
+                                data-toggle="tooltip" data-placement="right" title="{{ situ.description }}">
+                                {{ situ.description|u.truncate(20, '...') }}
+                            </td>
+
+                            <td class="text-capitalize pt-3"
+                                data-toggle="tooltip" data-placement="right" title="{{ situ.event.title }}">
+                                {{ situ.event.title|u.truncate(20, '...') }}
+                            </td>
+
+                            <td class="text-capitalize pt-3"
+                                data-toggle="tooltip" data-placement="right" title="{{ situ.categoryLevel1.title }}">
+                                {{ situ.categoryLevel1.title|u.truncate(20, '...') }}
+                            </td>
+
+                            <td class="text-capitalize pt-3">
+                                <a href="{{ path('user_visit', { 'slug': situ.user.slug }) }}">
+                                    {{ situ.user.name|u.truncate(15, '...') }}</a>
+                            </td>
+
+                            <td class="pt-3">
+                                <img src="{{ asset('img/flag/'~ situ.lang.lang  ~'.jpg') }}"
+                                     alt="{{ situ.lang.lang }}"
+                                     class="d-md-inline d-none lang-flag mr-1"
+                                     data-toggle="tooltip" data-placement="left"
+                                     title="{{ situ.lang.name|raw }}">
+                            </td>                            
+                            {% for lang in app.user.langs %}
+                                {% set translations = render_service.getTranslationByInitialIdAndUserLang(situ, lang) %}
+                                {% set exist        = false %}
+                                {% set action       = 'action.preview'|trans %}
+                                {% set class        = 'secondary' %}
+                                {% set validated    = '' %}
+                                {% set params       = {} %}
+                                <td class="px-0 text-center">
+                                    
+                                {% if lang == situ.lang %}
+                                    <span class="text-success p-2 align-middle">
+                                        <i class="fas fa-check"></i>
+                                    </span>
+                                {% else %}
+                                
+                                    {% if translations %}
+                                        
+                                        {% for translation in translations %}
+                                            {% set params   = { 'slug': translation.slug, 'preview': 'preview' } %}
+                                            
+                                            {% if translation.status.id == 3 %}
+                                                {% set exist = true %}
+                                                {% set validated = translation.slug %}
+                                            {% endif %}
+                                            
+                                            {% if exist %}
+                                                {% set params   = { 'slug': validated } %}
+                                                {% set action   = 'action.read'|trans %}
+                                                {% set class    = 'primary' %}
+                                                {% set params   = { 'slug': validated } %}
+                                            {% endif %}
+                                        {% endfor %}
+                                        
+                                        {% set link %}
+                                        <a href="{{ path('read_situ', params) }}"
+                                           class="btn {{ 'btn-outline-'~ class }} border-0 btn-sm px-1 {% if not exist %}mx-n1{% endif %}"
+                                           data-toggle="tooltip" data-placement="left"
+                                           title="{{ action }}"
+                                           aria-label="{{ action }}">
+                                            <i class="fas fa-eye"></i>
+                                         </a>
+                                        {% endset  %}
+                                        
+                                        {% if exist %}{{ link }}{% else %}
+                                            {% for translation in translations %}
+                                                {% if translation.status.id == 2 %}{{ link }}{% endif %}
+                                            {% endfor %}
+                                        {% endif %}
+                                        
+                                    {% else %}
+                                        <a href="#"
+                                           class="btn btn-outline-dark border-0 btn-sm px-2"
+                                           data-toggle="tooltip" data-placement="left"
+                                           title="{{ 'action.situ_add'|trans({}, 'messages') }}"
+                                           aria-label="{{ 'action.situ_add'|trans({}, 'messages') }}">
+                                            <i class="far fa-edit"></i>
+                                        </a>
+                                    {% endif %}
+                                {% endif %}
+                                </td>
+                            {% endfor %}
+
+                        </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+            {% endif %}
+
+        </div>
+    </div>
+    
+{% endblock %}

@@ -81,7 +81,7 @@
     {{ encore_entry_script_tags('table_app', null, 'backApp') }}
     <script>
         var translation = {
-            "yes" : "{{ 'yes'|trans }}",
+            "yes" : "{{ 'yes'|trans({}, 'messages') }}",
         }
     </script>
 {% endblock %}

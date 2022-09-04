@@ -66,6 +66,26 @@ class SituController extends AbstractController
     }
     
     /**
+     * Situs to translate list
+     * 
+     * @return Response
+     */
+    public function searchTranslation(): Response
+    {
+        $currentUser = $this->security->getUser();
+        
+        // Check permission
+        $this->denyAccessUnlessGranted('situ_translator', $currentUser);
+        
+        $situs = $this->em->getRepository(Situ::class)
+                    ->findInitialSitusByUserLangs( $currentUser, $currentUser->getLangs()->getValues() );
+        
+        return $this->render( 'front/situ/translation.html.twig', [
+            'situs' => $situs,
+        ] );
+    }
+    
+    /**
      * User situs list
      * 
      * @IsGranted("IS_AUTHENTICATED_FULLY")
@@ -77,29 +97,48 @@ class SituController extends AbstractController
     }
     
     /**
-     * Create / edit situ
+     * Create / edit / translate Situ
      * 
      * @IsGranted("IS_AUTHENTICATED_FULLY")
      * @IsGranted("ROLE_CONTRIBUTOR")
      */
-    public function create( Request $request, $id ): Response
+    public function create( Request $request, $id, $langId = null, $situId = null ): Response
     {
-        $defaultLang = $this->em->getRepository(Lang::class)
-                ->findOneBy([ 'lang' => $this->locale ])
-                ->getId();
+        $currentUser    = $this->security->getUser();
+        $defaultLang    = $this->em->getRepository(Lang::class)
+                            ->findOneBy([ 'lang' => $this->locale ])
+                            ->getId();
+        $langs          = $currentUser->getLangs()->getValues();
+        $lang           = array();
+        $situData       = array();
         
-        if ( $id ) {
+        if ( $langId ) {
+
+            // Situ to translate
+            $situData = $this->em->getRepository(Situ::class)->find($id);
+
+            if ( ! $situData ) throw $this->createNotFoundException();
+
+            // Translation lang
+            $lang = $this->em->getRepository(Lang::class)->find($langId);
+
+            // Check permission lang
+            $subject = [ 'lang' => $lang, 'initialLang' => $situData->getLang() ];
+            $this->denyAccessUnlessGranted( 'lang', $subject );
+
+            $situ = new Situ();
+            
+        } elseif ( $id ) {
             
             $situ = $this->em->getRepository(Situ::class)->find($id);
         
-            if ( ! $situ ) {
+            if ( ! $situ || 5 === $situ->getStatus()->getId() )
                 throw $this->createNotFoundException();
-            }
         
             // Check permission
-            $this->denyAccessUnlessGranted('create_situ', $situ);
+            $this->denyAccessUnlessGranted( 'update_situ', $situ );
             
-            // Check if situ lang is in user langs
+            // Check if user can update, redirect if can't
             $allowResult = $this->situManager->allowEdit( $situ );
             
             if ( true !== $allowResult ) return $this->redirect( $allowResult );
@@ -113,7 +152,6 @@ class SituController extends AbstractController
         $form->handleRequest($request);
 
         // Select, create, edit mapped data
-        $currentUser = $this->security->getUser();
         $formData = $this->createForm( SituDynamicDataForm::class, $situ, ['user' => $currentUser] );
         $formData->handleRequest($request);
         
@@ -134,13 +172,23 @@ class SituController extends AbstractController
             $form->addError( new FormError($result) );
         }
         
-        return $this->render( 'front/situ/new/create.html.twig', [
+        $template   = 'front/situ/new/create.html.twig';
+        $params     = [
             'defaultLang'   => $defaultLang,
             'form'          => $form->createView(),
             'formData'      => $formData->createView(),
-            'langs'         => count($currentUser->getLangs()),
+            'langs'         => count($langs),
             'situ'          => $situ,
-        ] );
+        ];
+        
+        if ( $langId ) {
+            $template   = 'front/situ/new/translate.html.twig';
+            $params['lang']     = $lang;
+            $params['langs']    = count($langs);
+            $params['situData'] = $situData;
+        }
+        
+        return $this->render( $template, $params );
     }
     
     /**
@@ -165,7 +213,7 @@ class SituController extends AbstractController
             $this->em->flush();
 
             $msg = $this->translator->trans(
-                    'contrib.delete.success', [], 'user_messages', $this->locale
+                    'situ.deleted', [], 'messages', $this->locale
                 );
             $this->addFlash('success', $msg);
 
@@ -204,79 +252,6 @@ class SituController extends AbstractController
         
         return $this->render( 'front/situ/read.html.twig', [ 'situ' => $situ ] );
     }
-
-    /**
-     * Translate situ
-     * 
-     * @IsGranted("IS_AUTHENTICATED_FULLY")
-     * @IsGranted("ROLE_CONTRIBUTOR")
-     */
-    public function translate( Request $request, $situId, $langId ): Response
-    {
-        $situ = new Situ();
-
-        $situToTranslate = $this->em->getRepository(Situ::class)->find($situId);
-        
-        if ( ! $situToTranslate ) throw $this->createNotFoundException();
-        
-        $defaultLang = $this->em->getRepository(Lang::class)
-                ->findOneBy(['lang' => $this->parameters->get('locale')])
-                ->getId();
-        
-        // Current user langs
-        $langs = $this->security->getUser()->getLangs()->getValues();
-        
-        // Situ to translate
-        $situData = $this->em->getRepository(Situ::class)->find($situId);
-        
-        // Translation lang
-        $lang = $this->em->getRepository(Lang::class)->find($langId);
-        
-        if ( ! $lang->getEnabled() ) throw $this->createNotFoundException();
-        
-        // Check permission
-        $subject = [ 'situ' => $situData, 'lang' => $lang ];
-        $this->denyAccessUnlessGranted( 'translate_situ', $subject );
-        
-        
-        // Situ entity form
-        $form = $this->createForm( SituForm::class, $situ );
-        $form->handleRequest($request);
-        
-        // Relation entities form
-        $formData = $this->createForm( SituDynamicDataForm::class, $situ, [
-            'user' => $this->security->getUser()
-        ] );
-        $formData->handleRequest($request);
-        
-        /**
-         * isSubmitted() method is used by dynamics fields
-         * So when user really submits form, we use isClicked() method
-         * to get data requested
-         */
-        if ( $form->get('save')->isClicked() || $form->get('submit')->isClicked() ) {
-            
-            $formSituData = $form->getViewData();
-            $result = $this->situManager->validationForm( $formSituData );
-            
-            if ( $result ) {
-                $url = $this->situEditor->setSitu( $formSituData, $request, $situId );
-                return $this->redirect($url);
-            }
-            
-            $form->addError(new FormError($result));
-        }
-        
-        return $this->render('front/situ/new/translate.html.twig', [
-            'defaultLang'   => $defaultLang,
-            'form'          => $form->createView(),
-            'formData'      => $formData->createView(),
-            'lang'          => $lang,
-            'langs'         => $langs,
-            'situ'          => $situ,
-            'situData'      => $situData,
-        ]);
-    }
     
     /**
      * Request situ validation
@@ -298,8 +273,9 @@ class SituController extends AbstractController
         try {
             $this->em->flush();
 
-            $this->mailer->sendModeratorSituValidate( $situ );
-            $this->messager->sendModeratorAlert( 'submission', 'situ', $situ );
+            // commented in localhost
+            $this->mailer->sendValidationRequestedMail( $situ );
+            $this->messager->sendModeratorAlert( 'submission', $situ );
             
             $msg =  $this->translator->trans(
                         'contrib.form.submit.flash.success', [], 'user_messages', $this->locale

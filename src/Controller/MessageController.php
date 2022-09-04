@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Message;
 use App\Entity\Situ;
+use App\Manager\MessageManager;
 use App\Service\RefererService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -12,6 +13,7 @@ use Symfony\Component\Security\Core\Security;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 trait Referer {
+    
     private function getRefererParams() {
         $request = $this->container->get('request_stack')->getCurrentRequest();
         $referer = $request->headers->get('referer');
@@ -27,29 +29,28 @@ class MessageController extends AbstractController
     use Referer;
     
     private $em;
+    private $messageManager;
     private $refererService;
     private $translator;
     
     public function __construct(EntityManagerInterface $em,
+                                MessageManager $messageManager,
                                 RefererService $refererService,
                                 Security $security,
                                 TranslatorInterface $translator)
     {
         $this->em = $em;
+        $this->messageManager = $messageManager;
         $this->refererService = $refererService;
         $this->security = $security;
         $this->translator = $translator;
     }
     
-    public function alerts($back = null)
+    public function alerts( $back = null )
     {
-        if ($back) {
-            $admin = true;
-            $template = 'back/message/alerts.html.twig';
-        } else {
-            $admin = false;
-            $template = 'front/message/alerts.html.twig';
-        }
+        $admin      = $back ? true : false;
+        $template   = $back ? 'back/message/alerts.html.twig'
+                            : 'front/message/alerts.html.twig';
         
         $alerts = $this->em->getRepository(Message::class)->findBy([
             'admin' => $admin,
@@ -57,20 +58,14 @@ class MessageController extends AbstractController
             'recipientUser' => $this->security->getUser(),
         ]);
         
-        return $this->render($template, [
-            'alerts' => $alerts,
-        ]);
+        return $this->render( $template, [ 'alerts' => $alerts ]);
     }
     
-    public function envelopes($back = null)
+    public function envelopes( $back = null )
     {
-        if ($back) {
-            $admin = true;
-            $template = 'back/message/envelope/search.html.twig';
-        } else {
-            $admin = false;
-            $template = 'front/message/envelope/search.html.twig';
-        }
+        $admin      = $back ? true : false;
+        $template   = $back ? 'back/message/envelope/search.html.twig'
+                            : 'front/message/envelope/search.html.twig';
         
         $envelopes = $this->em->getRepository(Message::class)->findBy([
             'admin' => $admin,
@@ -78,25 +73,21 @@ class MessageController extends AbstractController
             'recipientUser' => $this->security->getUser(),
         ]);
         
-        return $this->render($template, [
-            'envelopes' => $envelopes,
-        ]);
+        return $this->render( $template, [ 'envelopes' => $envelopes ]);
     }
     
-    public function readEnvelope(Message $message, $back = null)
+    public function readEnvelope( Message $message, $back = null )
     {
         // Check permission
         $this->denyAccessUnlessGranted('read_message', $message);
         
-        if ($back) $template = 'back/message/envelope/read.html.twig';
-        else $template = 'front/message/envelope/read.html.twig';
+        $template   = $back ? 'back/message/envelope/read.html.twig'
+                            : 'front/message/envelope/read.html.twig';
         
-        return $this->render($template, [
-            'message' => $message,
-        ]);
+        return $this->render( $template, [ 'message' => $message ]);
     }
     
-    public function followMessage(Message $message)
+    public function followMessage( Message $message )
     {
         // Check permission
         $this->denyAccessUnlessGranted('access_message', $message);
@@ -104,31 +95,17 @@ class MessageController extends AbstractController
         $message->setScanned(true);
         $this->em->persist($message);
         
-        // Case alert
-        if ('alert' === $message->getType()) {
-            
-            if ($message->getAdmin()) {
-                
-                $params = [
-                    'id' => $message->getEntityId(),
-                    '_locale' => locale_get_default()
-                ];
-                
-                switch ($message->getEntity()) {
-                    case 'situ':
-                        $route = 'back_situ_verify';
-                        break;
-                    case 'event':
-                        $route = 'back_event_read';
-                        break;
-                    case 'categoryLevel1':
-                        $route = 'back_category_read';
-                        break;
-                    case 'categoryLevel2':
-                        $route = 'back_category_read';
-                        break;
+        switch ( $message->getType() ) {
+            case 'alert':
+                if ( $message->getAdmin() ) {
+                    $params = [
+                        'id' => $message->getEntityId(),
+                        '_locale' => locale_get_default()
+                    ];
+                    $route = $this->messageManager( $message->getEntity() );
+                    break;
                 }
-            } else {
+                
                 if ('situ' === $message->getEntity()) {
                     
                     $route = 'read_situ';           
@@ -137,32 +114,33 @@ class MessageController extends AbstractController
                                         ->find($message->getEntityId())->getSlug(),
                         '_locale' => locale_get_default()
                     ];
-                } else {
-                    // Reload current page
-                    $refererParams = $this->getRefererParams();
-                    
-                    $route = $refererParams['_route']; 
-                    $params = $this->refererService->getParamsArray($refererParams);
+                    break;
                 }
-            }
-        }
-        // Case envelope
-        else {
-            $id = $message->getId();
-            if ($message->getAdmin()) {
-                $route = 'back_envelope_read';
-                $params = [
-                    'back' => 'back',
-                    'id' => $id,
-                    '_locale' => locale_get_default()
-                ];
-            } else {
+                
+                // Reload current page
+                $refererParams = $this->getRefererParams();
+                $route = $refererParams['_route']; 
+                $params = $this->refererService->getParamsArray($refererParams);
+                break;
+                
+            case 'envelope':
+                $id = $message->getId();
+                if ( $message->getAdmin() ) {
+                    $route = 'back_envelope_read';
+                    $params = [
+                        'back' => 'back',
+                        'id' => $id,
+                        '_locale' => locale_get_default()
+                    ];
+                    break;
+                }
+                
                 $route = 'front_envelope_read';
                 $params = [
                     'id' => $id,
                     '_locale' => locale_get_default()
                 ];
-            }
+                break;
         }
 
         try {
@@ -180,7 +158,7 @@ class MessageController extends AbstractController
         return $this->redirectToRoute($route, $params);
     }
     
-    public function ajaxPermuteScanned(Request $request)
+    public function ajaxPermuteScanned( Request $request )
     {
         if ($request->isXMLHttpRequest()) {
             
@@ -190,8 +168,8 @@ class MessageController extends AbstractController
             // Check permission - TODO check if ok
             $this->denyAccessUnlessGranted('access_message', $message);
             
-            if ($message->getScanned() === true) $message->setScanned(false);
-            else $message->setScanned(true);
+            $scanned = $message->getScanned() ? false : true;
+            $message->setScanned( $scanned );
 
             $this->em->persist($message);
             
@@ -220,21 +198,20 @@ class MessageController extends AbstractController
         }
     }
     
-    public function removeMessage(Message $message)
+    public function removeMessage( Message $message )
     {
         // Check permission
         $this->denyAccessUnlessGranted('access_message', $message);
             
-        $type = $message->getType();
-        $admin = $message->getAdmin();
-            
-        if ($type === 'alert') {
-            $route = $admin ? 'back_alerts' : 'front_alerts';
-        } else {
-            $route = $admin ? 'back_envelopes' : 'front_envelopes';
-        }
-        $params = $admin    ? ['back' => 'back', '_locale' => locale_get_default()]
-                            : ['_locale' => locale_get_default()];
+        $type   = $message->getType();
+        $admin  = $message->getAdmin();
+        
+        $route  = $admin
+                ? ( 'alert' === $type ? 'back_alerts' : 'back_envelopes' )
+                : ( 'alert' === $type ? 'front_alerts' : 'front_envelopes' );
+        
+        $params = $admin    ? [ 'back' => 'back', '_locale' => locale_get_default() ]
+                            : [ '_locale' => locale_get_default() ];
         
         $this->em->remove($message);
             
@@ -242,8 +219,8 @@ class MessageController extends AbstractController
             $this->em->flush();
 
             $msg = $this->translator->trans(
-                    'remove.flash.'.$type, [],
-                    'messenger_messages', $locale = locale_get_default()
+                    'remove.flash.'. $type, [],
+                    'messenger_messages', locale_get_default()
                 );
             $this->addFlash('success', $msg);
 
@@ -251,7 +228,7 @@ class MessageController extends AbstractController
             $this->addFlash('warning', $e->getMessage());
         }
 
-        return $this->redirectToRoute($route, $params);
+        return $this->redirectToRoute( $route, $params );
     }
     
 }

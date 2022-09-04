@@ -114,6 +114,11 @@ back_content_edit:
     methods:    ['GET', 'POST']
     defaults:
         id: null
+back_content_read:
+    path:       /{_locale}/back/content/read/{id}
+    controller: App\Controller\Back\PageController::contentRead
+    requirements:
+        id:     '\d+'
 back_content_search:
     path:       /{_locale}/back/contents
     controller: App\Controller\Back\PageController::allContents
@@ -191,13 +196,18 @@ read_situ:
 search_situ:
     path:       /{_locale}/search
     controller: App\Controller\Front\SituController::search
+translation_list:
+    path:       /{_locale}/search-translation
+    controller: App\Controller\Front\SituController::searchTranslation
 translate_situ:
-    path:       /{_locale}/translate/{situId}/{langId}
-    controller: App\Controller\Front\SituController::translate
+    path:       /{_locale}/translate/{id}/{langId}/{situId}
+    controller: App\Controller\Front\SituController::create
     methods:    ['GET', 'POST']
     requirements:
+        id:     '\d+'
         langId: '\d+'
-        situId: '\d+'
+    defaults:
+        situId:     null
 validation_situ:
     path:       /{_locale}/validation/{situ}
     controller: App\Controller\Front\SituController::validation
@@ -322,6 +332,9 @@ error_403:
     path:       /{_locale}/403
     controller: App\Controller\Security\ErrorController::accessDenied
     methods:    ['GET', 'POST']
+error_404:
+    path:       /{_locale}/404
+    controller: App\Controller\Security\ErrorController::showError
 lang_error:
     path:       /{_locale}/error/{lang}
     controller: App\Controller\Security\ErrorController::langError

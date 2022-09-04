@@ -3,20 +3,28 @@
 namespace App\Manager\Front;
 
 use App\Entity\Situ;
+use App\Entity\Lang;
+use App\Form\Front\Situ\SituDynamicDataForm;
+use App\Form\Front\Situ\SituForm;
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Form\FormError;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-class SituManager {
-    
+class SituManager
+{
+    private $em;
     private $security;
     private $translator;
     private $urlGenerator;
     
-    public function __construct(Security $security,
+    public function __construct(EntityManagerInterface $em,
+                                Security $security,
                                 TranslatorInterface $translator,
                                 UrlGeneratorInterface $urlGenerator)
     {
+        $this->em = $em;
         $this->security = $security;
         $this->translator = $translator;
         $this->urlGenerator = $urlGenerator;
@@ -88,23 +96,39 @@ class SituManager {
         $user = $this->security->getUser();
         
         // If lang is not a user lang, redirect to error page
-        if ( ! $user->getLangs()->contains( $situ->getLang() ) ) {
+        if ( ! $user->getLangs()->contains( $situ->getLang() ) )
+        {
             return $this->urlGenerator->generate( 'lang_error', [
                 '_locale' => locale_get_default(),
                 'lang' => $situ->getLang()->getLang(),
             ] );
         }
         
-        // If validation is requested, redirect to preview
-        if ( $situ->getStatus()->getId() === 2 ) {
+        // If current user is not situ user
+        // for post with status validation, validated or refused
+        // Redirect to preview
+        if ( $user !== $situ->getUser() && ( 2 === $situ->getStatus()->getId()
+                || 3 === $situ->getStatus()->getId()
+                || 4 === $situ->getStatus()->getId() ) )
+        {
             return $this->urlGenerator->generate( 'read_situ', [
                 '_locale' => locale_get_default(),
                 'slug' => $situ->getSlug(),
-                'p' => 'preview'
+                'preview' => 'preview'
             ] );
         }
         
         return true;
     }
+    
+//    public function allowValidation( Situ $situ )
+//    {
+//        if ( $situ->initialSitu ) return true;
+//        
+//        $initialSitu = $this->em->getRepository(Situ::class)
+//                ->findOneby(['translatedSituId' => $situ]);
+//        $transationLang = $this->em->getRepository(Situ::class)
+//                ->findOneby(['translatedSituId' => $initialSitu, 'lang' => $situ->getLang()]);
+//    }
     
 }

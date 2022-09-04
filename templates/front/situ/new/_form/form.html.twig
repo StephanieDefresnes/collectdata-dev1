@@ -124,7 +124,7 @@
                     <div id="collapse-categoryLevel2" class="pt-2 small infoCollapse d-none collapse"
                         aria-labelledby="heading-categoryLevel2" data-parent="#details">
                         <div class="d-block font-weight-bold">
-                            {{ 'label_dp.description'|trans({}, 'messages')  }}
+                            {{ 'label_dp.description'|trans({}, 'messages') }}
                         </div>
                         <div class="mt-1 px-3 line-11 first-letter description">
                             {{ situ.categoryLevel2 ? situ.categoryLevel2.description }}
@@ -177,6 +177,9 @@
         {{ form_widget(form.translatedSituId, {'value': translatedSituId} ) }}
 
         <div class="card-footer bg-light text-center{{ route == 'create_situ' ? ' d-none' }}">
+            <span id="actionSave" class="btn btn-outline-primary px-3 mx-2">
+                {{ 'action.save'|trans({}, 'messages') }}
+            </span>
             {{ form_widget(form.save) }}
             <span id="modalSubmit" class="btn btn-primary">
                 {{ 'action.submit'|trans({}, 'messages') }}

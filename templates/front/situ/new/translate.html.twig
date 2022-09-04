@@ -15,7 +15,7 @@
     <div id="loader" class="translateSitu d-block"></div>
         
     {% block banner%}
-    <div class="mt-3 mb-3 pt-5">
+    <div class="mt-3 pt-lg-5 pt-3">
         <h1 class="h3 text-white">
             {{ 'contrib.translation.title'|trans }}
         </h1>
@@ -42,18 +42,18 @@
 
                 <div class="card-header py-4 pl-4 bg-secondary-80 text-white">
 
-                    <div class="row mb-4 pb-1">
-                        <div class="col-md-12 mb-2 pt-1">
+                    <div class="row mb-md-4 pb-md-1">
+                        <div class="col-md-12 mb-md-0 mb-3 pt-1">
                             <span class="font-weight-bolder">
                                 {{ 'label_dp.event'|trans({}, 'messages') }}</span>
                             {{ situData.event.title }}
                         </div>
                     </div>
 
-                    <div id="initialDetails" class="accordion">
+                    <div id="initialDetails" class="accordion pb-1">
 
-                        <div class="row mb-4">
-                            <div class="col-md-12 mb-2 pt-1">
+                        <div class="row mb-md-4 pb-md-2">
+                            <div class="col-md-12 mb-md-0 mb-3 pt-1">
                                 <div id="initialHeadingOne" class="pointer">
                                     <div data-toggle="collapse" data-target="#initialCollapseOne"
                                          aria-expanded="false" aria-controls="initialCollapseOne">
@@ -77,8 +77,8 @@
                             </div>
                         </div>
 
-                        <div class="row mb-4 pb-3">
-                            <div class="col-md-12">
+                        <div class="row mb-md-4 pb-md-2">
+                            <div class="col-md-12 mb-md-0 mb-3 pt-1">
                                 <div id="initialHeadingTwo" class="pointer">
                                     <div data-toggle="collapse" data-target="#initialCollapseTwo"
                                          aria-expanded="false" aria-controls="initialCollapseTwo">
@@ -110,13 +110,13 @@
                     <h2 class="h5 font-weight-normal">{{ 'contrib.form.situ.label'|trans }}</h2>
 
                     <h6 class="h6 mb-2 pb-1 font-weight-bolder">{{ 'label_dp.title'|trans({}, 'messages') }}</h6>
-                    <div class="h-title mb-3 first-letter">{{ situData.title }}</div>
+                    <div class="h-title mb-3 first-letter"><div>{{ situData.title }}</div></div>
 
                     <h6 class="h6 font-weight-bolder">{{ 'label_dp.description'|trans({}, 'messages') }}</h6>
-                    <div class="h-description mb-4 pt-1 first-letter">{{ situData.description }}</div>
+                    <div class="h-description mb-md-3 mb-0 pt-1 first-letter"><div>{{ situData.description }}</div></div>
 
                     <div id="initialSituItems" data-initial="{{ situData.situItems|length }}">
-                        <h2 class="h5 font-weight-normal pt-4 pb-1 mb-3">{{ 'contrib.form.item.label'|trans }}</h2>
+                        <h2 class="h5 font-weight-normal pt-md-4 pb-0 pb-1 mb-3">{{ 'contrib.form.item.label'|trans }}</h2>
                         {% for item in situData.situItems %}
                             {% if item.score != 0 %}
                                 <legend class="col-12 px-0 border-top border-secondary col-form-label">{{ 'contrib.form.item.label_item'|trans }}</legend>
@@ -130,8 +130,8 @@
                                     {% endif %}
                                 </h6>
                             {% endif %}
-                            <div class="h-title mb-4 first-letter">{{ item.title }}</div>
-                            <div class="h-description first-letter">{{ item.description }}</div>
+                            <div class="h-title mb-3 first-letter"><div>{{ item.title }}</div></div>
+                            <div class="h-description first-letter"><div>{{ item.description }}</div></div>
                         {% endfor %}
                     </div>
                 </div>

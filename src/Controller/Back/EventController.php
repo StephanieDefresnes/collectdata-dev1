@@ -29,14 +29,12 @@ class EventController extends AbstractController
     {
         $events = $this->em->getRepository(Event::class)->findAll();
         
-        return $this->render('back/event/search.html.twig', [
-            'events' => $events,
-        ]);
+        return $this->render('back/event/search.html.twig', [ 'events' => $events ]);
     }
     
-    public function read(Event $event)
+    public function read( Event $event )
     {
-        if (!$event) {
+        if ( ! $event ) {
             return $this->redirectToRoute('back_not_found', [
                 '_locale' => locale_get_default()
             ]);
@@ -47,30 +45,33 @@ class EventController extends AbstractController
         ]);
     }
     
-    public function ajaxEventEnable(Request $request,
-                                    Messager $messager)
+    public function ajaxEventEnable( Request $request, Messager $messager)
     {
-        if ($request->isXMLHttpRequest()) {
+        if ( $request->isXMLHttpRequest() ) {
             
             $id = $request->request->get('id');
             $event = $this->em->getRepository(Event::class)->find($id);
             
-            if ($event->getValidated() === false) $event->setValidated(true);
+            if ( false === $event->getValidated() ) $event->setValidated( true );
 
             $this->em->persist($event);
             
             try {
                 $this->em->flush();
-                $messager->sendUserAlert('validation', 'event', $event);
+                $success = true;
                 
-                return $this->json(['success' => true]);
+                $messager->sendUserAlert('validation', $event);
+                
             } catch (Exception $ex) {
+                $success = false;
+                
                 $msg = $this->translator
                         ->trans('contrib.event.validation.flash.error', [],
                                 'back_messages', $locale = locale_get_default());
                 $this->addFlash('error', $msg);
-                return $this->json(['success' => false]);
             }
+                
+            return $this->json([ 'success' => $success ]);
         }
     }
 }

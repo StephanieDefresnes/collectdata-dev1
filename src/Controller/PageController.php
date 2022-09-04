@@ -7,11 +7,13 @@ use App\Entity\Page;
 use App\Entity\Status;
 use App\Entity\User;
 use App\Form\Page\PageFormType;
+use App\Manager\PageManager;
 use App\Manager\Back\UserManager;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Security;
@@ -25,18 +27,20 @@ class PageController extends AbstractController
     /**
      * Back and Front use this page with include
      * And provides different data depending on the context :
-     *      - $label for label of submit button "action"
-     *      - $action for flash message
-     *      - $referentPage for lang contributor in front context
-     *      - $route & $url for redirect
-     *      - $users in back context: when user can't translate into lang page,
-     *      he attributes it to lang contributor
+     *      - $action           = flash message var
+     *      - $label            = form button label
+     *      - $referentPage     = front context : locale content to translate
+     *      - $route & $params  = redirectToRoute params
+     *      - $template         = depending on context
+     *      - $users            = back context :
+     *                                  if page lang is not a current user lang,
+     *                                  user attributes page to a contributor user
      * 
      * Status values:
-     *      - '-1': new, for lang contributor in front
-     *      - 1:    on writing
-     *      - 2:    submitted to validation, for lang contributor in front
-     *      - 3:    validated
+     *      - '-1'  = new : content attributed to langContributor user
+     *      - 1     = on writing
+     *      - 2     = submitted to validation : for langContributor user
+     *      - 3     = validated
      * 
      * @param type $_locale
      * @param type $id
@@ -44,178 +48,153 @@ class PageController extends AbstractController
      * @return Response
      */
     public function contentEdit(EntityManagerInterface $em,
+                                PageManager $pageManager,
                                 Request $request,
                                 Security $security,
                                 TranslatorInterface $translator,
+                                UrlGeneratorInterface $urlGenerator,
                                 UserManager $userManager,
                                 $_locale, $id, $back = null): Response
     {
-        $action = 'submit';
-        $label = 'action.submit';
-        $referentPage = '';
-        $user = $security->getUser();
-        $users = [];
-        
-        // Prevent SUPER_VISITOR flush
-        $result = $userManager->preventSuperVisitor();
-        
-        if ($back) {
-            $this->denyAccessUnlessGranted('ROLE_SUPER_VISITOR');
-            // Route back_content_edit & default $label 
-            $label = 'action.validate';
-            $action = 'validate';
+        if ( $id ) {
+            $page = $em->getRepository(Page::class)->find($id);
             
-            $template = 'back/page/content/edit.html.twig';
-        } else {
-            $template = 'front/translation/page.html.twig';
-        }
-        
-        // Update or Create new Page
-        if ($id) {
-            $page = $em->getRepository(Page::class)
-                    ->find($id);
-            
-            if (!$page && $back) {
+            if ( $back && !$page ) {
                 return $this->redirectToRoute('back_not_found', [
                     '_locale' => locale_get_default()
                 ]);
             }
+        } else $page = new Page();
+        
+        $action         = $back ? 'validate' : 'submit';
+        $label          = 'action.'. $action;
+        $referentPage   = '';
+        $template       = $back ? 'back/page/content/edit.html.twig'
+                                : 'front/translation/page.html.twig';
+        $users          = [];
+        
+        if ( $id ) {
+            $user           = $security->getUser();
+            $isUserLang     = $pageManager->checkUserLangs(
+                                        $user->getLangs()->getValues(),
+                                        $user->getContributorLangs()->getValues(),
+                                        $page
+                                    );
+            $label          = $isUserLang   ? 'action.validate'
+                                            : 'action.attribute';
             
-            // If back & user langs contain page lang, user can valid page
-            // else he attributes to lang contributor user
-            if ($back) {
-                $label = 'action.attribute';
-                foreach ($user->getLangs()->getValues() as $lang) {
-                    if ($lang->getLang() === $page->getLang()) {
-                        $label = 'action.validate';
-                    }
-                }
-                foreach ($user->getContributorLangs()->getValues() as $lang) {
-                    if ($lang->getLang() === $page->getLang()) {
-                        $label = 'action.validate';
-                    }
-                }
+            $langPage = $em->getRepository(Lang::class)
+                                ->findOneBy(['lang' => $page->getLang()]);
             
-                // Get lang contributor user for page
-                $langPage = $em->getRepository(Lang::class)
-                            ->findOneBy(['lang' => $page->getLang()]);
-                
-                // Array of users to attribute translation page in form
-                $users = $em->getRepository(User::class)
-                            ->findLangContributors($langPage);
-                
-            } else {
-                $referentPage = $em->getRepository(Page::class)
-                        ->findOneBy([
-                            'type' => $page->getType(),
-                            'lang' => locale_get_default(),
-                        ]);
+            // Get langContributor users for current page lang
+            if ( $back ) $users = $em->getRepository(User::class)
+                                    ->findLangContributors($langPage);
             
-            }
-        } else {
-            $page = new Page();
+            // Get current lang page for front context
+            $referentPage   = $back ? $referentPage
+                                    : $em->getRepository(Page::class)
+                                                ->findOneBy([
+                                                    'type' => $page->getType(),
+                                                    'lang' => locale_get_default(),
+                                                ]);
         }
         
+        // Get contents collection
         $originalContents = new ArrayCollection();
         foreach ($page->getPageContents() as $content) {
             $originalContents->add($content);
         }
+            
+        // Prevent SUPER_VISITOR flush
+        $preventSV          = $userManager->preventSuperVisitor( $back );
+//        $preventFrontUrl    = $urlGenerator->generate('error_403', [
+//                                    '_locale' => locale_get_default()
+//                                ]);
+//        $preventUrl         = $back ? $preventSV : $preventFrontUrl;
         
         // Form
         $form = $this->createForm(PageFormType::class, $page, [
+                'back'  => $back,
                 'label' => $label,
                 'users' => $users,
             ]);
         $form->handleRequest($request);
         
-        if ($form->isSubmitted() && $form->isValid()) {
+        if ( $form->isSubmitted() && $form->isValid() ) {
             
-            if ($back) {
-                foreach ($originalContents as $content) {
-                    if (false === $page->getPageContents()->contains($content)) {
-                        $page->getPageContents()->removeElement($content);
-                        $em->remove($content);
-                    }
-                }       
-            }
+//            $userManager->preventSuperVisitor( $back );
+            if ( $preventSV ) return $this->redirect( $preventSV );
 
-            // Enable value depending on submitted button
-            if ($form->get('save')->isClicked()) {
-                
-                $enabled = false;
-                $status = $em->getRepository(Status::class)->find(1);
-                $action = $form->getClickedButton()->getName();
-                
-                if ($back) {
-                    $page->setUser(null);
-                    $url = $this->redirectToRoute('back_content_edit', [
-                        '_locale' => locale_get_default(),
-                        'back' => 'back',
-                        'id' => $page->getId(),
-                    ]);
-                } else {
-                    $url = $this->redirectToRoute('front_content_edit', [
-                        '_locale' => locale_get_default(),
-                        'id' => $page->getId(),
-                    ]);
-                }
-            } else {
-                
-                if ($back) {
-                    if ($label === 'action.validate') {
-                        $status = $em->getRepository(Status::class)->find(3);
-                        $enabled = true;
-                        $action = 'validate';
-                    } else {
-                        $status = $em->getRepository(Status::class)->find(intval('-1'));
-                        $enabled = false;
-                        $action = 'attribute';
-                    }
-                    $route = 'back_content_search';
-                } else {
-                    $status = $em->getRepository(Status::class)->find(2);
-                    $enabled = false;
-                    $action = $form->getClickedButton()->getName();
-                    $route = 'user_translations';
-                }
-                $url = $this->redirectToRoute($route, [
-                    '_locale' => locale_get_default(),
-                ]);
-            }
+            // Set value depending on submitted button & back
+            $isSaved    = $form->get('save')->isClicked();
+            
+            $enabled    = $isSaved  ? false
+                                    : ( $back   ? ( 'action.validate' === $label
+                                                    ? true : false )
+                                                : false );
+            
+            $statusId   = $isSaved  ? 1
+                                    : ( $back   ? ( 'action.validate' === $label
+                                                    ? 3 : intval('-1') )
+                                                : 2 );
+            $status     = $em->getRepository(Status::class)->find($statusId);
+            
             $page->setEnabled($enabled);
             $page->setStatus($status);
+            
+            // Update collections
+            foreach ($originalContents as $content) {
+                if ( $back && ! $page->getPageContents()->contains($content) ) {
+                    $page->getPageContents()->removeElement($content);
+                    $em->remove($content);
+                }
+            }
                 
             $em->persist($page);
             
-            try {
-                if (false !== $result) {
-                    if ($back) {
-                        $url = $this->redirect($result);
-                    } else {
-                        $url = $this->redirectToRoute('error_403', [
-                            '_locale' => locale_get_default(),
-                        ]);
-                    }
-                    return $url;
-                }
-                
+            // Set translation string var depending on context and clicked button
+            $buttonName = $form->getClickedButton()->getName();
+            $action = $isSaved  ? $buttonName
+                                : ( $back   ? ( 'action.validate' === $label
+                                                ? 'validate' : 'attribute' )
+                                            : $buttonName );
+            
+            // Set route depending on context and clicked button
+            $route  = $isSaved  ? ( $back   ? 'back_content_edit'
+                                        : 'front_content_edit' )
+                                : ( $back   ? 'back_content_search'
+                                            : 'user_translations' );
+
+            try {                
                 $em->flush();
 
                 $msg = $translator
                         ->trans('content.form.'. $action .'.flash.success', [],
-                                'back_messages', $locale = locale_get_default());
+                                'back_messages', locale_get_default());
                 $this->addFlash('success', $msg);
+                
+                // Set params depending on context and clicked button
+                $params     = $isSaved  ? ( $back
+                                            ? [ '_locale' => locale_get_default(),
+                                                'back' => 'back',
+                                                'id' => $page->getId() ]
+                                            : [ '_locale' => locale_get_default(),
+                                                'id' => $page->getId() ] )
+                                        : [ '_locale' => locale_get_default() ];
+                
+                return $this->redirectToRoute( $route, $params );
                 
             } catch (\Doctrine\DBAL\DBALException $e) {
                 $this->addFlash('warning', $e->getMessage());
+                
+                return $this->redirect($request->getUri());
             }
-            return $url;
         }
         
         return $this->render($template, [
-            'form' => $form->createView(),
-            'page' => $page,
-            'referentPage' => $referentPage,
+            'form'          => $form->createView(),
+            'page'          => $page,
+            'referentPage'  => $referentPage,
         ]);
     }
 }

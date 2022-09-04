@@ -15,7 +15,7 @@
         "doctrine/doctrine-migrations-bundle": "^3.0",
         "doctrine/orm": "^2.8",
         "friendsofphp/php-cs-fixer": "^3.1",
-        "friendsofsymfony/ckeditor-bundle": "^2.3",
+        "friendsofsymfony/ckeditor-bundle": "^2.4",
         "google/recaptcha": "^1.2",
         "laminas/laminas-code": "^3.5",
         "php-coveralls/php-coveralls": "^2.4",

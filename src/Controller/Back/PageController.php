@@ -13,7 +13,7 @@ use Symfony\Component\HttpFoundation\Response;
  * @IsGranted("IS_AUTHENTICATED_FULLY")
  */
 class PageController extends AbstractController
-{    
+{
     public function dashboard()
     {
         return $this->render('back/page/dashboard.html.twig');
@@ -25,6 +25,29 @@ class PageController extends AbstractController
         
         return $this->render('back/page/content/search.html.twig', [
             'pages' => $pages,
+        ]);
+    }
+    
+    public function contentRead($id)
+    {
+        $page = $this->getDoctrine()->getRepository(Page::class)->find($id);
+        
+        if ( ! $page ) {
+            return $this->redirectToRoute('back_not_found', [
+                '_locale' => locale_get_default()
+            ]);
+        }
+        
+        $referentPage   = $this->getDoctrine()
+                                ->getRepository(Page::class)
+                                            ->findOneBy([
+                                                'type' => $page->getType(),
+                                                'lang' => locale_get_default(),
+                                            ]);
+        
+        return $this->render('back/page/content/read.html.twig', [
+            'page' => $page,
+            'referentPage' => $referentPage,
         ]);
     }
     
@@ -50,31 +73,30 @@ class PageController extends AbstractController
                             \IntlDateFormatter::LONG,
                             \IntlDateFormatter::LONG,
                             null, null, 'MMM');
-        foreach($result as $r) {
-            array_push($countMonth, $r['situs']);
-            array_push($months, $intl->format(new \DateTime($r['situMonth'])));
-            array_push($years, $r['situYear']);
+        foreach( $result as $r ) {
+            array_push( $countMonth, $r['situs'] );
+            array_push( $months, $intl->format( new \DateTime($r['situMonth']) ) );
+            array_push( $years, $r['situYear'] );
         }
         $length = count($years);
         
         // Push first date concatenated
         array_push($dates, $months[0] .' '. $years[0]);
         
-        for ($i = 1; $i < $length; $i++) {
+        for ( $i = 1; $i < $length; $i++ ) {
 
-            // Concate date if previous year is different
-            // or if last date
-            if ($years[$i-1] !== $years[$i] || $i === $length - 1) {
+            $date = $months[$i];
+            
+            // Concate date if previous year is different or if last date
+            if ( $years[$i-1] !== $years[$i] || $i === $length - 1 )
                 $date = $months[$i] .' '. $years[$i];
-            } else {
-                $date = $months[$i];
-            }
+            
             array_push($dates, $date);
         }
         
-        $situsPerMonth['situs'] = $countMonth;
-        $situsPerMonth['dates'] = $dates;
-        $situsPerMonth['situsMax'] = max($countMonth);
+        $situsPerMonth['situs']     = $countMonth;
+        $situsPerMonth['dates']     = $dates;
+        $situsPerMonth['situsMax']  = max($countMonth);
         
         $dataChart['situsPerMonth'] = $situsPerMonth;
         
@@ -84,23 +106,21 @@ class PageController extends AbstractController
         $langs = $this->getDoctrine()->getRepository(Lang::class)
                     ->findBy(['enabled' => true]);
         
-        $langNames = [];
-        $countSitus = [];
-        $countUsers = [];
+        $langNames = $countSitus = $countUsers = [];
         
-        foreach ($langs as $lang) {
+        foreach ( $langs as $lang ) {
             $names = explode(';', $lang->getEnglishName());
-            array_push($langNames, $names[0]);
-            array_push($countSitus, count($lang->getSitus()));
-            array_push($countUsers, count($lang->getUsers()));
+            array_push( $langNames, $names[0] );
+            array_push( $countSitus, count($lang->getSitus()) );
+            array_push( $countUsers, count($lang->getUsers()) );
         }
         
-        $dataPerLang['langs'] = $langNames;
-        $dataPerLang['situs'] = $countSitus;
-        $dataPerLang['users'] = $countUsers;
-        $dataPerLang['usersMax'] = max($countUsers);
+        $dataPerLang['langs']       = $langNames;
+        $dataPerLang['situs']       = $countSitus;
+        $dataPerLang['users']       = $countUsers;
+        $dataPerLang['usersMax']    = max($countUsers);
         
-        $dataChart['dataPerLang'] = $dataPerLang;
+        $dataChart['dataPerLang']   = $dataPerLang;
         
         
         /*

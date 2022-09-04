@@ -4,7 +4,7 @@ namespace App\Form\Page;
 
 use App\Entity\Lang;
 use App\Entity\Page;
-use App\Manager\Back\PageManager;
+use App\Manager\PageManager;
 use App\Form\Page\ContentType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Form\AbstractType;
@@ -32,8 +32,7 @@ class PageFormType extends AbstractType
     
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        if ($options['label'] === 'action.attribute'
-                || $options['label'] === 'action.validate') {
+        if ( $options['back'] ) {
             
             $builder
                 ->add('type', ChoiceType::class, [
@@ -114,6 +113,7 @@ class PageFormType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => Page::class,
+            'back' => null,
             'label' => null,
             'users' => null,
             'translation_domain' => 'back_messages',

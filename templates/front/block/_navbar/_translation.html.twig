@@ -1,25 +1,25 @@
 {% trans_default_domain 'user_messages' %}
 
-    <li class="nav-item mx-md-0 mx-sm-4 mx-0 px-md-0 px-md-0 px-sm-2 px-0 dropdown{{ route in ['front_translations', 'front_translation_add'] ? ' active' }}">
-        <a class="nav-link dropdown-toggle" id="dropdown_translation" 
-           data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            {{ 'label.translation'|trans({}, 'messages') }}
-        </a>
-        <ul class="dropdown-menu pt-md-4 pt-0" aria-labelledby="dropdown_translation">
-            {% if app.user and app.user.langContributor and app.user.contributorLangs is not empty %}
-                <li class="dropdown-item bg-dark-95{{ route == 'user_translations' ? ' active' }}">
-                    <a href="{{ path('user_translations') }}">
-                        <i class="fas fa-globe-americas"></i>
-                        {{ 'nav.translation.site'|trans }}
-                    </a>
-                </li>
-            {% endif %}
-            {% if app.user and app.user.langs|length > 1 %}
-                <li class="dropdown-item bg-dark-95{{ route == '' ? ' active' }}">
-                    <a href="">
-                        <i class="fas fa-globe"></i> {{ 'nav.translation.contrib'|trans }}
-                    </a>
-                </li>
-            {% endif %}
-        </ul>
-    </li>
+<li class="nav-item mx-md-0 mx-sm-4 mx-0 px-md-0 px-md-0 px-sm-2 px-0 dropdown{{ route in ['front_translations', 'front_translation_add', 'translation_list', 'user_translations'] ? ' active' }}">
+    <a class="nav-link dropdown-toggle" id="dropdown_translation" 
+       data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        {{ 'label.translation'|trans({}, 'messages') }}
+    </a>
+    <ul class="dropdown-menu pt-md-4 pt-0" aria-labelledby="dropdown_translation">
+        {% if app.user and app.user.langs|length > 1 %}
+            <li class="dropdown-item bg-dark-95{{ route == 'translation_list' ? ' active' }}">
+                <a href="{{ path('translation_list') }}">
+                    <i class="fas fa-globe"></i> {{ 'nav.translation.contrib'|trans }}
+                </a>
+            </li>
+        {% endif %}
+        {% if app.user and app.user.langContributor and app.user.contributorLangs is not empty %}
+            <li class="dropdown-item bg-dark-95{{ route == 'user_translations' ? ' active' }}">
+                <a href="{{ path('user_translations') }}">
+                    <i class="fas fa-globe-americas"></i>
+                    {{ 'nav.translation.site'|trans }}
+                </a>
+            </li>
+        {% endif %}
+    </ul>
+</li>
