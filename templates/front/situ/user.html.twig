@@ -90,9 +90,16 @@
                             </td>
 
                             <td class="pt-3">
-                                <span class="text-capitalize">{{ situ.lang.name|raw }}</span>
+                                {% set langName = situ.lang.englishName|split(';') %}
+                                <img src="{{ asset('img/flag/'~ situ.lang.lang  ~'.jpg') }}"
+                                     alt="{{ langName[0] }}" class="lang-flag mr-1 mt-n1"
+                                     data-toggle="tooltip" data-placement="right"
+                                     title="{{ langName[0] }}">
                                 {% if situ.initialSitu == 0 %}
-                                    <span class="small"><i class="fas fa-globe "></i></span>
+                                    <span class="small" title="{{ 'action.translated'|trans }}"
+                                          data-toggle="tooltip" data-placement="right"
+                                          aria-label="{{ 'action.translated'|trans }}">
+                                        <i class="fas fa-globe "></i></span>
                                 {% endif %}
                             </td>
 
