@@ -79,13 +79,13 @@ class SituEditor {
         $event          = $resultEvent['event'];
         $situ->setEvent( $event );
 
-        // Select or create an categoryLevel1
+        // Select or create a categoryLevel1
         $resultCatLv1   = $this->persistObject( 'categoryLevel1', $situForm,
                                                         null, $lang, $event );
         $categoryLv1    = $resultCatLv1['category'];
         $situ->setCategoryLevel1( $categoryLv1 );
 
-        // Select or create an categoryLevel2
+        // Select or create a categoryLevel2
         $resultCatLv2   = $this->persistObject( 'categoryLevel2', $situForm,
                                                         null, $lang, null, $categoryLv1 );
         $situ->setCategoryLevel2( $resultCatLv2['category'] );
@@ -93,11 +93,11 @@ class SituEditor {
         // Check if translation and set values
         $this->persistObject( 'translate', $situForm, $situ );
         
-        
+        // Set situ data
         $situ->setTitle($situForm->getTitle());
         $situ->setDescription($situForm->getDescription());
 
-        // Original SituItem collection from Situ object
+        // Get original SituItem
         $originalItems = new ArrayCollection();
         foreach ($situ->getSituItems() as $item) {
             $originalItems->add($item);
