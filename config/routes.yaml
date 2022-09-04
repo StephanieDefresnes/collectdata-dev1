@@ -332,9 +332,6 @@ error_403:
     path:       /{_locale}/403
     controller: App\Controller\Security\ErrorController::accessDenied
     methods:    ['GET', 'POST']
-error_404:
-    path:       /{_locale}/404
-    controller: App\Controller\Security\ErrorController::showError
 lang_error:
     path:       /{_locale}/error/{lang}
     controller: App\Controller\Security\ErrorController::langError
