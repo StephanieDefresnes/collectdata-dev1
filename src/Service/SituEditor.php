@@ -55,43 +55,43 @@ class SituEditor {
     public function setSitu( Situ $situForm, Request $request )
     {
         // If update or create situ
-        $resultSitu = $this->persistMappedObject( 'situ', $situForm );
+        $resultSitu = $this->persistObject( 'situ', $situForm );
         $situ       = $resultSitu['data'];
         $success    = $resultSitu['success'];
         
         // Status depending on submitted button
         $situRequest    = $request->request->get('situ_form');
-        $resultStatus   = $this->persistMappedObject( 'status', $situRequest,
+        $resultStatus   = $this->persistObject( 'status', $situRequest,
                                                         $situ );
         $action         = $resultStatus['action'];
         if ( $situForm->getId() )
             $success    = 'success';
 
         // Lang depending on user choice or lovale
-        $resultLang     = $this->persistMappedObject( 'lang', $situForm,
+        $resultLang     = $this->persistObject( 'lang', $situForm,
                                                         $situ );
         $lang           = $resultLang['lang'];
         $situ->setLang( $lang );
 
         // Select or create an event
-        $resultEvent    = $this->persistMappedObject( 'event', $situForm,
+        $resultEvent    = $this->persistObject( 'event', $situForm,
                                                         null, $lang );
         $event          = $resultEvent['event'];
         $situ->setEvent( $event );
 
         // Select or create an categoryLevel1
-        $resultCatLv1   = $this->persistMappedObject( 'categoryLevel1', $situForm,
+        $resultCatLv1   = $this->persistObject( 'categoryLevel1', $situForm,
                                                         null, $lang, $event );
         $categoryLv1    = $resultCatLv1['category'];
         $situ->setCategoryLevel1( $categoryLv1 );
 
         // Select or create an categoryLevel2
-        $resultCatLv2   = $this->persistMappedObject( 'categoryLevel2', $situForm,
+        $resultCatLv2   = $this->persistObject( 'categoryLevel2', $situForm,
                                                         null, $lang, null, $categoryLv1 );
         $situ->setCategoryLevel2( $resultCatLv2['category'] );
         
         // Check if translation and set values
-        $this->persistMappedObject( 'translate', $situForm, $situ );
+        $this->persistObject( 'translate', $situForm, $situ );
         
         
         $situ->setTitle($situForm->getTitle());
@@ -172,11 +172,11 @@ class SituEditor {
      * @param Category $category
      * @return type
      */
-    private function persistMappedObject(   $subject, $data,
-                                            Situ $situ = null,
-                                            Lang $lang = null,
-                                            Event $event = null,
-                                            Category $category = null )
+    private function persistObject( $subject, $data,
+                                    Situ $situ = null,
+                                    Lang $lang = null,
+                                    Event $event = null,
+                                    Category $category = null )
     {
         $dateNow        = new \DateTime('now');
         $currentUser    = $this->security->getUser();
