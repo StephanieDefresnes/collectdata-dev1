@@ -54,7 +54,7 @@
                 <tbody class="small bg-white-80">
                 {% for situ in app.user.situs %}
                     {# not access to deleted situ and situ.lang wich isn't in user.langs #}
-                    {% if situ.status.id != 5 and situ.lang in app.user.langs %}
+                    {% if situ.status.id != 5 or situ.lang in app.user.langs %}
                         <tr data-id="{{ situ.id }}">
 
                             <td class="d-none">{{ situ.id }}</td>
